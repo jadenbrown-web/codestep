@@ -537,26 +537,36 @@ const challengeFile = (language: Language) => language === "javascript" ? "chall
 
 type DiagnosticPart = { text: string; help: string; kind: "type" | "message" | "token" | "location" };
 
-function syntaxDiagnostic(code: string, expected: string): DiagnosticPart[] {
-  const significant = (value: string) => {
-    const characters: { character: string; index: number }[] = [];
-    let quote = "";
-    let lineComment = false;
-    for (let index = 0; index < value.length; index += 1) {
-      const character = value[index];
-      const next = value[index + 1];
-      if (lineComment) {
-        if (character === "\n") lineComment = false;
-        continue;
-      }
-      if (!quote && character === "/" && next === "/") { lineComment = true; index += 1; continue; }
-      if ((character === '"' || character === "'" || character === "`") && value[index - 1] !== "\\") quote = quote === character ? "" : quote || character;
-      if (!/\s/.test(character)) characters.push({ character, index });
+function significantCharacters(value: string) {
+  const characters: { character: string; index: number }[] = [];
+  let quote = "";
+  let lineComment = false;
+  for (let index = 0; index < value.length; index += 1) {
+    const character = value[index];
+    const next = value[index + 1];
+    if (lineComment) {
+      if (character === "\n") lineComment = false;
+      continue;
     }
-    return characters;
-  };
-  const actual = significant(code);
-  const target = significant(expected);
+    if (!quote && character === "/" && next === "/") { lineComment = true; index += 1; continue; }
+    if ((character === '"' || character === "'" || character === "`") && value[index - 1] !== "\\") quote = quote === character ? "" : quote || character;
+    if (!/[\s\u00a0\u200b-\u200d\ufeff]/.test(character)) characters.push({ character, index });
+  }
+  return characters;
+}
+
+function alignedGuide(code: string, expected: string) {
+  const actual = significantCharacters(code);
+  const target = significantCharacters(expected);
+  let matched = 0;
+  while (matched < actual.length && matched < target.length && actual[matched].character === target[matched].character) matched += 1;
+  const expectedPosition = matched ? target[matched - 1].index + 1 : 0;
+  return code.replace(/[^\n]/g, " ") + expected.slice(expectedPosition);
+}
+
+function syntaxDiagnostic(code: string, expected: string): DiagnosticPart[] {
+  const actual = significantCharacters(code);
+  const target = significantCharacters(expected);
   let difference = 0;
   while (difference < actual.length && difference < target.length && actual[difference].character === target[difference].character) difference += 1;
   const rawIndex = actual[difference]?.index ?? code.length;
@@ -584,7 +594,7 @@ function SyntaxDiagnostic({ parts }: { parts: DiagnosticPart[] }) {
   return <div className="syntax-diagnostic" role="alert">{parts.map((part, index) => <span key={`${part.text}-${index}`} className={`diagnostic-${part.kind}`} tabIndex={0} data-help={part.help} title={part.help}>{part.text}</span>)}</div>;
 }
 
-function HighlightedCode({ code, language }: { code: string; language: Language }) {
+function HighlightedCode({ code, language, caretIndex }: { code: string; language: Language; caretIndex?: number }) {
   const pattern = language === "html"
     ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|src|alt|id|lang|charset)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:#])/g
     : language === "css"
@@ -611,7 +621,17 @@ function HighlightedCode({ code, language }: { code: string; language: Language 
     lastIndex = match.index! + text.length;
   }
   if (lastIndex < code.length) parts.push({ text: code.slice(lastIndex), kind: "plain" });
-  return <>{parts.map((part, i) => <span className={`syntax-${part.kind}`} key={i}>{part.text}</span>)}</>;
+  let offset = 0;
+  let caretPlaced = false;
+  return <>{parts.map((part, index) => {
+    const start = offset;
+    const end = start + part.text.length;
+    offset = end;
+    if (caretIndex === undefined || caretPlaced || caretIndex < start || caretIndex > end) return <span className={`syntax-${part.kind}`} key={index}>{part.text}</span>;
+    const split = Math.max(0, Math.min(part.text.length, caretIndex - start));
+    caretPlaced = true;
+    return <span className={`syntax-${part.kind}`} key={index}>{part.text.slice(0, split)}<i className="editor-caret" />{part.text.slice(split)}</span>;
+  })}{caretIndex !== undefined && !caretPlaced && <i className="editor-caret" />}</>;
 }
 
 function SettingsPanel({ open, themeMode, showGuide, colourTyping, onThemeChange, onGuideChange, onColourTypingChange, onClose }: { open: boolean; themeMode: ThemeMode; showGuide: boolean; colourTyping: boolean; onThemeChange: (mode: ThemeMode) => void; onGuideChange: (show: boolean) => void; onColourTypingChange: (show: boolean) => void; onClose: () => void }) {
@@ -633,6 +653,7 @@ export default function Home() {
   const [language, setLanguage] = useState<Language | null>(null);
   const [index, setIndex] = useState(0);
   const [code, setCode] = useState("");
+  const [caretIndex, setCaretIndex] = useState(0);
   const [status, setStatus] = useState<"idle" | "wrong" | "correct">("idle");
   const [typedOutput, setTypedOutput] = useState("");
   const [ghostLength, setGhostLength] = useState(0);
@@ -645,8 +666,7 @@ export default function Home() {
 
   const current = language ? lessons[language][index] : null;
   const visibleGhost = current ? current.answer.slice(0, ghostLength) : "";
-  const hiddenGhostLength = Math.min(code.length, visibleGhost.length);
-  const guideCode = visibleGhost.slice(0, hiddenGhostLength).replace(/[^\n]/g, " ") + visibleGhost.slice(hiddenGhostLength);
+  const guideCode = alignedGuide(code, visibleGhost);
   const breakdown = language ? breakdowns[language][index] : undefined;
   const progress = language ? Math.round((index / lessons[language].length) * 100) : 0;
   const diagnostic = useMemo(() => current ? syntaxDiagnostic(code, current.answer) : [], [code, current]);
@@ -654,6 +674,7 @@ export default function Home() {
   useEffect(() => {
     if (current) {
       setCode(current.starter || "");
+      setCaretIndex((current.starter || "").length);
       setStatus("idle");
       setTypedOutput("");
     }
@@ -756,6 +777,7 @@ export default function Home() {
     const nextCode = code.slice(0, start) + insert + code.slice(end);
     const nextCaret = start + insert.length;
     setCode(nextCode);
+    setCaretIndex(nextCaret);
     setStatus("idle");
     requestAnimationFrame(() => editor.setSelectionRange(nextCaret, nextCaret));
   }
@@ -925,8 +947,8 @@ export default function Home() {
             <button className="reference-next" onClick={nextLesson}>Continue to the next lesson →</button>
           </div> : <>
           <div className="editor-panel">
-            <div className="panel-bar"><div className="file-tab"><span>◆</span> {challengeFile(language)}</div><div className="panel-actions"><span>UTF-8</span><button onClick={() => setCode("")} title="Reset code">↻ Reset</button></div></div>
-            <div className={`editor-body ${colourTyping ? "colour-typing" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className="code-guide" aria-hidden="true"><span>CODE GUIDE</span><code><HighlightedCode code={guideCode} language={language} /></code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><HighlightedCode code={code} language={language} /><i className="editor-caret" /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(e) => {setCode(e.target.value); setStatus("idle")}} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : "// Type your code here..."} /></div>
+            <div className="panel-bar"><div className="file-tab"><span>◆</span> {challengeFile(language)}</div><div className="panel-actions"><span>UTF-8</span><button onClick={() => { setCode(""); setCaretIndex(0); }} title="Reset code">↻ Reset</button></div></div>
+            <div className={`editor-body ${colourTyping ? "colour-typing" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className="code-guide" aria-hidden="true"><span>CODE GUIDE</span><code><HighlightedCode code={guideCode} language={language} /></code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><HighlightedCode code={code} language={language} caretIndex={caretIndex} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : "// Type your code here..."} /></div>
           </div>
           <div className="console-panel">
             <div className="console-bar"><span><i /> CONSOLE</span><button onClick={() => setStatus("idle")}>Clear</button></div>
