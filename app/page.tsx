@@ -305,7 +305,6 @@ export default function Home() {
             <div className="reference-head"><div><span>STEP 1</span><b>Look at this code</b></div></div>
             <pre><code>{current!.answer}</code></pre>
           </div>
-          <div className="task-card"><div className="task-icon">⌨</div><div><b>Your turn</b><p>{current!.prompt}</p></div></div>
           <div className="tip"><span>↵</span> Copy or type the example into the editor, then press Enter to check it.</div>
         </aside>
         <section className="workspace">
