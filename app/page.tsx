@@ -206,7 +206,36 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Apple", "Banana", "Orange"],
     },
     {
-      eyebrow: "07 · Array positions",
+      eyebrow: "07 · Empty list",
+      title: "Start an empty car list",
+      explanation: "List<string> creates a flexible list that stores text. Unlike a fixed-size array, a List can grow as new items are added. new List<string>() creates it with zero items.",
+      note: "// Create an empty list that will hold car names",
+      prompt: "Create the empty cars list for text values.",
+      answer: "List<string> cars = new List<string>();",
+      output: ["cars  →  []", "The list currently has 0 items."],
+    },
+    {
+      eyebrow: "08 · Add to a list",
+      title: "Put a car into the list",
+      explanation: "Console.ReadLine() collects the user's answer. cars.Add(newCar) takes that saved text and adds it to the end of the cars list.",
+      note: "// Ask for a car, then add the answer to cars",
+      prompt: "Use Add to put newCar into the empty cars list.",
+      starter: 'List<string> cars = new List<string>();\nConsole.WriteLine("What car do you want to add?");\nstring newCar = Console.ReadLine();\n\n',
+      answer: 'List<string> cars = new List<string>();\nConsole.WriteLine("What car do you want to add?");\nstring newCar = Console.ReadLine();\n\ncars.Add(newCar);',
+      output: ["Before: []", "What car do you want to add?  →  Ford", 'After Add: ["Ford"]'],
+    },
+    {
+      eyebrow: "09 · Print a list",
+      title: "Show the finished car list",
+      explanation: "string.Join joins every list item into readable text. Console.WriteLine then prints that text, showing the car that was added in the previous step.",
+      note: "// Join and print the items stored in cars",
+      prompt: "Print the complete cars list in square brackets.",
+      starter: 'List<string> cars = new List<string>();\nConsole.WriteLine("What car do you want to add?");\nstring newCar = Console.ReadLine();\ncars.Add(newCar);\n\n',
+      answer: 'List<string> cars = new List<string>();\nConsole.WriteLine("What car do you want to add?");\nstring newCar = Console.ReadLine();\ncars.Add(newCar);\n\nConsole.WriteLine($"[{string.Join(", ", cars)}]");',
+      output: ["What car do you want to add?  →  Ford", "[Ford]"],
+    },
+    {
+      eyebrow: "10 · Array positions",
       title: "Pick one item",
       explanation: "C# arrays count from zero. That means position 0 is the first item, position 1 is the second, and so on.",
       note: "// Print the first item from fruits",
@@ -216,7 +245,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Apple"],
     },
     {
-      eyebrow: "08 · Objects",
+      eyebrow: "11 · Objects",
       title: "Give values names",
       explanation: "C# objects keep related values in named properties. Here, an anonymous object groups a car's Brand and Colour together.",
       note: "// Create a car object and print its properties",
@@ -225,7 +254,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Brand: BMW", "Colour: Blue"],
     },
     {
-      eyebrow: "09 · Timers",
+      eyebrow: "12 · Timers",
       title: "Run code later",
       explanation: "Task.Delay pauses asynchronous C# code for a number of milliseconds. Using await lets each message appear after another one-second delay.",
       note: "// Print One, Two, and Three one second apart",
@@ -234,7 +263,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["One", "Two", "Three"],
     },
     {
-      eyebrow: "10 · Date and time",
+      eyebrow: "13 · Date and time",
       title: "Get the current moment",
       explanation: "DateTime.Now gets the computer's current local date and time. Storing it in currentDateTime lets the program use or display that moment later.",
       note: "// Get the current date and time, then print it",
@@ -243,7 +272,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["06/08/2026 19:05:00"],
     },
     {
-      eyebrow: "11 · Classes",
+      eyebrow: "14 · Classes",
       title: "Create cars from a blueprint",
       explanation: "A C# class is a reusable blueprint for objects. Properties store each car's data, the constructor receives starting values, and this refers to the particular object being created.",
       note: "// Define a Car class, then create and print two car objects",
@@ -442,10 +471,13 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
     3: [{ code: "if ( ... )", name: "Check", meaning: "Runs a block only when its condition is true." }, { code: 'answer == "2"', name: "Condition", meaning: "Compares the saved answer with 2." }, { code: "else", name: "Otherwise", meaning: "Runs when the condition is false." }],
     4: [{ code: ">= 0", name: "Lower limit", meaning: "Checks that age is zero or greater." }, { code: "&&", name: "Two ampersands", meaning: "Read this as AND: the condition on each side must be true." }, { code: "<= 18", name: "Upper limit", meaning: "Checks that age is eighteen or less." }, { code: "else", name: "Otherwise", meaning: "Runs when the complete range condition is false." }],
     5: [{ code: "string[]", name: "Array type", meaning: "Says fruits is a list of text values." }, { code: "foreach", name: "Loop", meaning: "Visits every item in the array." }, { code: "fruit", name: "Current item", meaning: "Temporarily holds the item being visited." }],
-    7: [{ code: "var car", name: "Variable", meaning: "Creates a place named car for the object." }, { code: "new { ... }", name: "Object", meaning: "Groups related values into one thing." }, { code: "car.Brand", name: "Property", meaning: "Reads the Brand value stored on car." }],
-    8: [{ code: "Task.Delay", name: "Timer", meaning: "Creates a pause for a number of milliseconds." }, { code: "1000", name: "Duration", meaning: "One thousand milliseconds means one second." }, { code: "await", name: "Wait", meaning: "Pauses here before moving to the next line." }],
-    9: [{ code: "DateTime", name: "Type", meaning: "Represents a date and a time in C#." }, { code: "DateTime.Now", name: "Current moment", meaning: "Reads the computer's current local date and time." }, { code: "Console.WriteLine", name: "Display", meaning: "Shows the stored value in the console." }],
-    10: [{ code: "class Car", name: "Blueprint", meaning: "Defines the data and behaviour shared by every Car object." }, { code: "public string Name", name: "Property", meaning: "Stores a text name that other code can read or change." }, { code: "Car(string name, int year)", name: "Constructor", meaning: "Receives the starting values whenever a new Car is created." }, { code: "this.Name = name", name: "Store a value", meaning: "Saves the received name on this particular car object." }, { code: "new Car(...) ", name: "Create an object", meaning: "Builds a separate Car from the supplied values." }],
+    6: [{ code: "List<string>", name: "Flexible text list", meaning: "Creates a list that can grow and accepts string values." }, { code: "cars", name: "Variable name", meaning: "The label used to find this list later." }, { code: "new List<string>()", name: "Empty list", meaning: "Builds the list with zero items inside it." }, { code: ";", name: "End statement", meaning: "Marks the end of the declaration." }],
+    7: [{ code: "newCar", name: "Saved answer", meaning: "Holds the text returned by Console.ReadLine." }, { code: "cars.Add", name: "Add an item", meaning: "Adds a new value to the end of the cars list." }, { code: "(newCar)", name: "Item to add", meaning: "Passes the user's saved answer into Add." }, { code: ";", name: "End statement", meaning: "Marks where the Add instruction ends." }],
+    8: [{ code: "string.Join", name: "Join items", meaning: "Turns all list items into one readable piece of text." }, { code: '", "', name: "Separator", meaning: "Places a comma and space between multiple cars." }, { code: "cars", name: "Whole list", meaning: "Supplies every stored car to string.Join." }, { code: "Console.WriteLine", name: "Display", meaning: "Prints the joined list in the console." }],
+    10: [{ code: "var car", name: "Variable", meaning: "Creates a place named car for the object." }, { code: "new { ... }", name: "Object", meaning: "Groups related values into one thing." }, { code: "car.Brand", name: "Property", meaning: "Reads the Brand value stored on car." }],
+    11: [{ code: "Task.Delay", name: "Timer", meaning: "Creates a pause for a number of milliseconds." }, { code: "1000", name: "Duration", meaning: "One thousand milliseconds means one second." }, { code: "await", name: "Wait", meaning: "Pauses here before moving to the next line." }],
+    12: [{ code: "DateTime", name: "Type", meaning: "Represents a date and a time in C#." }, { code: "DateTime.Now", name: "Current moment", meaning: "Reads the computer's current local date and time." }, { code: "Console.WriteLine", name: "Display", meaning: "Shows the stored value in the console." }],
+    13: [{ code: "class Car", name: "Blueprint", meaning: "Defines the data and behaviour shared by every Car object." }, { code: "public string Name", name: "Property", meaning: "Stores a text name that other code can read or change." }, { code: "Car(string name, int year)", name: "Constructor", meaning: "Receives the starting values whenever a new Car is created." }, { code: "this.Name = name", name: "Store a value", meaning: "Saves the received name on this particular car object." }, { code: "new Car(...) ", name: "Create an object", meaning: "Builds a separate Car from the supplied values." }],
   },
   html: {
     0: [{ code: "<!DOCTYPE", name: "Declaration", meaning: "Tells the browser what kind of document follows." }, { code: "html", name: "Modern HTML", meaning: "Selects the current HTML standard." }],
@@ -479,7 +511,7 @@ function HighlightedCode({ code, language }: { code: string; language: Language 
     ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|src|alt|id|lang|charset)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:#])/g
     : language === "css"
     ? /(\/\*[\s\S]*?\*\/|#[0-9a-fA-F]{3,8}\b|#[A-Za-z_]\w*|\b(?:body|p|background-color|color|text-align|font-family|border|border-radius|solid|dotted|center|lightblue|red|blue|tomato)\b|\d+(?:px)?|[{}();:.,])/g
-    : /(\/\/[^\n]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|class|constructor|this|let|const|new|if|else|for|of|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|&&|>=|<=|[{}()[\];=.:<>])/g;
+    : /(\/\/[^\n]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|class|constructor|this|let|const|new|if|else|for|of|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime|List)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|&&|>=|<=|[{}()[\];=.:<>])/g;
   const parts: { text: string; kind: string }[] = [];
   let lastIndex = 0;
   for (const match of code.matchAll(pattern)) {
@@ -489,7 +521,7 @@ function HighlightedCode({ code, language }: { code: string; language: Language 
     if (/^(\/\/|\/\*|<!--)/.test(text)) kind = "comment";
     else if (/^["'`]/.test(text)) kind = "string";
     else if (/^(function|class|constructor|this|let|const|new|if|else|for|of|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
-    else if (/^(console|Console|Task|Date|DateTime|log)$/.test(text)) kind = "api";
+    else if (/^(console|Console|Task|Date|DateTime|List|log)$/.test(text)) kind = "api";
     else if (/^(style|href|src|alt|id|lang|charset)$/.test(text)) kind = "attribute";
     else if (/^(background-color|color|text-align|font-family|border|border-radius)$/.test(text)) kind = "api";
     else if (/^(body|p)$/.test(text)) kind = "keyword";
