@@ -233,12 +233,12 @@ export default function Home() {
             <pre><code>{current!.answer}</code></pre>
           </div>
           <div className="task-card"><div className="task-icon">⌨</div><div><b>Your turn</b><p>{current!.prompt}</p></div></div>
-          <div className="tip"><span>i</span> Copy or type the example into the editor on the right, then check it.</div>
+          <div className="tip"><span>↵</span> Copy or type the example into the editor, then press Enter to check it.</div>
         </aside>
         <section className="workspace">
           <div className="editor-panel">
             <div className="panel-bar"><div className="file-tab"><span>◆</span> {language === "javascript" ? "challenge.js" : "Program.cs"}</div><div className="panel-actions"><span>UTF-8</span><button onClick={() => setCode("")} title="Reset code">↻ Reset</button></div></div>
-            <div className="editor-body"><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div><textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(e) => {setCode(e.target.value); setStatus("idle")}} placeholder="// Type your code here..." /></div>
+            <div className="editor-body"><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div><textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(e) => {setCode(e.target.value); setStatus("idle")}} onKeyDown={(e) => { if (e.key === "Enter" && status === "correct") { e.preventDefault(); nextLesson(); } else if (e.key === "Enter" && normalize(code) === normalize(current!.answer)) { e.preventDefault(); checkCode(); } }} placeholder="// Type your code here..." /></div>
           </div>
           <div className="console-panel">
             <div className="console-bar"><span><i /> CONSOLE</span><button onClick={() => setStatus("idle")}>Clear</button></div>
@@ -249,7 +249,7 @@ export default function Home() {
             </div>
           </div>
           <div className={`feedback ${status}`}>
-            <div>{status === "correct" ? <><span className="feedback-icon">✓</span><p><b>That’s correct!</b><small>Your code ran successfully. Ready for the next step?</small></p></> : status === "wrong" ? <><span className="feedback-icon">!</span><p><b>Keep going</b><small>You’re close. Compare each symbol with the explanation.</small></p></> : <p><b>Ready to run?</b><small>Type the code described on the left, then check it.</small></p>}</div>
+            <div>{status === "correct" ? <><span className="feedback-icon">✓</span><p><b>That’s correct!</b><small>Press Enter again or choose the next lesson.</small></p></> : status === "wrong" ? <><span className="feedback-icon">!</span><p><b>Keep going</b><small>You’re close. Compare each symbol with the explanation.</small></p></> : <p><b>Ready to run?</b><small>When your code matches the example, press Enter.</small></p>}</div>
             {status === "correct" ? <button onClick={nextLesson}>{index === lessons[language].length - 1 ? "Finish path" : "Next lesson"} →</button> : <button onClick={checkCode} disabled={!code.trim()}>▶ Check code</button>}
           </div>
         </section>
