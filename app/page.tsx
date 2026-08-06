@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-type Language = "javascript" | "csharp" | "python";
+type Language = "javascript" | "csharp" | "html";
 type Lesson = {
   title: string;
   eyebrow: string;
@@ -183,78 +183,78 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["06/08/2026 19:05:00"],
     },
   ],
-  python: [
+  html: [
     {
-      eyebrow: "01 · Imports",
-      title: "Bring in useful tools",
-      explanation: "import loads code from Python's standard library. Your script imports os to run a terminal command and time to pause before moving on.",
-      note: "# Load the tools used by the quiz",
-      prompt: "Import os and time on separate lines.",
-      answer: "import os\nimport time",
-      output: ["os and time are ready to use."],
+      eyebrow: "01 · Doctype",
+      title: "Tell the browser it is HTML",
+      explanation: "The doctype declaration belongs at the very top of the file. It tells the browser to use modern HTML rules when it reads the page.",
+      note: "<!-- Declare this as a modern HTML document -->",
+      prompt: "Type the HTML doctype declaration.",
+      answer: "<!DOCTYPE html>",
+      output: ["HTML document type recognised."],
     },
     {
-      eyebrow: "02 · Terminal colours",
-      title: "Give feedback a colour",
-      explanation: "These special ANSI escape codes tell a compatible terminal to change text colour. reset switches the terminal back so later text does not stay coloured.",
-      note: "# Save colour codes under easy names",
-      prompt: "Create red, green, and reset colour variables.",
-      answer: 'red = "\\033[31m"\ngreen = "\\033[32m"\nreset = "\\033[0m"',
-      output: ["Colour codes saved."],
+      eyebrow: "02 · Page structure",
+      title: "Start the HTML page",
+      explanation: "The html element wraps the whole page. Most elements use an opening tag and a closing tag; the forward slash marks the closing tag.",
+      note: "<!-- Wrap the page in opening and closing html tags -->",
+      prompt: "Create the outer html element.",
+      answer: "<html>\n</html>",
+      output: ["Page wrapper created."],
     },
     {
-      eyebrow: "03 · Functions",
-      title: "Reuse the right response",
-      explanation: "def creates a function: a named set of instructions you can reuse. The indented lines belong to the function, and correct() calls it.",
-      note: "# Create and call the correct-answer response",
-      prompt: "Define correct, print Correct, then call the function.",
-      answer: 'def correct():\n    print("Correct")\n\ncorrect()',
-      output: ["Correct"],
+      eyebrow: "03 · Head and title",
+      title: "Name the browser tab",
+      explanation: "The head holds information about the page rather than visible page content. The title inside it supplies the text shown on the browser tab.",
+      note: "<!-- Add a title inside the head section -->",
+      prompt: "Create the head and give the page a title.",
+      answer: "<head>\n  <title>My page</title>\n</head>",
+      output: ["Browser-tab title: My page"],
     },
     {
-      eyebrow: "04 · F-strings",
-      title: "Build coloured messages",
-      explanation: "An f-string starts with f and lets you insert variable values inside curly braces. Your script uses this to put a colour before a message and reset it afterwards.",
-      note: "# Print Correct in green, then reset the colour",
-      prompt: "Use an f-string with green and reset.",
-      answer: 'print(f"{green}Correct{reset}")',
-      output: ["Correct"],
+      eyebrow: "04 · Body",
+      title: "Add visible page content",
+      explanation: "The body contains everything visitors see in the browser window, such as headings, paragraphs, links, images, and buttons.",
+      note: "<!-- Create the visible body of the page -->",
+      prompt: "Create an empty body element.",
+      answer: "<body>\n</body>",
+      output: ["Visible page area created."],
     },
     {
-      eyebrow: "05 · Input",
-      title: "Remember what they type",
-      explanation: "input shows a prompt and waits for the user to type. The equals sign stores the returned text in a variable so the program can check it next.",
-      note: "# Ask for the HTML doctype and remember the answer",
-      prompt: "Save the user's answer in doctype.",
-      answer: 'doctype = input("Enter your answer: ")',
-      output: ["Enter your answer:  →  <!DOCTYPE html>"],
+      eyebrow: "05 · Background colour",
+      title: "Style the page background",
+      explanation: "The style attribute adds CSS directly to an HTML element. background-color chooses the colour behind everything inside the body.",
+      note: "<!-- Give the page a light-blue background -->",
+      prompt: "Add a background colour to the body tag.",
+      answer: '<body style="background-color: lightblue;">\n</body>',
+      output: ["The page background is light blue."],
     },
     {
-      eyebrow: "06 · Decisions",
-      title: "Check the answer",
-      explanation: "if compares the user's text with the expected HTML. == asks whether two values are equal; else handles every answer that does not match.",
-      note: "# Call the correct function only when the text matches",
-      prompt: "Check doctype and call the matching response function.",
-      answer: 'if doctype == "<!DOCTYPE html>":\n    correct()\nelse:\n    wrong()',
-      output: ["Correct"],
+      eyebrow: "06 · Headings",
+      title: "Create a heading hierarchy",
+      explanation: "Headings organise the page. h1 is the main heading; h2 introduces a major section; h3 and h4 create smaller subsections below it.",
+      note: "<!-- Add a main heading and a section heading -->",
+      prompt: "Create an h1 followed by an h2.",
+      answer: "<h1>Main heading</h1>\n<h2>Main section</h2>",
+      output: ["Main heading", "Main section"],
     },
     {
-      eyebrow: "07 · Loops",
-      title: "Keep the quiz running",
-      explanation: "while repeats its indented block while a condition is true. Because True never changes, while True creates a continuous quiz loop until the program is stopped.",
-      note: "# Keep asking the same question",
-      prompt: "Create a continuous loop that asks for an answer.",
-      answer: 'while True:\n    answer = input("Enter your answer: ")',
-      output: ["The quiz is waiting for an answer."],
+      eyebrow: "07 · Links",
+      title: "Open another page",
+      explanation: "The a element creates a link. Its href attribute stores the destination, while the text between the tags is what the visitor clicks.",
+      note: "<!-- Link to a second HTML page -->",
+      prompt: "Create a link to page.html.",
+      answer: '<a href="page.html">Open page</a>',
+      output: ["Open page  →  page.html"],
     },
     {
-      eyebrow: "08 · Refactoring",
-      title: "Turn repetition into one tool",
-      explanation: "Your quiz repeats the same print, input, and check pattern for every HTML tag. A function with parameters lets one clean block handle every question.",
-      note: "# Make one reusable question function",
-      prompt: "Create ask_question, then use it for the doctype.",
-      answer: 'def ask_question(message, expected):\n    print(message)\n    answer = input("Enter your answer: ")\n    if answer == expected:\n        correct()\n    else:\n        wrong()\n\nask_question("Type the HTML doctype", "<!DOCTYPE html>")',
-      output: ["Type the HTML doctype", "Enter your answer:  →  <!DOCTYPE html>", "Correct"],
+      eyebrow: "08 · Text and colour",
+      title: "Style a heading",
+      explanation: "A paragraph uses p tags for normal text. The color CSS property changes the foreground text colour; here it is applied to a heading through style.",
+      note: "<!-- Create a red heading and a paragraph -->",
+      prompt: "Add the styled heading and paragraph.",
+      answer: '<h1 style="color: red;">Red Title</h1>\n<p>This is a paragraph.</p>',
+      output: ["Red Title", "This is a paragraph."],
     },
   ],
 };
@@ -280,24 +280,24 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
     7: [{ code: "Task.Delay", name: "Timer", meaning: "Creates a pause for a number of milliseconds." }, { code: "1000", name: "Duration", meaning: "One thousand milliseconds means one second." }, { code: "await", name: "Wait", meaning: "Pauses here before moving to the next line." }],
     8: [{ code: "DateTime", name: "Type", meaning: "Represents a date and a time in C#." }, { code: "DateTime.Now", name: "Current moment", meaning: "Reads the computer's current local date and time." }, { code: "Console.WriteLine", name: "Display", meaning: "Shows the stored value in the console." }],
   },
-  python: {
-    0: [{ code: "import", name: "Load", meaning: "Makes another module available in this file." }, { code: "os", name: "System tools", meaning: "Lets the script run commands such as clearing the terminal." }, { code: "time", name: "Time tools", meaning: "Provides time.sleep for short pauses." }],
-    1: [{ code: "\\033[31m", name: "Escape code", meaning: "Tells a compatible terminal to switch to red." }, { code: "red", name: "Readable label", meaning: "Saves that difficult code under a simple name." }, { code: "\\033[0m", name: "Reset", meaning: "Returns later terminal text to its normal colour." }],
-    2: [{ code: "def", name: "Define", meaning: "Starts the creation of a new function." }, { code: "correct", name: "Function name", meaning: "A clear label for the reusable instructions." }, { code: "    print(...) ", name: "Indented body", meaning: "The indented instruction belongs to the function." }, { code: "correct()", name: "Call", meaning: "Runs the function." }],
-    3: [{ code: "f\"...\"", name: "F-string", meaning: "Builds text with values inserted into it." }, { code: "{green}", name: "Insert value", meaning: "Adds the saved green terminal code here." }, { code: "{reset}", name: "Restore colour", meaning: "Stops following text from staying green." }],
-    4: [{ code: "input(...) ", name: "Ask", meaning: "Shows a message and waits for typed text." }, { code: "doctype", name: "Variable", meaning: "Keeps the text that the user entered." }, { code: "=", name: "Store", meaning: "Places the returned text into doctype." }],
-    5: [{ code: "if", name: "Decision", meaning: "Chooses a path based on a condition." }, { code: "==", name: "Compare", meaning: "Checks whether two values are equal." }, { code: "else", name: "Fallback", meaning: "Runs when the comparison is false." }],
-    6: [{ code: "while", name: "Repeat", meaning: "Runs an indented block again while its condition is true." }, { code: "True", name: "Always true", meaning: "Makes the loop continue until the program is stopped." }, { code: "    answer = ...", name: "Loop body", meaning: "Indentation shows which instruction repeats." }],
-    7: [{ code: "message, expected", name: "Parameters", meaning: "Let each call supply a new question and correct answer." }, { code: "answer", name: "Local value", meaning: "Stores the response for this question." }, { code: "ask_question(...) ", name: "Reuse", meaning: "Runs the whole question pattern with new values." }],
+  html: {
+    0: [{ code: "<!DOCTYPE", name: "Declaration", meaning: "Tells the browser what kind of document follows." }, { code: "html", name: "Modern HTML", meaning: "Selects the current HTML standard." }],
+    1: [{ code: "<html>", name: "Opening tag", meaning: "Marks where the HTML page begins." }, { code: "</html>", name: "Closing tag", meaning: "The slash marks where that element ends." }],
+    2: [{ code: "<head>", name: "Page information", meaning: "Contains information used by the browser." }, { code: "<title>", name: "Tab title", meaning: "Sets the words shown on the browser tab." }, { code: "</title>", name: "Close title", meaning: "The slash ends the title element." }],
+    3: [{ code: "<body>", name: "Visible content", meaning: "Starts the part visitors can see." }, { code: "</body>", name: "End content", meaning: "Closes the visible page area." }],
+    4: [{ code: "style=", name: "Style attribute", meaning: "Adds CSS rules directly to this element." }, { code: "background-color", name: "CSS property", meaning: "Chooses the colour behind the content." }, { code: "lightblue", name: "CSS value", meaning: "The particular background colour to use." }, { code: ";", name: "Rule ending", meaning: "Marks the end of this CSS instruction." }],
+    5: [{ code: "h1", name: "Main heading", meaning: "The page's most important heading." }, { code: "h2", name: "Section heading", meaning: "Introduces a major section beneath the h1." }, { code: "</...>", name: "Closing tag", meaning: "Ends the heading so later text stays separate." }],
+    6: [{ code: "<a>", name: "Anchor", meaning: "Creates a clickable link." }, { code: "href", name: "Destination", meaning: "Stores the page or address to open." }, { code: "Open page", name: "Link text", meaning: "The words the visitor clicks." }],
+    7: [{ code: "color: red", name: "Text colour", meaning: "Changes the heading's foreground colour." }, { code: "<p>", name: "Paragraph", meaning: "Wraps a block of ordinary text." }, { code: "</p>", name: "Close paragraph", meaning: "Marks where the paragraph ends." }],
   },
 };
 
 const normalize = (value: string) =>
   value.replace(/\/\/.*$/gm, "").replace(/\s+/g, "").replace(/'/g, '"').trim();
 
-const languageName = (language: Language) => language === "javascript" ? "JavaScript" : language === "csharp" ? "C Sharp" : "Python";
-const languageBadge = (language: Language) => language === "javascript" ? "JS" : language === "csharp" ? "C#" : "PY";
-const challengeFile = (language: Language) => language === "javascript" ? "challenge.js" : language === "csharp" ? "Program.cs" : "quiz.py";
+const languageName = (language: Language) => language === "javascript" ? "JavaScript" : language === "csharp" ? "C Sharp" : "HTML";
+const languageBadge = (language: Language) => language === "javascript" ? "JS" : language === "csharp" ? "C#" : "HTML";
+const challengeFile = (language: Language) => language === "javascript" ? "challenge.js" : language === "csharp" ? "Program.cs" : "index.html";
 
 export default function Home() {
   const [language, setLanguage] = useState<Language | null>(null);
@@ -305,7 +305,7 @@ export default function Home() {
   const [code, setCode] = useState("");
   const [status, setStatus] = useState<"idle" | "wrong" | "correct">("idle");
   const [navOpen, setNavOpen] = useState(true);
-  const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0, python: 0 });
+  const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0, html: 0 });
 
   const current = language ? lessons[language][index] : null;
   const breakdown = language ? breakdowns[language][index] : undefined;
@@ -370,10 +370,10 @@ export default function Home() {
               <h3>C Sharp</h3><p>Create powerful console apps and learn the foundations of strongly typed code.</p>
               <div className="course-bottom"><span>Start learning <b>→</b></span><div className="mini-progress"><i style={{width: `${completed.csharp / lessons.csharp.length * 100}%`}} /></div></div>
             </button>
-            <button className="course-card py-card" onClick={() => openCourse("python")}>
-              <div className="course-icon">PY</div><div className="course-count">{lessons.python.length} LESSONS</div>
-              <h3>Python</h3><p>Learn from your HTML quiz script: inputs, colours, functions, decisions, and loops.</p>
-              <div className="course-bottom"><span>Start learning <b>→</b></span><div className="mini-progress"><i style={{width: `${completed.python / lessons.python.length * 100}%`}} /></div></div>
+            <button className="course-card py-card" onClick={() => openCourse("html")}>
+              <div className="course-icon">HTML</div><div className="course-count">{lessons.html.length} LESSONS</div>
+              <h3>HTML</h3><p>Build a web page with structure, headings, links, paragraphs, and colour.</p>
+              <div className="course-bottom"><span>Start learning <b>→</b></span><div className="mini-progress"><i style={{width: `${completed.html / lessons.html.length * 100}%`}} /></div></div>
             </button>
           </div>
         </section>
