@@ -535,6 +535,55 @@ const languageName = (language: Language) => language === "javascript" ? "JavaSc
 const languageBadge = (language: Language) => language === "javascript" ? "JS" : language === "csharp" ? "C#" : language === "html" ? "HTML" : "CSS";
 const challengeFile = (language: Language) => language === "javascript" ? "challenge.js" : language === "csharp" ? "Program.cs" : language === "html" ? "index.html" : "styles.css";
 
+type DiagnosticPart = { text: string; help: string; kind: "type" | "message" | "token" | "location" };
+
+function syntaxDiagnostic(code: string, expected: string): DiagnosticPart[] {
+  const significant = (value: string) => {
+    const characters: { character: string; index: number }[] = [];
+    let quote = "";
+    let lineComment = false;
+    for (let index = 0; index < value.length; index += 1) {
+      const character = value[index];
+      const next = value[index + 1];
+      if (lineComment) {
+        if (character === "\n") lineComment = false;
+        continue;
+      }
+      if (!quote && character === "/" && next === "/") { lineComment = true; index += 1; continue; }
+      if ((character === '"' || character === "'" || character === "`") && value[index - 1] !== "\\") quote = quote === character ? "" : quote || character;
+      if (!/\s/.test(character)) characters.push({ character, index });
+    }
+    return characters;
+  };
+  const actual = significant(code);
+  const target = significant(expected);
+  let difference = 0;
+  while (difference < actual.length && difference < target.length && actual[difference].character === target[difference].character) difference += 1;
+  const rawIndex = actual[difference]?.index ?? code.length;
+  const before = code.slice(0, rawIndex);
+  const line = before.split("\n").length;
+  const column = rawIndex - before.lastIndexOf("\n");
+  const actualToken = actual[difference]?.character;
+  const expectedToken = target[difference]?.character;
+  const message = actualToken
+    ? `Unexpected token '${actualToken}'`
+    : "Unexpected end of input";
+  const tokenHelp = actualToken
+    ? `The compiler found ${actualToken}, but expected ${expectedToken ? `'${expectedToken}'` : "the instruction to end"} here.`
+    : `The compiler reached the end while it was still expecting ${expectedToken ? `'${expectedToken}'` : "more code"}.`;
+  return [
+    { text: "SyntaxError", help: "The code cannot be read because its grammar or punctuation is incomplete or in the wrong order.", kind: "type" },
+    { text: `: ${message}`, help: tokenHelp, kind: "message" },
+    ...(actualToken ? [{ text: `  ${actualToken}`, help: `This is the token the compiler could not use at this position.`, kind: "token" as const }] : []),
+    { text: `  line ${line}`, help: `Line ${line} is the row where the compiler first noticed the problem.`, kind: "location" },
+    { text: `, column ${column}`, help: `Column ${column} is the character position on that line.`, kind: "location" },
+  ];
+}
+
+function SyntaxDiagnostic({ parts }: { parts: DiagnosticPart[] }) {
+  return <div className="syntax-diagnostic" role="alert">{parts.map((part, index) => <span key={`${part.text}-${index}`} className={`diagnostic-${part.kind}`} tabIndex={0} data-help={part.help} title={part.help}>{part.text}</span>)}</div>;
+}
+
 function HighlightedCode({ code, language }: { code: string; language: Language }) {
   const pattern = language === "html"
     ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|src|alt|id|lang|charset)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:#])/g
@@ -600,6 +649,7 @@ export default function Home() {
   const guideCode = visibleGhost.slice(0, hiddenGhostLength).replace(/[^\n]/g, " ") + visibleGhost.slice(hiddenGhostLength);
   const breakdown = language ? breakdowns[language][index] : undefined;
   const progress = language ? Math.round((index / lessons[language].length) * 100) : 0;
+  const diagnostic = useMemo(() => current ? syntaxDiagnostic(code, current.answer) : [], [code, current]);
 
   useEffect(() => {
     if (current) {
@@ -882,7 +932,7 @@ export default function Home() {
             <div className="console-bar"><span><i /> CONSOLE</span><button onClick={() => setStatus("idle")}>Clear</button></div>
             <div className="console-body">
               {status === "idle" && <span className="console-muted">Your program output will appear here...</span>}
-              {status === "wrong" && <><div className="error-line">× Not quite yet.</div><div className="console-muted">Check the comment and look for missing punctuation, names, or brackets.</div></>}
+              {status === "wrong" && <><SyntaxDiagnostic parts={diagnostic} /><div className="console-muted diagnostic-hint">Hover over or focus each underlined part to see what it means.</div></>}
               {status === "correct" && <><div className="run-line"><span>✓</span> Code accepted — running...</div><div className="typed-output">{typedOutput.split("\n").map((line, i, lines) => <div key={i}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}</div>)}</div></>}
             </div>
           </div>
