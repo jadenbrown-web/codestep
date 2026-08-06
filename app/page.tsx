@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 
 type Language = "javascript" | "csharp" | "html" | "css";
 type ThemeMode = "light" | "dark" | "system";
@@ -503,7 +503,13 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
 };
 
 const normalize = (value: string) =>
-  value.replace(/\/\/.*$/gm, "").replace(/\s+/g, "").replace(/'/g, '"').trim();
+  value
+    .replace(/\/\/.*$/gm, "")
+    .replace(/[\s\u00a0\u200b-\u200d\ufeff]+/g, "")
+    .replace(/[‘’]/g, "'")
+    .replace(/[“”]/g, '"')
+    .replace(/'/g, '"')
+    .trim();
 
 const languageName = (language: Language) => language === "javascript" ? "JavaScript" : language === "csharp" ? "C Sharp" : language === "html" ? "HTML" : "CSS";
 const languageBadge = (language: Language) => language === "javascript" ? "JS" : language === "csharp" ? "C#" : language === "html" ? "HTML" : "CSS";
@@ -666,6 +672,33 @@ export default function Home() {
     }
   }
 
+  function handleEditorKeyDown(event: ReactKeyboardEvent<HTMLTextAreaElement>) {
+    const editor = event.currentTarget;
+    if (event.key === "Enter" && status === "correct") {
+      event.preventDefault();
+      nextLesson();
+      return;
+    }
+    if (event.key === "Enter" && current && normalize(code) === normalize(current.answer)) {
+      event.preventDefault();
+      checkCode();
+      return;
+    }
+    if (event.key !== "Enter" && event.key !== "Tab") return;
+
+    event.preventDefault();
+    const start = editor.selectionStart;
+    const end = editor.selectionEnd;
+    const lineStart = code.lastIndexOf("\n", start - 1) + 1;
+    const indentation = code.slice(lineStart, start).match(/^\s*/)?.[0] ?? "";
+    const insert = event.key === "Tab" ? "  " : `\n${indentation}${code.slice(0, start).trimEnd().endsWith("{") ? "  " : ""}`;
+    const nextCode = code.slice(0, start) + insert + code.slice(end);
+    const nextCaret = start + insert.length;
+    setCode(nextCode);
+    setStatus("idle");
+    requestAnimationFrame(() => editor.setSelectionRange(nextCaret, nextCaret));
+  }
+
   function nextLesson() {
     if (!language) return;
     if (index === lessons[language].length - 1) {
@@ -778,11 +811,7 @@ export default function Home() {
             <div><code>&lt;sub&gt; / &lt;sup&gt;</code><p><b>Subscript or superscript</b><span>Lowers or raises smaller text, useful for H₂O and 2³.</span></p></div>
           </div> : <>
             <div className="comment-card"><div className="comment-label">READ THE COMMENT</div><code>{current!.note}</code></div>
-            <div className="reference-card">
-              <div className="reference-head"><div><span>STEP 1</span><b>Look at this code</b></div></div>
-              <pre><code><HighlightedCode code={current!.answer} language={language} /></code></pre>
-            </div>
-            <div className="tip"><span>↵</span> Copy or type the example into the editor, then press Enter to check it.</div>
+            <div className="tip"><span>↵</span> Type over the guide in the editor, then press Enter to check it. Spaces and indentation are accepted.</div>
           </>}
         </aside>
         <section className="workspace">
@@ -836,7 +865,7 @@ export default function Home() {
           </div> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className="file-tab"><span>◆</span> {challengeFile(language)}</div><div className="panel-actions"><span>UTF-8</span><button onClick={() => setCode("")} title="Reset code">↻ Reset</button></div></div>
-            <div className={`editor-body ${colourTyping ? "colour-typing" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className="code-guide" aria-hidden="true"><span>CODE GUIDE</span><code><HighlightedCode code={guideCode} language={language} /></code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><HighlightedCode code={code} language={language} /><i className="editor-caret" /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(e) => {setCode(e.target.value); setStatus("idle")}} onKeyDown={(e) => { if (e.key === "Enter" && status === "correct") { e.preventDefault(); nextLesson(); } else if (e.key === "Enter" && normalize(code) === normalize(current!.answer)) { e.preventDefault(); checkCode(); } }} placeholder={showGuide ? "" : "// Type your code here..."} /></div>
+            <div className={`editor-body ${colourTyping ? "colour-typing" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className="code-guide" aria-hidden="true"><span>CODE GUIDE</span><code><HighlightedCode code={guideCode} language={language} /></code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><HighlightedCode code={code} language={language} /><i className="editor-caret" /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(e) => {setCode(e.target.value); setStatus("idle")}} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : "// Type your code here..."} /></div>
           </div>
           <div className="console-panel">
             <div className="console-bar"><span><i /> CONSOLE</span><button onClick={() => setStatus("idle")}>Clear</button></div>
