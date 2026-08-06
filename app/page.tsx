@@ -193,6 +193,15 @@ const lessons: Record<Language, Lesson[]> = {
       answer: "DateTime currentDateTime = DateTime.Now;\nConsole.WriteLine(currentDateTime);",
       output: ["06/08/2026 19:05:00"],
     },
+    {
+      eyebrow: "10 · Classes",
+      title: "Create cars from a blueprint",
+      explanation: "A C# class is a reusable blueprint for objects. Properties store each car's data, the constructor receives starting values, and this refers to the particular object being created.",
+      note: "// Define a Car class, then create and print two car objects",
+      prompt: "Create the Car class and make the Ford and Audi objects inside Main.",
+      answer: 'class Car\n{\n  public string Name { get; set; }\n  public int Year { get; set; }\n\n  public Car(string name, int year)\n  {\n    // this.Name is the property stored in the car object.\n    // name is the value passed into the constructor.\n    this.Name = name;\n\n    // this.Year is the property stored in the car object.\n    // year is the value passed into the constructor.\n    this.Year = year;\n  }\n}\n\nclass Program\n{\n  static void Main()\n  {\n    Car myCar1 = new Car("Ford", 2014);\n    Car myCar2 = new Car("Audi", 2019);\n\n    Console.WriteLine($"{myCar1.Name}, {myCar1.Year}");\n    Console.WriteLine($"{myCar2.Name}, {myCar2.Year}");\n  }\n}',
+      output: ["Ford, 2014", "Audi, 2019"],
+    },
   ],
   html: [
     {
@@ -364,6 +373,7 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
     6: [{ code: "var car", name: "Variable", meaning: "Creates a place named car for the object." }, { code: "new { ... }", name: "Object", meaning: "Groups related values into one thing." }, { code: "car.Brand", name: "Property", meaning: "Reads the Brand value stored on car." }],
     7: [{ code: "Task.Delay", name: "Timer", meaning: "Creates a pause for a number of milliseconds." }, { code: "1000", name: "Duration", meaning: "One thousand milliseconds means one second." }, { code: "await", name: "Wait", meaning: "Pauses here before moving to the next line." }],
     8: [{ code: "DateTime", name: "Type", meaning: "Represents a date and a time in C#." }, { code: "DateTime.Now", name: "Current moment", meaning: "Reads the computer's current local date and time." }, { code: "Console.WriteLine", name: "Display", meaning: "Shows the stored value in the console." }],
+    9: [{ code: "class Car", name: "Blueprint", meaning: "Defines the data and behaviour shared by every Car object." }, { code: "public string Name", name: "Property", meaning: "Stores a text name that other code can read or change." }, { code: "Car(string name, int year)", name: "Constructor", meaning: "Receives the starting values whenever a new Car is created." }, { code: "this.Name = name", name: "Store a value", meaning: "Saves the received name on this particular car object." }, { code: "new Car(...) ", name: "Create an object", meaning: "Builds a separate Car from the supplied values." }],
   },
   html: {
     0: [{ code: "<!DOCTYPE", name: "Declaration", meaning: "Tells the browser what kind of document follows." }, { code: "html", name: "Modern HTML", meaning: "Selects the current HTML standard." }],
@@ -395,7 +405,7 @@ function HighlightedCode({ code, language }: { code: string; language: Language 
     ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|src|alt|lang|charset)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:])/g
     : language === "css"
     ? /(\/\*[\s\S]*?\*\/|#[0-9a-fA-F]{3,8}\b|\b(?:body|p|background-color|color|text-align|font-family|border|border-radius|solid|dotted|center|lightblue|red|blue)\b|\d+(?:px)?|[{}();:.,])/g
-    : /(\/\/[^\n]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|class|constructor|this|let|const|new|if|else|for|of|setTimeout|void|string|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|[{}()[\];=.:])/g;
+    : /(\/\/[^\n]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|class|constructor|this|let|const|new|if|else|for|of|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|[{}()[\];=.:])/g;
   const parts: { text: string; kind: string }[] = [];
   let lastIndex = 0;
   for (const match of code.matchAll(pattern)) {
@@ -404,7 +414,7 @@ function HighlightedCode({ code, language }: { code: string; language: Language 
     let kind = "punctuation";
     if (/^(\/\/|\/\*|<!--)/.test(text)) kind = "comment";
     else if (/^["'`]/.test(text)) kind = "string";
-    else if (/^(function|class|constructor|this|let|const|new|if|else|for|of|setTimeout|void|string|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
+    else if (/^(function|class|constructor|this|let|const|new|if|else|for|of|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
     else if (/^(console|Console|Task|Date|DateTime|log)$/.test(text)) kind = "api";
     else if (/^(style|href|src|alt|lang|charset)$/.test(text)) kind = "attribute";
     else if (/^(background-color|color|text-align|font-family|border|border-radius)$/.test(text)) kind = "api";
