@@ -174,12 +174,6 @@ export default function Home() {
       <main className="home-shell">
         <header className="home-nav"><div className="brand"><span className="brand-mark">&gt;_</span> Code<span>Step</span></div><div className="nav-note">LEARN BY TYPING</div></header>
         <section className="hero">
-          <div className="hero-copy">
-            <div className="kicker"><span /> Your coding journey starts here</div>
-            <h1>Read it.<br />Type it. <em>Run it.</em></h1>
-            <p>No long lectures. Learn one idea at a time, type the real code, and see it come alive in the console.</p>
-            <div className="hero-meta"><span>⌨ Hands-on lessons</span><span>↗ Instant feedback</span></div>
-          </div>
           <div className="terminal-card" aria-hidden="true">
             <div className="terminal-top"><i/><i/><i/><span>first-steps.js</span></div>
             <div className="terminal-code"><small>1</small><div><b>function</b> <strong>sayHello</strong>() {'{'}<br />&nbsp;&nbsp;<span>console</span>.log(<u>"Hello, coder!"</u>);<br />{'}'}<br /><br /><strong>sayHello</strong>();</div></div>
