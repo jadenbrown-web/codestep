@@ -13,7 +13,7 @@ type Lesson = {
   answer: string;
   output: string[];
   referenceOnly?: boolean;
-  referenceKind?: "text" | "fonts";
+  referenceKind?: "text" | "fonts" | "pages";
 };
 
 const lessons: Record<Language, Lesson[]> = {
@@ -298,6 +298,17 @@ const lessons: Record<Language, Lesson[]> = {
       referenceOnly: true,
       referenceKind: "fonts",
     },
+    {
+      eyebrow: "12 · Multiple pages",
+      title: "Link two HTML pages",
+      explanation: "This is a two-file reference rather than a quiz. When both files are in the same folder, each href can use the other file's name as a relative path.",
+      note: "<!-- Link index.html and page2.html in both directions -->",
+      prompt: "Compare the two files and follow the links between them.",
+      answer: '<a href="page2.html">Go to Page 2</a>',
+      output: ["index.html ↔ page2.html"],
+      referenceOnly: true,
+      referenceKind: "pages",
+    },
   ],
 };
 
@@ -495,6 +506,10 @@ export default function Home() {
             <b>How the browser chooses</b>
             <p><code>font-family: Georgia, serif;</code> means “use Georgia if available; otherwise use the browser’s serif font.” Names containing spaces, such as <code>"Times New Roman"</code>, should be quoted.</p>
             <span>Commonly installed does not mean guaranteed on every operating system.</span>
+          </div> : current!.referenceKind === "pages" ? <div className="pages-guide">
+            <div><code>href=&quot;page2.html&quot;</code><p><b>Move forward</b><span>The link in index.html opens page2.html from the same folder.</span></p></div>
+            <div><code>href=&quot;index.html&quot;</code><p><b>Go back</b><span>The second page links back to the first file.</span></p></div>
+            <div className="page-flow"><b>index.html</b><span>⇄</span><b>page2.html</b></div>
           </div> : <div className="element-guide">
             <div><code>&lt;h1&gt;–&lt;h6&gt;</code><p><b>Heading hierarchy</b><span>Six levels, from the main page heading down to the smallest subheading.</span></p></div>
             <div><code>&lt;strong&gt;</code><p><b>Important bold text</b><span>Adds importance; browsers normally display it in bold.</span></p></div>
@@ -528,6 +543,14 @@ export default function Home() {
               <div style={{fontFamily:"'Courier New', monospace"}}><b>Courier New</b><span>The quick brown fox jumps over the lazy dog.</span><code>&quot;Courier New&quot;, monospace</code></div>
               <div style={{fontFamily:"'Brush Script MT', cursive"}}><b>Brush Script MT</b><span>The quick brown fox jumps over the lazy dog.</span><code>&quot;Brush Script MT&quot;, cursive</code></div>
             </div>
+            <button className="reference-next" onClick={nextLesson}>Continue to multiple pages →</button>
+          </div> : current!.referenceKind === "pages" ? <div className="pages-reference-preview">
+            <div className="preview-bar"><span>◆</span> TWO HTML FILES</div>
+            <div className="file-pair">
+              <article><header><span>1</span><b>index.html</b></header><pre><code><HighlightedCode language="html" code={'<!DOCTYPE html>\n<html>\n<body>\n\n  <h1>First Page</h1>\n\n  <a href="page2.html">Go to Page 2</a>\n\n</body>\n</html>'} /></code></pre></article>
+              <article><header><span>2</span><b>page2.html</b></header><pre><code><HighlightedCode language="html" code={'<!DOCTYPE html>\n<html>\n<body>\n\n  <h1>Page 2</h1>\n\n  <a href="index.html">Go back</a>\n\n</body>\n</html>'} /></code></pre></article>
+            </div>
+            <div className="link-journey"><b>First Page</b><span>Go to Page 2 →</span><b>Page 2</b><span>← Go back</span></div>
             <button className="reference-next" onClick={nextLesson}>Finish the HTML path →</button>
           </div> : <div className="text-reference-preview">
             <div className="preview-bar"><span>◆</span> HTML TEXT REFERENCE</div>
