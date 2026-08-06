@@ -567,6 +567,7 @@ export default function Home() {
   const [index, setIndex] = useState(0);
   const [code, setCode] = useState("");
   const [status, setStatus] = useState<"idle" | "wrong" | "correct">("idle");
+  const [typedOutput, setTypedOutput] = useState("");
   const [navOpen, setNavOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [themeMode, setThemeMode] = useState<ThemeMode>("system");
@@ -581,8 +582,24 @@ export default function Home() {
     if (current) {
       setCode(current.starter || "");
       setStatus("idle");
+      setTypedOutput("");
     }
   }, [current]);
+
+  useEffect(() => {
+    if (status !== "correct" || !current) { setTypedOutput(""); return; }
+    const completeOutput = current.output.join("\n");
+    let position = 0;
+    let interval: ReturnType<typeof setInterval> | undefined;
+    const delay = setTimeout(() => {
+      interval = setInterval(() => {
+        position += 1;
+        setTypedOutput(completeOutput.slice(0, position));
+        if (position >= completeOutput.length && interval) clearInterval(interval);
+      }, 18);
+    }, 350);
+    return () => { clearTimeout(delay); if (interval) clearInterval(interval); };
+  }, [status, current]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("codestep-theme") as ThemeMode | null;
@@ -796,7 +813,7 @@ export default function Home() {
             <div className="console-body">
               {status === "idle" && <span className="console-muted">Your program output will appear here...</span>}
               {status === "wrong" && <><div className="error-line">× Not quite yet.</div><div className="console-muted">Check the comment and look for missing punctuation, names, or brackets.</div></>}
-              {status === "correct" && current!.output.map((line, i) => <div key={i}><span className="prompt-mark">›</span> {line}</div>)}
+              {status === "correct" && <><div className="run-line"><span>✓</span> Code accepted — running...</div><div className="typed-output">{typedOutput.split("\n").map((line, i, lines) => <div key={i}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}</div>)}</div></>}
             </div>
           </div>
           <div className={`feedback ${status}`}>
