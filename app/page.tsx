@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 type Language = "javascript" | "csharp" | "html" | "css";
+type ThemeMode = "light" | "dark" | "system";
 type Lesson = {
   title: string;
   eyebrow: string;
@@ -547,12 +548,29 @@ function breakdownSyntaxKind(code: string) {
   return "attribute";
 }
 
+function SettingsPanel({ open, themeMode, showGuide, onThemeChange, onGuideChange, onClose }: { open: boolean; themeMode: ThemeMode; showGuide: boolean; onThemeChange: (mode: ThemeMode) => void; onGuideChange: (show: boolean) => void; onClose: () => void }) {
+  if (!open) return null;
+  return <div className="settings-backdrop" role="presentation" onMouseDown={onClose}>
+    <section className="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settings-title" onMouseDown={(event) => event.stopPropagation()}>
+      <div className="settings-head"><div><small>CODESTEP</small><h2 id="settings-title">Settings</h2></div><button onClick={onClose} aria-label="Close settings">×</button></div>
+      <div className="settings-group"><b>Appearance</b><span>Choose a theme or follow your device setting.</span><div className="theme-options">
+        {(["light", "dark", "system"] as ThemeMode[]).map((mode) => <button key={mode} className={themeMode === mode ? "selected" : ""} onClick={() => onThemeChange(mode)}><i>{mode === "light" ? "☀" : mode === "dark" ? "☾" : "◐"}</i><span>{mode[0].toUpperCase() + mode.slice(1)}</span><small>{mode === "system" ? "Use device setting" : `${mode} appearance`}</small></button>)}
+      </div></div>
+      <div className="settings-group guide-setting"><div><b>Code guide</b><span>Show a faint, colour-coded copy of the expected answer in the editor.</span></div><button className={`switch ${showGuide ? "on" : ""}`} role="switch" aria-checked={showGuide} onClick={() => onGuideChange(!showGuide)}><i /></button></div>
+      <p className="settings-foot">The guide includes comments but stays translucent so your own typing remains clear.</p>
+    </section>
+  </div>;
+}
+
 export default function Home() {
   const [language, setLanguage] = useState<Language | null>(null);
   const [index, setIndex] = useState(0);
   const [code, setCode] = useState("");
   const [status, setStatus] = useState<"idle" | "wrong" | "correct">("idle");
   const [navOpen, setNavOpen] = useState(true);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [themeMode, setThemeMode] = useState<ThemeMode>("system");
+  const [showGuide, setShowGuide] = useState(true);
   const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0, html: 0, css: 0 });
 
   const current = language ? lessons[language][index] : null;
@@ -565,6 +583,24 @@ export default function Home() {
       setStatus("idle");
     }
   }, [current]);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("codestep-theme") as ThemeMode | null;
+    const savedGuide = localStorage.getItem("codestep-code-guide");
+    if (savedTheme && ["light", "dark", "system"].includes(savedTheme)) setThemeMode(savedTheme);
+    if (savedGuide !== null) setShowGuide(savedGuide === "true");
+  }, []);
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    const applyTheme = () => { document.documentElement.dataset.theme = themeMode === "system" ? (media.matches ? "dark" : "light") : themeMode; };
+    applyTheme();
+    media.addEventListener("change", applyTheme);
+    localStorage.setItem("codestep-theme", themeMode);
+    return () => media.removeEventListener("change", applyTheme);
+  }, [themeMode]);
+
+  useEffect(() => { localStorage.setItem("codestep-code-guide", String(showGuide)); }, [showGuide]);
 
   const lineNumbers = useMemo(() => Array.from({ length: Math.max(8, code.split("\n").length) }, (_, i) => i + 1), [code]);
 
@@ -595,8 +631,9 @@ export default function Home() {
 
   if (!language) {
     return (
+      <>
       <main className="home-shell">
-        <header className="home-nav"><div className="brand"><span className="brand-mark">&gt;_</span> Code<span>Step</span></div><div className="nav-note">LEARN BY TYPING</div></header>
+        <header className="home-nav"><div className="brand"><span className="brand-mark">&gt;_</span> Code<span>Step</span></div><div className="home-actions"><div className="nav-note">LEARN BY TYPING</div><button className="settings-button" onClick={() => setSettingsOpen(true)}>⚙ <span>Settings</span></button></div></header>
         <section className="hero">
           <div className="terminal-card" aria-hidden="true">
             <div className="terminal-top"><i/><i/><i/><span>first-steps.js</span></div>
@@ -631,15 +668,18 @@ export default function Home() {
           </div>
         </section>
       </main>
+      <SettingsPanel open={settingsOpen} themeMode={themeMode} showGuide={showGuide} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onClose={() => setSettingsOpen(false)} />
+      </>
     );
   }
 
   return (
+    <>
     <main className="lesson-shell">
       <header className="lesson-nav">
         <div className="lesson-brand-group"><button className="drawer-toggle" onClick={() => setNavOpen((open) => !open)} aria-label={navOpen ? "Close lesson list" : "Open lesson list"} aria-expanded={navOpen}><span>☰</span></button><button className="brand brand-button" onClick={() => setLanguage(null)}><span className="brand-mark">&gt;_</span> Code<span>Step</span></button></div>
         <div className="lesson-progress"><div><span>{languageName(language)} path</span><b>{index + 1} / {lessons[language].length}</b></div><div className="progress-track"><i style={{width: `${Math.max(progress, 4)}%`}} /></div></div>
-        <button className="exit-button" onClick={() => setLanguage(null)}>Exit lesson ×</button>
+        <div className="lesson-actions"><button className="settings-button" onClick={() => setSettingsOpen(true)}>⚙ <span>Settings</span></button><button className="exit-button" onClick={() => setLanguage(null)}>Exit lesson ×</button></div>
       </header>
       <div className={`lesson-layout ${navOpen ? "drawer-open" : "drawer-closed"}`}>
         <aside className="lesson-drawer" aria-label="Lesson list">
@@ -749,7 +789,7 @@ export default function Home() {
           </div> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className="file-tab"><span>◆</span> {challengeFile(language)}</div><div className="panel-actions"><span>UTF-8</span><button onClick={() => setCode("")} title="Reset code">↻ Reset</button></div></div>
-            <div className="editor-body"><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div><textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(e) => {setCode(e.target.value); setStatus("idle")}} onKeyDown={(e) => { if (e.key === "Enter" && status === "correct") { e.preventDefault(); nextLesson(); } else if (e.key === "Enter" && normalize(code) === normalize(current!.answer)) { e.preventDefault(); checkCode(); } }} placeholder="// Type your code here..." /></div>
+            <div className="editor-body"><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className="code-guide" aria-hidden="true"><span>CODE GUIDE</span><code><HighlightedCode code={current!.answer} language={language} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(e) => {setCode(e.target.value); setStatus("idle")}} onKeyDown={(e) => { if (e.key === "Enter" && status === "correct") { e.preventDefault(); nextLesson(); } else if (e.key === "Enter" && normalize(code) === normalize(current!.answer)) { e.preventDefault(); checkCode(); } }} placeholder="// Type your code here..." /></div>
           </div>
           <div className="console-panel">
             <div className="console-bar"><span><i /> CONSOLE</span><button onClick={() => setStatus("idle")}>Clear</button></div>
@@ -767,5 +807,7 @@ export default function Home() {
         </section>
       </div>
     </main>
+    <SettingsPanel open={settingsOpen} themeMode={themeMode} showGuide={showGuide} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onClose={() => setSettingsOpen(false)} />
+    </>
   );
 }
