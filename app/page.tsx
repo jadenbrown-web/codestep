@@ -84,7 +84,16 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Your age is between 0 and 18."],
     },
     {
-      eyebrow: "08 · Arrays",
+      eyebrow: "08 · Regular expressions",
+      title: "Let names beginning with J enter",
+      explanation: "A regular expression checks text against a pattern. /^J/i means: the slashes hold the pattern, ^ anchors the check to the beginning, J is the required first letter, and i ignores uppercase or lowercase. It accepts any word beginning with J—not only names—and rejects J when it appears later in the text.",
+      note: "// Let people into the club when their name begins with J",
+      prompt: "Check the five names and print who may enter the club.",
+      answer: 'const names = ["Jaden", "James", "Jessica", "Sarah", "Ben"];\n\nfor (const name of names) {\n  if (/^J/i.test(name)) {\n    console.log(name + " can enter the club.");\n  } else {\n    console.log(name + " cannot enter the club.");\n  }\n}',
+      output: ["Jaden can enter the club.", "James can enter the club.", "Jessica can enter the club.", "Sarah cannot enter the club.", "Ben cannot enter the club."],
+    },
+    {
+      eyebrow: "09 · Arrays",
       title: "Keep a list",
       explanation: "A JavaScript list is called an array. Square brackets hold its items, and a for...of loop visits each item one at a time.",
       note: "// Store three fruits, then print each one",
@@ -93,7 +102,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Apple", "Banana", "Orange"],
     },
     {
-      eyebrow: "09 · Constant array",
+      eyebrow: "10 · Constant array",
       title: "Start an empty car list",
       explanation: "const is short for constant. Like let, it creates a named variable, but const prevents that variable from being reassigned to a different value later. Here cars must keep pointing to the same array, although .push() can still add items inside that array.",
       note: "// Create an empty list that will hold cars",
@@ -102,7 +111,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["cars  →  []", "The list currently has 0 items."],
     },
     {
-      eyebrow: "10 · Add to an array",
+      eyebrow: "11 · Add to an array",
       title: "Put a car into the list",
       explanation: "prompt collects a car name from the user. cars.push(newCar) takes that saved answer and adds it to the end of the cars array.",
       note: "// Ask for a car, then add the answer to cars",
@@ -112,7 +121,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Before: []", "What car do you want to add?  →  Ford", 'After push: ["Ford"]'],
     },
     {
-      eyebrow: "11 · Print an array",
+      eyebrow: "12 · Print an array",
       title: "Show the finished car list",
       explanation: "console.log(cars) sends the whole array to the console. Because Ford was pushed into cars first, the printed list now contains that item.",
       note: "// Print the list after adding the new car",
@@ -122,7 +131,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What car do you want to add?  →  Ford", '["Ford"]'],
     },
     {
-      eyebrow: "12 · Sets",
+      eyebrow: "13 · Sets",
       title: "Remove duplicate names",
       explanation: "A Set stores only unique values. Passing names into new Set(names) removes repeated names, and [...uniqueNames] spreads the remaining values back into an array for printing.",
       note: "// Ask for three names, then remove any duplicates",
@@ -131,7 +140,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Enter the first name:  →  Alex", "Enter the second name:  →  Sam", "Enter the third name:  →  Alex", '["Alex", "Sam"]'],
     },
     {
-      eyebrow: "13 · Array positions",
+      eyebrow: "14 · Array positions",
       title: "Look up the car you added",
       explanation: "Array positions start at zero. cars[0] retrieves the first item, which is Ford because it was the first value pushed into the array.",
       note: "// Look up and print the first car in the array",
@@ -141,7 +150,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What car do you want to add?  →  Ford", '["Ford"]', "Item at position 0  →  Ford"],
     },
     {
-      eyebrow: "14 · Objects",
+      eyebrow: "15 · Objects",
       title: "Give values names",
       explanation: "Objects keep related values under named keys. Here, BMW and Ford are keys, and each car has a colour property.",
       note: "// Look up a car brand and print its colour",
@@ -150,7 +159,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Enter BMW or Ford:  →  BMW", "Brand: BMW", "Colour: Blue"],
     },
     {
-      eyebrow: "15 · Timers",
+      eyebrow: "16 · Timers",
       title: "Run code later",
       explanation: "setTimeout schedules a function to run after a delay. The delay is measured in milliseconds, so 1000 means one second.",
       note: "// Print One, Two, and Three one second apart",
@@ -159,7 +168,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["One", "Two", "Three"],
     },
     {
-      eyebrow: "16 · Date and time",
+      eyebrow: "17 · Date and time",
       title: "Get the current moment",
       explanation: "new Date() creates a Date object containing the current date and time from the device running the code. console.log then displays that value.",
       note: "// Create the current date and time, then print it",
@@ -168,7 +177,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Thu Aug 06 2026 19:05:00 GMT+0100 (British Summer Time)"],
     },
     {
-      eyebrow: "17 · Classes",
+      eyebrow: "18 · Classes",
       title: "Create cars from a blueprint",
       explanation: "A class is a reusable blueprint for objects. Its constructor receives values when new Car(...) runs, and this stores those values as properties on each separate car object.",
       note: "// Define a Car class, then create and print two car objects",
@@ -243,7 +252,16 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Your age is between 0 and 18."],
     },
     {
-      eyebrow: "08 · Arrays",
+      eyebrow: "08 · Regular expressions",
+      title: "Let names beginning with J enter",
+      explanation: "A regular expression checks text against a pattern. Regex comes from System.Text.RegularExpressions. ^J means the text must begin with J, while RegexOptions.IgnoreCase accepts uppercase or lowercase. It accepts any word beginning with J—not only names—and rejects J when it appears later in the text.",
+      note: "// Let people into the club when their name begins with J",
+      prompt: "Check the five names and print who may enter the club.",
+      answer: 'using System.Text.RegularExpressions;\n\nstring[] names = { "Jaden", "James", "Jessica", "Sarah", "Ben" };\n\nforeach (string name in names) {\n  if (Regex.IsMatch(name, "^J", RegexOptions.IgnoreCase)) {\n    Console.WriteLine($"{name} can enter the club.");\n  } else {\n    Console.WriteLine($"{name} cannot enter the club.");\n  }\n}',
+      output: ["Jaden can enter the club.", "James can enter the club.", "Jessica can enter the club.", "Sarah cannot enter the club.", "Ben cannot enter the club."],
+    },
+    {
+      eyebrow: "09 · Arrays",
       title: "Keep a list",
       explanation: "A C# array keeps several values of the same type. Square brackets mark the array, and a foreach loop visits each item one at a time.",
       note: "// Store three fruits, then print each one",
@@ -252,7 +270,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Apple", "Banana", "Orange"],
     },
     {
-      eyebrow: "09 · Empty list",
+      eyebrow: "10 · Empty list",
       title: "Start an empty car list",
       explanation: "List<string> creates a flexible list that stores text, and new List<string>() starts it with zero items. C# has a const keyword too, but const is only for values fixed at compile time; a growing List cannot be const. This is why the C# version begins with List<string> rather than copying JavaScript's const.",
       note: "// Create an empty list that will hold car names",
@@ -261,7 +279,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["cars  →  []", "The list currently has 0 items."],
     },
     {
-      eyebrow: "10 · Add to a list",
+      eyebrow: "11 · Add to a list",
       title: "Put a car into the list",
       explanation: "Console.ReadLine() collects the user's answer. cars.Add(newCar) takes that saved text and adds it to the end of the cars list.",
       note: "// Ask for a car, then add the answer to cars",
@@ -271,7 +289,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Before: []", "What car do you want to add?  →  Ford", 'After Add: ["Ford"]'],
     },
     {
-      eyebrow: "11 · Print a list",
+      eyebrow: "12 · Print a list",
       title: "Show the finished car list",
       explanation: "string.Join joins every list item into readable text. Console.WriteLine then prints that text, showing the car that was added in the previous step.",
       note: "// Join and print the items stored in cars",
@@ -281,7 +299,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What car do you want to add?  →  Ford", "[Ford]"],
     },
     {
-      eyebrow: "12 · Sets",
+      eyebrow: "13 · Sets",
       title: "Remove duplicate names",
       explanation: "A HashSet stores only unique values. Passing names into new HashSet<string>(names) removes repeated names, and string.Join makes the remaining values readable for printing.",
       note: "// Ask for three names, then remove any duplicates",
@@ -290,7 +308,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Enter the first name:  →  Alex", "Enter the second name:  →  Sam", "Enter the third name:  →  Alex", "[Alex, Sam]"],
     },
     {
-      eyebrow: "13 · Array positions",
+      eyebrow: "14 · Array positions",
       title: "Look up the car you added",
       explanation: "C# list positions start at zero. cars[0] retrieves the first item, which is Ford because it was the first value added to the list.",
       note: "// Look up and print the first car in the list",
@@ -300,7 +318,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What car do you want to add?  →  Ford", "[Ford]", "Item at position 0  →  Ford"],
     },
     {
-      eyebrow: "14 · Objects",
+      eyebrow: "15 · Objects",
       title: "Give values names",
       explanation: "C# objects keep related values in named properties. Here, an anonymous object groups a car's Brand and Colour together.",
       note: "// Create a car object and print its properties",
@@ -309,7 +327,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Brand: BMW", "Colour: Blue"],
     },
     {
-      eyebrow: "15 · Timers",
+      eyebrow: "16 · Timers",
       title: "Run code later",
       explanation: "Task.Delay pauses asynchronous C# code for a number of milliseconds. Using await lets each message appear after another one-second delay.",
       note: "// Print One, Two, and Three one second apart",
@@ -318,7 +336,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["One", "Two", "Three"],
     },
     {
-      eyebrow: "16 · Date and time",
+      eyebrow: "17 · Date and time",
       title: "Get the current moment",
       explanation: "DateTime.Now gets the computer's current local date and time. Storing it in currentDateTime lets the program use or display that moment later.",
       note: "// Get the current date and time, then print it",
@@ -327,7 +345,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["06/08/2026 19:05:00"],
     },
     {
-      eyebrow: "17 · Classes",
+      eyebrow: "18 · Classes",
       title: "Create cars from a blueprint",
       explanation: "A C# class is a reusable blueprint for objects. Properties store each car's data, the constructor receives starting values, and this refers to the particular object being created.",
       note: "// Define a Car class, then create and print two car objects",
@@ -588,6 +606,22 @@ const setsBreakdowns: Partial<Record<Language, CodePart[]>> = {
   ],
 };
 
+const regexBreakdowns: Partial<Record<Language, CodePart[]>> = {
+  javascript: [
+    { code: "/ ... /", name: "Pattern", meaning: "The forward slashes mark the beginning and end of a regular expression." },
+    { code: "^", name: "Beginning", meaning: "The caret says the match must start at the very beginning of the text." },
+    { code: "J", name: "Required letter", meaning: "This is the letter that must appear first." },
+    { code: "i", name: "Ignore case", meaning: "Accepts either uppercase J or lowercase j." },
+    { code: ".test(name)", name: "Check a name", meaning: "Returns true when name begins with J and false when it does not." },
+  ],
+  csharp: [
+    { code: '"^J"', name: "Pattern", meaning: "The caret requires J to be at the beginning of the text." },
+    { code: "Regex.IsMatch", name: "Check a name", meaning: "Returns true when the supplied name matches the pattern." },
+    { code: "RegexOptions.IgnoreCase", name: "Ignore case", meaning: "Accepts either uppercase J or lowercase j." },
+    { code: "else", name: "No match", meaning: "Runs when the name does not begin with J." },
+  ],
+};
+
 const normalize = (value: string) =>
   value
     .replace(/\/\/.*$/gm, "")
@@ -675,7 +709,7 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
     ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|src|alt|id|lang|charset)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:#])/g
     : language === "css"
     ? /(\/\*[\s\S]*?\*\/|#[0-9a-fA-F]{3,8}\b|#[A-Za-z_]\w*|\b(?:body|p|background-color|color|text-align|font-family|border|border-radius|solid|dotted|center|lightblue|red|blue|tomato)\b|\d+(?:px)?|[{}();:.,])/g
-    : /(\/\/[^\n]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|class|constructor|this|let|const|new|null|if|else|for|of|while|true|false|break|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime|List|Set|HashSet)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|&&|>=|<=|\+\+|--|[{}()[\];=.:<>?])/g;
+    : /(\/\/[^\n]*|\/\^[A-Za-z]+\/[gimsuy]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|class|constructor|this|let|const|new|null|if|else|for|of|while|true|false|break|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime|List|Set|HashSet|Regex|RegexOptions)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|&&|>=|<=|\+\+|--|[{}()[\];=.:<>?^/])/g;
   const parts: { text: string; kind: string }[] = [];
   let lastIndex = 0;
   for (const match of code.matchAll(pattern)) {
@@ -683,9 +717,9 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
     const text = match[0];
     let kind = "punctuation";
     if (/^(\/\/|\/\*|<!--)/.test(text)) kind = "comment";
-    else if (/^["'`]/.test(text)) kind = "string";
+    else if (/^["'`]/.test(text) || /^\/\^/.test(text)) kind = "string";
     else if (/^(function|class|constructor|this|let|const|new|null|if|else|for|of|while|true|false|break|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
-    else if (/^(console|Console|Task|Date|DateTime|List|Set|HashSet|log)$/.test(text)) kind = "api";
+    else if (/^(console|Console|Task|Date|DateTime|List|Set|HashSet|Regex|RegexOptions|log)$/.test(text)) kind = "api";
     else if (/^(style|href|src|alt|id|lang|charset)$/.test(text)) kind = "attribute";
     else if (/^(background-color|color|text-align|font-family|border|border-radius)$/.test(text)) kind = "api";
     else if (/^(body|p)$/.test(text)) kind = "keyword";
@@ -745,8 +779,9 @@ export default function Home() {
   const guideCode = alignedGuide(code, visibleGhost);
   const breakdown = language
     ? (index === 5 && nullBreakdowns[language])
-      || (index === 11 && setsBreakdowns[language])
-      || breakdowns[language][language === "javascript" || language === "csharp" ? (index > 11 ? index - 2 : index > 5 ? index - 1 : index) : index]
+      || (index === 7 && regexBreakdowns[language])
+      || (index === 12 && setsBreakdowns[language])
+      || breakdowns[language][language === "javascript" || language === "csharp" ? (index > 12 ? index - 3 : index > 7 ? index - 2 : index > 5 ? index - 1 : index) : index]
     : undefined;
   const progress = language ? Math.round((index / lessons[language].length) * 100) : 0;
   const diagnostic = useMemo(() => current ? syntaxDiagnostic(code, current.answer) : [], [code, current]);
