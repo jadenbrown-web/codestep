@@ -89,6 +89,15 @@ const lessons: Record<Language, Lesson[]> = {
       answer: 'setTimeout(() => console.log("One"), 1000);\nsetTimeout(() => console.log("Two"), 2000);\nsetTimeout(() => console.log("Three"), 3000);',
       output: ["One", "Two", "Three"],
     },
+    {
+      eyebrow: "09 · Date and time",
+      title: "Get the current moment",
+      explanation: "new Date() creates a Date object containing the current date and time from the device running the code. console.log then displays that value.",
+      note: "// Create the current date and time, then print it",
+      prompt: "Store a new Date in currentDateTime and show it in the console.",
+      answer: "const currentDateTime = new Date();\nconsole.log(currentDateTime);",
+      output: ["Thu Aug 06 2026 19:05:00 GMT+0100 (British Summer Time)"],
+    },
   ],
   csharp: [
     {
@@ -163,6 +172,15 @@ const lessons: Record<Language, Lesson[]> = {
       prompt: "Wait one second before printing each message.",
       answer: 'await Task.Delay(1000);\nConsole.WriteLine("One");\n\nawait Task.Delay(1000);\nConsole.WriteLine("Two");\n\nawait Task.Delay(1000);\nConsole.WriteLine("Three");',
       output: ["One", "Two", "Three"],
+    },
+    {
+      eyebrow: "09 · Date and time",
+      title: "Get the current moment",
+      explanation: "DateTime.Now gets the computer's current local date and time. Storing it in currentDateTime lets the program use or display that moment later.",
+      note: "// Get the current date and time, then print it",
+      prompt: "Store DateTime.Now in currentDateTime and show it in the console.",
+      answer: "DateTime currentDateTime = DateTime.Now;\nConsole.WriteLine(currentDateTime);",
+      output: ["06/08/2026 19:05:00"],
     },
   ],
   python: [
@@ -251,6 +269,7 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
     4: [{ code: "[ ... ]", name: "Array", meaning: "Keeps several values together in one list." }, { code: "for ... of", name: "Loop", meaning: "Visits every item in the array." }, { code: "fruit", name: "Current item", meaning: "Temporarily holds the item being visited." }],
     6: [{ code: "{ key: value }", name: "Object", meaning: "Groups values under names such as BMW and Ford." }, { code: "cars[brand]", name: "Look up", meaning: "Uses brand to find the matching car." }, { code: ".colour", name: "Property", meaning: "Selects the colour stored on that car." }],
     7: [{ code: "setTimeout", name: "Schedule", meaning: "Asks JavaScript to run some code later." }, { code: "() => ...", name: "Code to run", meaning: "A short function waiting inside the timer." }, { code: "1000", name: "Delay", meaning: "One thousand milliseconds means one second." }],
+    8: [{ code: "const", name: "Fixed variable", meaning: "Creates a variable that will not be reassigned." }, { code: "new Date()", name: "Current moment", meaning: "Creates a Date using the device's current date and time." }, { code: "console.log", name: "Display", meaning: "Shows the stored Date in the console." }],
   },
   csharp: {
     0: [{ code: "void", name: "Result type", meaning: "Says this method does not send a value back." }, { code: "Correct()", name: "Name", meaning: "Names the method so you can call it later." }, { code: "{ ... }", name: "Instructions", meaning: "Holds the code the method will run." }, { code: "Correct();", name: "Call it", meaning: "Runs the method you created." }],
@@ -259,6 +278,7 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
     4: [{ code: "string[]", name: "Array type", meaning: "Says fruits is a list of text values." }, { code: "foreach", name: "Loop", meaning: "Visits every item in the array." }, { code: "fruit", name: "Current item", meaning: "Temporarily holds the item being visited." }],
     6: [{ code: "var car", name: "Variable", meaning: "Creates a place named car for the object." }, { code: "new { ... }", name: "Object", meaning: "Groups related values into one thing." }, { code: "car.Brand", name: "Property", meaning: "Reads the Brand value stored on car." }],
     7: [{ code: "Task.Delay", name: "Timer", meaning: "Creates a pause for a number of milliseconds." }, { code: "1000", name: "Duration", meaning: "One thousand milliseconds means one second." }, { code: "await", name: "Wait", meaning: "Pauses here before moving to the next line." }],
+    8: [{ code: "DateTime", name: "Type", meaning: "Represents a date and a time in C#." }, { code: "DateTime.Now", name: "Current moment", meaning: "Reads the computer's current local date and time." }, { code: "Console.WriteLine", name: "Display", meaning: "Shows the stored value in the console." }],
   },
   python: {
     0: [{ code: "import", name: "Load", meaning: "Makes another module available in this file." }, { code: "os", name: "System tools", meaning: "Lets the script run commands such as clearing the terminal." }, { code: "time", name: "Time tools", meaning: "Provides time.sleep for short pauses." }],
