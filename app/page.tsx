@@ -12,6 +12,7 @@ type Lesson = {
   starter?: string;
   answer: string;
   output: string[];
+  referenceOnly?: boolean;
 };
 
 const lessons: Record<Language, Lesson[]> = {
@@ -258,12 +259,13 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       eyebrow: "09 · Centred text section",
-      title: "Build a centred text section",
-      explanation: "A section groups related content. text-align: center centres the text inside that whole section, while h1, h2, h5, and h6 demonstrate different heading levels and strong marks important text as bold.",
-      note: "<!-- Group several heading levels and bold text in one centred section -->",
-      prompt: "Create the centred section with four heading levels and bold text.",
-      answer: '<section style="text-align: center;">\n  <h1>Main heading</h1>\n  <h2>Section heading</h2>\n  <h5>Small heading</h5>\n  <h6>Smallest heading</h6>\n  <strong>Bold text</strong>\n</section>',
-      output: ["Main heading", "Section heading", "Small heading", "Smallest heading", "Bold text — all centred"],
+      title: "Explore HTML text elements",
+      explanation: "This is a reference page rather than a quiz. Compare every heading level, then see how HTML makes text bold, centres a group, marks deleted text, and lowers characters with subscript.",
+      note: "<!-- A visual guide to HTML text elements -->",
+      prompt: "Explore the examples and what each element means.",
+      answer: '<section style="text-align: center;">\n  <h1>Heading 1</h1>\n  <h2>Heading 2</h2>\n  <h3>Heading 3</h3>\n  <h4>Heading 4</h4>\n  <h5>Heading 5</h5>\n  <h6>Heading 6</h6>\n  <strong>Bold important text</strong>\n  <p><del>Deleted text</del></p>\n  <p>H<sub>2</sub>O</p>\n</section>',
+      output: ["Reference explored."],
+      referenceOnly: true,
     },
     {
       eyebrow: "10 · JavaScript in HTML",
@@ -466,14 +468,33 @@ export default function Home() {
               <code className={`breakdown-${breakdownSyntaxKind(part.code)}`}>{part.code}</code><div><b>{part.name}</b><span>{part.meaning}</span></div>
             </div>)}</div>
           </section>}
-          <div className="comment-card"><div className="comment-label">READ THE COMMENT</div><code>{current!.note}</code></div>
-          <div className="reference-card">
-            <div className="reference-head"><div><span>STEP 1</span><b>Look at this code</b></div></div>
-            <pre><code><HighlightedCode code={current!.answer} language={language} /></code></pre>
-          </div>
-          <div className="tip"><span>↵</span> Copy or type the example into the editor, then press Enter to check it.</div>
+          {current!.referenceOnly ? <div className="element-guide">
+            <div><code>&lt;h1&gt;–&lt;h6&gt;</code><p><b>Heading hierarchy</b><span>Six levels, from the main page heading down to the smallest subheading.</span></p></div>
+            <div><code>&lt;strong&gt;</code><p><b>Important bold text</b><span>Adds importance; browsers normally display it in bold.</span></p></div>
+            <div><code>text-align: center</code><p><b>Centre a group</b><span>Centres the text inside the element carrying this CSS rule.</span></p></div>
+            <div><code>&lt;del&gt;</code><p><b>Deleted text</b><span>Shows that text was removed, usually with a line through it.</span></p></div>
+            <div><code>&lt;sub&gt;</code><p><b>Subscript</b><span>Lowers smaller text, useful for formulas such as H₂O.</span></p></div>
+          </div> : <>
+            <div className="comment-card"><div className="comment-label">READ THE COMMENT</div><code>{current!.note}</code></div>
+            <div className="reference-card">
+              <div className="reference-head"><div><span>STEP 1</span><b>Look at this code</b></div></div>
+              <pre><code><HighlightedCode code={current!.answer} language={language} /></code></pre>
+            </div>
+            <div className="tip"><span>↵</span> Copy or type the example into the editor, then press Enter to check it.</div>
+          </>}
         </aside>
         <section className="workspace">
+          {current!.referenceOnly ? <div className="text-reference-preview">
+            <div className="preview-bar"><span>◆</span> HTML TEXT REFERENCE</div>
+            <div className="heading-samples"><h1>Heading 1</h1><h2>Heading 2</h2><h3>Heading 3</h3><h4>Heading 4</h4><h5>Heading 5</h5><h6>Heading 6</h6></div>
+            <div className="format-samples">
+              <div><small>&lt;strong&gt;</small><strong>Bold important text</strong></div>
+              <div className="centred-sample"><small>text-align: center</small><span>This text is centred</span></div>
+              <div><small>&lt;del&gt;</small><del>Deleted text</del></div>
+              <div><small>&lt;sub&gt;</small><span>H<sub>2</sub>O uses subscript</span></div>
+            </div>
+            <button className="reference-next" onClick={nextLesson}>Continue to the next lesson →</button>
+          </div> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className="file-tab"><span>◆</span> {challengeFile(language)}</div><div className="panel-actions"><span>UTF-8</span><button onClick={() => setCode("")} title="Reset code">↻ Reset</button></div></div>
             <div className="editor-body"><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div><textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(e) => {setCode(e.target.value); setStatus("idle")}} onKeyDown={(e) => { if (e.key === "Enter" && status === "correct") { e.preventDefault(); nextLesson(); } else if (e.key === "Enter" && normalize(code) === normalize(current!.answer)) { e.preventDefault(); checkCode(); } }} placeholder="// Type your code here..." /></div>
@@ -490,6 +511,7 @@ export default function Home() {
             <div>{status === "correct" ? <><span className="feedback-icon">✓</span><p><b>That’s correct!</b><small>Press Enter again or choose the next lesson.</small></p></> : status === "wrong" ? <><span className="feedback-icon">!</span><p><b>Keep going</b><small>You’re close. Compare each symbol with the explanation.</small></p></> : <p><b>Ready to run?</b><small>When your code matches the example, press Enter.</small></p>}</div>
             {status === "correct" ? <button onClick={nextLesson}>{index === lessons[language].length - 1 ? "Finish path" : "Next lesson"} →</button> : <button onClick={checkCode} disabled={!code.trim()}>▶ Check code</button>}
           </div>
+          </>}
         </section>
       </div>
     </main>
