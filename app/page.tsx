@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-type Language = "javascript" | "csharp" | "html";
+type Language = "javascript" | "csharp" | "html" | "css";
 type Lesson = {
   title: string;
   eyebrow: string;
@@ -232,16 +232,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Visible page area created."],
     },
     {
-      eyebrow: "05 · Background colour",
-      title: "Style the page background",
-      explanation: "The style attribute adds CSS directly to an HTML element. background-color chooses the colour behind everything inside the body.",
-      note: "<!-- Give the page a light-blue background -->",
-      prompt: "Add a background colour to the body tag.",
-      answer: '<body style="background-color: lightblue;">\n</body>',
-      output: ["The page background is light blue."],
-    },
-    {
-      eyebrow: "06 · Headings",
+      eyebrow: "05 · Headings",
       title: "Create a heading hierarchy",
       explanation: "Headings organise the page. h1 is the main heading; h2 introduces a major section; h3 and h4 create smaller subsections below it.",
       note: "<!-- Add a main heading and a section heading -->",
@@ -250,7 +241,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Main heading", "Main section"],
     },
     {
-      eyebrow: "07 · Links",
+      eyebrow: "06 · Links",
       title: "Open another page",
       explanation: "The a element creates a link. Its href attribute stores the destination, while the text between the tags is what the visitor clicks.",
       note: "<!-- Link to a second HTML page -->",
@@ -259,27 +250,18 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Open page  →  page.html"],
     },
     {
-      eyebrow: "08 · Text and colour",
-      title: "Style a heading",
-      explanation: "A paragraph uses p tags for normal text. The color CSS property changes the foreground text colour; here it is applied to a heading through style.",
-      note: "<!-- Create a red heading and a paragraph -->",
-      prompt: "Add the styled heading and paragraph.",
-      answer: '<h1 style="color: red;">Red Title</h1>\n<p>This is a paragraph.</p>',
-      output: ["Red Title", "This is a paragraph."],
-    },
-    {
-      eyebrow: "09 · Centred text section",
+      eyebrow: "07 · Text elements",
       title: "Explore HTML text elements",
-      explanation: "This is a reference page rather than a quiz. Compare heading levels, text formatting elements, alignment, and a few useful layout styles from your notes sheet.",
+      explanation: "This is a reference page rather than a quiz. Compare heading levels and HTML text-formatting elements such as strong, em, mark, del, sub, and sup.",
       note: "<!-- A visual guide to HTML text elements -->",
       prompt: "Explore the examples and what each element means.",
-      answer: '<section style="text-align: center;">\n  <h1>Heading 1</h1>\n  <h2>Heading 2</h2>\n  <h3>Heading 3</h3>\n  <h4>Heading 4</h4>\n  <h5>Heading 5</h5>\n  <h6>Heading 6</h6>\n  <b>Bold text</b>\n  <strong>Important text</strong>\n  <i>Italic text</i>\n  <em>Emphasized text</em>\n  <mark>Highlighted text</mark>\n  <small>Smaller text</small>\n  <del>Deleted text</del>\n  <ins>Inserted text</ins>\n  <span>H<sub>2</sub>O and 2<sup>3</sup></span>\n</section>',
+      answer: '<section>\n  <h1>Heading 1</h1>\n  <h2>Heading 2</h2>\n  <h3>Heading 3</h3>\n  <h4>Heading 4</h4>\n  <h5>Heading 5</h5>\n  <h6>Heading 6</h6>\n  <b>Bold text</b>\n  <strong>Important text</strong>\n  <i>Italic text</i>\n  <em>Emphasized text</em>\n  <mark>Highlighted text</mark>\n  <small>Smaller text</small>\n  <del>Deleted text</del>\n  <ins>Inserted text</ins>\n  <span>H<sub>2</sub>O and 2<sup>3</sup></span>\n</section>',
       output: ["Reference explored."],
       referenceOnly: true,
       referenceKind: "text",
     },
     {
-      eyebrow: "10 · JavaScript in HTML",
+      eyebrow: "08 · JavaScript in HTML",
       title: "Show the current date and time",
       explanation: "The script element lets an HTML page run JavaScript. new Date() creates the current date and time, and console.log displays it in the browser's developer console.",
       note: "<!-- Run JavaScript from inside the HTML page -->",
@@ -288,18 +270,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Current date and time printed in the browser console."],
     },
     {
-      eyebrow: "11 · Font families",
-      title: "Compare website fonts",
-      explanation: "This is a visual reference rather than a quiz. A browser uses the first available font in a font-family list, then tries each fallback. Named fonts are not guaranteed on every device, so finish every stack with a generic family.",
-      note: "<!-- Compare common fonts and safe fallbacks -->",
-      prompt: "Compare the font samples and their fallback families.",
-      answer: 'p { font-family: Arial, sans-serif; }',
-      output: ["Font reference explored."],
-      referenceOnly: true,
-      referenceKind: "fonts",
-    },
-    {
-      eyebrow: "12 · Multiple pages",
+      eyebrow: "09 · Multiple pages",
       title: "Link two HTML pages",
       explanation: "This is a two-file reference rather than a quiz. When both files are in the same folder, each href can use the other file's name as a relative path.",
       note: "<!-- Link index.html and page2.html in both directions -->",
@@ -310,7 +281,7 @@ const lessons: Record<Language, Lesson[]> = {
       referenceKind: "pages",
     },
     {
-      eyebrow: "13 · Images",
+      eyebrow: "10 · Images",
       title: "Place an image on the page",
       explanation: "The img element displays an image. src tells the browser which file to load, while alt describes the image if it cannot be seen or loaded. If car.png is beside index.html, its filename is enough for src.",
       note: "<!-- Display car.png from the same folder as this HTML file -->",
@@ -318,10 +289,41 @@ const lessons: Record<Language, Lesson[]> = {
       answer: '<img src="car.png" alt="A car">',
       output: ["Image loaded: car.png", "Alternative text: A car"],
     },
+  ],
+  css: [
     {
-      eyebrow: "14 · CSS borders and colours",
+      eyebrow: "01 · Background colour",
+      title: "Colour the page background",
+      explanation: "CSS rules use a property and a value. background-color chooses the colour behind an element, while the colon separates the property from its value and the semicolon ends the instruction.",
+      note: "/* Give the page a light-blue background */",
+      prompt: "Write a body rule with a light-blue background.",
+      answer: "body {\n  background-color: lightblue;\n}",
+      output: ["The page background is light blue."],
+    },
+    {
+      eyebrow: "02 · Text styling",
+      title: "Colour and centre text",
+      explanation: "color changes the text colour. text-align controls horizontal alignment inside the selected element; center places its inline content in the middle.",
+      note: "/* Make every paragraph red and centred */",
+      prompt: "Style paragraphs with red, centred text.",
+      answer: "p {\n  color: red;\n  text-align: center;\n}",
+      output: ["Red paragraph text centred."],
+    },
+    {
+      eyebrow: "03 · Font families",
+      title: "Compare website fonts",
+      explanation: "This is a visual reference rather than a quiz. A browser uses the first available font in a font-family list, then tries each fallback. Named fonts are not guaranteed on every device, so finish every stack with a generic family.",
+      note: "/* Compare common fonts and safe fallbacks */",
+      prompt: "Compare the font samples and their fallback families.",
+      answer: "p { font-family: Arial, sans-serif; }",
+      output: ["Font reference explored."],
+      referenceOnly: true,
+      referenceKind: "fonts",
+    },
+    {
+      eyebrow: "04 · Borders and colours",
       title: "Explore borders and colour formats",
-      explanation: "This visual reference shows how CSS selectors style HTML, how classes target particular paragraphs, and how border and colour properties change what appears in the browser.",
+      explanation: "This visual reference shows how CSS selectors target elements and how border, RGB, RGBA, and hexadecimal colour values change their appearance.",
       note: "/* Compare borders, rounded corners, RGB, RGBA, and hex colours */",
       prompt: "Explore the rendered CSS examples and their explanations.",
       answer: "p.one { border: 5px solid red; }",
@@ -330,13 +332,13 @@ const lessons: Record<Language, Lesson[]> = {
       referenceKind: "css",
     },
     {
-      eyebrow: "15 · Border practice",
+      eyebrow: "05 · Border practice",
       title: "Create a rounded dotted border",
-      explanation: "A class connects one HTML element to a reusable CSS rule. The border shorthand sets width, style, and colour, while border-radius rounds the corners.",
-      note: "<!-- Style one paragraph with a dotted blue rounded border -->",
-      prompt: "Create the notice class and apply it to the paragraph.",
-      answer: '<style>\n  p.notice {\n    border: 5px dotted blue;\n    border-radius: 5px;\n  }\n</style>\n\n<p class="notice">Border practice</p>',
-      output: ["Border practice — dotted blue border with rounded corners"],
+      explanation: "A class selector targets elements carrying that class. The border shorthand sets width, style, and colour, while border-radius rounds the corners.",
+      note: "/* Give notice paragraphs a dotted blue rounded border */",
+      prompt: "Create the notice class with a dotted blue rounded border.",
+      answer: "p.notice {\n  border: 5px dotted blue;\n  border-radius: 5px;\n}",
+      output: ["Notice paragraphs have a dotted blue border with rounded corners."],
     },
   ],
 };
@@ -368,27 +370,31 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
     1: [{ code: "<html>", name: "Opening tag", meaning: "Marks where the HTML page begins." }, { code: 'lang="en"', name: "Page language", meaning: "Identifies the document as English." }, { code: "</html>", name: "Closing tag", meaning: "The slash marks where that element ends." }],
     2: [{ code: "<head>", name: "Page information", meaning: "Contains information used by the browser." }, { code: '<meta charset="UTF-8">', name: "Character encoding", meaning: "Supports letters, symbols, and characters from many languages." }, { code: "<title>", name: "Tab title", meaning: "Sets the words shown on the browser tab." }],
     3: [{ code: "<body>", name: "Visible content", meaning: "Starts the part visitors can see." }, { code: "</body>", name: "End content", meaning: "Closes the visible page area." }],
-    4: [{ code: "style=", name: "Style attribute", meaning: "Adds CSS rules directly to this element." }, { code: "background-color", name: "CSS property", meaning: "Chooses the colour behind the content." }, { code: ":", name: "Property separator", meaning: "Separates the CSS property name from the value it should use." }, { code: "lightblue", name: "CSS value", meaning: "The particular background colour to use." }, { code: ";", name: "Rule ending", meaning: "Marks the end of this CSS instruction so another rule can follow." }],
-    5: [{ code: "h1", name: "Main heading", meaning: "The page's most important heading." }, { code: "h2", name: "Section heading", meaning: "Introduces a major section beneath the h1." }, { code: "</...>", name: "Closing tag", meaning: "Ends the heading so later text stays separate." }],
-    6: [{ code: "<a>", name: "Anchor", meaning: "Creates a clickable link." }, { code: "href", name: "Destination", meaning: "Stores the page or address to open." }, { code: "Open page", name: "Link text", meaning: "The words the visitor clicks." }],
-    7: [{ code: "color: red", name: "Text colour", meaning: "Changes the heading's foreground colour." }, { code: "<p>", name: "Paragraph", meaning: "Wraps a block of ordinary text." }, { code: "</p>", name: "Close paragraph", meaning: "Marks where the paragraph ends." }],
-    8: [{ code: "<section>", name: "Content group", meaning: "Keeps a related part of the page together." }, { code: "text-align: center", name: "Centre text", meaning: "Centres the inline content inside the whole section." }, { code: "h1 — h6", name: "Heading levels", meaning: "Create a hierarchy from most to least important." }, { code: "<strong>", name: "Important text", meaning: "Marks text as important and normally displays it in bold." }],
-    9: [{ code: "<script>", name: "JavaScript area", meaning: "Tells the browser that the code inside is JavaScript." }, { code: "const", name: "Fixed variable", meaning: "Creates a variable that will not be reassigned." }, { code: "new Date()", name: "Current moment", meaning: "Creates a Date using the device's current date and time." }, { code: "console.log", name: "Developer console", meaning: "Displays the value in the browser's developer tools." }],
-    12: [{ code: "<img>", name: "Image element", meaning: "Places an image in the HTML page; it does not need a closing tag." }, { code: 'src="car.png"', name: "Image source", meaning: "Loads car.png from the same folder as the HTML file." }, { code: 'alt="A car"', name: "Alternative text", meaning: "Describes the image for accessibility and when it cannot load." }],
-    14: [{ code: "p.notice", name: "CSS selector", meaning: "Targets paragraph elements carrying the notice class." }, { code: "border", name: "Border property", meaning: "Sets the line around the element." }, { code: "5px dotted blue", name: "Border values", meaning: "Uses a five-pixel dotted line coloured blue." }, { code: "border-radius: 5px", name: "Rounded corners", meaning: "Rounds each corner of the border by five pixels." }],
+    4: [{ code: "h1", name: "Main heading", meaning: "The page's most important heading." }, { code: "h2", name: "Section heading", meaning: "Introduces a major section beneath the h1." }, { code: "</...>", name: "Closing tag", meaning: "Ends the heading so later text stays separate." }],
+    5: [{ code: "<a>", name: "Anchor", meaning: "Creates a clickable link." }, { code: "href", name: "Destination", meaning: "Stores the page or address to open." }, { code: "Open page", name: "Link text", meaning: "The words the visitor clicks." }],
+    6: [{ code: "<section>", name: "Content group", meaning: "Keeps a related part of the page together." }, { code: "h1 — h6", name: "Heading levels", meaning: "Create a hierarchy from most to least important." }, { code: "<strong>", name: "Important text", meaning: "Marks text as important and normally displays it in bold." }, { code: "<del>", name: "Deleted text", meaning: "Shows text that has been removed with a line through it." }],
+    7: [{ code: "<script>", name: "JavaScript area", meaning: "Tells the browser that the code inside is JavaScript." }, { code: "const", name: "Fixed variable", meaning: "Creates a variable that will not be reassigned." }, { code: "new Date()", name: "Current moment", meaning: "Creates a Date using the device's current date and time." }, { code: "console.log", name: "Developer console", meaning: "Displays the value in the browser's developer tools." }],
+    9: [{ code: "<img>", name: "Image element", meaning: "Places an image in the HTML page; it does not need a closing tag." }, { code: 'src="car.png"', name: "Image source", meaning: "Loads car.png from the same folder as the HTML file." }, { code: 'alt="A car"', name: "Alternative text", meaning: "Describes the image for accessibility and when it cannot load." }],
+  },
+  css: {
+    0: [{ code: "body", name: "Selector", meaning: "Chooses the HTML body element to style." }, { code: "background-color", name: "Property", meaning: "Chooses the colour behind the element." }, { code: ":", name: "Property separator", meaning: "Separates the property name from its value." }, { code: "lightblue", name: "Value", meaning: "The background colour to apply." }, { code: ";", name: "Rule ending", meaning: "Ends this CSS declaration so another can follow." }],
+    1: [{ code: "p", name: "Selector", meaning: "Chooses every paragraph on the page." }, { code: "color: red", name: "Text colour", meaning: "Makes the selected text red." }, { code: "text-align: center", name: "Alignment", meaning: "Centres inline content inside each paragraph." }, { code: ";", name: "Rule ending", meaning: "Marks the end of each CSS declaration." }],
+    4: [{ code: "p.notice", name: "Class selector", meaning: "Targets paragraphs carrying the notice class." }, { code: "border", name: "Border property", meaning: "Sets the line around the element." }, { code: "5px dotted blue", name: "Border values", meaning: "Uses a five-pixel dotted line coloured blue." }, { code: "border-radius: 5px", name: "Rounded corners", meaning: "Rounds each corner of the border by five pixels." }],
   },
 };
 
 const normalize = (value: string) =>
   value.replace(/\/\/.*$/gm, "").replace(/\s+/g, "").replace(/'/g, '"').trim();
 
-const languageName = (language: Language) => language === "javascript" ? "JavaScript" : language === "csharp" ? "C Sharp" : "HTML";
-const languageBadge = (language: Language) => language === "javascript" ? "JS" : language === "csharp" ? "C#" : "HTML";
-const challengeFile = (language: Language) => language === "javascript" ? "challenge.js" : language === "csharp" ? "Program.cs" : "index.html";
+const languageName = (language: Language) => language === "javascript" ? "JavaScript" : language === "csharp" ? "C Sharp" : language === "html" ? "HTML" : "CSS";
+const languageBadge = (language: Language) => language === "javascript" ? "JS" : language === "csharp" ? "C#" : language === "html" ? "HTML" : "CSS";
+const challengeFile = (language: Language) => language === "javascript" ? "challenge.js" : language === "csharp" ? "Program.cs" : language === "html" ? "index.html" : "styles.css";
 
 function HighlightedCode({ code, language }: { code: string; language: Language }) {
   const pattern = language === "html"
     ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|src|alt|lang|charset)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:])/g
+    : language === "css"
+    ? /(\/\*[\s\S]*?\*\/|#[0-9a-fA-F]{3,8}\b|\b(?:body|p|background-color|color|text-align|font-family|border|border-radius|solid|dotted|center|lightblue|red|blue)\b|\d+(?:px)?|[{}();:.,])/g
     : /(\/\/[^\n]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|class|constructor|this|let|const|new|if|else|for|of|setTimeout|void|string|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|[{}()[\];=.:])/g;
   const parts: { text: string; kind: string }[] = [];
   let lastIndex = 0;
@@ -396,11 +402,14 @@ function HighlightedCode({ code, language }: { code: string; language: Language 
     if (match.index! > lastIndex) parts.push({ text: code.slice(lastIndex, match.index), kind: "plain" });
     const text = match[0];
     let kind = "punctuation";
-    if (/^(\/\/|<!--)/.test(text)) kind = "comment";
+    if (/^(\/\/|\/\*|<!--)/.test(text)) kind = "comment";
     else if (/^["'`]/.test(text)) kind = "string";
     else if (/^(function|class|constructor|this|let|const|new|if|else|for|of|setTimeout|void|string|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
     else if (/^(console|Console|Task|Date|DateTime|log)$/.test(text)) kind = "api";
     else if (/^(style|href|src|alt|lang|charset)$/.test(text)) kind = "attribute";
+    else if (/^(background-color|color|text-align|font-family|border|border-radius)$/.test(text)) kind = "api";
+    else if (/^(body|p)$/.test(text)) kind = "keyword";
+    else if (/^(solid|dotted|center|lightblue|red|blue|#[0-9a-fA-F]+)$/.test(text)) kind = "string";
     else if (/^\d+$/.test(text)) kind = "number";
     else if (/^[A-Za-z_]/.test(text)) kind = "function-name";
     parts.push({ text, kind });
@@ -425,7 +434,7 @@ export default function Home() {
   const [code, setCode] = useState("");
   const [status, setStatus] = useState<"idle" | "wrong" | "correct">("idle");
   const [navOpen, setNavOpen] = useState(true);
-  const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0, html: 0 });
+  const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0, html: 0, css: 0 });
 
   const current = language ? lessons[language][index] : null;
   const breakdown = language ? breakdowns[language][index] : undefined;
@@ -492,8 +501,13 @@ export default function Home() {
             </button>
             <button className="course-card py-card" onClick={() => openCourse("html")}>
               <div className="course-icon">HTML</div><div className="course-count">{lessons.html.length} LESSONS</div>
-              <h3>HTML</h3><p>Build a web page with structure, headings, links, paragraphs, and colour.</p>
+              <h3>HTML</h3><p>Build web pages with structure, headings, text, links, images, and scripts.</p>
               <div className="course-bottom"><span>Start learning <b>→</b></span><div className="mini-progress"><i style={{width: `${completed.html / lessons.html.length * 100}%`}} /></div></div>
+            </button>
+            <button className="course-card css-card" onClick={() => openCourse("css")}>
+              <div className="course-icon">CSS</div><div className="course-count">{lessons.css.length} LESSONS</div>
+              <h3>CSS</h3><p>Style web pages with colours, alignment, fonts, borders, and rounded corners.</p>
+              <div className="course-bottom"><span>Start learning <b>→</b></span><div className="mini-progress"><i style={{width: `${completed.css / lessons.css.length * 100}%`}} /></div></div>
             </button>
           </div>
         </section>
@@ -554,10 +568,8 @@ export default function Home() {
             <div><code>&lt;b&gt; / &lt;i&gt;</code><p><b>Visual bold and italic</b><span>Changes appearance without adding importance or emphasis.</span></p></div>
             <div><code>&lt;em&gt;</code><p><b>Emphasized text</b><span>Adds verbal emphasis; browsers normally display it in italics.</span></p></div>
             <div><code>&lt;mark&gt; / &lt;small&gt;</code><p><b>Highlight or reduce</b><span>Marks relevant text or displays a smaller side comment.</span></p></div>
-            <div><code>text-align: center</code><p><b>Centre a group</b><span>Centres the text inside the element carrying this CSS rule.</span></p></div>
             <div><code>&lt;del&gt; / &lt;ins&gt;</code><p><b>Deleted or inserted</b><span>Shows removed text with a line through it or added text with an underline.</span></p></div>
             <div><code>&lt;sub&gt; / &lt;sup&gt;</code><p><b>Subscript or superscript</b><span>Lowers or raises smaller text, useful for H₂O and 2³.</span></p></div>
-            <div><code>max-width + margin</code><p><b>Readable page layout</b><span>Limits long lines; margin: auto centres the content block.</span></p></div>
           </div> : <>
             <div className="comment-card"><div className="comment-label">READ THE COMMENT</div><code>{current!.note}</code></div>
             <div className="reference-card">
@@ -569,7 +581,7 @@ export default function Home() {
         </aside>
         <section className="workspace">
           {current!.referenceOnly ? current!.referenceKind === "fonts" ? <div className="font-reference-preview">
-            <div className="preview-bar"><span>◆</span> HTML FONT REFERENCE</div>
+            <div className="preview-bar"><span>◆</span> CSS FONT REFERENCE</div>
             <div className="font-samples">
               <div style={{fontFamily:"Arial, sans-serif"}}><b>Arial</b><span>The quick brown fox jumps over the lazy dog.</span><code>Arial, sans-serif</code></div>
               <div style={{fontFamily:"Verdana, sans-serif"}}><b>Verdana</b><span>The quick brown fox jumps over the lazy dog.</span><code>Verdana, sans-serif</code></div>
@@ -581,7 +593,7 @@ export default function Home() {
               <div style={{fontFamily:"'Courier New', monospace"}}><b>Courier New</b><span>The quick brown fox jumps over the lazy dog.</span><code>&quot;Courier New&quot;, monospace</code></div>
               <div style={{fontFamily:"'Brush Script MT', cursive"}}><b>Brush Script MT</b><span>The quick brown fox jumps over the lazy dog.</span><code>&quot;Brush Script MT&quot;, cursive</code></div>
             </div>
-            <button className="reference-next" onClick={nextLesson}>Continue to multiple pages →</button>
+            <button className="reference-next" onClick={nextLesson}>Continue to borders →</button>
           </div> : current!.referenceKind === "pages" ? <div className="pages-reference-preview">
             <div className="preview-bar"><span>◆</span> TWO HTML FILES</div>
             <div className="file-pair">
@@ -611,10 +623,8 @@ export default function Home() {
               <div><small>&lt;b&gt;</small><b>Visually bold text</b></div>
               <div><small>&lt;i&gt; and &lt;em&gt;</small><span><i>Italic text</i> · <em>Emphasized text</em></span></div>
               <div><small>&lt;mark&gt; and &lt;small&gt;</small><span><mark>Highlighted text</mark> · <small>Smaller text</small></span></div>
-              <div className="centred-sample"><small>text-align: center</small><span>This text is centred</span></div>
               <div><small>&lt;del&gt; and &lt;ins&gt;</small><span><del>Deleted text</del> · <ins>Inserted text</ins></span></div>
               <div><small>&lt;sub&gt; and &lt;sup&gt;</small><span>H<sub>2</sub>O · 2<sup>3</sup></span></div>
-              <div><small>line-height · max-width · margin · padding</small><span>A readable centred content column with comfortable spacing.</span></div>
             </div>
             <button className="reference-next" onClick={nextLesson}>Continue to the next lesson →</button>
           </div> : <>
