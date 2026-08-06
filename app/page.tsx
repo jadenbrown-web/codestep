@@ -122,7 +122,16 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What car do you want to add?  →  Ford", '["Ford"]'],
     },
     {
-      eyebrow: "12 · Array positions",
+      eyebrow: "12 · Sets",
+      title: "Remove duplicate names",
+      explanation: "A Set stores only unique values. Passing names into new Set(names) removes repeated names, and [...uniqueNames] spreads the remaining values back into an array for printing.",
+      note: "// Ask for three names, then remove any duplicates",
+      prompt: "Collect three names, create a Set, and print its unique values.",
+      answer: 'const names = [];\n\nnames.push(prompt("Enter the first name:"));\nnames.push(prompt("Enter the second name:"));\nnames.push(prompt("Enter the third name:"));\n\nconst uniqueNames = new Set(names);\n\nconsole.log([...uniqueNames]);',
+      output: ["Enter the first name:  →  Alex", "Enter the second name:  →  Sam", "Enter the third name:  →  Alex", '["Alex", "Sam"]'],
+    },
+    {
+      eyebrow: "13 · Array positions",
       title: "Look up the car you added",
       explanation: "Array positions start at zero. cars[0] retrieves the first item, which is Ford because it was the first value pushed into the array.",
       note: "// Look up and print the first car in the array",
@@ -132,7 +141,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What car do you want to add?  →  Ford", '["Ford"]', "Item at position 0  →  Ford"],
     },
     {
-      eyebrow: "13 · Objects",
+      eyebrow: "14 · Objects",
       title: "Give values names",
       explanation: "Objects keep related values under named keys. Here, BMW and Ford are keys, and each car has a colour property.",
       note: "// Look up a car brand and print its colour",
@@ -141,7 +150,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Enter BMW or Ford:  →  BMW", "Brand: BMW", "Colour: Blue"],
     },
     {
-      eyebrow: "14 · Timers",
+      eyebrow: "15 · Timers",
       title: "Run code later",
       explanation: "setTimeout schedules a function to run after a delay. The delay is measured in milliseconds, so 1000 means one second.",
       note: "// Print One, Two, and Three one second apart",
@@ -150,7 +159,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["One", "Two", "Three"],
     },
     {
-      eyebrow: "15 · Date and time",
+      eyebrow: "16 · Date and time",
       title: "Get the current moment",
       explanation: "new Date() creates a Date object containing the current date and time from the device running the code. console.log then displays that value.",
       note: "// Create the current date and time, then print it",
@@ -159,7 +168,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Thu Aug 06 2026 19:05:00 GMT+0100 (British Summer Time)"],
     },
     {
-      eyebrow: "16 · Classes",
+      eyebrow: "17 · Classes",
       title: "Create cars from a blueprint",
       explanation: "A class is a reusable blueprint for objects. Its constructor receives values when new Car(...) runs, and this stores those values as properties on each separate car object.",
       note: "// Define a Car class, then create and print two car objects",
@@ -272,7 +281,16 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What car do you want to add?  →  Ford", "[Ford]"],
     },
     {
-      eyebrow: "12 · Array positions",
+      eyebrow: "12 · Sets",
+      title: "Remove duplicate names",
+      explanation: "A HashSet stores only unique values. Passing names into new HashSet<string>(names) removes repeated names, and string.Join makes the remaining values readable for printing.",
+      note: "// Ask for three names, then remove any duplicates",
+      prompt: "Collect three names, create a HashSet, and print its unique values.",
+      answer: 'List<string> names = new List<string>();\n\nConsole.WriteLine("Enter the first name:");\nnames.Add(Console.ReadLine());\nConsole.WriteLine("Enter the second name:");\nnames.Add(Console.ReadLine());\nConsole.WriteLine("Enter the third name:");\nnames.Add(Console.ReadLine());\n\nHashSet<string> uniqueNames = new HashSet<string>(names);\n\nConsole.WriteLine($"[{string.Join(", ", uniqueNames)}]");',
+      output: ["Enter the first name:  →  Alex", "Enter the second name:  →  Sam", "Enter the third name:  →  Alex", "[Alex, Sam]"],
+    },
+    {
+      eyebrow: "13 · Array positions",
       title: "Look up the car you added",
       explanation: "C# list positions start at zero. cars[0] retrieves the first item, which is Ford because it was the first value added to the list.",
       note: "// Look up and print the first car in the list",
@@ -282,7 +300,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What car do you want to add?  →  Ford", "[Ford]", "Item at position 0  →  Ford"],
     },
     {
-      eyebrow: "13 · Objects",
+      eyebrow: "14 · Objects",
       title: "Give values names",
       explanation: "C# objects keep related values in named properties. Here, an anonymous object groups a car's Brand and Colour together.",
       note: "// Create a car object and print its properties",
@@ -291,7 +309,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Brand: BMW", "Colour: Blue"],
     },
     {
-      eyebrow: "14 · Timers",
+      eyebrow: "15 · Timers",
       title: "Run code later",
       explanation: "Task.Delay pauses asynchronous C# code for a number of milliseconds. Using await lets each message appear after another one-second delay.",
       note: "// Print One, Two, and Three one second apart",
@@ -300,7 +318,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["One", "Two", "Three"],
     },
     {
-      eyebrow: "15 · Date and time",
+      eyebrow: "16 · Date and time",
       title: "Get the current moment",
       explanation: "DateTime.Now gets the computer's current local date and time. Storing it in currentDateTime lets the program use or display that moment later.",
       note: "// Get the current date and time, then print it",
@@ -309,7 +327,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["06/08/2026 19:05:00"],
     },
     {
-      eyebrow: "16 · Classes",
+      eyebrow: "17 · Classes",
       title: "Create cars from a blueprint",
       explanation: "A C# class is a reusable blueprint for objects. Properties store each car's data, the constructor receives starting values, and this refers to the particular object being created.",
       note: "// Define a Car class, then create and print two car objects",
@@ -555,6 +573,21 @@ const nullBreakdowns: Partial<Record<Language, CodePart[]>> = {
   ],
 };
 
+const setsBreakdowns: Partial<Record<Language, CodePart[]>> = {
+  javascript: [
+    { code: "names", name: "Source array", meaning: "Holds all three answers, including any repeated names." },
+    { code: "new Set(names)", name: "Remove duplicates", meaning: "Creates a Set from names. A Set keeps only one copy of each value." },
+    { code: "uniqueNames", name: "Set variable", meaning: "Labels the new collection of unique names so it can be used later." },
+    { code: "[...uniqueNames]", name: "Spread into an array", meaning: "The three dots copy every Set value into a new array for familiar array-style output." },
+  ],
+  csharp: [
+    { code: "names", name: "Source list", meaning: "Holds all three answers, including any repeated names." },
+    { code: "HashSet<string>", name: "Unique text collection", meaning: "Defines a collection that stores no duplicate text values." },
+    { code: "new HashSet<string>(names)", name: "Remove duplicates", meaning: "Creates the HashSet from names and keeps only one copy of each value." },
+    { code: "string.Join", name: "Readable output", meaning: "Joins the unique values together so they can be printed on one line." },
+  ],
+};
+
 const normalize = (value: string) =>
   value
     .replace(/\/\/.*$/gm, "")
@@ -642,7 +675,7 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
     ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|src|alt|id|lang|charset)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:#])/g
     : language === "css"
     ? /(\/\*[\s\S]*?\*\/|#[0-9a-fA-F]{3,8}\b|#[A-Za-z_]\w*|\b(?:body|p|background-color|color|text-align|font-family|border|border-radius|solid|dotted|center|lightblue|red|blue|tomato)\b|\d+(?:px)?|[{}();:.,])/g
-    : /(\/\/[^\n]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|class|constructor|this|let|const|new|null|if|else|for|of|while|true|false|break|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime|List)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|&&|>=|<=|\+\+|--|[{}()[\];=.:<>?])/g;
+    : /(\/\/[^\n]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|class|constructor|this|let|const|new|null|if|else|for|of|while|true|false|break|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime|List|Set|HashSet)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|&&|>=|<=|\+\+|--|[{}()[\];=.:<>?])/g;
   const parts: { text: string; kind: string }[] = [];
   let lastIndex = 0;
   for (const match of code.matchAll(pattern)) {
@@ -652,7 +685,7 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
     if (/^(\/\/|\/\*|<!--)/.test(text)) kind = "comment";
     else if (/^["'`]/.test(text)) kind = "string";
     else if (/^(function|class|constructor|this|let|const|new|null|if|else|for|of|while|true|false|break|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
-    else if (/^(console|Console|Task|Date|DateTime|List|log)$/.test(text)) kind = "api";
+    else if (/^(console|Console|Task|Date|DateTime|List|Set|HashSet|log)$/.test(text)) kind = "api";
     else if (/^(style|href|src|alt|id|lang|charset)$/.test(text)) kind = "attribute";
     else if (/^(background-color|color|text-align|font-family|border|border-radius)$/.test(text)) kind = "api";
     else if (/^(body|p)$/.test(text)) kind = "keyword";
@@ -711,7 +744,9 @@ export default function Home() {
   const visibleGhost = current ? current.answer.slice(0, ghostLength) : "";
   const guideCode = alignedGuide(code, visibleGhost);
   const breakdown = language
-    ? (index === 5 && nullBreakdowns[language]) || breakdowns[language][language === "javascript" || language === "csharp" ? (index > 5 ? index - 1 : index) : index]
+    ? (index === 5 && nullBreakdowns[language])
+      || (index === 11 && setsBreakdowns[language])
+      || breakdowns[language][language === "javascript" || language === "csharp" ? (index > 11 ? index - 2 : index > 5 ? index - 1 : index) : index]
     : undefined;
   const progress = language ? Math.round((index / lessons[language].length) * 100) : 0;
   const diagnostic = useMemo(() => current ? syntaxDiagnostic(code, current.answer) : [], [code, current]);
