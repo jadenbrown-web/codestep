@@ -343,6 +343,15 @@ function HighlightedCode({ code, language }: { code: string; language: Language 
   return <>{parts.map((part, i) => <span className={`syntax-${part.kind}`} key={i}>{part.text}</span>)}</>;
 }
 
+function breakdownSyntaxKind(code: string) {
+  if (/^(function|let|const|new|if|else|for|for \.\.\. of|setTimeout|void|string|string\[\]|var|foreach|await|while|<\/?[a-z1-6]+>|<\/?|\/?>)$/i.test(code)) return "keyword";
+  if (/^(console|Console|Task|Date|DateTime|console\.log|Console\.WriteLine|Task\.Delay|DateTime\.Now)$/i.test(code)) return "api";
+  if (/^["'`]|color|lightblue|1000$/.test(code)) return "string";
+  if (/^[{}()[\];=.: ]+$|^\{.*\}$|^<\/\.\.\.>$/.test(code)) return "punctuation";
+  if (/\(.*\)|\w+\(\);?$/.test(code)) return "function-name";
+  return "attribute";
+}
+
 export default function Home() {
   const [language, setLanguage] = useState<Language | null>(null);
   const [index, setIndex] = useState(0);
@@ -454,7 +463,7 @@ export default function Home() {
           {breakdown && <section className="code-breakdown" aria-label="Code breakdown">
             <div className="breakdown-label">BREAK IT DOWN</div>
             <div className="breakdown-grid">{breakdown.map((part, partIndex) => <div className="breakdown-part" key={`${part.code}-${partIndex}`}>
-              <code>{part.code}</code><div><b>{part.name}</b><span>{part.meaning}</span></div>
+              <code className={`breakdown-${breakdownSyntaxKind(part.code)}`}>{part.code}</code><div><b>{part.name}</b><span>{part.meaning}</span></div>
             </div>)}</div>
           </section>}
           <div className="comment-card"><div className="comment-label">READ THE COMMENT</div><code>{current!.note}</code></div>
