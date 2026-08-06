@@ -80,6 +80,15 @@ const lessons: Record<Language, Lesson[]> = {
       answer: 'let cars = {\n  BMW: { colour: "Blue" },\n  Ford: { colour: "Red" }\n};\n\nlet brand = prompt("Enter BMW or Ford:");\n\nif (cars[brand]) {\n  console.log("Brand: " + brand);\n  console.log("Colour: " + cars[brand].colour);\n} else {\n  console.log("Car not found");\n}',
       output: ["Enter BMW or Ford:  →  BMW", "Brand: BMW", "Colour: Blue"],
     },
+    {
+      eyebrow: "08 · Timers",
+      title: "Run code later",
+      explanation: "setTimeout schedules a function to run after a delay. The delay is measured in milliseconds, so 1000 means one second.",
+      note: "// Print One, Two, and Three one second apart",
+      prompt: "Schedule each message with the correct delay.",
+      answer: 'setTimeout(() => console.log("One"), 1000);\nsetTimeout(() => console.log("Two"), 2000);\nsetTimeout(() => console.log("Three"), 3000);',
+      output: ["One", "Two", "Three"],
+    },
   ],
   csharp: [
     {
@@ -145,6 +154,15 @@ const lessons: Record<Language, Lesson[]> = {
       prompt: "Create the car object, then print its brand and colour.",
       answer: 'var car = new { Brand = "BMW", Colour = "Blue" };\n\nConsole.WriteLine($"Brand: {car.Brand}");\nConsole.WriteLine($"Colour: {car.Colour}");',
       output: ["Brand: BMW", "Colour: Blue"],
+    },
+    {
+      eyebrow: "08 · Timers",
+      title: "Run code later",
+      explanation: "Task.Delay pauses asynchronous C# code for a number of milliseconds. Using await lets each message appear after another one-second delay.",
+      note: "// Print One, Two, and Three one second apart",
+      prompt: "Wait one second before printing each message.",
+      answer: 'await Task.Delay(1000);\nConsole.WriteLine("One");\n\nawait Task.Delay(1000);\nConsole.WriteLine("Two");\n\nawait Task.Delay(1000);\nConsole.WriteLine("Three");',
+      output: ["One", "Two", "Three"],
     },
   ],
 };
