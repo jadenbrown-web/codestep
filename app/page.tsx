@@ -207,19 +207,19 @@ const lessons: Record<Language, Lesson[]> = {
     {
       eyebrow: "02 · Page structure",
       title: "Start the HTML page",
-      explanation: "The html element wraps the whole page. Most elements use an opening tag and a closing tag; the forward slash marks the closing tag.",
-      note: "<!-- Wrap the page in opening and closing html tags -->",
-      prompt: "Create the outer html element.",
-      answer: "<html>\n</html>",
+      explanation: "The html element wraps the whole page. The lang attribute identifies the page language for browsers, search engines, and assistive technology. The forward slash marks the closing tag.",
+      note: "<!-- Wrap the English-language page in html tags -->",
+      prompt: "Create the outer html element and mark its language as English.",
+      answer: '<html lang="en">\n</html>',
       output: ["Page wrapper created."],
     },
     {
       eyebrow: "03 · Head and title",
       title: "Name the browser tab",
-      explanation: "The head holds information about the page rather than visible page content. The title inside it supplies the text shown on the browser tab.",
-      note: "<!-- Add a title inside the head section -->",
-      prompt: "Create the head and give the page a title.",
-      answer: "<head>\n  <title>My page</title>\n</head>",
+      explanation: "The head holds information about the page. meta charset UTF-8 lets it display a wide range of characters correctly, while title supplies the text shown on the browser tab.",
+      note: "<!-- Set the character encoding and browser-tab title -->",
+      prompt: "Create the head, set UTF-8, and give the page a title.",
+      answer: '<head>\n  <meta charset="UTF-8">\n  <title>My page</title>\n</head>',
       output: ["Browser-tab title: My page"],
     },
     {
@@ -270,10 +270,10 @@ const lessons: Record<Language, Lesson[]> = {
     {
       eyebrow: "09 · Centred text section",
       title: "Explore HTML text elements",
-      explanation: "This is a reference page rather than a quiz. Compare every heading level, then see how HTML makes text bold, centres a group, marks deleted text, and lowers characters with subscript.",
+      explanation: "This is a reference page rather than a quiz. Compare heading levels, text formatting elements, alignment, and a few useful layout styles from your notes sheet.",
       note: "<!-- A visual guide to HTML text elements -->",
       prompt: "Explore the examples and what each element means.",
-      answer: '<section style="text-align: center;">\n  <h1>Heading 1</h1>\n  <h2>Heading 2</h2>\n  <h3>Heading 3</h3>\n  <h4>Heading 4</h4>\n  <h5>Heading 5</h5>\n  <h6>Heading 6</h6>\n  <strong>Bold important text</strong>\n  <p><del>Deleted text</del></p>\n  <p>H<sub>2</sub>O</p>\n</section>',
+      answer: '<section style="text-align: center;">\n  <h1>Heading 1</h1>\n  <h2>Heading 2</h2>\n  <h3>Heading 3</h3>\n  <h4>Heading 4</h4>\n  <h5>Heading 5</h5>\n  <h6>Heading 6</h6>\n  <b>Bold text</b>\n  <strong>Important text</strong>\n  <i>Italic text</i>\n  <em>Emphasized text</em>\n  <mark>Highlighted text</mark>\n  <small>Smaller text</small>\n  <del>Deleted text</del>\n  <ins>Inserted text</ins>\n  <span>H<sub>2</sub>O and 2<sup>3</sup></span>\n</section>',
       output: ["Reference explored."],
       referenceOnly: true,
       referenceKind: "text",
@@ -325,8 +325,8 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
   },
   html: {
     0: [{ code: "<!DOCTYPE", name: "Declaration", meaning: "Tells the browser what kind of document follows." }, { code: "html", name: "Modern HTML", meaning: "Selects the current HTML standard." }],
-    1: [{ code: "<html>", name: "Opening tag", meaning: "Marks where the HTML page begins." }, { code: "</html>", name: "Closing tag", meaning: "The slash marks where that element ends." }],
-    2: [{ code: "<head>", name: "Page information", meaning: "Contains information used by the browser." }, { code: "<title>", name: "Tab title", meaning: "Sets the words shown on the browser tab." }, { code: "</title>", name: "Close title", meaning: "The slash ends the title element." }],
+    1: [{ code: "<html>", name: "Opening tag", meaning: "Marks where the HTML page begins." }, { code: 'lang="en"', name: "Page language", meaning: "Identifies the document as English." }, { code: "</html>", name: "Closing tag", meaning: "The slash marks where that element ends." }],
+    2: [{ code: "<head>", name: "Page information", meaning: "Contains information used by the browser." }, { code: '<meta charset="UTF-8">', name: "Character encoding", meaning: "Supports letters, symbols, and characters from many languages." }, { code: "<title>", name: "Tab title", meaning: "Sets the words shown on the browser tab." }],
     3: [{ code: "<body>", name: "Visible content", meaning: "Starts the part visitors can see." }, { code: "</body>", name: "End content", meaning: "Closes the visible page area." }],
     4: [{ code: "style=", name: "Style attribute", meaning: "Adds CSS rules directly to this element." }, { code: "background-color", name: "CSS property", meaning: "Chooses the colour behind the content." }, { code: "lightblue", name: "CSS value", meaning: "The particular background colour to use." }, { code: ";", name: "Rule ending", meaning: "Marks the end of this CSS instruction." }],
     5: [{ code: "h1", name: "Main heading", meaning: "The page's most important heading." }, { code: "h2", name: "Section heading", meaning: "Introduces a major section beneath the h1." }, { code: "</...>", name: "Closing tag", meaning: "Ends the heading so later text stays separate." }],
@@ -346,7 +346,7 @@ const challengeFile = (language: Language) => language === "javascript" ? "chall
 
 function HighlightedCode({ code, language }: { code: string; language: Language }) {
   const pattern = language === "html"
-    ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|title|body|section|script|h[1-6]|p|a|strong)\b|\b(?:style|href)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:])/g
+    ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|section|script|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|lang|charset)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:])/g
     : /(\/\/[^\n]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|class|constructor|this|let|const|new|if|else|for|of|setTimeout|void|string|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|[{}()[\];=.:])/g;
   const parts: { text: string; kind: string }[] = [];
   let lastIndex = 0;
@@ -356,9 +356,9 @@ function HighlightedCode({ code, language }: { code: string; language: Language 
     let kind = "punctuation";
     if (/^(\/\/|<!--)/.test(text)) kind = "comment";
     else if (/^["'`]/.test(text)) kind = "string";
-    else if (/^(function|class|constructor|this|let|const|new|if|else|for|of|setTimeout|void|string|var|foreach|in|await|<\/?|\/?>|html|head|title|body|section|script|h[1-6]|p|a|strong)$/.test(text)) kind = "keyword";
+    else if (/^(function|class|constructor|this|let|const|new|if|else|for|of|setTimeout|void|string|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|section|script|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
     else if (/^(console|Console|Task|Date|DateTime|log)$/.test(text)) kind = "api";
-    else if (/^(style|href)$/.test(text)) kind = "attribute";
+    else if (/^(style|href|lang|charset)$/.test(text)) kind = "attribute";
     else if (/^\d+$/.test(text)) kind = "number";
     else if (/^[A-Za-z_]/.test(text)) kind = "function-name";
     parts.push({ text, kind });
@@ -498,9 +498,13 @@ export default function Home() {
           </div> : <div className="element-guide">
             <div><code>&lt;h1&gt;–&lt;h6&gt;</code><p><b>Heading hierarchy</b><span>Six levels, from the main page heading down to the smallest subheading.</span></p></div>
             <div><code>&lt;strong&gt;</code><p><b>Important bold text</b><span>Adds importance; browsers normally display it in bold.</span></p></div>
+            <div><code>&lt;b&gt; / &lt;i&gt;</code><p><b>Visual bold and italic</b><span>Changes appearance without adding importance or emphasis.</span></p></div>
+            <div><code>&lt;em&gt;</code><p><b>Emphasized text</b><span>Adds verbal emphasis; browsers normally display it in italics.</span></p></div>
+            <div><code>&lt;mark&gt; / &lt;small&gt;</code><p><b>Highlight or reduce</b><span>Marks relevant text or displays a smaller side comment.</span></p></div>
             <div><code>text-align: center</code><p><b>Centre a group</b><span>Centres the text inside the element carrying this CSS rule.</span></p></div>
-            <div><code>&lt;del&gt;</code><p><b>Deleted text</b><span>Shows that text was removed, usually with a line through it.</span></p></div>
-            <div><code>&lt;sub&gt;</code><p><b>Subscript</b><span>Lowers smaller text, useful for formulas such as H₂O.</span></p></div>
+            <div><code>&lt;del&gt; / &lt;ins&gt;</code><p><b>Deleted or inserted</b><span>Shows removed text with a line through it or added text with an underline.</span></p></div>
+            <div><code>&lt;sub&gt; / &lt;sup&gt;</code><p><b>Subscript or superscript</b><span>Lowers or raises smaller text, useful for H₂O and 2³.</span></p></div>
+            <div><code>max-width + margin</code><p><b>Readable page layout</b><span>Limits long lines; margin: auto centres the content block.</span></p></div>
           </div> : <>
             <div className="comment-card"><div className="comment-label">READ THE COMMENT</div><code>{current!.note}</code></div>
             <div className="reference-card">
@@ -530,9 +534,13 @@ export default function Home() {
             <div className="heading-samples"><h1>Heading 1</h1><h2>Heading 2</h2><h3>Heading 3</h3><h4>Heading 4</h4><h5>Heading 5</h5><h6>Heading 6</h6></div>
             <div className="format-samples">
               <div><small>&lt;strong&gt;</small><strong>Bold important text</strong></div>
+              <div><small>&lt;b&gt;</small><b>Visually bold text</b></div>
+              <div><small>&lt;i&gt; and &lt;em&gt;</small><span><i>Italic text</i> · <em>Emphasized text</em></span></div>
+              <div><small>&lt;mark&gt; and &lt;small&gt;</small><span><mark>Highlighted text</mark> · <small>Smaller text</small></span></div>
               <div className="centred-sample"><small>text-align: center</small><span>This text is centred</span></div>
-              <div><small>&lt;del&gt;</small><del>Deleted text</del></div>
-              <div><small>&lt;sub&gt;</small><span>H<sub>2</sub>O uses subscript</span></div>
+              <div><small>&lt;del&gt; and &lt;ins&gt;</small><span><del>Deleted text</del> · <ins>Inserted text</ins></span></div>
+              <div><small>&lt;sub&gt; and &lt;sup&gt;</small><span>H<sub>2</sub>O · 2<sup>3</sup></span></div>
+              <div><small>line-height · max-width · margin · padding</small><span>A readable centred content column with comfortable spacing.</span></div>
             </div>
             <button className="reference-next" onClick={nextLesson}>Continue to the next lesson →</button>
           </div> : <>
