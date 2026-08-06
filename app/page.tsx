@@ -319,6 +319,30 @@ const languageName = (language: Language) => language === "javascript" ? "JavaSc
 const languageBadge = (language: Language) => language === "javascript" ? "JS" : language === "csharp" ? "C#" : "HTML";
 const challengeFile = (language: Language) => language === "javascript" ? "challenge.js" : language === "csharp" ? "Program.cs" : "index.html";
 
+function HighlightedCode({ code, language }: { code: string; language: Language }) {
+  const pattern = language === "html"
+    ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|title|body|section|script|h[1-6]|p|a|strong)\b|\b(?:style|href)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:])/g
+    : /(\/\/[^\n]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|let|const|new|if|else|for|of|setTimeout|void|string|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|[{}()[\];=.:])/g;
+  const parts: { text: string; kind: string }[] = [];
+  let lastIndex = 0;
+  for (const match of code.matchAll(pattern)) {
+    if (match.index! > lastIndex) parts.push({ text: code.slice(lastIndex, match.index), kind: "plain" });
+    const text = match[0];
+    let kind = "punctuation";
+    if (/^(\/\/|<!--)/.test(text)) kind = "comment";
+    else if (/^["'`]/.test(text)) kind = "string";
+    else if (/^(function|let|const|new|if|else|for|of|setTimeout|void|string|var|foreach|in|await|<\/?|\/?>|html|head|title|body|section|script|h[1-6]|p|a|strong)$/.test(text)) kind = "keyword";
+    else if (/^(console|Console|Task|Date|DateTime|log)$/.test(text)) kind = "api";
+    else if (/^(style|href)$/.test(text)) kind = "attribute";
+    else if (/^\d+$/.test(text)) kind = "number";
+    else if (/^[A-Za-z_]/.test(text)) kind = "function-name";
+    parts.push({ text, kind });
+    lastIndex = match.index! + text.length;
+  }
+  if (lastIndex < code.length) parts.push({ text: code.slice(lastIndex), kind: "plain" });
+  return <>{parts.map((part, i) => <span className={`syntax-${part.kind}`} key={i}>{part.text}</span>)}</>;
+}
+
 export default function Home() {
   const [language, setLanguage] = useState<Language | null>(null);
   const [index, setIndex] = useState(0);
@@ -436,7 +460,7 @@ export default function Home() {
           <div className="comment-card"><div className="comment-label">READ THE COMMENT</div><code>{current!.note}</code></div>
           <div className="reference-card">
             <div className="reference-head"><div><span>STEP 1</span><b>Look at this code</b></div></div>
-            <pre><code>{current!.answer}</code></pre>
+            <pre><code><HighlightedCode code={current!.answer} language={language} /></code></pre>
           </div>
           <div className="tip"><span>↵</span> Copy or type the example into the editor, then press Enter to check it.</div>
         </aside>
