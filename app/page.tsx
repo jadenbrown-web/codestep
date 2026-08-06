@@ -601,7 +601,7 @@ function syntaxDiagnostic(code: string, expected: string): DiagnosticPart[] {
 }
 
 function SyntaxDiagnostic({ parts }: { parts: DiagnosticPart[] }) {
-  return <div className="syntax-diagnostic" role="alert">{parts.map((part, index) => <span key={`${part.text}-${index}`} className={`diagnostic-${part.kind}`} tabIndex={0} data-help={part.help} title={part.help}>{part.text}</span>)}</div>;
+  return <div className="syntax-diagnostic" role="alert">{parts.map((part, index) => <span key={`${part.text}-${index}`} className={`diagnostic-${part.kind}`} tabIndex={0} data-help={part.help} aria-label={`${part.text}: ${part.help}`}>{part.text}</span>)}</div>;
 }
 
 function HighlightedCode({ code, language, caretIndex }: { code: string; language: Language; caretIndex?: number }) {
