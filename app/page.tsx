@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-type Language = "javascript" | "csharp";
+type Language = "javascript" | "csharp" | "python";
 type Lesson = {
   title: string;
   eyebrow: string;
@@ -165,6 +165,80 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["One", "Two", "Three"],
     },
   ],
+  python: [
+    {
+      eyebrow: "01 · Imports",
+      title: "Bring in useful tools",
+      explanation: "import loads code from Python's standard library. Your script imports os to run a terminal command and time to pause before moving on.",
+      note: "# Load the tools used by the quiz",
+      prompt: "Import os and time on separate lines.",
+      answer: "import os\nimport time",
+      output: ["os and time are ready to use."],
+    },
+    {
+      eyebrow: "02 · Terminal colours",
+      title: "Give feedback a colour",
+      explanation: "These special ANSI escape codes tell a compatible terminal to change text colour. reset switches the terminal back so later text does not stay coloured.",
+      note: "# Save colour codes under easy names",
+      prompt: "Create red, green, and reset colour variables.",
+      answer: 'red = "\\033[31m"\ngreen = "\\033[32m"\nreset = "\\033[0m"',
+      output: ["Colour codes saved."],
+    },
+    {
+      eyebrow: "03 · Functions",
+      title: "Reuse the right response",
+      explanation: "def creates a function: a named set of instructions you can reuse. The indented lines belong to the function, and correct() calls it.",
+      note: "# Create and call the correct-answer response",
+      prompt: "Define correct, print Correct, then call the function.",
+      answer: 'def correct():\n    print("Correct")\n\ncorrect()',
+      output: ["Correct"],
+    },
+    {
+      eyebrow: "04 · F-strings",
+      title: "Build coloured messages",
+      explanation: "An f-string starts with f and lets you insert variable values inside curly braces. Your script uses this to put a colour before a message and reset it afterwards.",
+      note: "# Print Correct in green, then reset the colour",
+      prompt: "Use an f-string with green and reset.",
+      answer: 'print(f"{green}Correct{reset}")',
+      output: ["Correct"],
+    },
+    {
+      eyebrow: "05 · Input",
+      title: "Remember what they type",
+      explanation: "input shows a prompt and waits for the user to type. The equals sign stores the returned text in a variable so the program can check it next.",
+      note: "# Ask for the HTML doctype and remember the answer",
+      prompt: "Save the user's answer in doctype.",
+      answer: 'doctype = input("Enter your answer: ")',
+      output: ["Enter your answer:  →  <!DOCTYPE html>"],
+    },
+    {
+      eyebrow: "06 · Decisions",
+      title: "Check the answer",
+      explanation: "if compares the user's text with the expected HTML. == asks whether two values are equal; else handles every answer that does not match.",
+      note: "# Call the correct function only when the text matches",
+      prompt: "Check doctype and call the matching response function.",
+      answer: 'if doctype == "<!DOCTYPE html>":\n    correct()\nelse:\n    wrong()',
+      output: ["Correct"],
+    },
+    {
+      eyebrow: "07 · Loops",
+      title: "Keep the quiz running",
+      explanation: "while repeats its indented block while a condition is true. Because True never changes, while True creates a continuous quiz loop until the program is stopped.",
+      note: "# Keep asking the same question",
+      prompt: "Create a continuous loop that asks for an answer.",
+      answer: 'while True:\n    answer = input("Enter your answer: ")',
+      output: ["The quiz is waiting for an answer."],
+    },
+    {
+      eyebrow: "08 · Refactoring",
+      title: "Turn repetition into one tool",
+      explanation: "Your quiz repeats the same print, input, and check pattern for every HTML tag. A function with parameters lets one clean block handle every question.",
+      note: "# Make one reusable question function",
+      prompt: "Create ask_question, then use it for the doctype.",
+      answer: 'def ask_question(message, expected):\n    print(message)\n    answer = input("Enter your answer: ")\n    if answer == expected:\n        correct()\n    else:\n        wrong()\n\nask_question("Type the HTML doctype", "<!DOCTYPE html>")',
+      output: ["Type the HTML doctype", "Enter your answer:  →  <!DOCTYPE html>", "Correct"],
+    },
+  ],
 };
 
 type CodePart = { code: string; name: string; meaning: string };
@@ -186,10 +260,24 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
     6: [{ code: "var car", name: "Variable", meaning: "Creates a place named car for the object." }, { code: "new { ... }", name: "Object", meaning: "Groups related values into one thing." }, { code: "car.Brand", name: "Property", meaning: "Reads the Brand value stored on car." }],
     7: [{ code: "Task.Delay", name: "Timer", meaning: "Creates a pause for a number of milliseconds." }, { code: "1000", name: "Duration", meaning: "One thousand milliseconds means one second." }, { code: "await", name: "Wait", meaning: "Pauses here before moving to the next line." }],
   },
+  python: {
+    0: [{ code: "import", name: "Load", meaning: "Makes another module available in this file." }, { code: "os", name: "System tools", meaning: "Lets the script run commands such as clearing the terminal." }, { code: "time", name: "Time tools", meaning: "Provides time.sleep for short pauses." }],
+    1: [{ code: "\\033[31m", name: "Escape code", meaning: "Tells a compatible terminal to switch to red." }, { code: "red", name: "Readable label", meaning: "Saves that difficult code under a simple name." }, { code: "\\033[0m", name: "Reset", meaning: "Returns later terminal text to its normal colour." }],
+    2: [{ code: "def", name: "Define", meaning: "Starts the creation of a new function." }, { code: "correct", name: "Function name", meaning: "A clear label for the reusable instructions." }, { code: "    print(...) ", name: "Indented body", meaning: "The indented instruction belongs to the function." }, { code: "correct()", name: "Call", meaning: "Runs the function." }],
+    3: [{ code: "f\"...\"", name: "F-string", meaning: "Builds text with values inserted into it." }, { code: "{green}", name: "Insert value", meaning: "Adds the saved green terminal code here." }, { code: "{reset}", name: "Restore colour", meaning: "Stops following text from staying green." }],
+    4: [{ code: "input(...) ", name: "Ask", meaning: "Shows a message and waits for typed text." }, { code: "doctype", name: "Variable", meaning: "Keeps the text that the user entered." }, { code: "=", name: "Store", meaning: "Places the returned text into doctype." }],
+    5: [{ code: "if", name: "Decision", meaning: "Chooses a path based on a condition." }, { code: "==", name: "Compare", meaning: "Checks whether two values are equal." }, { code: "else", name: "Fallback", meaning: "Runs when the comparison is false." }],
+    6: [{ code: "while", name: "Repeat", meaning: "Runs an indented block again while its condition is true." }, { code: "True", name: "Always true", meaning: "Makes the loop continue until the program is stopped." }, { code: "    answer = ...", name: "Loop body", meaning: "Indentation shows which instruction repeats." }],
+    7: [{ code: "message, expected", name: "Parameters", meaning: "Let each call supply a new question and correct answer." }, { code: "answer", name: "Local value", meaning: "Stores the response for this question." }, { code: "ask_question(...) ", name: "Reuse", meaning: "Runs the whole question pattern with new values." }],
+  },
 };
 
 const normalize = (value: string) =>
   value.replace(/\/\/.*$/gm, "").replace(/\s+/g, "").replace(/'/g, '"').trim();
+
+const languageName = (language: Language) => language === "javascript" ? "JavaScript" : language === "csharp" ? "C Sharp" : "Python";
+const languageBadge = (language: Language) => language === "javascript" ? "JS" : language === "csharp" ? "C#" : "PY";
+const challengeFile = (language: Language) => language === "javascript" ? "challenge.js" : language === "csharp" ? "Program.cs" : "quiz.py";
 
 export default function Home() {
   const [language, setLanguage] = useState<Language | null>(null);
@@ -197,7 +285,7 @@ export default function Home() {
   const [code, setCode] = useState("");
   const [status, setStatus] = useState<"idle" | "wrong" | "correct">("idle");
   const [navOpen, setNavOpen] = useState(true);
-  const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0 });
+  const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0, python: 0 });
 
   const current = language ? lessons[language][index] : null;
   const breakdown = language ? breakdowns[language][index] : undefined;
@@ -262,6 +350,11 @@ export default function Home() {
               <h3>C Sharp</h3><p>Create powerful console apps and learn the foundations of strongly typed code.</p>
               <div className="course-bottom"><span>Start learning <b>→</b></span><div className="mini-progress"><i style={{width: `${completed.csharp / lessons.csharp.length * 100}%`}} /></div></div>
             </button>
+            <button className="course-card py-card" onClick={() => openCourse("python")}>
+              <div className="course-icon">PY</div><div className="course-count">{lessons.python.length} LESSONS</div>
+              <h3>Python</h3><p>Learn from your HTML quiz script: inputs, colours, functions, decisions, and loops.</p>
+              <div className="course-bottom"><span>Start learning <b>→</b></span><div className="mini-progress"><i style={{width: `${completed.python / lessons.python.length * 100}%`}} /></div></div>
+            </button>
           </div>
         </section>
       </main>
@@ -272,12 +365,12 @@ export default function Home() {
     <main className="lesson-shell">
       <header className="lesson-nav">
         <div className="lesson-brand-group"><button className="drawer-toggle" onClick={() => setNavOpen((open) => !open)} aria-label={navOpen ? "Close lesson list" : "Open lesson list"} aria-expanded={navOpen}><span>☰</span></button><button className="brand brand-button" onClick={() => setLanguage(null)}><span className="brand-mark">&gt;_</span> Code<span>Step</span></button></div>
-        <div className="lesson-progress"><div><span>{language === "javascript" ? "JavaScript" : "C Sharp"} path</span><b>{index + 1} / {lessons[language].length}</b></div><div className="progress-track"><i style={{width: `${Math.max(progress, 4)}%`}} /></div></div>
+        <div className="lesson-progress"><div><span>{languageName(language)} path</span><b>{index + 1} / {lessons[language].length}</b></div><div className="progress-track"><i style={{width: `${Math.max(progress, 4)}%`}} /></div></div>
         <button className="exit-button" onClick={() => setLanguage(null)}>Exit lesson ×</button>
       </header>
       <div className={`lesson-layout ${navOpen ? "drawer-open" : "drawer-closed"}`}>
         <aside className="lesson-drawer" aria-label="Lesson list">
-          <div className="drawer-head"><span>{language === "javascript" ? "JS" : "C#"}</span><div><small>LEARNING PATH</small><b>{language === "javascript" ? "JavaScript" : "C Sharp"}</b></div><button onClick={() => setNavOpen(false)} aria-label="Close lesson list">×</button></div>
+          <div className="drawer-head"><span>{languageBadge(language)}</span><div><small>LEARNING PATH</small><b>{languageName(language)}</b></div><button onClick={() => setNavOpen(false)} aria-label="Close lesson list">×</button></div>
           <div className="drawer-summary"><div><span>{completed[language]} of {lessons[language].length} completed</span><b>{Math.round(completed[language] / lessons[language].length * 100)}%</b></div><div className="drawer-progress"><i style={{width: `${completed[language] / lessons[language].length * 100}%`}} /></div></div>
           <nav className="drawer-lessons">
             {lessons[language].map((lesson, lessonIndex) => (
@@ -309,7 +402,7 @@ export default function Home() {
         </aside>
         <section className="workspace">
           <div className="editor-panel">
-            <div className="panel-bar"><div className="file-tab"><span>◆</span> {language === "javascript" ? "challenge.js" : "Program.cs"}</div><div className="panel-actions"><span>UTF-8</span><button onClick={() => setCode("")} title="Reset code">↻ Reset</button></div></div>
+            <div className="panel-bar"><div className="file-tab"><span>◆</span> {challengeFile(language)}</div><div className="panel-actions"><span>UTF-8</span><button onClick={() => setCode("")} title="Reset code">↻ Reset</button></div></div>
             <div className="editor-body"><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div><textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(e) => {setCode(e.target.value); setStatus("idle")}} onKeyDown={(e) => { if (e.key === "Enter" && status === "correct") { e.preventDefault(); nextLesson(); } else if (e.key === "Enter" && normalize(code) === normalize(current!.answer)) { e.preventDefault(); checkCode(); } }} placeholder="// Type your code here..." /></div>
           </div>
           <div className="console-panel">
