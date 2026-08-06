@@ -309,6 +309,15 @@ const lessons: Record<Language, Lesson[]> = {
       referenceOnly: true,
       referenceKind: "pages",
     },
+    {
+      eyebrow: "13 · Images",
+      title: "Place an image on the page",
+      explanation: "The img element displays an image. src tells the browser which file to load, while alt describes the image if it cannot be seen or loaded. If car.png is beside index.html, its filename is enough for src.",
+      note: "<!-- Display car.png from the same folder as this HTML file -->",
+      prompt: "Add the car image with useful alternative text.",
+      answer: '<img src="car.png" alt="A car">',
+      output: ["Image loaded: car.png", "Alternative text: A car"],
+    },
   ],
 };
 
@@ -345,6 +354,7 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
     7: [{ code: "color: red", name: "Text colour", meaning: "Changes the heading's foreground colour." }, { code: "<p>", name: "Paragraph", meaning: "Wraps a block of ordinary text." }, { code: "</p>", name: "Close paragraph", meaning: "Marks where the paragraph ends." }],
     8: [{ code: "<section>", name: "Content group", meaning: "Keeps a related part of the page together." }, { code: "text-align: center", name: "Centre text", meaning: "Centres the inline content inside the whole section." }, { code: "h1 — h6", name: "Heading levels", meaning: "Create a hierarchy from most to least important." }, { code: "<strong>", name: "Important text", meaning: "Marks text as important and normally displays it in bold." }],
     9: [{ code: "<script>", name: "JavaScript area", meaning: "Tells the browser that the code inside is JavaScript." }, { code: "const", name: "Fixed variable", meaning: "Creates a variable that will not be reassigned." }, { code: "new Date()", name: "Current moment", meaning: "Creates a Date using the device's current date and time." }, { code: "console.log", name: "Developer console", meaning: "Displays the value in the browser's developer tools." }],
+    12: [{ code: "<img>", name: "Image element", meaning: "Places an image in the HTML page; it does not need a closing tag." }, { code: 'src="car.png"', name: "Image source", meaning: "Loads car.png from the same folder as the HTML file." }, { code: 'alt="A car"', name: "Alternative text", meaning: "Describes the image for accessibility and when it cannot load." }],
   },
 };
 
@@ -357,7 +367,7 @@ const challengeFile = (language: Language) => language === "javascript" ? "chall
 
 function HighlightedCode({ code, language }: { code: string; language: Language }) {
   const pattern = language === "html"
-    ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|section|script|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|lang|charset)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:])/g
+    ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|src|alt|lang|charset)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:])/g
     : /(\/\/[^\n]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|class|constructor|this|let|const|new|if|else|for|of|setTimeout|void|string|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|[{}()[\];=.:])/g;
   const parts: { text: string; kind: string }[] = [];
   let lastIndex = 0;
@@ -367,9 +377,9 @@ function HighlightedCode({ code, language }: { code: string; language: Language 
     let kind = "punctuation";
     if (/^(\/\/|<!--)/.test(text)) kind = "comment";
     else if (/^["'`]/.test(text)) kind = "string";
-    else if (/^(function|class|constructor|this|let|const|new|if|else|for|of|setTimeout|void|string|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|section|script|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
+    else if (/^(function|class|constructor|this|let|const|new|if|else|for|of|setTimeout|void|string|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
     else if (/^(console|Console|Task|Date|DateTime|log)$/.test(text)) kind = "api";
-    else if (/^(style|href|lang|charset)$/.test(text)) kind = "attribute";
+    else if (/^(style|href|src|alt|lang|charset)$/.test(text)) kind = "attribute";
     else if (/^\d+$/.test(text)) kind = "number";
     else if (/^[A-Za-z_]/.test(text)) kind = "function-name";
     parts.push({ text, kind });
@@ -551,7 +561,7 @@ export default function Home() {
               <article><header><span>2</span><b>page2.html</b></header><pre><code><HighlightedCode language="html" code={'<!DOCTYPE html>\n<html>\n<body>\n\n  <h1>Page 2</h1>\n\n  <a href="index.html">Go back</a>\n\n</body>\n</html>'} /></code></pre></article>
             </div>
             <div className="link-journey"><b>First Page</b><span>Go to Page 2 →</span><b>Page 2</b><span>← Go back</span></div>
-            <button className="reference-next" onClick={nextLesson}>Finish the HTML path →</button>
+            <button className="reference-next" onClick={nextLesson}>Continue to images →</button>
           </div> : <div className="text-reference-preview">
             <div className="preview-bar"><span>◆</span> HTML TEXT REFERENCE</div>
             <div className="heading-samples"><h1>Heading 1</h1><h2>Heading 2</h2><h3>Heading 3</h3><h4>Heading 4</h4><h5>Heading 5</h5><h6>Heading 6</h6></div>
