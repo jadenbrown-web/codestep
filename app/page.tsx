@@ -329,6 +329,15 @@ const lessons: Record<Language, Lesson[]> = {
       referenceOnly: true,
       referenceKind: "css",
     },
+    {
+      eyebrow: "15 · Border practice",
+      title: "Create a rounded dotted border",
+      explanation: "A class connects one HTML element to a reusable CSS rule. The border shorthand sets width, style, and colour, while border-radius rounds the corners.",
+      note: "<!-- Style one paragraph with a dotted blue rounded border -->",
+      prompt: "Create the notice class and apply it to the paragraph.",
+      answer: '<style>\n  p.notice {\n    border: 5px dotted blue;\n    border-radius: 5px;\n  }\n</style>\n\n<p class="notice">Border practice</p>',
+      output: ["Border practice — dotted blue border with rounded corners"],
+    },
   ],
 };
 
@@ -366,6 +375,7 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
     8: [{ code: "<section>", name: "Content group", meaning: "Keeps a related part of the page together." }, { code: "text-align: center", name: "Centre text", meaning: "Centres the inline content inside the whole section." }, { code: "h1 — h6", name: "Heading levels", meaning: "Create a hierarchy from most to least important." }, { code: "<strong>", name: "Important text", meaning: "Marks text as important and normally displays it in bold." }],
     9: [{ code: "<script>", name: "JavaScript area", meaning: "Tells the browser that the code inside is JavaScript." }, { code: "const", name: "Fixed variable", meaning: "Creates a variable that will not be reassigned." }, { code: "new Date()", name: "Current moment", meaning: "Creates a Date using the device's current date and time." }, { code: "console.log", name: "Developer console", meaning: "Displays the value in the browser's developer tools." }],
     12: [{ code: "<img>", name: "Image element", meaning: "Places an image in the HTML page; it does not need a closing tag." }, { code: 'src="car.png"', name: "Image source", meaning: "Loads car.png from the same folder as the HTML file." }, { code: 'alt="A car"', name: "Alternative text", meaning: "Describes the image for accessibility and when it cannot load." }],
+    14: [{ code: "p.notice", name: "CSS selector", meaning: "Targets paragraph elements carrying the notice class." }, { code: "border", name: "Border property", meaning: "Sets the line around the element." }, { code: "5px dotted blue", name: "Border values", meaning: "Uses a five-pixel dotted line coloured blue." }, { code: "border-radius: 5px", name: "Rounded corners", meaning: "Rounds each corner of the border by five pixels." }],
   },
 };
 
@@ -592,7 +602,7 @@ export default function Home() {
               <p className="css-border rounded">Rounded border <code>border-radius: 5px</code></p>
             </div>
             <div className="hex-note"><code>#222222</code><span>Hex colours start with #. Each pair controls red, green, and blue.</span></div>
-            <button className="reference-next" onClick={nextLesson}>Finish the HTML path →</button>
+            <button className="reference-next" onClick={nextLesson}>Try the border quiz →</button>
           </div> : <div className="text-reference-preview">
             <div className="preview-bar"><span>◆</span> HTML TEXT REFERENCE</div>
             <div className="heading-samples"><h1>Heading 1</h1><h2>Heading 2</h2><h3>Heading 3</h3><h4>Heading 4</h4><h5>Heading 5</h5><h6>Heading 6</h6></div>
