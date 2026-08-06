@@ -14,7 +14,7 @@ type Lesson = {
   answer: string;
   output: string[];
   referenceOnly?: boolean;
-  referenceKind?: "text" | "fonts" | "pages" | "css";
+  referenceKind?: "text" | "fonts" | "pages" | "css" | "comparisons";
 };
 
 const lessons: Record<Language, Lesson[]> = {
@@ -84,7 +84,18 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Your age is between 0 and 18."],
     },
     {
-      eyebrow: "08 · Regular expressions",
+      eyebrow: "08 · Comparison reference",
+      title: "Compare two values",
+      explanation: "Comparison operators ask a question about two values and produce true or false. Keep this page as a quick reference: the code stays nearly identical while the symbol changes the question being asked.",
+      note: "// Compare values using equality, inequality, and size operators",
+      prompt: "Explore the comparison operators and their results.",
+      answer: "let x = 5;\nconsole.log(x === 5);",
+      output: ["Comparison reference explored."],
+      referenceOnly: true,
+      referenceKind: "comparisons",
+    },
+    {
+      eyebrow: "09 · Regular expressions",
       title: "Let names beginning with J enter",
       explanation: "A regular expression checks text against a pattern. /^J/i means: the slashes hold the pattern, ^ anchors the check to the beginning, J is the required first letter, and i ignores uppercase or lowercase. It accepts any word beginning with J—not only names—and rejects J when it appears later in the text.",
       note: "// Let people into the club when their name begins with J",
@@ -93,7 +104,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Jaden can enter the club.", "James can enter the club.", "Jessica can enter the club.", "Sarah cannot enter the club.", "Ben cannot enter the club."],
     },
     {
-      eyebrow: "09 · Arrays",
+      eyebrow: "10 · Arrays",
       title: "Keep a list",
       explanation: "A JavaScript list is called an array. Square brackets hold its items, and a for...of loop visits each item one at a time.",
       note: "// Store three fruits, then print each one",
@@ -102,7 +113,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Apple", "Banana", "Orange"],
     },
     {
-      eyebrow: "10 · Constant array",
+      eyebrow: "11 · Constant array",
       title: "Start an empty car list",
       explanation: "const is short for constant. Like let, it creates a named variable, but const prevents that variable from being reassigned to a different value later. Here cars must keep pointing to the same array, although .push() can still add items inside that array.",
       note: "// Create an empty list that will hold cars",
@@ -111,7 +122,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["cars  →  []", "The list currently has 0 items."],
     },
     {
-      eyebrow: "11 · Add to an array",
+      eyebrow: "12 · Add to an array",
       title: "Put a car into the list",
       explanation: "prompt collects a car name from the user. cars.push(newCar) takes that saved answer and adds it to the end of the cars array.",
       note: "// Ask for a car, then add the answer to cars",
@@ -121,7 +132,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Before: []", "What car do you want to add?  →  Ford", 'After push: ["Ford"]'],
     },
     {
-      eyebrow: "12 · Print an array",
+      eyebrow: "13 · Print an array",
       title: "Show the finished car list",
       explanation: "console.log(cars) sends the whole array to the console. Because Ford was pushed into cars first, the printed list now contains that item.",
       note: "// Print the list after adding the new car",
@@ -131,7 +142,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What car do you want to add?  →  Ford", '["Ford"]'],
     },
     {
-      eyebrow: "13 · Sets",
+      eyebrow: "14 · Sets",
       title: "Remove duplicate names",
       explanation: "A Set stores only unique values. Passing names into new Set(names) removes repeated names, and [...uniqueNames] spreads the remaining values back into an array for printing.",
       note: "// Ask for three names, then remove any duplicates",
@@ -140,7 +151,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Enter the first name:  →  Alex", "Enter the second name:  →  Sam", "Enter the third name:  →  Alex", '["Alex", "Sam"]'],
     },
     {
-      eyebrow: "14 · Array positions",
+      eyebrow: "15 · Array positions",
       title: "Look up the car you added",
       explanation: "Array positions start at zero. cars[0] retrieves the first item, which is Ford because it was the first value pushed into the array.",
       note: "// Look up and print the first car in the array",
@@ -150,7 +161,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What car do you want to add?  →  Ford", '["Ford"]', "Item at position 0  →  Ford"],
     },
     {
-      eyebrow: "15 · Objects",
+      eyebrow: "16 · Objects",
       title: "Give values names",
       explanation: "Objects keep related values under named keys. Here, BMW and Ford are keys, and each car has a colour property.",
       note: "// Look up a car brand and print its colour",
@@ -159,7 +170,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Enter BMW or Ford:  →  BMW", "Brand: BMW", "Colour: Blue"],
     },
     {
-      eyebrow: "16 · Timers",
+      eyebrow: "17 · Timers",
       title: "Run code later",
       explanation: "setTimeout schedules a function to run after a delay. The delay is measured in milliseconds, so 1000 means one second.",
       note: "// Print One, Two, and Three one second apart",
@@ -168,7 +179,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["One", "Two", "Three"],
     },
     {
-      eyebrow: "17 · Date and time",
+      eyebrow: "18 · Date and time",
       title: "Get the current moment",
       explanation: "new Date() creates a Date object containing the current date and time from the device running the code. console.log then displays that value.",
       note: "// Create the current date and time, then print it",
@@ -177,7 +188,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Thu Aug 06 2026 19:05:00 GMT+0100 (British Summer Time)"],
     },
     {
-      eyebrow: "18 · Classes",
+      eyebrow: "19 · Classes",
       title: "Create cars from a blueprint",
       explanation: "A class is a reusable blueprint for objects. Its constructor receives values when new Car(...) runs, and this stores those values as properties on each separate car object.",
       note: "// Define a Car class, then create and print two car objects",
@@ -252,7 +263,18 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Your age is between 0 and 18."],
     },
     {
-      eyebrow: "08 · Regular expressions",
+      eyebrow: "08 · Comparison reference",
+      title: "Compare two values",
+      explanation: "Comparison operators ask a question about two values and produce true or false. Keep this page as a quick reference: the code stays nearly identical while the symbol changes the question being asked.",
+      note: "// Compare values using equality, inequality, and size operators",
+      prompt: "Explore the comparison operators and their results.",
+      answer: "int x = 5;\nConsole.WriteLine(x == 5);",
+      output: ["Comparison reference explored."],
+      referenceOnly: true,
+      referenceKind: "comparisons",
+    },
+    {
+      eyebrow: "09 · Regular expressions",
       title: "Let names beginning with J enter",
       explanation: "A regular expression checks text against a pattern. Regex comes from System.Text.RegularExpressions. ^J means the text must begin with J, while RegexOptions.IgnoreCase accepts uppercase or lowercase. It accepts any word beginning with J—not only names—and rejects J when it appears later in the text.",
       note: "// Let people into the club when their name begins with J",
@@ -261,7 +283,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Jaden can enter the club.", "James can enter the club.", "Jessica can enter the club.", "Sarah cannot enter the club.", "Ben cannot enter the club."],
     },
     {
-      eyebrow: "09 · Arrays",
+      eyebrow: "10 · Arrays",
       title: "Keep a list",
       explanation: "A C# array keeps several values of the same type. Square brackets mark the array, and a foreach loop visits each item one at a time.",
       note: "// Store three fruits, then print each one",
@@ -270,7 +292,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Apple", "Banana", "Orange"],
     },
     {
-      eyebrow: "10 · Empty list",
+      eyebrow: "11 · Empty list",
       title: "Start an empty car list",
       explanation: "List<string> creates a flexible list that stores text, and new List<string>() starts it with zero items. C# has a const keyword too, but const is only for values fixed at compile time; a growing List cannot be const. This is why the C# version begins with List<string> rather than copying JavaScript's const.",
       note: "// Create an empty list that will hold car names",
@@ -279,7 +301,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["cars  →  []", "The list currently has 0 items."],
     },
     {
-      eyebrow: "11 · Add to a list",
+      eyebrow: "12 · Add to a list",
       title: "Put a car into the list",
       explanation: "Console.ReadLine() collects the user's answer. cars.Add(newCar) takes that saved text and adds it to the end of the cars list.",
       note: "// Ask for a car, then add the answer to cars",
@@ -289,7 +311,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Before: []", "What car do you want to add?  →  Ford", 'After Add: ["Ford"]'],
     },
     {
-      eyebrow: "12 · Print a list",
+      eyebrow: "13 · Print a list",
       title: "Show the finished car list",
       explanation: "string.Join joins every list item into readable text. Console.WriteLine then prints that text, showing the car that was added in the previous step.",
       note: "// Join and print the items stored in cars",
@@ -299,7 +321,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What car do you want to add?  →  Ford", "[Ford]"],
     },
     {
-      eyebrow: "13 · Sets",
+      eyebrow: "14 · Sets",
       title: "Remove duplicate names",
       explanation: "A HashSet stores only unique values. Passing names into new HashSet<string>(names) removes repeated names, and string.Join makes the remaining values readable for printing.",
       note: "// Ask for three names, then remove any duplicates",
@@ -308,7 +330,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Enter the first name:  →  Alex", "Enter the second name:  →  Sam", "Enter the third name:  →  Alex", "[Alex, Sam]"],
     },
     {
-      eyebrow: "14 · Array positions",
+      eyebrow: "15 · Array positions",
       title: "Look up the car you added",
       explanation: "C# list positions start at zero. cars[0] retrieves the first item, which is Ford because it was the first value added to the list.",
       note: "// Look up and print the first car in the list",
@@ -318,7 +340,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What car do you want to add?  →  Ford", "[Ford]", "Item at position 0  →  Ford"],
     },
     {
-      eyebrow: "15 · Objects",
+      eyebrow: "16 · Objects",
       title: "Give values names",
       explanation: "C# objects keep related values in named properties. Here, an anonymous object groups a car's Brand and Colour together.",
       note: "// Create a car object and print its properties",
@@ -327,7 +349,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Brand: BMW", "Colour: Blue"],
     },
     {
-      eyebrow: "16 · Timers",
+      eyebrow: "17 · Timers",
       title: "Run code later",
       explanation: "Task.Delay pauses asynchronous C# code for a number of milliseconds. Using await lets each message appear after another one-second delay.",
       note: "// Print One, Two, and Three one second apart",
@@ -336,7 +358,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["One", "Two", "Three"],
     },
     {
-      eyebrow: "17 · Date and time",
+      eyebrow: "18 · Date and time",
       title: "Get the current moment",
       explanation: "DateTime.Now gets the computer's current local date and time. Storing it in currentDateTime lets the program use or display that moment later.",
       note: "// Get the current date and time, then print it",
@@ -345,7 +367,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["06/08/2026 19:05:00"],
     },
     {
-      eyebrow: "18 · Classes",
+      eyebrow: "19 · Classes",
       title: "Create cars from a blueprint",
       explanation: "A C# class is a reusable blueprint for objects. Properties store each car's data, the constructor receives starting values, and this refers to the particular object being created.",
       note: "// Define a Car class, then create and print two car objects",
@@ -778,10 +800,11 @@ export default function Home() {
   const visibleGhost = current ? current.answer.slice(0, ghostLength) : "";
   const guideCode = alignedGuide(code, visibleGhost);
   const breakdown = language
-    ? (index === 5 && nullBreakdowns[language])
-      || (index === 7 && regexBreakdowns[language])
-      || (index === 12 && setsBreakdowns[language])
-      || breakdowns[language][language === "javascript" || language === "csharp" ? (index > 12 ? index - 3 : index > 7 ? index - 2 : index > 5 ? index - 1 : index) : index]
+    ? current?.referenceKind === "comparisons" ? undefined
+      : (index === 5 && nullBreakdowns[language])
+      || (index === 8 && regexBreakdowns[language])
+      || (index === 13 && setsBreakdowns[language])
+      || breakdowns[language][language === "javascript" || language === "csharp" ? (index > 13 ? index - 4 : index > 8 ? index - 3 : index > 5 ? index - 1 : index) : index]
     : undefined;
   const progress = language ? Math.round((index / lessons[language].length) * 100) : 0;
   const diagnostic = useMemo(() => current ? syntaxDiagnostic(code, current.answer) : [], [code, current]);
@@ -984,7 +1007,13 @@ export default function Home() {
               <code><HighlightedCode code={part.code} language={language} /></code><div><b>{part.name}</b><span>{part.meaning}</span></div>
             </div>)}</div>
           </section>}
-          {current!.referenceOnly ? current!.referenceKind === "fonts" ? <div className="font-guide-note">
+          {current!.referenceOnly ? current!.referenceKind === "comparisons" ? <div className="comparison-guide">
+            <div><code>{language === "javascript" ? "==" : "=="}</code><p><b>Equal value</b><span>{language === "javascript" ? "Converts types before comparing; usually prefer ===." : "Checks whether the two values are equal."}</span></p></div>
+            {language === "javascript" && <div><code>===</code><p><b>Equal value and type</b><span>Strict equality checks the value and its data type.</span></p></div>}
+            <div><code>{language === "javascript" ? "!==" : "!="}</code><p><b>Not equal</b><span>True when the two values are different.</span></p></div>
+            <div><code>&gt; / &lt;</code><p><b>Greater or less than</b><span>The open side faces the larger value; the point faces the smaller value.</span></p></div>
+            <div><code>&gt;= / &lt;=</code><p><b>Greater or less, including equal</b><span>The added equals line means the boundary value also counts.</span></p></div>
+          </div> : current!.referenceKind === "fonts" ? <div className="font-guide-note">
             <b>How the browser chooses</b>
             <p><code>font-family: Georgia, serif;</code> means “use Georgia if available; otherwise use the browser’s serif font.” Names containing spaces, such as <code>"Times New Roman"</code>, should be quoted.</p>
             <span>Commonly installed does not mean guaranteed on every operating system.</span>
@@ -1013,7 +1042,28 @@ export default function Home() {
           </>}
         </aside>
         <section className="workspace">
-          {current!.referenceOnly ? current!.referenceKind === "fonts" ? <div className="font-reference-preview">
+          {current!.referenceOnly ? current!.referenceKind === "comparisons" ? <div className="comparison-reference-preview">
+            <div className="preview-bar"><span>◆</span> {language === "javascript" ? "JAVASCRIPT" : "C SHARP"} COMPARISON REFERENCE</div>
+            <div className="comparison-start"><code>{language === "javascript" ? "let x = 5;" : "int x = 5;"}</code><span>Each row below asks a different question about the same value.</span></div>
+            <div className="comparison-table" role="table" aria-label="Comparison operators">
+              <div className="comparison-row comparison-header" role="row"><b>Operator</b><b>Meaning</b><b>Example</b><b>Result</b></div>
+              {language === "javascript" ? <>
+                <div className="comparison-row" role="row"><code>==</code><span>equal value</span><code>x == &quot;5&quot;</code><strong>true</strong></div>
+                <div className="comparison-row" role="row"><code>===</code><span>equal value and type</span><code>x === &quot;5&quot;</code><strong className="result-false">false</strong></div>
+                <div className="comparison-row" role="row"><code>!=</code><span>not equal value</span><code>x != 8</code><strong>true</strong></div>
+                <div className="comparison-row" role="row"><code>!==</code><span>not equal value or type</span><code>x !== &quot;5&quot;</code><strong>true</strong></div>
+              </> : <>
+                <div className="comparison-row" role="row"><code>==</code><span>equal to</span><code>x == 5</code><strong>true</strong></div>
+                <div className="comparison-row" role="row"><code>!=</code><span>not equal to</span><code>x != 5</code><strong className="result-false">false</strong></div>
+              </>}
+              <div className="comparison-row" role="row"><code>&gt;</code><span>greater than</span><code>x &gt; 8</code><strong className="result-false">false</strong></div>
+              <div className="comparison-row" role="row"><code>&lt;</code><span>less than</span><code>x &lt; 8</code><strong>true</strong></div>
+              <div className="comparison-row" role="row"><code>&gt;=</code><span>greater than or equal to</span><code>x &gt;= 5</code><strong>true</strong></div>
+              <div className="comparison-row" role="row"><code>&lt;=</code><span>less than or equal to</span><code>x &lt;= 4</code><strong className="result-false">false</strong></div>
+            </div>
+            <div className="comparison-reminder"><b>Remember the “arrow” shapes</b><span><code>&gt;</code> points away from the greater value; <code>&lt;</code> points towards the smaller value. They are called greater-than and less-than signs.</span></div>
+            <button className="reference-next" onClick={nextLesson}>Continue to names beginning with J →</button>
+          </div> : current!.referenceKind === "fonts" ? <div className="font-reference-preview">
             <div className="preview-bar"><span>◆</span> CSS FONT REFERENCE</div>
             <div className="font-samples">
               <div style={{fontFamily:"Arial, sans-serif"}}><b>Arial</b><span>The quick brown fox jumps over the lazy dog.</span><code>Arial, sans-serif</code></div>
