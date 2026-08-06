@@ -590,15 +590,19 @@ export default function Home() {
     if (status !== "correct" || !current) { setTypedOutput(""); return; }
     const completeOutput = current.output.join("\n");
     let position = 0;
-    let interval: ReturnType<typeof setInterval> | undefined;
+    let typingTimer: ReturnType<typeof setTimeout> | undefined;
+    const typeNextCharacter = () => {
+      position += 1;
+      setTypedOutput(completeOutput.slice(0, position));
+      if (position >= completeOutput.length) return;
+      const character = completeOutput[position - 1];
+      const rhythm = character === "\n" ? 85 : /[.,!?]/.test(character) ? 48 : 20 + (position % 4) * 4;
+      typingTimer = setTimeout(typeNextCharacter, rhythm);
+    };
     const delay = setTimeout(() => {
-      interval = setInterval(() => {
-        position += 1;
-        setTypedOutput(completeOutput.slice(0, position));
-        if (position >= completeOutput.length && interval) clearInterval(interval);
-      }, 18);
+      typeNextCharacter();
     }, 350);
-    return () => { clearTimeout(delay); if (interval) clearInterval(interval); };
+    return () => { clearTimeout(delay); if (typingTimer) clearTimeout(typingTimer); };
   }, [status, current]);
 
   useEffect(() => {
