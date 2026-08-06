@@ -13,7 +13,7 @@ type Lesson = {
   answer: string;
   output: string[];
   referenceOnly?: boolean;
-  referenceKind?: "text" | "fonts" | "pages";
+  referenceKind?: "text" | "fonts" | "pages" | "css";
 };
 
 const lessons: Record<Language, Lesson[]> = {
@@ -318,6 +318,17 @@ const lessons: Record<Language, Lesson[]> = {
       answer: '<img src="car.png" alt="A car">',
       output: ["Image loaded: car.png", "Alternative text: A car"],
     },
+    {
+      eyebrow: "14 · CSS borders and colours",
+      title: "Explore borders and colour formats",
+      explanation: "This visual reference shows how CSS selectors style HTML, how classes target particular paragraphs, and how border and colour properties change what appears in the browser.",
+      note: "/* Compare borders, rounded corners, RGB, RGBA, and hex colours */",
+      prompt: "Explore the rendered CSS examples and their explanations.",
+      answer: "p.one { border: 5px solid red; }",
+      output: ["CSS reference explored."],
+      referenceOnly: true,
+      referenceKind: "css",
+    },
   ],
 };
 
@@ -520,6 +531,13 @@ export default function Home() {
             <div><code>href=&quot;page2.html&quot;</code><p><b>Move forward</b><span>The link in index.html opens page2.html from the same folder.</span></p></div>
             <div><code>href=&quot;index.html&quot;</code><p><b>Go back</b><span>The second page links back to the first file.</span></p></div>
             <div className="page-flow"><b>index.html</b><span>⇄</span><b>page2.html</b></div>
+          </div> : current!.referenceKind === "css" ? <div className="css-guide">
+            <div><code>p.one</code><p><b>Class selector</b><span>Targets paragraph elements whose class is one.</span></p></div>
+            <div><code>5px solid red</code><p><b>Border shorthand</b><span>Sets width, line style, and colour in one instruction.</span></p></div>
+            <div><code>border-left</code><p><b>One side only</b><span>Styles only the left edge; border-bottom does the same for the bottom.</span></p></div>
+            <div><code>border-radius</code><p><b>Rounded corners</b><span>Rounds the corners of the element's border.</span></p></div>
+            <div><code>#222222</code><p><b>Hex colour</b><span>Uses a hash followed by red, green, and blue hexadecimal values.</span></p></div>
+            <div><code>rgba(..., 0.4)</code><p><b>Transparent colour</b><span>The fourth number controls opacity from 0 to 1.</span></p></div>
           </div> : <div className="element-guide">
             <div><code>&lt;h1&gt;–&lt;h6&gt;</code><p><b>Heading hierarchy</b><span>Six levels, from the main page heading down to the smallest subheading.</span></p></div>
             <div><code>&lt;strong&gt;</code><p><b>Important bold text</b><span>Adds importance; browsers normally display it in bold.</span></p></div>
@@ -562,6 +580,19 @@ export default function Home() {
             </div>
             <div className="link-journey"><b>First Page</b><span>Go to Page 2 →</span><b>Page 2</b><span>← Go back</span></div>
             <button className="reference-next" onClick={nextLesson}>Continue to images →</button>
+          </div> : current!.referenceKind === "css" ? <div className="css-reference-preview">
+            <div className="preview-bar"><span>◆</span> CSS BORDERS AND COLOURS</div>
+            <div className="colour-samples"><div className="solid-colour">Solid rgb colour</div><div className="transparent-colour">Transparent rgba colour</div></div>
+            <div className="border-samples">
+              <p className="css-border red-solid">Solid red border <code>5px solid red</code></p>
+              <p className="css-border green-solid">Solid green border <code>5px solid green</code></p>
+              <p className="css-border blue-dotted">Dotted blue border <code>5px dotted blue</code></p>
+              <p className="css-border left-only">Left border <code>border-left</code></p>
+              <p className="css-border bottom-only">Bottom border <code>border-bottom</code></p>
+              <p className="css-border rounded">Rounded border <code>border-radius: 5px</code></p>
+            </div>
+            <div className="hex-note"><code>#222222</code><span>Hex colours start with #. Each pair controls red, green, and blue.</span></div>
+            <button className="reference-next" onClick={nextLesson}>Finish the HTML path →</button>
           </div> : <div className="text-reference-preview">
             <div className="preview-bar"><span>◆</span> HTML TEXT REFERENCE</div>
             <div className="heading-samples"><h1>Heading 1</h1><h2>Heading 2</h2><h3>Heading 3</h3><h4>Heading 4</h4><h5>Heading 5</h5><h6>Heading 6</h6></div>
