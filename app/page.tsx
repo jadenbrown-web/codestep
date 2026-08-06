@@ -298,6 +298,15 @@ const lessons: Record<Language, Lesson[]> = {
       answer: '<img src="car.png" alt="A car">',
       output: ["Image loaded: car.png", "Alternative text: A car"],
     },
+    {
+      eyebrow: "11 · IDs for CSS",
+      title: "Give one element a unique name",
+      explanation: "The id attribute gives one HTML element a unique name. CSS can then select that exact element with a hash followed by the same name, such as #p1.",
+      note: "<!-- Give this particular paragraph the ID p1 -->",
+      prompt: "Add the p1 ID to the paragraph so CSS can target it.",
+      answer: '<p id="p1">This paragraph has its own ID.</p>',
+      output: ["Paragraph identified as p1.", "CSS can select it with #p1."],
+    },
   ],
   css: [
     {
@@ -319,7 +328,16 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Red paragraph text centred."],
     },
     {
-      eyebrow: "03 · Font families",
+      eyebrow: "03 · ID selectors",
+      title: "Style one unique element",
+      explanation: "An ID selector begins with #. The selector #p1 matches the HTML element carrying id=\"p1\", so this rule changes only that particular element.",
+      note: "/* Select the HTML element whose ID is p1 */",
+      prompt: "Use its ID to make only p1 tomato coloured.",
+      answer: "#p1 {\n  color: tomato;\n}",
+      output: ["Only the element with id=\"p1\" turns tomato."],
+    },
+    {
+      eyebrow: "04 · Font families",
       title: "Compare website fonts",
       explanation: "This is a visual reference rather than a quiz. A browser uses the first available font in a font-family list, then tries each fallback. Named fonts are not guaranteed on every device, so finish every stack with a generic family.",
       note: "/* Compare common fonts and safe fallbacks */",
@@ -330,7 +348,7 @@ const lessons: Record<Language, Lesson[]> = {
       referenceKind: "fonts",
     },
     {
-      eyebrow: "04 · Borders and colours",
+      eyebrow: "05 · Borders and colours",
       title: "Explore borders and colour formats",
       explanation: "This visual reference shows how CSS selectors target elements and how border, RGB, RGBA, and hexadecimal colour values change their appearance.",
       note: "/* Compare borders, rounded corners, RGB, RGBA, and hex colours */",
@@ -341,7 +359,7 @@ const lessons: Record<Language, Lesson[]> = {
       referenceKind: "css",
     },
     {
-      eyebrow: "05 · Border practice",
+      eyebrow: "06 · Border practice",
       title: "Create a rounded dotted border",
       explanation: "A class selector targets elements carrying that class. The border shorthand sets width, style, and colour, while border-radius rounds the corners.",
       note: "/* Give notice paragraphs a dotted blue rounded border */",
@@ -385,11 +403,13 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
     6: [{ code: "<section>", name: "Content group", meaning: "Keeps a related part of the page together." }, { code: "h1 — h6", name: "Heading levels", meaning: "Create a hierarchy from most to least important." }, { code: "<strong>", name: "Important text", meaning: "Marks text as important and normally displays it in bold." }, { code: "<del>", name: "Deleted text", meaning: "Shows text that has been removed with a line through it." }],
     7: [{ code: "<script>", name: "JavaScript area", meaning: "Tells the browser that the code inside is JavaScript." }, { code: "const", name: "Fixed variable", meaning: "Creates a variable that will not be reassigned." }, { code: "new Date()", name: "Current moment", meaning: "Creates a Date using the device's current date and time." }, { code: "console.log", name: "Developer console", meaning: "Displays the value in the browser's developer tools." }],
     9: [{ code: "<img>", name: "Image element", meaning: "Places an image in the HTML page; it does not need a closing tag." }, { code: 'src="car.png"', name: "Image source", meaning: "Loads car.png from the same folder as the HTML file." }, { code: 'alt="A car"', name: "Alternative text", meaning: "Describes the image for accessibility and when it cannot load." }],
+    10: [{ code: "<p>", name: "Paragraph", meaning: "Creates the particular paragraph that will be styled." }, { code: 'id="p1"', name: "Unique ID", meaning: "Gives this element the unique name p1." }, { code: "#p1", name: "Matching CSS", meaning: "CSS uses a hash before the ID name to select this exact element." }],
   },
   css: {
     0: [{ code: "body", name: "Selector", meaning: "Chooses the HTML body element to style." }, { code: "background-color", name: "Property", meaning: "Chooses the colour behind the element." }, { code: ":", name: "Property separator", meaning: "Separates the property name from its value." }, { code: "lightblue", name: "Value", meaning: "The background colour to apply." }, { code: ";", name: "Rule ending", meaning: "Ends this CSS declaration so another can follow." }],
     1: [{ code: "p", name: "Selector", meaning: "Chooses every paragraph on the page." }, { code: "color: red", name: "Text colour", meaning: "Makes the selected text red." }, { code: "text-align: center", name: "Alignment", meaning: "Centres inline content inside each paragraph." }, { code: ";", name: "Rule ending", meaning: "Marks the end of each CSS declaration." }],
-    4: [{ code: "p.notice", name: "Class selector", meaning: "Targets paragraphs carrying the notice class." }, { code: "border", name: "Border property", meaning: "Sets the line around the element." }, { code: "5px dotted blue", name: "Border values", meaning: "Uses a five-pixel dotted line coloured blue." }, { code: "border-radius: 5px", name: "Rounded corners", meaning: "Rounds each corner of the border by five pixels." }],
+    2: [{ code: "#", name: "ID marker", meaning: "The hash tells CSS that this is an ID selector." }, { code: "p1", name: "ID name", meaning: "Must exactly match the id value written in the HTML." }, { code: "color: tomato", name: "Declaration", meaning: "Changes the text colour of only the matched element." }],
+    5: [{ code: "p.notice", name: "Class selector", meaning: "Targets paragraphs carrying the notice class." }, { code: "border", name: "Border property", meaning: "Sets the line around the element." }, { code: "5px dotted blue", name: "Border values", meaning: "Uses a five-pixel dotted line coloured blue." }, { code: "border-radius: 5px", name: "Rounded corners", meaning: "Rounds each corner of the border by five pixels." }],
   },
 };
 
@@ -402,9 +422,9 @@ const challengeFile = (language: Language) => language === "javascript" ? "chall
 
 function HighlightedCode({ code, language }: { code: string; language: Language }) {
   const pattern = language === "html"
-    ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|src|alt|lang|charset)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:])/g
+    ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|src|alt|id|lang|charset)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:#])/g
     : language === "css"
-    ? /(\/\*[\s\S]*?\*\/|#[0-9a-fA-F]{3,8}\b|\b(?:body|p|background-color|color|text-align|font-family|border|border-radius|solid|dotted|center|lightblue|red|blue)\b|\d+(?:px)?|[{}();:.,])/g
+    ? /(\/\*[\s\S]*?\*\/|#[0-9a-fA-F]{3,8}\b|#[A-Za-z_]\w*|\b(?:body|p|background-color|color|text-align|font-family|border|border-radius|solid|dotted|center|lightblue|red|blue|tomato)\b|\d+(?:px)?|[{}();:.,])/g
     : /(\/\/[^\n]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|class|constructor|this|let|const|new|if|else|for|of|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|[{}()[\];=.:])/g;
   const parts: { text: string; kind: string }[] = [];
   let lastIndex = 0;
@@ -416,10 +436,11 @@ function HighlightedCode({ code, language }: { code: string; language: Language 
     else if (/^["'`]/.test(text)) kind = "string";
     else if (/^(function|class|constructor|this|let|const|new|if|else|for|of|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
     else if (/^(console|Console|Task|Date|DateTime|log)$/.test(text)) kind = "api";
-    else if (/^(style|href|src|alt|lang|charset)$/.test(text)) kind = "attribute";
+    else if (/^(style|href|src|alt|id|lang|charset)$/.test(text)) kind = "attribute";
     else if (/^(background-color|color|text-align|font-family|border|border-radius)$/.test(text)) kind = "api";
     else if (/^(body|p)$/.test(text)) kind = "keyword";
-    else if (/^(solid|dotted|center|lightblue|red|blue|#[0-9a-fA-F]+)$/.test(text)) kind = "string";
+    else if (/^(solid|dotted|center|lightblue|red|blue|tomato|#[0-9a-fA-F]+)$/.test(text)) kind = "string";
+    else if (/^#[A-Za-z_]/.test(text)) kind = "function-name";
     else if (/^\d+$/.test(text)) kind = "number";
     else if (/^[A-Za-z_]/.test(text)) kind = "function-name";
     parts.push({ text, kind });
