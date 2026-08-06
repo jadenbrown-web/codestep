@@ -548,7 +548,7 @@ function breakdownSyntaxKind(code: string) {
   return "attribute";
 }
 
-function SettingsPanel({ open, themeMode, showGuide, onThemeChange, onGuideChange, onClose }: { open: boolean; themeMode: ThemeMode; showGuide: boolean; onThemeChange: (mode: ThemeMode) => void; onGuideChange: (show: boolean) => void; onClose: () => void }) {
+function SettingsPanel({ open, themeMode, showGuide, colourTyping, onThemeChange, onGuideChange, onColourTypingChange, onClose }: { open: boolean; themeMode: ThemeMode; showGuide: boolean; colourTyping: boolean; onThemeChange: (mode: ThemeMode) => void; onGuideChange: (show: boolean) => void; onColourTypingChange: (show: boolean) => void; onClose: () => void }) {
   if (!open) return null;
   return <div className="settings-backdrop" role="presentation" onMouseDown={onClose}>
     <section className="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settings-title" onMouseDown={(event) => event.stopPropagation()}>
@@ -557,6 +557,7 @@ function SettingsPanel({ open, themeMode, showGuide, onThemeChange, onGuideChang
         {(["light", "dark", "system"] as ThemeMode[]).map((mode) => <button key={mode} className={themeMode === mode ? "selected" : ""} onClick={() => onThemeChange(mode)}><i>{mode === "light" ? "☀" : mode === "dark" ? "☾" : "◐"}</i><span>{mode[0].toUpperCase() + mode.slice(1)}</span><small>{mode === "system" ? "Use device setting" : `${mode} appearance`}</small></button>)}
       </div></div>
       <div className="settings-group guide-setting"><div><b>Code guide</b><span>Show a faint, colour-coded copy of the expected answer in the editor.</span></div><button className={`switch ${showGuide ? "on" : ""}`} role="switch" aria-checked={showGuide} onClick={() => onGuideChange(!showGuide)}><i /></button></div>
+      <div className="settings-group guide-setting"><div><b>Colour typed code</b><span>Give your typed code the same syntax colours as the ghost guide.</span></div><button className={`switch ${colourTyping ? "on" : ""}`} role="switch" aria-checked={colourTyping} onClick={() => onColourTypingChange(!colourTyping)}><i /></button></div>
       <p className="settings-foot">The guide includes comments but stays translucent so your own typing remains clear.</p>
     </section>
   </div>;
@@ -572,9 +573,11 @@ export default function Home() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [themeMode, setThemeMode] = useState<ThemeMode>("system");
   const [showGuide, setShowGuide] = useState(true);
+  const [colourTyping, setColourTyping] = useState(true);
   const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0, html: 0, css: 0 });
 
   const current = language ? lessons[language][index] : null;
+  const guideCode = current ? current.answer.slice(0, Math.min(code.length, current.answer.length)).replace(/[^\n]/g, " ") + current.answer.slice(Math.min(code.length, current.answer.length)) : "";
   const breakdown = language ? breakdowns[language][index] : undefined;
   const progress = language ? Math.round((index / lessons[language].length) * 100) : 0;
 
@@ -608,8 +611,10 @@ export default function Home() {
   useEffect(() => {
     const savedTheme = localStorage.getItem("codestep-theme") as ThemeMode | null;
     const savedGuide = localStorage.getItem("codestep-code-guide");
+    const savedColourTyping = localStorage.getItem("codestep-colour-typing");
     if (savedTheme && ["light", "dark", "system"].includes(savedTheme)) setThemeMode(savedTheme);
     if (savedGuide !== null) setShowGuide(savedGuide === "true");
+    if (savedColourTyping !== null) setColourTyping(savedColourTyping === "true");
   }, []);
 
   useEffect(() => {
@@ -622,6 +627,7 @@ export default function Home() {
   }, [themeMode]);
 
   useEffect(() => { localStorage.setItem("codestep-code-guide", String(showGuide)); }, [showGuide]);
+  useEffect(() => { localStorage.setItem("codestep-colour-typing", String(colourTyping)); }, [colourTyping]);
 
   const lineNumbers = useMemo(() => Array.from({ length: Math.max(8, code.split("\n").length) }, (_, i) => i + 1), [code]);
 
@@ -689,7 +695,7 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <SettingsPanel open={settingsOpen} themeMode={themeMode} showGuide={showGuide} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onClose={() => setSettingsOpen(false)} />
+      <SettingsPanel open={settingsOpen} themeMode={themeMode} showGuide={showGuide} colourTyping={colourTyping} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onColourTypingChange={setColourTyping} onClose={() => setSettingsOpen(false)} />
       </>
     );
   }
@@ -810,7 +816,7 @@ export default function Home() {
           </div> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className="file-tab"><span>◆</span> {challengeFile(language)}</div><div className="panel-actions"><span>UTF-8</span><button onClick={() => setCode("")} title="Reset code">↻ Reset</button></div></div>
-            <div className="editor-body"><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className="code-guide" aria-hidden="true"><span>CODE GUIDE</span><code><HighlightedCode code={current!.answer} language={language} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(e) => {setCode(e.target.value); setStatus("idle")}} onKeyDown={(e) => { if (e.key === "Enter" && status === "correct") { e.preventDefault(); nextLesson(); } else if (e.key === "Enter" && normalize(code) === normalize(current!.answer)) { e.preventDefault(); checkCode(); } }} placeholder="// Type your code here..." /></div>
+            <div className={`editor-body ${colourTyping ? "colour-typing" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className="code-guide" aria-hidden="true"><span>CODE GUIDE</span><code><HighlightedCode code={guideCode} language={language} /></code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><HighlightedCode code={code} language={language} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(e) => {setCode(e.target.value); setStatus("idle")}} onKeyDown={(e) => { if (e.key === "Enter" && status === "correct") { e.preventDefault(); nextLesson(); } else if (e.key === "Enter" && normalize(code) === normalize(current!.answer)) { e.preventDefault(); checkCode(); } }} placeholder={showGuide ? "" : "// Type your code here..."} /></div>
           </div>
           <div className="console-panel">
             <div className="console-bar"><span><i /> CONSOLE</span><button onClick={() => setStatus("idle")}>Clear</button></div>
@@ -828,7 +834,7 @@ export default function Home() {
         </section>
       </div>
     </main>
-    <SettingsPanel open={settingsOpen} themeMode={themeMode} showGuide={showGuide} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onClose={() => setSettingsOpen(false)} />
+    <SettingsPanel open={settingsOpen} themeMode={themeMode} showGuide={showGuide} colourTyping={colourTyping} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onColourTypingChange={setColourTyping} onClose={() => setSettingsOpen(false)} />
     </>
   );
 }
