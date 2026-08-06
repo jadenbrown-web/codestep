@@ -265,6 +265,15 @@ const lessons: Record<Language, Lesson[]> = {
       answer: '<section style="text-align: center;">\n  <h1>Main heading</h1>\n  <h2>Section heading</h2>\n  <h5>Small heading</h5>\n  <h6>Smallest heading</h6>\n  <strong>Bold text</strong>\n</section>',
       output: ["Main heading", "Section heading", "Small heading", "Smallest heading", "Bold text — all centred"],
     },
+    {
+      eyebrow: "10 · JavaScript in HTML",
+      title: "Show the current date and time",
+      explanation: "The script element lets an HTML page run JavaScript. new Date() creates the current date and time, and console.log displays it in the browser's developer console.",
+      note: "<!-- Run JavaScript from inside the HTML page -->",
+      prompt: "Put the date-and-time code inside a script element.",
+      answer: "<script>\n  const currentDateTime = new Date();\n  console.log(currentDateTime);\n</script>",
+      output: ["Current date and time printed in the browser console."],
+    },
   ],
 };
 
@@ -299,6 +308,7 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
     6: [{ code: "<a>", name: "Anchor", meaning: "Creates a clickable link." }, { code: "href", name: "Destination", meaning: "Stores the page or address to open." }, { code: "Open page", name: "Link text", meaning: "The words the visitor clicks." }],
     7: [{ code: "color: red", name: "Text colour", meaning: "Changes the heading's foreground colour." }, { code: "<p>", name: "Paragraph", meaning: "Wraps a block of ordinary text." }, { code: "</p>", name: "Close paragraph", meaning: "Marks where the paragraph ends." }],
     8: [{ code: "<section>", name: "Content group", meaning: "Keeps a related part of the page together." }, { code: "text-align: center", name: "Centre text", meaning: "Centres the inline content inside the whole section." }, { code: "h1 — h6", name: "Heading levels", meaning: "Create a hierarchy from most to least important." }, { code: "<strong>", name: "Important text", meaning: "Marks text as important and normally displays it in bold." }],
+    9: [{ code: "<script>", name: "JavaScript area", meaning: "Tells the browser that the code inside is JavaScript." }, { code: "const", name: "Fixed variable", meaning: "Creates a variable that will not be reassigned." }, { code: "new Date()", name: "Current moment", meaning: "Creates a Date using the device's current date and time." }, { code: "console.log", name: "Developer console", meaning: "Displays the value in the browser's developer tools." }],
   },
 };
 
