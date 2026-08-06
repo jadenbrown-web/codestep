@@ -65,7 +65,16 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What is 1 + 1?  →  2", "Correct!"],
     },
     {
-      eyebrow: "06 · Combined conditions",
+      eyebrow: "06 · Null values",
+      title: "Mark a value as not ready yet",
+      explanation: "null deliberately means that a variable has no value yet. It is different from zero or an empty string, and the variable may receive a real value later. === null checks specifically for that missing value.",
+      note: "// null means there is deliberately no result yet",
+      prompt: "Set result to null, then print the message for its current state.",
+      answer: 'let result = null; // There is no result yet\n\nif (result === null) {\n  console.log("No result yet");\n} else {\n  console.log("Result is ready");\n}',
+      output: ["No result yet"],
+    },
+    {
+      eyebrow: "07 · Combined conditions",
       title: "Check whether a value is in a range",
       explanation: "A range needs two comparisons. >= checks the lower limit, <= checks the upper limit, and && means both conditions must be true at the same time.",
       note: "// && means AND. Both conditions must be true.",
@@ -75,7 +84,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Your age is between 0 and 18."],
     },
     {
-      eyebrow: "07 · Arrays",
+      eyebrow: "08 · Arrays",
       title: "Keep a list",
       explanation: "A JavaScript list is called an array. Square brackets hold its items, and a for...of loop visits each item one at a time.",
       note: "// Store three fruits, then print each one",
@@ -84,7 +93,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Apple", "Banana", "Orange"],
     },
     {
-      eyebrow: "08 · Constant array",
+      eyebrow: "09 · Constant array",
       title: "Start an empty car list",
       explanation: "const is short for constant. Like let, it creates a named variable, but const prevents that variable from being reassigned to a different value later. Here cars must keep pointing to the same array, although .push() can still add items inside that array.",
       note: "// Create an empty list that will hold cars",
@@ -93,7 +102,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["cars  →  []", "The list currently has 0 items."],
     },
     {
-      eyebrow: "09 · Add to an array",
+      eyebrow: "10 · Add to an array",
       title: "Put a car into the list",
       explanation: "prompt collects a car name from the user. cars.push(newCar) takes that saved answer and adds it to the end of the cars array.",
       note: "// Ask for a car, then add the answer to cars",
@@ -103,7 +112,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Before: []", "What car do you want to add?  →  Ford", 'After push: ["Ford"]'],
     },
     {
-      eyebrow: "10 · Print an array",
+      eyebrow: "11 · Print an array",
       title: "Show the finished car list",
       explanation: "console.log(cars) sends the whole array to the console. Because Ford was pushed into cars first, the printed list now contains that item.",
       note: "// Print the list after adding the new car",
@@ -113,7 +122,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What car do you want to add?  →  Ford", '["Ford"]'],
     },
     {
-      eyebrow: "11 · Array positions",
+      eyebrow: "12 · Array positions",
       title: "Look up the car you added",
       explanation: "Array positions start at zero. cars[0] retrieves the first item, which is Ford because it was the first value pushed into the array.",
       note: "// Look up and print the first car in the array",
@@ -123,7 +132,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What car do you want to add?  →  Ford", '["Ford"]', "Item at position 0  →  Ford"],
     },
     {
-      eyebrow: "12 · Objects",
+      eyebrow: "13 · Objects",
       title: "Give values names",
       explanation: "Objects keep related values under named keys. Here, BMW and Ford are keys, and each car has a colour property.",
       note: "// Look up a car brand and print its colour",
@@ -132,7 +141,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Enter BMW or Ford:  →  BMW", "Brand: BMW", "Colour: Blue"],
     },
     {
-      eyebrow: "13 · Timers",
+      eyebrow: "14 · Timers",
       title: "Run code later",
       explanation: "setTimeout schedules a function to run after a delay. The delay is measured in milliseconds, so 1000 means one second.",
       note: "// Print One, Two, and Three one second apart",
@@ -141,7 +150,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["One", "Two", "Three"],
     },
     {
-      eyebrow: "14 · Date and time",
+      eyebrow: "15 · Date and time",
       title: "Get the current moment",
       explanation: "new Date() creates a Date object containing the current date and time from the device running the code. console.log then displays that value.",
       note: "// Create the current date and time, then print it",
@@ -150,7 +159,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Thu Aug 06 2026 19:05:00 GMT+0100 (British Summer Time)"],
     },
     {
-      eyebrow: "15 · Classes",
+      eyebrow: "16 · Classes",
       title: "Create cars from a blueprint",
       explanation: "A class is a reusable blueprint for objects. Its constructor receives values when new Car(...) runs, and this stores those values as properties on each separate car object.",
       note: "// Define a Car class, then create and print two car objects",
@@ -206,7 +215,16 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What is 1 + 1?  →  2", "Correct!"],
     },
     {
-      eyebrow: "06 · Combined conditions",
+      eyebrow: "06 · Null values",
+      title: "Mark a value as not ready yet",
+      explanation: "null deliberately means that a variable has no value yet. string? allows this text variable to hold either text or null, and == null checks whether the value is still missing.",
+      note: "// null means there is deliberately no result yet",
+      prompt: "Set the nullable result to null, then print the message for its current state.",
+      answer: 'string? result = null; // There is no result yet\n\nif (result == null)\n{\n  Console.WriteLine("No result yet");\n}\nelse\n{\n  Console.WriteLine("Result is ready");\n}',
+      output: ["No result yet"],
+    },
+    {
+      eyebrow: "07 · Combined conditions",
       title: "Check whether a value is in a range",
       explanation: "A range needs two comparisons. >= checks the lower limit, <= checks the upper limit, and && means both conditions must be true at the same time.",
       note: "// && means AND. Both conditions must be true.",
@@ -216,7 +234,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Your age is between 0 and 18."],
     },
     {
-      eyebrow: "07 · Arrays",
+      eyebrow: "08 · Arrays",
       title: "Keep a list",
       explanation: "A C# array keeps several values of the same type. Square brackets mark the array, and a foreach loop visits each item one at a time.",
       note: "// Store three fruits, then print each one",
@@ -225,7 +243,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Apple", "Banana", "Orange"],
     },
     {
-      eyebrow: "08 · Empty list",
+      eyebrow: "09 · Empty list",
       title: "Start an empty car list",
       explanation: "List<string> creates a flexible list that stores text, and new List<string>() starts it with zero items. C# has a const keyword too, but const is only for values fixed at compile time; a growing List cannot be const. This is why the C# version begins with List<string> rather than copying JavaScript's const.",
       note: "// Create an empty list that will hold car names",
@@ -234,7 +252,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["cars  →  []", "The list currently has 0 items."],
     },
     {
-      eyebrow: "09 · Add to a list",
+      eyebrow: "10 · Add to a list",
       title: "Put a car into the list",
       explanation: "Console.ReadLine() collects the user's answer. cars.Add(newCar) takes that saved text and adds it to the end of the cars list.",
       note: "// Ask for a car, then add the answer to cars",
@@ -244,7 +262,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Before: []", "What car do you want to add?  →  Ford", 'After Add: ["Ford"]'],
     },
     {
-      eyebrow: "10 · Print a list",
+      eyebrow: "11 · Print a list",
       title: "Show the finished car list",
       explanation: "string.Join joins every list item into readable text. Console.WriteLine then prints that text, showing the car that was added in the previous step.",
       note: "// Join and print the items stored in cars",
@@ -254,7 +272,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What car do you want to add?  →  Ford", "[Ford]"],
     },
     {
-      eyebrow: "11 · Array positions",
+      eyebrow: "12 · Array positions",
       title: "Look up the car you added",
       explanation: "C# list positions start at zero. cars[0] retrieves the first item, which is Ford because it was the first value added to the list.",
       note: "// Look up and print the first car in the list",
@@ -264,7 +282,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What car do you want to add?  →  Ford", "[Ford]", "Item at position 0  →  Ford"],
     },
     {
-      eyebrow: "12 · Objects",
+      eyebrow: "13 · Objects",
       title: "Give values names",
       explanation: "C# objects keep related values in named properties. Here, an anonymous object groups a car's Brand and Colour together.",
       note: "// Create a car object and print its properties",
@@ -273,7 +291,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Brand: BMW", "Colour: Blue"],
     },
     {
-      eyebrow: "13 · Timers",
+      eyebrow: "14 · Timers",
       title: "Run code later",
       explanation: "Task.Delay pauses asynchronous C# code for a number of milliseconds. Using await lets each message appear after another one-second delay.",
       note: "// Print One, Two, and Three one second apart",
@@ -282,7 +300,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["One", "Two", "Three"],
     },
     {
-      eyebrow: "14 · Date and time",
+      eyebrow: "15 · Date and time",
       title: "Get the current moment",
       explanation: "DateTime.Now gets the computer's current local date and time. Storing it in currentDateTime lets the program use or display that moment later.",
       note: "// Get the current date and time, then print it",
@@ -291,7 +309,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["06/08/2026 19:05:00"],
     },
     {
-      eyebrow: "15 · Classes",
+      eyebrow: "16 · Classes",
       title: "Create cars from a blueprint",
       explanation: "A C# class is a reusable blueprint for objects. Properties store each car's data, the constructor receives starting values, and this refers to the particular object being created.",
       note: "// Define a Car class, then create and print two car objects",
@@ -522,6 +540,21 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
   },
 };
 
+const nullBreakdowns: Partial<Record<Language, CodePart[]>> = {
+  javascript: [
+    { code: "let result", name: "Variable", meaning: "Creates a changeable variable named result." },
+    { code: "null", name: "No value yet", meaning: "Deliberately stores no value for now; result can receive one later." },
+    { code: "=== null", name: "Exact check", meaning: "Checks whether result is specifically the null value." },
+    { code: "else", name: "A value exists", meaning: "Runs the other branch when result is no longer null." },
+  ],
+  csharp: [
+    { code: "string? result", name: "Nullable text", meaning: "The question mark allows result to hold text or null." },
+    { code: "null", name: "No value yet", meaning: "Deliberately stores no value for now; result can receive one later." },
+    { code: "== null", name: "Null check", meaning: "Checks whether result still contains no value." },
+    { code: "else", name: "A value exists", meaning: "Runs the other branch when result is no longer null." },
+  ],
+};
+
 const normalize = (value: string) =>
   value
     .replace(/\/\/.*$/gm, "")
@@ -609,7 +642,7 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
     ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|src|alt|id|lang|charset)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:#])/g
     : language === "css"
     ? /(\/\*[\s\S]*?\*\/|#[0-9a-fA-F]{3,8}\b|#[A-Za-z_]\w*|\b(?:body|p|background-color|color|text-align|font-family|border|border-radius|solid|dotted|center|lightblue|red|blue|tomato)\b|\d+(?:px)?|[{}();:.,])/g
-    : /(\/\/[^\n]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|class|constructor|this|let|const|new|if|else|for|of|while|true|false|break|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime|List)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|&&|>=|<=|\+\+|--|[{}()[\];=.:<>])/g;
+    : /(\/\/[^\n]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|class|constructor|this|let|const|new|null|if|else|for|of|while|true|false|break|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime|List)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|&&|>=|<=|\+\+|--|[{}()[\];=.:<>?])/g;
   const parts: { text: string; kind: string }[] = [];
   let lastIndex = 0;
   for (const match of code.matchAll(pattern)) {
@@ -618,7 +651,7 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
     let kind = "punctuation";
     if (/^(\/\/|\/\*|<!--)/.test(text)) kind = "comment";
     else if (/^["'`]/.test(text)) kind = "string";
-    else if (/^(function|class|constructor|this|let|const|new|if|else|for|of|while|true|false|break|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
+    else if (/^(function|class|constructor|this|let|const|new|null|if|else|for|of|while|true|false|break|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|section|script|img|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
     else if (/^(console|Console|Task|Date|DateTime|List|log)$/.test(text)) kind = "api";
     else if (/^(style|href|src|alt|id|lang|charset)$/.test(text)) kind = "attribute";
     else if (/^(background-color|color|text-align|font-family|border|border-radius)$/.test(text)) kind = "api";
@@ -677,7 +710,9 @@ export default function Home() {
   const current = language ? lessons[language][index] : null;
   const visibleGhost = current ? current.answer.slice(0, ghostLength) : "";
   const guideCode = alignedGuide(code, visibleGhost);
-  const breakdown = language ? breakdowns[language][index] : undefined;
+  const breakdown = language
+    ? (index === 5 && nullBreakdowns[language]) || breakdowns[language][language === "javascript" || language === "csharp" ? (index > 5 ? index - 1 : index) : index]
+    : undefined;
   const progress = language ? Math.round((index / lessons[language].length) * 100) : 0;
   const diagnostic = useMemo(() => current ? syntaxDiagnostic(code, current.answer) : [], [code, current]);
 
