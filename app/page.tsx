@@ -256,6 +256,15 @@ const lessons: Record<Language, Lesson[]> = {
       answer: '<h1 style="color: red;">Red Title</h1>\n<p>This is a paragraph.</p>',
       output: ["Red Title", "This is a paragraph."],
     },
+    {
+      eyebrow: "09 · Centred text section",
+      title: "Build a centred text section",
+      explanation: "A section groups related content. text-align: center centres the text inside that whole section, while h1, h2, h5, and h6 demonstrate different heading levels and strong marks important text as bold.",
+      note: "<!-- Group several heading levels and bold text in one centred section -->",
+      prompt: "Create the centred section with four heading levels and bold text.",
+      answer: '<section style="text-align: center;">\n  <h1>Main heading</h1>\n  <h2>Section heading</h2>\n  <h5>Small heading</h5>\n  <h6>Smallest heading</h6>\n  <strong>Bold text</strong>\n</section>',
+      output: ["Main heading", "Section heading", "Small heading", "Smallest heading", "Bold text — all centred"],
+    },
   ],
 };
 
@@ -289,6 +298,7 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
     5: [{ code: "h1", name: "Main heading", meaning: "The page's most important heading." }, { code: "h2", name: "Section heading", meaning: "Introduces a major section beneath the h1." }, { code: "</...>", name: "Closing tag", meaning: "Ends the heading so later text stays separate." }],
     6: [{ code: "<a>", name: "Anchor", meaning: "Creates a clickable link." }, { code: "href", name: "Destination", meaning: "Stores the page or address to open." }, { code: "Open page", name: "Link text", meaning: "The words the visitor clicks." }],
     7: [{ code: "color: red", name: "Text colour", meaning: "Changes the heading's foreground colour." }, { code: "<p>", name: "Paragraph", meaning: "Wraps a block of ordinary text." }, { code: "</p>", name: "Close paragraph", meaning: "Marks where the paragraph ends." }],
+    8: [{ code: "<section>", name: "Content group", meaning: "Keeps a related part of the page together." }, { code: "text-align: center", name: "Centre text", meaning: "Centres the inline content inside the whole section." }, { code: "h1 — h6", name: "Heading levels", meaning: "Create a hierarchy from most to least important." }, { code: "<strong>", name: "Important text", meaning: "Marks text as important and normally displays it in bold." }],
   },
 };
 
