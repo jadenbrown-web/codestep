@@ -569,6 +569,7 @@ export default function Home() {
   const [code, setCode] = useState("");
   const [status, setStatus] = useState<"idle" | "wrong" | "correct">("idle");
   const [typedOutput, setTypedOutput] = useState("");
+  const [ghostLength, setGhostLength] = useState(0);
   const [navOpen, setNavOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [themeMode, setThemeMode] = useState<ThemeMode>("system");
@@ -577,7 +578,9 @@ export default function Home() {
   const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0, html: 0, css: 0 });
 
   const current = language ? lessons[language][index] : null;
-  const guideCode = current ? current.answer.slice(0, Math.min(code.length, current.answer.length)).replace(/[^\n]/g, " ") + current.answer.slice(Math.min(code.length, current.answer.length)) : "";
+  const visibleGhost = current ? current.answer.slice(0, ghostLength) : "";
+  const hiddenGhostLength = Math.min(code.length, visibleGhost.length);
+  const guideCode = visibleGhost.slice(0, hiddenGhostLength).replace(/[^\n]/g, " ") + visibleGhost.slice(hiddenGhostLength);
   const breakdown = language ? breakdowns[language][index] : undefined;
   const progress = language ? Math.round((index / lessons[language].length) * 100) : 0;
 
@@ -588,6 +591,23 @@ export default function Home() {
       setTypedOutput("");
     }
   }, [current]);
+
+  useEffect(() => {
+    setGhostLength(0);
+    if (!showGuide || !current) return;
+    let position = 0;
+    let typingTimer: ReturnType<typeof setTimeout> | undefined;
+    const typeGhostCharacter = () => {
+      position += 1;
+      setGhostLength(position);
+      if (position >= current.answer.length) return;
+      const character = current.answer[position - 1];
+      const rhythm = character === "\n" ? 24 : /[.,;{}]/.test(character) ? 11 : 5 + (position % 3) * 2;
+      typingTimer = setTimeout(typeGhostCharacter, rhythm);
+    };
+    const delay = setTimeout(typeGhostCharacter, 180);
+    return () => { clearTimeout(delay); if (typingTimer) clearTimeout(typingTimer); };
+  }, [current, showGuide]);
 
   useEffect(() => {
     if (status !== "correct" || !current) { setTypedOutput(""); return; }
