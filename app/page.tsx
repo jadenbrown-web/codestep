@@ -575,18 +575,28 @@ function syntaxDiagnostic(code: string, expected: string): DiagnosticPart[] {
   const column = rawIndex - before.lastIndexOf("\n");
   const actualToken = actual[difference]?.character;
   const expectedToken = target[difference]?.character;
-  const message = actualToken
-    ? `Unexpected token '${actualToken}'`
-    : "Unexpected end of input";
-  const tokenHelp = actualToken
-    ? `The compiler found ${actualToken}, but expected ${expectedToken ? `'${expectedToken}'` : "the instruction to end"} here.`
-    : `The compiler reached the end while it was still expecting ${expectedToken ? `'${expectedToken}'` : "more code"}.`;
+  const expectedIndex = target[difference]?.index ?? expected.length;
+  let wordStart = expectedIndex;
+  let wordEnd = expectedIndex;
+  while (wordStart > 0 && /[A-Za-z0-9_]/.test(expected[wordStart - 1])) wordStart -= 1;
+  while (wordEnd < expected.length && /[A-Za-z0-9_]/.test(expected[wordEnd])) wordEnd += 1;
+  const expectedWord = expected.slice(wordStart, wordEnd);
+  const currentWord = code.match(/[A-Za-z_]\w*$/)?.[0] ?? "";
+  const incompleteWord = !actualToken && currentWord.length > 0 && expectedWord.startsWith(currentWord) && expectedWord !== currentWord;
+  const message = incompleteWord
+    ? `Incomplete keyword '${currentWord}'`
+    : actualToken ? `Unexpected token '${actualToken}'` : "Unexpected end of input";
+  const tokenHelp = incompleteWord
+    ? `You started '${expectedWord}' but stopped after '${currentWord}'. Type the remaining '${expectedWord.slice(currentWord.length)}'.`
+    : actualToken
+      ? `The compiler found ${actualToken}, but expected ${expectedToken ? `'${expectedToken}'` : "the instruction to end"} here.`
+      : `The compiler reached the end while it was still expecting ${expectedToken ? `'${expectedToken}'` : "more code"}.`;
   return [
-    { text: "SyntaxError", help: "The code cannot be read because its grammar or punctuation is incomplete or in the wrong order.", kind: "type" },
-    { text: `: ${message}`, help: tokenHelp, kind: "message" },
-    ...(actualToken ? [{ text: `  ${actualToken}`, help: `This is the token the compiler could not use at this position.`, kind: "token" as const }] : []),
-    { text: `  line ${line}`, help: `Line ${line} is the row where the compiler first noticed the problem.`, kind: "location" },
-    { text: `, column ${column}`, help: `Column ${column} is the character position on that line.`, kind: "location" },
+    { text: "SyntaxError:", help: "The code cannot be read because its grammar or punctuation is incomplete or in the wrong order.", kind: "type" },
+    { text: message, help: tokenHelp, kind: "message" },
+    ...(actualToken ? [{ text: actualToken, help: `This is the token the compiler could not use at this position.`, kind: "token" as const }] : []),
+    { text: `line ${line}`, help: `Line ${line} is the row where the compiler first noticed the problem.`, kind: "location" },
+    { text: `column ${column}`, help: `Column ${column} is the character position on that line.`, kind: "location" },
   ];
 }
 
