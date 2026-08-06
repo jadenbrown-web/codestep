@@ -130,6 +130,7 @@ export default function Home() {
   const [code, setCode] = useState("");
   const [status, setStatus] = useState<"idle" | "wrong" | "correct">("idle");
   const [copied, setCopied] = useState(false);
+  const [navOpen, setNavOpen] = useState(true);
   const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0 });
 
   const current = language ? lessons[language][index] : null;
@@ -217,11 +218,24 @@ export default function Home() {
   return (
     <main className="lesson-shell">
       <header className="lesson-nav">
-        <button className="brand brand-button" onClick={() => setLanguage(null)}><span className="brand-mark">&gt;_</span> Code<span>Step</span></button>
+        <div className="lesson-brand-group"><button className="drawer-toggle" onClick={() => setNavOpen((open) => !open)} aria-label={navOpen ? "Close lesson list" : "Open lesson list"} aria-expanded={navOpen}><span>☰</span></button><button className="brand brand-button" onClick={() => setLanguage(null)}><span className="brand-mark">&gt;_</span> Code<span>Step</span></button></div>
         <div className="lesson-progress"><div><span>{language === "javascript" ? "JavaScript" : "C Sharp"} path</span><b>{index + 1} / {lessons[language].length}</b></div><div className="progress-track"><i style={{width: `${Math.max(progress, 4)}%`}} /></div></div>
         <button className="exit-button" onClick={() => setLanguage(null)}>Exit lesson ×</button>
       </header>
-      <div className="lesson-layout">
+      <div className={`lesson-layout ${navOpen ? "drawer-open" : "drawer-closed"}`}>
+        <aside className="lesson-drawer" aria-label="Lesson list">
+          <div className="drawer-head"><span>{language === "javascript" ? "JS" : "C#"}</span><div><small>LEARNING PATH</small><b>{language === "javascript" ? "JavaScript" : "C Sharp"}</b></div><button onClick={() => setNavOpen(false)} aria-label="Close lesson list">×</button></div>
+          <div className="drawer-summary"><div><span>{completed[language]} of {lessons[language].length} completed</span><b>{Math.round(completed[language] / lessons[language].length * 100)}%</b></div><div className="drawer-progress"><i style={{width: `${completed[language] / lessons[language].length * 100}%`}} /></div></div>
+          <nav className="drawer-lessons">
+            {lessons[language].map((lesson, lessonIndex) => (
+              <button key={lesson.title} className={`${lessonIndex === index ? "active" : ""} ${lessonIndex < completed[language] ? "done" : ""}`} onClick={() => { setIndex(lessonIndex); if (window.innerWidth <= 850) setNavOpen(false); }}>
+                <span className="lesson-state">{lessonIndex < completed[language] ? "✓" : lessonIndex + 1}</span><span><small>{lesson.eyebrow.split("·")[1]}</small><b>{lesson.title}</b></span><i>›</i>
+              </button>
+            ))}
+          </nav>
+          <button className="drawer-home" onClick={() => setLanguage(null)}>← Choose another language</button>
+        </aside>
+        {navOpen && <button className="drawer-backdrop" aria-label="Close lesson list" onClick={() => setNavOpen(false)} />}
         <aside className="lesson-copy">
           <button className="back-link" onClick={() => index ? setIndex(index - 1) : setLanguage(null)}>← Back</button>
           <div className="lesson-number">{current!.eyebrow}</div>
