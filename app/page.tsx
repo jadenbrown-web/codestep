@@ -13,6 +13,7 @@ type Lesson = {
   answer: string;
   output: string[];
   referenceOnly?: boolean;
+  referenceKind?: "text" | "fonts";
 };
 
 const lessons: Record<Language, Lesson[]> = {
@@ -275,6 +276,7 @@ const lessons: Record<Language, Lesson[]> = {
       answer: '<section style="text-align: center;">\n  <h1>Heading 1</h1>\n  <h2>Heading 2</h2>\n  <h3>Heading 3</h3>\n  <h4>Heading 4</h4>\n  <h5>Heading 5</h5>\n  <h6>Heading 6</h6>\n  <strong>Bold important text</strong>\n  <p><del>Deleted text</del></p>\n  <p>H<sub>2</sub>O</p>\n</section>',
       output: ["Reference explored."],
       referenceOnly: true,
+      referenceKind: "text",
     },
     {
       eyebrow: "10 · JavaScript in HTML",
@@ -284,6 +286,17 @@ const lessons: Record<Language, Lesson[]> = {
       prompt: "Put the date-and-time code inside a script element.",
       answer: "<script>\n  const currentDateTime = new Date();\n  console.log(currentDateTime);\n</script>",
       output: ["Current date and time printed in the browser console."],
+    },
+    {
+      eyebrow: "11 · Font families",
+      title: "Compare website fonts",
+      explanation: "This is a visual reference rather than a quiz. A browser uses the first available font in a font-family list, then tries each fallback. Named fonts are not guaranteed on every device, so finish every stack with a generic family.",
+      note: "<!-- Compare common fonts and safe fallbacks -->",
+      prompt: "Compare the font samples and their fallback families.",
+      answer: 'p { font-family: Arial, sans-serif; }',
+      output: ["Font reference explored."],
+      referenceOnly: true,
+      referenceKind: "fonts",
     },
   ],
 };
@@ -478,7 +491,11 @@ export default function Home() {
               <code className={`breakdown-${breakdownSyntaxKind(part.code)}`}>{part.code}</code><div><b>{part.name}</b><span>{part.meaning}</span></div>
             </div>)}</div>
           </section>}
-          {current!.referenceOnly ? <div className="element-guide">
+          {current!.referenceOnly ? current!.referenceKind === "fonts" ? <div className="font-guide-note">
+            <b>How the browser chooses</b>
+            <p><code>font-family: Georgia, serif;</code> means “use Georgia if available; otherwise use the browser’s serif font.” Names containing spaces, such as <code>"Times New Roman"</code>, should be quoted.</p>
+            <span>Commonly installed does not mean guaranteed on every operating system.</span>
+          </div> : <div className="element-guide">
             <div><code>&lt;h1&gt;–&lt;h6&gt;</code><p><b>Heading hierarchy</b><span>Six levels, from the main page heading down to the smallest subheading.</span></p></div>
             <div><code>&lt;strong&gt;</code><p><b>Important bold text</b><span>Adds importance; browsers normally display it in bold.</span></p></div>
             <div><code>text-align: center</code><p><b>Centre a group</b><span>Centres the text inside the element carrying this CSS rule.</span></p></div>
@@ -494,7 +511,21 @@ export default function Home() {
           </>}
         </aside>
         <section className="workspace">
-          {current!.referenceOnly ? <div className="text-reference-preview">
+          {current!.referenceOnly ? current!.referenceKind === "fonts" ? <div className="font-reference-preview">
+            <div className="preview-bar"><span>◆</span> HTML FONT REFERENCE</div>
+            <div className="font-samples">
+              <div style={{fontFamily:"Arial, sans-serif"}}><b>Arial</b><span>The quick brown fox jumps over the lazy dog.</span><code>Arial, sans-serif</code></div>
+              <div style={{fontFamily:"Verdana, sans-serif"}}><b>Verdana</b><span>The quick brown fox jumps over the lazy dog.</span><code>Verdana, sans-serif</code></div>
+              <div style={{fontFamily:"Tahoma, sans-serif"}}><b>Tahoma</b><span>The quick brown fox jumps over the lazy dog.</span><code>Tahoma, sans-serif</code></div>
+              <div style={{fontFamily:"'Trebuchet MS', sans-serif"}}><b>Trebuchet MS</b><span>The quick brown fox jumps over the lazy dog.</span><code>&quot;Trebuchet MS&quot;, sans-serif</code></div>
+              <div style={{fontFamily:"'Times New Roman', serif"}}><b>Times New Roman</b><span>The quick brown fox jumps over the lazy dog.</span><code>&quot;Times New Roman&quot;, serif</code></div>
+              <div style={{fontFamily:"Georgia, serif"}}><b>Georgia</b><span>The quick brown fox jumps over the lazy dog.</span><code>Georgia, serif</code></div>
+              <div style={{fontFamily:"Garamond, serif"}}><b>Garamond</b><span>The quick brown fox jumps over the lazy dog.</span><code>Garamond, serif</code></div>
+              <div style={{fontFamily:"'Courier New', monospace"}}><b>Courier New</b><span>The quick brown fox jumps over the lazy dog.</span><code>&quot;Courier New&quot;, monospace</code></div>
+              <div style={{fontFamily:"'Brush Script MT', cursive"}}><b>Brush Script MT</b><span>The quick brown fox jumps over the lazy dog.</span><code>&quot;Brush Script MT&quot;, cursive</code></div>
+            </div>
+            <button className="reference-next" onClick={nextLesson}>Finish the HTML path →</button>
+          </div> : <div className="text-reference-preview">
             <div className="preview-bar"><span>◆</span> HTML TEXT REFERENCE</div>
             <div className="heading-samples"><h1>Heading 1</h1><h2>Heading 2</h2><h3>Heading 3</h3><h4>Heading 4</h4><h5>Heading 5</h5><h6>Heading 6</h6></div>
             <div className="format-samples">
