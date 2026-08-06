@@ -129,6 +129,7 @@ export default function Home() {
   const [index, setIndex] = useState(0);
   const [code, setCode] = useState("");
   const [status, setStatus] = useState<"idle" | "wrong" | "correct">("idle");
+  const [copied, setCopied] = useState(false);
   const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0 });
 
   const current = language ? lessons[language][index] : null;
@@ -138,6 +139,7 @@ export default function Home() {
     if (current) {
       setCode(current.starter || "");
       setStatus("idle");
+      setCopied(false);
     }
   }, [current]);
 
@@ -156,6 +158,13 @@ export default function Home() {
     } else {
       setStatus("wrong");
     }
+  }
+
+  async function copyExample() {
+    if (!current) return;
+    await navigator.clipboard.writeText(current.answer);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1600);
   }
 
   function nextLesson() {
@@ -219,8 +228,12 @@ export default function Home() {
           <h1>{current!.title}</h1>
           <p>{current!.explanation}</p>
           <div className="comment-card"><div className="comment-label">READ THE COMMENT</div><code>{current!.note}</code></div>
+          <div className="reference-card">
+            <div className="reference-head"><div><span>STEP 1</span><b>Look at this code</b></div><button onClick={copyExample}>{copied ? "✓ Copied" : "Copy code"}</button></div>
+            <pre><code>{current!.answer}</code></pre>
+          </div>
           <div className="task-card"><div className="task-icon">⌨</div><div><b>Your turn</b><p>{current!.prompt}</p></div></div>
-          <div className="tip"><span>i</span> Spacing does not need to match exactly. Focus on the code.</div>
+          <div className="tip"><span>i</span> Copy or type the example into the editor on the right, then check it.</div>
         </aside>
         <section className="workspace">
           <div className="editor-panel">
