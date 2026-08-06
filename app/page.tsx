@@ -99,6 +99,15 @@ const lessons: Record<Language, Lesson[]> = {
       answer: "const currentDateTime = new Date();\nconsole.log(currentDateTime);",
       output: ["Thu Aug 06 2026 19:05:00 GMT+0100 (British Summer Time)"],
     },
+    {
+      eyebrow: "10 · Classes",
+      title: "Create cars from a blueprint",
+      explanation: "A class is a reusable blueprint for objects. Its constructor receives values when new Car(...) runs, and this stores those values as properties on each separate car object.",
+      note: "// Define a Car class, then create and print two car objects",
+      prompt: "Create the Car class and the Ford and Audi objects.",
+      answer: 'class Car {\n  constructor(name, year) {\n    // this.name is the property stored in the car object.\n    // name is the value passed into the constructor.\n    this.name = name;\n\n    // this.year is the property stored in the car object.\n    // year is the value passed into the constructor.\n    this.year = year;\n  }\n}\n\nconst myCar1 = new Car("Ford", 2014);\nconst myCar2 = new Car("Audi", 2019);\n\nconsole.log(myCar1);\nconsole.log(myCar2);',
+      output: ['Car { name: "Ford", year: 2014 }', 'Car { name: "Audi", year: 2019 }'],
+    },
   ],
   csharp: [
     {
@@ -290,6 +299,7 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
     6: [{ code: "{ key: value }", name: "Object", meaning: "Groups values under names such as BMW and Ford." }, { code: "cars[brand]", name: "Look up", meaning: "Uses brand to find the matching car." }, { code: ".colour", name: "Property", meaning: "Selects the colour stored on that car." }],
     7: [{ code: "setTimeout", name: "Schedule", meaning: "Asks JavaScript to run some code later." }, { code: "() => ...", name: "Code to run", meaning: "A short function waiting inside the timer." }, { code: "1000", name: "Delay", meaning: "One thousand milliseconds means one second." }],
     8: [{ code: "const", name: "Fixed variable", meaning: "Creates a variable that will not be reassigned." }, { code: "new Date()", name: "Current moment", meaning: "Creates a Date using the device's current date and time." }, { code: "console.log", name: "Display", meaning: "Shows the stored Date in the console." }],
+    9: [{ code: "class Car", name: "Blueprint", meaning: "Defines the shape and behaviour shared by every Car object." }, { code: "constructor(name, year)", name: "Starting values", meaning: "Receives the name and year whenever a new car is created." }, { code: "this.name = name", name: "Store a property", meaning: "Saves the received name on this particular car object." }, { code: "new Car(...) ", name: "Create an object", meaning: "Builds a separate Car using the values inside the parentheses." }],
   },
   csharp: {
     0: [{ code: "void", name: "Result type", meaning: "Says this method does not send a value back." }, { code: "Correct()", name: "Name", meaning: "Names the method so you can call it later." }, { code: "{ ... }", name: "Instructions", meaning: "Holds the code the method will run." }, { code: "Correct();", name: "Call it", meaning: "Runs the method you created." }],
@@ -324,7 +334,7 @@ const challengeFile = (language: Language) => language === "javascript" ? "chall
 function HighlightedCode({ code, language }: { code: string; language: Language }) {
   const pattern = language === "html"
     ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|title|body|section|script|h[1-6]|p|a|strong)\b|\b(?:style|href)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:])/g
-    : /(\/\/[^\n]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|let|const|new|if|else|for|of|setTimeout|void|string|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|[{}()[\];=.:])/g;
+    : /(\/\/[^\n]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|class|constructor|this|let|const|new|if|else|for|of|setTimeout|void|string|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|[{}()[\];=.:])/g;
   const parts: { text: string; kind: string }[] = [];
   let lastIndex = 0;
   for (const match of code.matchAll(pattern)) {
@@ -333,7 +343,7 @@ function HighlightedCode({ code, language }: { code: string; language: Language 
     let kind = "punctuation";
     if (/^(\/\/|<!--)/.test(text)) kind = "comment";
     else if (/^["'`]/.test(text)) kind = "string";
-    else if (/^(function|let|const|new|if|else|for|of|setTimeout|void|string|var|foreach|in|await|<\/?|\/?>|html|head|title|body|section|script|h[1-6]|p|a|strong)$/.test(text)) kind = "keyword";
+    else if (/^(function|class|constructor|this|let|const|new|if|else|for|of|setTimeout|void|string|var|foreach|in|await|<\/?|\/?>|html|head|title|body|section|script|h[1-6]|p|a|strong)$/.test(text)) kind = "keyword";
     else if (/^(console|Console|Task|Date|DateTime|log)$/.test(text)) kind = "api";
     else if (/^(style|href)$/.test(text)) kind = "attribute";
     else if (/^\d+$/.test(text)) kind = "number";
@@ -346,7 +356,7 @@ function HighlightedCode({ code, language }: { code: string; language: Language 
 }
 
 function breakdownSyntaxKind(code: string) {
-  if (/^(function|let|const|new|if|else|for|for \.\.\. of|setTimeout|void|string|string\[\]|var|foreach|await|while|<\/?[a-z1-6]+>|<\/?|\/?>)$/i.test(code)) return "keyword";
+  if (/^(function|class Car|constructor|this|let|const|new|if|else|for|for \.\.\. of|setTimeout|void|string|string\[\]|var|foreach|await|while|<\/?[a-z1-6]+>|<\/?|\/?>)$/i.test(code)) return "keyword";
   if (/^(console|Console|Task|Date|DateTime|console\.log|Console\.WriteLine|Task\.Delay|DateTime\.Now)$/i.test(code)) return "api";
   if (/^["'`]|color|lightblue|1000$/.test(code)) return "string";
   if (/^[{}()[\];=.: ]+$|^\{.*\}$|^<\/\.\.\.>$/.test(code)) return "punctuation";
