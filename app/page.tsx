@@ -683,6 +683,16 @@ const normalize = (value: string) =>
     .replace(/'/g, '"')
     .trim();
 
+const lessonTone = (lesson: Lesson) => {
+  const label = `${lesson.eyebrow} ${lesson.title}`.toLowerCase();
+  if (/function|method|class|heading|text element/.test(label)) return "rose";
+  if (/loop|timer|page structure|doctype|body|div|multiple pages/.test(label)) return "blue";
+  if (/variable|null|date|time|font/.test(label)) return "gold";
+  if (/console|print/.test(label)) return "cyan";
+  if (/decision|condition|comparison|regular expression|javascript in html/.test(label)) return "violet";
+  return "green";
+};
+
 const languageName = (language: Language) => language === "javascript" ? "JavaScript" : language === "csharp" ? "C Sharp" : language === "html" ? "HTML" : "CSS";
 const languageBadge = (language: Language) => language === "javascript" ? "JS" : language === "csharp" ? "C#" : language === "html" ? "HTML" : "CSS";
 const challengeFile = (language: Language) => language === "javascript" ? "challenge.js" : language === "csharp" ? "Program.cs" : language === "html" ? "index.html" : "styles.css";
@@ -1049,7 +1059,7 @@ export default function Home() {
           <div className="drawer-summary"><div><span>{completed[language]} of {lessons[language].length} completed</span><b>{Math.round(completed[language] / lessons[language].length * 100)}%</b></div><div className="drawer-progress"><i style={{width: `${completed[language] / lessons[language].length * 100}%`}} /></div></div>
           <nav className="drawer-lessons">
             {lessons[language].map((lesson, lessonIndex) => (
-              <button key={lesson.title} className={`${lessonIndex === index ? "active" : ""} ${lessonIndex < completed[language] ? "done" : ""}`} onClick={() => { setIndex(lessonIndex); if (window.innerWidth <= 850) setNavOpen(false); }}>
+              <button key={lesson.title} className={`tone-${lessonTone(lesson)} ${lessonIndex === index ? "active" : ""} ${lessonIndex < completed[language] ? "done" : ""}`} onClick={() => { setIndex(lessonIndex); if (window.innerWidth <= 850) setNavOpen(false); }}>
                 <span className="lesson-state">{lessonIndex < completed[language] ? "✓" : lessonIndex + 1}</span><span><small>{lesson.eyebrow.split("·")[1]}</small><b>{lesson.title}</b></span><i>›</i>
               </button>
             ))}
