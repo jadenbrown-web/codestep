@@ -695,15 +695,18 @@ const lessonTone = (lesson: Lesson) => {
   return "green";
 };
 
-const withoutGuideComments = (value: string, language: Language) => value
-  .split("\n")
-  .map((line) => {
-    if (language === "html") return line.replace(/<!--.*?-->/g, (comment) => " ".repeat(comment.length));
-    if (language === "css") return line.replace(/\/\*.*?\*\//g, (comment) => " ".repeat(comment.length));
-    const commentIndex = line.indexOf("//");
-    return commentIndex < 0 ? line : line.slice(0, commentIndex) + " ".repeat(line.length - commentIndex);
-  })
-  .join("\n");
+const withoutGuideComments = (value: string, language: Language) => {
+  const uncommented = language === "html"
+    ? value.replace(/<!--[\s\S]*?-->/g, "")
+    : language === "css"
+      ? value.replace(/\/\*[\s\S]*?\*\//g, "")
+      : value.split("\n").map((line) => {
+        const commentIndex = line.indexOf("//");
+        return commentIndex < 0 ? line : line.slice(0, commentIndex);
+      }).join("\n");
+
+  return uncommented.split("\n").filter((line) => line.trim()).join("\n");
+};
 
 const languageName = (language: Language) => language === "javascript" ? "JavaScript" : language === "csharp" ? "C Sharp" : language === "html" ? "HTML" : "CSS";
 const languageBadge = (language: Language) => language === "javascript" ? "JS" : language === "csharp" ? "C#" : language === "html" ? "HTML" : "CSS";
@@ -735,7 +738,8 @@ function alignedGuide(code: string, expected: string) {
   let matched = 0;
   while (matched < actual.length && matched < target.length && actual[matched].character === target[matched].character) matched += 1;
   const expectedPosition = matched ? target[matched - 1].index + 1 : 0;
-  return code.replace(/[^\n]/g, " ") + expected.slice(expectedPosition);
+  const remainingGuide = expected.slice(expectedPosition).replace(/^\s+/, "");
+  return code.replace(/[^\n]/g, " ") + remainingGuide;
 }
 
 function syntaxDiagnostic(code: string, expected: string): DiagnosticPart[] {
@@ -881,14 +885,14 @@ export default function Home() {
     const typeGhostCharacter = () => {
       position += 1;
       setGhostLength(position);
-      if (position >= current.answer.length) return;
-      const character = current.answer[position - 1];
+      if (position >= ghostSource.length) return;
+      const character = ghostSource[position - 1];
       const rhythm = character === "\n" ? 24 : /[.,;{}]/.test(character) ? 11 : 5 + (position % 3) * 2;
       typingTimer = setTimeout(typeGhostCharacter, rhythm);
     };
     const delay = setTimeout(typeGhostCharacter, 180);
     return () => { clearTimeout(delay); if (typingTimer) clearTimeout(typingTimer); };
-  }, [current, showGuide]);
+  }, [current, ghostSource, showGuide]);
 
   useEffect(() => {
     if (status !== "correct" || !current) { setTypedOutput(""); return; }
@@ -1073,7 +1077,7 @@ export default function Home() {
           <nav className="drawer-lessons">
             {lessons[language].map((lesson, lessonIndex) => (
               <button key={lesson.title} className={`tone-${lessonTone(lesson)} ${lessonIndex === index ? "active" : ""} ${lessonIndex < completed[language] ? "done" : ""}`} onClick={() => { setIndex(lessonIndex); if (window.innerWidth <= 850) setNavOpen(false); }}>
-                <span className="lesson-state">{lessonIndex < completed[language] ? "✓" : lessonIndex + 1}</span><span><small>{lesson.eyebrow.split("·")[1]}</small><b>{lesson.title}</b></span><i>›</i>
+                <span className="lesson-state">{lessonIndex + 1}</span><span><small>{lesson.eyebrow.split("·")[1]}</small><b>{lesson.title}</b></span><i>›</i>
               </button>
             ))}
           </nav>
@@ -1197,7 +1201,7 @@ export default function Home() {
           </div> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className="file-tab"><span>◆</span> {challengeFile(language)}</div><div className="panel-actions"><span>UTF-8</span><button onClick={() => { setCode(""); setCaretIndex(0); }} title="Reset code">↻ Reset</button></div></div>
-            <div className={`editor-body ${colourTyping ? "colour-typing" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className="code-guide" aria-hidden="true"><span>CODE GUIDE</span><code><HighlightedCode code={guideCode} language={language} /></code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><HighlightedCode code={code} language={language} caretIndex={caretIndex} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : "// Type your code here..."} /></div>
+            <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className="code-guide" aria-hidden="true"><span>CODE GUIDE</span><code><HighlightedCode code={guideCode} language={language} /></code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><HighlightedCode code={code} language={language} caretIndex={caretIndex} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : "// Type your code here..."} /></div>
           </div>
           <div className="console-panel">
             <div className="console-bar"><span><i /> CONSOLE</span><button onClick={() => setStatus("idle")}>Clear</button></div>
