@@ -690,8 +690,20 @@ const lessonTone = (lesson: Lesson) => {
   if (/variable|null|date|time|font/.test(label)) return "gold";
   if (/console|print/.test(label)) return "cyan";
   if (/decision|condition|comparison|regular expression|javascript in html/.test(label)) return "violet";
+  if (/array|list|set|object|position/.test(label)) return "green";
+  if (/image|video|audio|style|border|colour|css|selector/.test(label)) return "orange";
   return "green";
 };
+
+const withoutGuideComments = (value: string, language: Language) => value
+  .split("\n")
+  .map((line) => {
+    if (language === "html") return line.replace(/<!--.*?-->/g, (comment) => " ".repeat(comment.length));
+    if (language === "css") return line.replace(/\/\*.*?\*\//g, (comment) => " ".repeat(comment.length));
+    const commentIndex = line.indexOf("//");
+    return commentIndex < 0 ? line : line.slice(0, commentIndex) + " ".repeat(line.length - commentIndex);
+  })
+  .join("\n");
 
 const languageName = (language: Language) => language === "javascript" ? "JavaScript" : language === "csharp" ? "C Sharp" : language === "html" ? "HTML" : "CSS";
 const languageBadge = (language: Language) => language === "javascript" ? "JS" : language === "csharp" ? "C#" : language === "html" ? "HTML" : "CSS";
@@ -816,7 +828,7 @@ function SettingsPanel({ open, themeMode, showGuide, colourTyping, onThemeChange
       </div></div>
       <div className="settings-group guide-setting"><div><b>Code guide</b><span>Show a faint, colour-coded copy of the expected answer in the editor.</span></div><button className={`switch ${showGuide ? "on" : ""}`} role="switch" aria-checked={showGuide} onClick={() => onGuideChange(!showGuide)}><i /></button></div>
       <div className="settings-group guide-setting"><div><b>Colour typed code</b><span>Give your typed code the same syntax colours as the ghost guide.</span></div><button className={`switch ${colourTyping ? "on" : ""}`} role="switch" aria-checked={colourTyping} onClick={() => onColourTypingChange(!colourTyping)}><i /></button></div>
-      <p className="settings-foot">The guide includes comments but stays translucent so your own typing remains clear.</p>
+      <p className="settings-foot">The guide shows only the code you need to type. Lesson comments stay in the explanation panel.</p>
     </section>
   </div>;
 }
@@ -839,7 +851,8 @@ export default function Home() {
   const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0, html: 0, css: 0 });
 
   const current = language ? lessons[language][index] : null;
-  const visibleGhost = current ? current.answer.slice(0, ghostLength) : "";
+  const ghostSource = current ? withoutGuideComments(current.answer, language ?? "javascript") : "";
+  const visibleGhost = ghostSource.slice(0, ghostLength);
   const guideCode = alignedGuide(code, visibleGhost);
   const breakdown = language
     ? current?.referenceKind === "comparisons" ? undefined
@@ -1011,7 +1024,7 @@ export default function Home() {
             <div className="terminal-top"><i/><i/><i/><span>first-steps.js</span></div>
             <div className="terminal-code"><div className="terminal-lines"><small>1</small><small>2</small><small>3</small><small>4</small><small>5</small></div><pre><code><HighlightedCode code={homeDemoCode.slice(0, homeCodeLength)} language="javascript" /></code></pre></div>
             <div className="terminal-output"><span>›</span> {homeDemoOutput.slice(0, homeOutputLength)}<i>▋</i></div>
-            <div className="success-pill">✓ Nice work!</div>
+            <div className="success-pill"><span>✓</span><div><b>Nice work!</b><small>Your code ran successfully</small></div></div>
           </div>
         </section>
         <section className="courses">
@@ -1109,7 +1122,7 @@ export default function Home() {
             <div><code>&lt;sub&gt; / &lt;sup&gt;</code><p><b>Subscript or superscript</b><span>Lowers or raises smaller text, useful for H₂O and 2³.</span></p></div>
           </div> : <>
             <div className="comment-card"><div className="comment-label">READ THE COMMENT</div><code>{current!.note}</code></div>
-            <div className="tip"><span>↵</span> Type over the guide in the editor, then press Enter to check it. Spaces and indentation are accepted.</div>
+            <div className="tip">Type over the guide in the editor, then press Enter to check it. Spaces and indentation are accepted.</div>
           </>}
         </aside>
         <section className="workspace">
