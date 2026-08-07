@@ -1068,7 +1068,7 @@ export default function Home() {
       </header>
       <div className={`lesson-layout ${navOpen ? "drawer-open" : "drawer-closed"}`}>
         <aside className="lesson-drawer" aria-label="Lesson list">
-          <div className="drawer-head"><span>{languageBadge(language)}</span><div><small>LEARNING PATH</small><b>{languageName(language)}</b></div><button onClick={() => setNavOpen(false)} aria-label="Close lesson list">×</button></div>
+          <div className="drawer-head"><span>{languageBadge(language)}</span><div><small>LEARNING PATH</small><b>{languageName(language)}</b></div></div>
           <div className="drawer-summary"><div><span>{completed[language]} of {lessons[language].length} completed</span><b>{Math.round(completed[language] / lessons[language].length * 100)}%</b></div><div className="drawer-progress"><i style={{width: `${completed[language] / lessons[language].length * 100}%`}} /></div></div>
           <nav className="drawer-lessons">
             {lessons[language].map((lesson, lessonIndex) => (
