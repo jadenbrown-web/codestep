@@ -481,7 +481,16 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Video loaded: my-video.mp4", "Playback controls enabled."],
     },
     {
-      eyebrow: "12 · IDs for CSS",
+      eyebrow: "12 · Audio",
+      title: "Place audio on the page",
+      explanation: "The audio element works much like video, but it plays sound without a picture area. src tells the browser to load my-audio.mp3, and controls adds play, pause, volume, and timeline controls. Keep the MP3 file beside the HTML file when using only its filename.",
+      note: "<!-- Play my-audio.mp3 with playback controls -->",
+      prompt: "Add the audio file and let the visitor control its playback.",
+      answer: '<audio src="my-audio.mp3" controls></audio>',
+      output: ["Audio loaded: my-audio.mp3", "Playback controls enabled."],
+    },
+    {
+      eyebrow: "13 · IDs for CSS",
       title: "Give one element a unique name",
       explanation: "The id attribute gives one HTML element a unique name. CSS can then select that exact element with a hash followed by the same name, such as #p1.",
       note: "<!-- Give this particular paragraph the ID p1 -->",
@@ -598,7 +607,8 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
     7: [{ code: "<script>", name: "JavaScript area", meaning: "Tells the browser that the code inside is JavaScript." }, { code: "const", name: "Fixed variable", meaning: "Creates a variable that will not be reassigned." }, { code: "new Date()", name: "Current moment", meaning: "Creates a Date using the device's current date and time." }, { code: "console.log", name: "Developer console", meaning: "Displays the value in the browser's developer tools." }],
     9: [{ code: "<img>", name: "Image element", meaning: "Places an image in the HTML page; it does not need a closing tag." }, { code: 'src="car.png"', name: "Image source", meaning: "Loads car.png from the same folder as the HTML file." }, { code: 'alt="A car"', name: "Alternative text", meaning: "Describes the image for accessibility and when it cannot load." }],
     10: [{ code: "<video>", name: "Video element", meaning: "Creates a video player inside the webpage." }, { code: 'src="my-video.mp4"', name: "Video source", meaning: "Loads my-video.mp4 from the same folder as the HTML file." }, { code: "controls", name: "Playback controls", meaning: "Shows the browser's play, pause, volume, and timeline controls." }, { code: "</video>", name: "Closing tag", meaning: "Marks where the video element ends." }],
-    11: [{ code: "<p>", name: "Paragraph", meaning: "Creates the particular paragraph that will be styled." }, { code: 'id="p1"', name: "Unique ID", meaning: "Gives this element the unique name p1." }, { code: "#p1", name: "Matching CSS", meaning: "CSS uses a hash before the ID name to select this exact element." }],
+    11: [{ code: "<audio>", name: "Audio element", meaning: "Creates an audio player without a video picture area." }, { code: 'src="my-audio.mp3"', name: "Audio source", meaning: "Loads my-audio.mp3 from the same folder as the HTML file." }, { code: "controls", name: "Playback controls", meaning: "Shows the browser's play, pause, volume, and timeline controls." }, { code: "</audio>", name: "Closing tag", meaning: "Marks where the audio element ends." }],
+    12: [{ code: "<p>", name: "Paragraph", meaning: "Creates the particular paragraph that will be styled." }, { code: 'id="p1"', name: "Unique ID", meaning: "Gives this element the unique name p1." }, { code: "#p1", name: "Matching CSS", meaning: "CSS uses a hash before the ID name to select this exact element." }],
   },
   css: {
     0: [{ code: "body", name: "Selector", meaning: "Chooses the HTML body element to style." }, { code: "background-color", name: "Property", meaning: "Chooses the colour behind the element." }, { code: ":", name: "Property separator", meaning: "Separates the property name from its value." }, { code: "lightblue", name: "Value", meaning: "The background colour to apply." }, { code: ";", name: "Rule ending", meaning: "Ends this CSS declaration so another can follow." }],
@@ -738,7 +748,7 @@ function SyntaxDiagnostic({ parts }: { parts: DiagnosticPart[] }) {
 
 function HighlightedCode({ code, language, caretIndex }: { code: string; language: Language; caretIndex?: number }) {
   const pattern = language === "html"
-    ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|section|script|img|video|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|src|alt|controls|id|lang|charset)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:#])/g
+    ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|section|script|img|video|audio|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|src|alt|controls|id|lang|charset)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:#])/g
     : language === "css"
     ? /(\/\*[\s\S]*?\*\/|#[0-9a-fA-F]{3,8}\b|#[A-Za-z_]\w*|\b(?:body|p|background-color|color|text-align|font-family|border|border-radius|solid|dotted|center|lightblue|red|blue|tomato)\b|\d+(?:px)?|[{}();:.,])/g
     : /(\/\/[^\n]*|\/\^[A-Za-z]+\/[gimsuy]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|class|constructor|this|let|const|new|null|if|else|for|of|while|true|false|break|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime|List|Set|HashSet|Regex|RegexOptions)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|&&|>=|<=|\+\+|--|[{}()[\];=.:<>?^/])/g;
@@ -750,7 +760,7 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
     let kind = "punctuation";
     if (/^(\/\/|\/\*|<!--)/.test(text)) kind = "comment";
     else if (/^["'`]/.test(text) || /^\/\^/.test(text)) kind = "string";
-    else if (/^(function|class|constructor|this|let|const|new|null|if|else|for|of|while|true|false|break|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|section|script|img|video|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
+    else if (/^(function|class|constructor|this|let|const|new|null|if|else|for|of|while|true|false|break|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|section|script|img|video|audio|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
     else if (/^(console|Console|Task|Date|DateTime|List|Set|HashSet|Regex|RegexOptions|log)$/.test(text)) kind = "api";
     else if (/^(style|href|src|alt|controls|id|lang|charset)$/.test(text)) kind = "attribute";
     else if (/^(background-color|color|text-align|font-family|border|border-radius)$/.test(text)) kind = "api";
