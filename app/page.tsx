@@ -788,6 +788,8 @@ export default function Home() {
   const [caretIndex, setCaretIndex] = useState(0);
   const [status, setStatus] = useState<"idle" | "wrong" | "correct">("idle");
   const [typedOutput, setTypedOutput] = useState("");
+  const [homeCodeLength, setHomeCodeLength] = useState(0);
+  const [homeOutputLength, setHomeOutputLength] = useState(0);
   const [ghostLength, setGhostLength] = useState(0);
   const [navOpen, setNavOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -875,11 +877,36 @@ export default function Home() {
   useEffect(() => { localStorage.setItem("codestep-code-guide", String(showGuide)); }, [showGuide]);
   useEffect(() => { localStorage.setItem("codestep-colour-typing", String(colourTyping)); }, [colourTyping]);
 
+  useEffect(() => {
+    if (language) return;
+    const demoCode = 'function sayHello() {\n  console.log("Hello, coder!");\n}\n\nsayHello();';
+    const demoOutput = "Hello, coder!";
+    setHomeCodeLength(0);
+    setHomeOutputLength(0);
+    let codePosition = 0;
+    let outputPosition = 0;
+    let timer: ReturnType<typeof setTimeout>;
+    const typeOutput = () => {
+      outputPosition += 1;
+      setHomeOutputLength(outputPosition);
+      if (outputPosition < demoOutput.length) timer = setTimeout(typeOutput, 28);
+    };
+    const typeCode = () => {
+      codePosition += 1;
+      setHomeCodeLength(codePosition);
+      if (codePosition < demoCode.length) timer = setTimeout(typeCode, demoCode[codePosition - 1] === "\n" ? 28 : 10);
+      else timer = setTimeout(typeOutput, 160);
+    };
+    timer = setTimeout(typeCode, 220);
+    return () => clearTimeout(timer);
+  }, [language]);
+
   const lineNumbers = useMemo(() => Array.from({ length: Math.max(8, code.split("\n").length) }, (_, i) => i + 1), [code]);
 
   function openCourse(next: Language) {
     setLanguage(next);
     setIndex(Math.min(completed[next], lessons[next].length - 1));
+    window.scrollTo({ top: 0, behavior: "auto" });
   }
 
   function checkCode() {
@@ -922,6 +949,8 @@ export default function Home() {
 
   function nextLesson() {
     if (!language) return;
+    document.querySelector(".lesson-copy")?.scrollTo({ top: 0, behavior: "auto" });
+    window.scrollTo({ top: 0, behavior: "auto" });
     if (index === lessons[language].length - 1) {
       setLanguage(null);
       setIndex(0);
@@ -931,6 +960,8 @@ export default function Home() {
   }
 
   if (!language) {
+    const homeDemoCode = 'function sayHello() {\n  console.log("Hello, coder!");\n}\n\nsayHello();';
+    const homeDemoOutput = "Hello, coder!";
     return (
       <>
       <main className="home-shell">
@@ -938,8 +969,8 @@ export default function Home() {
         <section className="hero">
           <div className="terminal-card" aria-hidden="true">
             <div className="terminal-top"><i/><i/><i/><span>first-steps.js</span></div>
-            <div className="terminal-code"><small>1</small><div><b>function</b> <strong>sayHello</strong>() {'{'}<br />&nbsp;&nbsp;<span>console</span>.log(<u>"Hello, coder!"</u>);<br />{'}'}<br /><br /><strong>sayHello</strong>();</div></div>
-            <div className="terminal-output"><span>›</span> Hello, coder!<i>▋</i></div>
+            <div className="terminal-code"><div className="terminal-lines"><small>1</small><small>2</small><small>3</small><small>4</small><small>5</small></div><pre><code><HighlightedCode code={homeDemoCode.slice(0, homeCodeLength)} language="javascript" /></code></pre></div>
+            <div className="terminal-output"><span>›</span> {homeDemoOutput.slice(0, homeOutputLength)}<i>▋</i></div>
             <div className="success-pill">✓ Nice work!</div>
           </div>
         </section>
