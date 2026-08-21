@@ -443,10 +443,10 @@ const lessons: Record<Language, Lesson[]> = {
     {
       eyebrow: "08 · Text elements",
       title: "Explore HTML text elements",
-      explanation: "This is a reference page rather than a quiz. Compare heading levels and HTML text-formatting elements such as strong, em, mark, del, sub, and sup.",
+      explanation: "This is a reference page rather than a quiz. Compare headings, paragraphs, text-formatting elements, inline colour and alignment styles, and a link to another page.",
       note: "<!-- A visual guide to HTML text elements -->",
       prompt: "Explore the examples and what each element means.",
-      answer: '<section>\n  <h1>Heading 1</h1>\n  <h2>Heading 2</h2>\n  <h3>Heading 3</h3>\n  <h4>Heading 4</h4>\n  <h5>Heading 5</h5>\n  <h6>Heading 6</h6>\n  <b>Bold text</b>\n  <strong>Important text</strong>\n  <i>Italic text</i>\n  <em>Emphasized text</em>\n  <mark>Highlighted text</mark>\n  <small>Smaller text</small>\n  <del>Deleted text</del>\n  <ins>Inserted text</ins>\n  <span>H<sub>2</sub>O and 2<sup>3</sup></span>\n</section>',
+      answer: '<p>This page shows some useful HTML elements.</p>\n\n<h2>Headings</h2>\n<h1>Main Title</h1>\n<h2>Section Heading</h2>\n<h3>Subsection</h3>\n<h4>Smaller Heading</h4>\n<h5>Even Smaller Heading</h5>\n<h6>Smallest Heading</h6>\n\n<h2>Paragraph</h2>\n<p>This is a paragraph.</p>\n\n<h2>Text Formatting</h2>\n<p><b>Bold text</b></p>\n<p><strong>Important text</strong></p>\n<p><i>Italic text</i></p>\n<p><em>Emphasized text</em></p>\n<p><mark>Marked text</mark></p>\n<p><small>Smaller text</small></p>\n<p><del>Deleted text</del></p>\n<p><ins>Inserted text</ins></p>\n<p>Subscript text: H<sub>2</sub>O</p>\n<p>Superscript text: 2<sup>3</sup> = 8</p>\n\n<h2>Colour and Alignment</h2>\n<h3 style="color: green;">This heading is green.</h3>\n<p style="text-align: center;">This paragraph is centred.</p>\n<p><a href="notes/html-basics-notes.html">Read the HTML basics notes</a></p>',
       output: ["Reference explored."],
       referenceOnly: true,
       referenceKind: "text",
@@ -1124,6 +1124,9 @@ export default function Home() {
             <div><code>&lt;mark&gt; / &lt;small&gt;</code><p><b>Highlight or reduce</b><span>Marks relevant text or displays a smaller side comment.</span></p></div>
             <div><code>&lt;del&gt; / &lt;ins&gt;</code><p><b>Deleted or inserted</b><span>Shows removed text with a line through it or added text with an underline.</span></p></div>
             <div><code>&lt;sub&gt; / &lt;sup&gt;</code><p><b>Subscript or superscript</b><span>Lowers or raises smaller text, useful for H₂O and 2³.</span></p></div>
+            <div><code>&lt;p&gt;</code><p><b>Paragraph</b><span>Groups a normal block of written text.</span></p></div>
+            <div><code>style=&quot;...&quot;</code><p><b>Inline style</b><span>Adds CSS directly to one element, such as a colour or centred alignment.</span></p></div>
+            <div><code>&lt;a href=&quot;...&quot;&gt;</code><p><b>Link</b><span>Creates clickable text and stores its destination in href.</span></p></div>
           </div> : <>
             <div className="comment-card"><div className="comment-label">READ THE COMMENT</div><code>{current!.note}</code></div>
             <div className="tip">Type over the guide in the editor, then press Enter to check it. Spaces and indentation are accepted.</div>
@@ -1188,15 +1191,18 @@ export default function Home() {
             <button className="reference-next" onClick={nextLesson}>Try the border quiz →</button>
           </div> : <div className="text-reference-preview">
             <div className="preview-bar"><span>◆</span> HTML TEXT REFERENCE</div>
-            <div className="heading-samples"><h1>Heading 1</h1><h2>Heading 2</h2><h3>Heading 3</h3><h4>Heading 4</h4><h5>Heading 5</h5><h6>Heading 6</h6></div>
+            <p className="text-reference-intro">This page shows some useful HTML elements.</p>
+            <div className="heading-samples"><small>HEADINGS</small><h1>Main Title</h1><h2>Section Heading</h2><h3>Subsection</h3><h4>Smaller Heading</h4><h5>Even Smaller Heading</h5><h6>Smallest Heading</h6></div>
+            <div className="paragraph-sample"><small>PARAGRAPH</small><p>This is a paragraph.</p></div>
             <div className="format-samples">
-              <div><small>&lt;strong&gt;</small><strong>Bold important text</strong></div>
-              <div><small>&lt;b&gt;</small><b>Visually bold text</b></div>
+              <div><small>&lt;b&gt;</small><b>Bold text</b></div>
+              <div><small>&lt;strong&gt;</small><strong>Important text</strong></div>
               <div><small>&lt;i&gt; and &lt;em&gt;</small><span><i>Italic text</i> · <em>Emphasized text</em></span></div>
-              <div><small>&lt;mark&gt; and &lt;small&gt;</small><span><mark>Highlighted text</mark> · <small>Smaller text</small></span></div>
+              <div><small>&lt;mark&gt; and &lt;small&gt;</small><span><mark>Marked text</mark> · <small>Smaller text</small></span></div>
               <div><small>&lt;del&gt; and &lt;ins&gt;</small><span><del>Deleted text</del> · <ins>Inserted text</ins></span></div>
-              <div><small>&lt;sub&gt; and &lt;sup&gt;</small><span>H<sub>2</sub>O · 2<sup>3</sup></span></div>
+              <div><small>&lt;sub&gt; and &lt;sup&gt;</small><span>H<sub>2</sub>O · 2<sup>3</sup> = 8</span></div>
             </div>
+            <div className="style-samples"><small>COLOUR AND ALIGNMENT</small><h3 style={{color:"green"}}>This heading is green.</h3><p style={{textAlign:"center"}}>This paragraph is centred.</p><a href="notes/html-basics-notes.html" onClick={(event) => event.preventDefault()}>Read the HTML basics notes</a></div>
             <button className="reference-next" onClick={nextLesson}>Continue to the next lesson →</button>
           </div> : <>
           <div className="editor-panel">
