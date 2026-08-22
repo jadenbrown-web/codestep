@@ -30,12 +30,12 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       eyebrow: "02 · While loops",
-      title: "Repeat code until you stop it",
-      explanation: "while repeats the code inside its braces while its condition is true. while (true) would continue forever, so this example uses break to stop safely after count reaches three.",
-      note: "// Repeat the block, then break when count reaches 3",
-      prompt: "Create a while (true) loop that prints 1, 2, and 3 before stopping.",
-      answer: 'let count = 1;\n\nwhile (true) {\n  console.log(count);\n\n  if (count === 3) {\n    break;\n  }\n\n  count++;\n}',
-      output: ["1", "2", "3"],
+      title: "Stop either answer with break",
+      explanation: "while (true) keeps repeating because true never changes. break immediately leaves the nearest loop. Here the if branch uses break after a correct answer, and the else branch also uses break after an incorrect answer, so either result stops the loop. This is JavaScript code—not HTML—and an endless version can freeze a browser page.",
+      note: "// break stops the loop after either the if or else result",
+      prompt: "Create the loop and put break after the message in both branches.",
+      answer: 'while (true) {\n  let answer = prompt("What is 1 + 1?");\n\n  if (answer == "2") {\n    console.log("Correct!");\n    break;\n  } else {\n    console.log("Incorrect! The answer is 2.");\n    break;\n  }\n}',
+      output: ["What is 1 + 1?  →  2", "Correct!", "break leaves the loop."],
     },
     {
       eyebrow: "03 · Variables",
@@ -209,12 +209,12 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       eyebrow: "02 · While loops",
-      title: "Repeat code until you stop it",
-      explanation: "while repeats the code inside its braces while its condition is true. while (true) would continue forever, so this example uses break to stop safely after count reaches three.",
-      note: "// Repeat the block, then break when count reaches 3",
-      prompt: "Create a while (true) loop that prints 1, 2, and 3 before stopping.",
-      answer: 'int count = 1;\n\nwhile (true)\n{\n  Console.WriteLine(count);\n\n  if (count == 3)\n  {\n    break;\n  }\n\n  count++;\n}',
-      output: ["1", "2", "3"],
+      title: "Stop either answer with break",
+      explanation: "while (true) keeps repeating because true never changes. break immediately leaves the nearest loop. Here the if branch uses break after a correct answer, and the else branch also uses break after an incorrect answer, so either result stops the loop.",
+      note: "// break stops the loop after either the if or else result",
+      prompt: "Create the loop and put break after the message in both branches.",
+      answer: 'while (true)\n{\n  Console.WriteLine("What is 1 + 1?");\n  string answer = Console.ReadLine();\n\n  if (answer == "2")\n  {\n    Console.WriteLine("Correct!");\n    break;\n  }\n  else\n  {\n    Console.WriteLine("Incorrect! The answer is 2.");\n    break;\n  }\n}',
+      output: ["What is 1 + 1?  →  2", "Correct!", "break leaves the loop."],
     },
     {
       eyebrow: "03 · Variables",
@@ -507,6 +507,15 @@ const lessons: Record<Language, Lesson[]> = {
       answer: '<p id="p1">This paragraph has its own ID.</p>',
       output: ["Paragraph identified as p1.", "CSS can select it with #p1."],
     },
+    {
+      eyebrow: "15 · Browser-safe repetition",
+      title: "Use a button instead of while (true)",
+      explanation: "while (true) is JavaScript, so it will not work when typed as HTML. Even inside a script element, a loop that never gets to break can freeze the page. In HTML, let a button call the function once per click. return ends the function after either the if or else result; the browser then stays responsive and waits for the next click.",
+      note: "<!-- A click safely runs one answer check at a time -->",
+      prompt: "Create the button and function that check one answer per click.",
+      answer: '<button onclick="checkAnswer()">Check answer</button>\n<p id="result"></p>\n\n<script>\n  function checkAnswer() {\n    let answer = prompt("What is 1 + 1?");\n\n    if (answer == "2") {\n      document.getElementById("result").textContent = "Correct!";\n      return;\n    } else {\n      document.getElementById("result").textContent = "Incorrect! The answer is 2.";\n      return;\n    }\n  }\n</script>',
+      output: ["Button clicked.", "What is 1 + 1?  →  2", "Correct!", "return ends this button click safely."],
+    },
   ],
   css: [
     {
@@ -575,7 +584,7 @@ type CodePart = { code: string; name: string; meaning: string };
 const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
   javascript: {
     0: [{ code: "function", name: "Create", meaning: "Starts a reusable block of code." }, { code: "correct()", name: "Name", meaning: "Names the function so you can call it later." }, { code: "{ ... }", name: "Instructions", meaning: "Holds the code the function will run." }, { code: "correct();", name: "Call it", meaning: "Runs the function you created." }, { code: ";", name: "End instruction", meaning: "Marks where an instruction ends. JavaScript can sometimes work without it, but using it consistently makes the ending clear." }],
-    1: [{ code: "while (true)", name: "Repeat", meaning: "Keeps running the block while its condition is true." }, { code: "true", name: "Always true", meaning: "Makes the loop continue until something inside stops it." }, { code: "break", name: "Stop", meaning: "Leaves the loop immediately when count reaches three." }, { code: "count++", name: "Increase", meaning: "Adds one to count after each repetition." }],
+    1: [{ code: "while (true)", name: "Repeat", meaning: "Keeps running until code inside stops the loop." }, { code: "if / else", name: "Two results", meaning: "Chooses the correct or incorrect message." }, { code: "break", name: "Stop", meaning: "Immediately leaves the loop after either message is shown." }],
     2: [{ code: "let", name: "Create", meaning: "Makes a variable that can remember something." }, { code: "name", name: "Label", meaning: "The name used to find the saved value later." }, { code: "prompt( ... )", name: "Ask", meaning: "Shows a question and returns the user's answer." }, { code: "=", name: "Save", meaning: "Puts the answer from prompt into name." }],
     4: [{ code: "if ( ... )", name: "Check", meaning: "Runs a block only when its condition is true." }, { code: 'answer == "2"', name: "Condition", meaning: "Compares the saved answer with 2." }, { code: "else", name: "Otherwise", meaning: "Runs when the condition is false." }],
     5: [{ code: ">= 0", name: "Lower limit", meaning: "Checks that age is zero or greater." }, { code: "&&", name: "Two ampersands", meaning: "Read this as AND: the condition on each side must be true." }, { code: "<= 18", name: "Upper limit", meaning: "Checks that age is eighteen or less." }, { code: "else", name: "Otherwise", meaning: "Runs when the complete range condition is false." }],
@@ -591,7 +600,7 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
   },
   csharp: {
     0: [{ code: "void", name: "Result type", meaning: "Says this method does not send a value back." }, { code: "Correct()", name: "Name", meaning: "Names the method so you can call it later." }, { code: "{ ... }", name: "Instructions", meaning: "Holds the code the method will run." }, { code: "Correct();", name: "Call it", meaning: "Runs the method you created." }, { code: ";", name: "End statement", meaning: "Marks where a statement ends. C# requires it after statements such as calling a method or printing text." }],
-    1: [{ code: "while (true)", name: "Repeat", meaning: "Keeps running the block while its condition is true." }, { code: "true", name: "Always true", meaning: "Makes the loop continue until something inside stops it." }, { code: "break", name: "Stop", meaning: "Leaves the loop immediately when count reaches three." }, { code: "count++", name: "Increase", meaning: "Adds one to count after each repetition." }],
+    1: [{ code: "while (true)", name: "Repeat", meaning: "Keeps running until code inside stops the loop." }, { code: "if / else", name: "Two results", meaning: "Chooses the correct or incorrect message." }, { code: "break", name: "Stop", meaning: "Immediately leaves the loop after either message is shown." }],
     2: [{ code: "string", name: "Type", meaning: "Says this variable will store text." }, { code: "name", name: "Label", meaning: "The name used to find the saved text later." }, { code: "Console.ReadLine()", name: "Read", meaning: "Waits for the user to type an answer." }, { code: "=", name: "Save", meaning: "Puts that answer into name." }],
     4: [{ code: "if ( ... )", name: "Check", meaning: "Runs a block only when its condition is true." }, { code: 'answer == "2"', name: "Condition", meaning: "Compares the saved answer with 2." }, { code: "else", name: "Otherwise", meaning: "Runs when the condition is false." }],
     5: [{ code: ">= 0", name: "Lower limit", meaning: "Checks that age is zero or greater." }, { code: "&&", name: "Two ampersands", meaning: "Read this as AND: the condition on each side must be true." }, { code: "<= 18", name: "Upper limit", meaning: "Checks that age is eighteen or less." }, { code: "else", name: "Otherwise", meaning: "Runs when the complete range condition is false." }],
@@ -619,6 +628,7 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
     11: [{ code: "<video>", name: "Video element", meaning: "Creates a video player inside the webpage." }, { code: 'src="my-video.mp4"', name: "Video source", meaning: "Loads my-video.mp4 from the same folder as the HTML file." }, { code: "controls", name: "Playback controls", meaning: "Shows the browser's play, pause, volume, and timeline controls." }, { code: "</video>", name: "Closing tag", meaning: "Marks where the video element ends." }],
     12: [{ code: "<audio>", name: "Audio element", meaning: "Creates an audio player without a video picture area." }, { code: 'src="my-audio.mp3"', name: "Audio source", meaning: "Loads my-audio.mp3 from the same folder as the HTML file." }, { code: "controls", name: "Playback controls", meaning: "Shows the browser's play, pause, volume, and timeline controls." }, { code: "</audio>", name: "Closing tag", meaning: "Marks where the audio element ends." }],
     13: [{ code: "<p>", name: "Paragraph", meaning: "Creates the particular paragraph that will be styled." }, { code: 'id="p1"', name: "Unique ID", meaning: "Gives this element the unique name p1." }, { code: "#p1", name: "Matching CSS", meaning: "CSS uses a hash before the ID name to select this exact element." }],
+    14: [{ code: "onclick", name: "Wait for a click", meaning: "Runs checkAnswer once when the visitor presses the button." }, { code: "if / else", name: "Two results", meaning: "Chooses the correct or incorrect message." }, { code: "return", name: "End this function", meaning: "Stops this one button action; unlike break, it does not need a loop." }],
   },
   css: {
     0: [{ code: "body", name: "Selector", meaning: "Chooses the HTML body element to style." }, { code: "background-color", name: "Property", meaning: "Chooses the colour behind the element." }, { code: ":", name: "Property separator", meaning: "Separates the property name from its value." }, { code: "lightblue", name: "Value", meaning: "The background colour to apply." }, { code: ";", name: "Rule ending", meaning: "Ends this CSS declaration so another can follow." }],
