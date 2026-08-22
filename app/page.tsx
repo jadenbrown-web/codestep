@@ -30,12 +30,12 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       eyebrow: "02 · While loops",
-      title: "Stop either answer with break",
-      explanation: "while (true) keeps repeating because true never changes. break immediately leaves the nearest loop. Here the if branch uses break after a correct answer, and the else branch also uses break after an incorrect answer, so either result stops the loop. This is JavaScript code—not HTML—and an endless version can freeze a browser page.",
-      note: "// break stops the loop after either the if or else result",
-      prompt: "Create the loop and put break after the message in both branches.",
-      answer: 'while (true) {\n  let answer = prompt("What is 1 + 1?");\n\n  if (answer == "2") {\n    console.log("Correct!");\n    break;\n  } else {\n    console.log("Incorrect! The answer is 2.");\n    break;\n  }\n}',
-      output: ["What is 1 + 1?  →  2", "Correct!", "break leaves the loop."],
+      title: "Repeat input until the answer is correct",
+      explanation: "while (true) repeats the input and output because true never changes. The if block checks the input. When the answer is correct, break immediately leaves the loop. A wrong answer reaches the bottom and the loop asks for input again. This is JavaScript code—not HTML—and an endless version can freeze a browser page.",
+      note: "// Ask for input, show output, and break inside the if block",
+      prompt: "Create the loop with input, output, and break inside if.",
+      answer: 'while (true) {\n  let answer = prompt("What is 1 + 1?");\n  console.log(answer);\n\n  if (answer == "2") {\n    console.log("Correct!");\n    break;\n  }\n\n  console.log("Try again.");\n}',
+      output: ["INPUT  →  2", "OUTPUT  →  2", "Correct!", "break leaves the loop."],
     },
     {
       eyebrow: "03 · Variables",
@@ -54,15 +54,6 @@ const lessons: Record<Language, Lesson[]> = {
       prompt: "Write the single line that clears the console.",
       answer: "console.clear();",
       output: ["Console cleared."],
-    },
-    {
-      eyebrow: "05 · Decisions",
-      title: "Check an answer",
-      explanation: "if checks whether a condition is true. Its braces contain the code to run when it is true; else handles everything else.",
-      note: "// Check whether 1 + 1 equals 2",
-      prompt: "Complete the if / else check and print the right message.",
-      answer: 'let answer = prompt("What is 1 + 1?");\n\nif (answer == "2") {\n  console.log("Correct!");\n} else {\n  console.log("Incorrect! The answer is 2.");\n}',
-      output: ["What is 1 + 1?  →  2", "Correct!"],
     },
     {
       eyebrow: "06 · Null values",
@@ -209,12 +200,12 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       eyebrow: "02 · While loops",
-      title: "Stop either answer with break",
-      explanation: "while (true) keeps repeating because true never changes. break immediately leaves the nearest loop. Here the if branch uses break after a correct answer, and the else branch also uses break after an incorrect answer, so either result stops the loop.",
-      note: "// break stops the loop after either the if or else result",
-      prompt: "Create the loop and put break after the message in both branches.",
-      answer: 'while (true)\n{\n  Console.WriteLine("What is 1 + 1?");\n  string answer = Console.ReadLine();\n\n  if (answer == "2")\n  {\n    Console.WriteLine("Correct!");\n    break;\n  }\n  else\n  {\n    Console.WriteLine("Incorrect! The answer is 2.");\n    break;\n  }\n}',
-      output: ["What is 1 + 1?  →  2", "Correct!", "break leaves the loop."],
+      title: "Repeat input until the answer is correct",
+      explanation: "while (true) repeats the input and output because true never changes. The if block checks the input. When the answer is correct, break immediately leaves the loop. A wrong answer reaches the bottom and the loop asks for input again.",
+      note: "// Ask for input, show output, and break inside the if block",
+      prompt: "Create the loop with input, output, and break inside if.",
+      answer: 'while (true)\n{\n  Console.WriteLine("What is 1 + 1?");\n  string answer = Console.ReadLine();\n  Console.WriteLine(answer);\n\n  if (answer == "2")\n  {\n    Console.WriteLine("Correct!");\n    break;\n  }\n\n  Console.WriteLine("Try again.");\n}',
+      output: ["INPUT  →  2", "OUTPUT  →  2", "Correct!", "break leaves the loop."],
     },
     {
       eyebrow: "03 · Variables",
@@ -233,15 +224,6 @@ const lessons: Record<Language, Lesson[]> = {
       prompt: "Write the single line that clears the console.",
       answer: "Console.Clear();",
       output: ["Console cleared."],
-    },
-    {
-      eyebrow: "05 · Decisions",
-      title: "Check an answer",
-      explanation: "if checks whether a condition is true. Its braces contain the code to run when it is true; else handles everything else.",
-      note: "// Check whether 1 + 1 equals 2",
-      prompt: "Complete the if / else check and print the right message.",
-      answer: 'Console.WriteLine("What is 1 + 1?");\nstring answer = Console.ReadLine();\n\nif (answer == "2") {\n  Console.WriteLine("Correct!");\n} else {\n  Console.WriteLine("Incorrect! The answer is 2.");\n}',
-      output: ["What is 1 + 1?  →  2", "Correct!"],
     },
     {
       eyebrow: "06 · Null values",
@@ -584,7 +566,7 @@ type CodePart = { code: string; name: string; meaning: string };
 const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
   javascript: {
     0: [{ code: "function", name: "Create", meaning: "Starts a reusable block of code." }, { code: "correct()", name: "Name", meaning: "Names the function so you can call it later." }, { code: "{ ... }", name: "Instructions", meaning: "Holds the code the function will run." }, { code: "correct();", name: "Call it", meaning: "Runs the function you created." }, { code: ";", name: "End instruction", meaning: "Marks where an instruction ends. JavaScript can sometimes work without it, but using it consistently makes the ending clear." }],
-    1: [{ code: "while (true)", name: "Repeat", meaning: "Keeps running until code inside stops the loop." }, { code: "if / else", name: "Two results", meaning: "Chooses the correct or incorrect message." }, { code: "break", name: "Stop", meaning: "Immediately leaves the loop after either message is shown." }],
+    1: [{ code: "while (true)", name: "Repeat", meaning: "Keeps asking for input until code inside stops the loop." }, { code: "prompt", name: "Input", meaning: "Asks the user for an answer." }, { code: "console.log", name: "Output", meaning: "Shows the input and the result." }, { code: "break", name: "Stop", meaning: "Leaves the loop when the if condition is true." }],
     2: [{ code: "let", name: "Create", meaning: "Makes a variable that can remember something." }, { code: "name", name: "Label", meaning: "The name used to find the saved value later." }, { code: "prompt( ... )", name: "Ask", meaning: "Shows a question and returns the user's answer." }, { code: "=", name: "Save", meaning: "Puts the answer from prompt into name." }],
     4: [{ code: "if ( ... )", name: "Check", meaning: "Runs a block only when its condition is true." }, { code: 'answer == "2"', name: "Condition", meaning: "Compares the saved answer with 2." }, { code: "else", name: "Otherwise", meaning: "Runs when the condition is false." }],
     5: [{ code: ">= 0", name: "Lower limit", meaning: "Checks that age is zero or greater." }, { code: "&&", name: "Two ampersands", meaning: "Read this as AND: the condition on each side must be true." }, { code: "<= 18", name: "Upper limit", meaning: "Checks that age is eighteen or less." }, { code: "else", name: "Otherwise", meaning: "Runs when the complete range condition is false." }],
@@ -600,7 +582,7 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
   },
   csharp: {
     0: [{ code: "void", name: "Result type", meaning: "Says this method does not send a value back." }, { code: "Correct()", name: "Name", meaning: "Names the method so you can call it later." }, { code: "{ ... }", name: "Instructions", meaning: "Holds the code the method will run." }, { code: "Correct();", name: "Call it", meaning: "Runs the method you created." }, { code: ";", name: "End statement", meaning: "Marks where a statement ends. C# requires it after statements such as calling a method or printing text." }],
-    1: [{ code: "while (true)", name: "Repeat", meaning: "Keeps running until code inside stops the loop." }, { code: "if / else", name: "Two results", meaning: "Chooses the correct or incorrect message." }, { code: "break", name: "Stop", meaning: "Immediately leaves the loop after either message is shown." }],
+    1: [{ code: "while (true)", name: "Repeat", meaning: "Keeps asking for input until code inside stops the loop." }, { code: "Console.ReadLine", name: "Input", meaning: "Reads the user's answer." }, { code: "Console.WriteLine", name: "Output", meaning: "Shows the input and the result." }, { code: "break", name: "Stop", meaning: "Leaves the loop when the if condition is true." }],
     2: [{ code: "string", name: "Type", meaning: "Says this variable will store text." }, { code: "name", name: "Label", meaning: "The name used to find the saved text later." }, { code: "Console.ReadLine()", name: "Read", meaning: "Waits for the user to type an answer." }, { code: "=", name: "Save", meaning: "Puts that answer into name." }],
     4: [{ code: "if ( ... )", name: "Check", meaning: "Runs a block only when its condition is true." }, { code: 'answer == "2"', name: "Condition", meaning: "Compares the saved answer with 2." }, { code: "else", name: "Otherwise", meaning: "Runs when the condition is false." }],
     5: [{ code: ">= 0", name: "Lower limit", meaning: "Checks that age is zero or greater." }, { code: "&&", name: "Two ampersands", meaning: "Read this as AND: the condition on each side must be true." }, { code: "<= 18", name: "Upper limit", meaning: "Checks that age is eighteen or less." }, { code: "else", name: "Otherwise", meaning: "Runs when the complete range condition is false." }],
@@ -870,10 +852,10 @@ export default function Home() {
   const guideCode = alignedGuide(code, visibleGhost);
   const breakdown = language
     ? current?.referenceKind === "comparisons" ? undefined
-      : (index === 5 && nullBreakdowns[language])
-      || (index === 8 && regexBreakdowns[language])
-      || (index === 13 && setsBreakdowns[language])
-      || breakdowns[language][language === "javascript" || language === "csharp" ? (index > 13 ? index - 4 : index > 8 ? index - 3 : index > 5 ? index - 1 : index) : index]
+      : (index === 4 && nullBreakdowns[language])
+      || (index === 7 && regexBreakdowns[language])
+      || (index === 12 && setsBreakdowns[language])
+      || breakdowns[language][language === "javascript" || language === "csharp" ? (index > 12 ? index - 3 : index > 7 ? index - 2 : index) : index]
     : undefined;
   const progress = language ? Math.round((index / lessons[language].length) * 100) : 0;
   const diagnostic = useMemo(() => current ? syntaxDiagnostic(code, current.answer) : [], [code, current]);
@@ -1096,7 +1078,7 @@ export default function Home() {
         {navOpen && <button className="drawer-backdrop" aria-label="Close lesson list" onClick={() => setNavOpen(false)} />}
         <aside className="lesson-copy">
           <button className="back-link" onClick={() => index ? setIndex(index - 1) : setLanguage(null)}>← Back</button>
-          <div className="lesson-number">{current!.eyebrow}</div>
+          <div className="lesson-number">{String(index + 1).padStart(2, "0")} · {current!.eyebrow.split("·")[1]}</div>
           <h1>{current!.title}</h1>
           <p>{current!.explanation}</p>
           {breakdown && <section className="code-breakdown" aria-label="Code breakdown">
