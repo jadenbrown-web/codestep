@@ -56,6 +56,15 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Console cleared."],
     },
     {
+      eyebrow: "05 · If and else with words",
+      title: "Right answer or wrong answer",
+      explanation: "if checks whether the word in answer is exactly green. When it is green, the program prints Right! The else block runs for every other word and prints Wrong!",
+      note: "// Print Right for green, or Wrong for any other answer",
+      prompt: "Ask what colour grass is, then use if and else to check the word.",
+      answer: 'let answer = prompt("What color is grass?");\n\nif (answer === "green") {\n  console.log("Right!");\n} else {\n  console.log("Wrong!");\n}',
+      output: ["What color is grass?  →  green", "Right!"],
+    },
+    {
       eyebrow: "06 · Null values",
       title: "Mark a value as not ready yet",
       explanation: "null deliberately means that a variable has no value yet. It is different from zero or an empty string, and the variable may receive a real value later. === null checks specifically for that missing value.",
@@ -224,6 +233,15 @@ const lessons: Record<Language, Lesson[]> = {
       prompt: "Write the single line that clears the console.",
       answer: "Console.Clear();",
       output: ["Console cleared."],
+    },
+    {
+      eyebrow: "05 · If and else with words",
+      title: "Right answer or wrong answer",
+      explanation: "if checks whether the word in answer is exactly green. When it is green, the program prints Right! The else block runs for every other word and prints Wrong!",
+      note: "// Print Right for green, or Wrong for any other answer",
+      prompt: "Ask what colour grass is, then use if and else to check the word.",
+      answer: 'Console.WriteLine("What color is grass?");\nstring answer = Console.ReadLine();\n\nif (answer == "green")\n{\n  Console.WriteLine("Right!");\n}\nelse\n{\n  Console.WriteLine("Wrong!");\n}',
+      output: ["What color is grass?  →  green", "Right!"],
     },
     {
       eyebrow: "06 · Null values",
