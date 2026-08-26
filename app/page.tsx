@@ -133,13 +133,13 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       eyebrow: "13 · Print an array",
-      title: "Show the finished car list",
-      explanation: "console.log(cars) sends the whole array to the console. Because Ford was pushed into cars first, the printed list now contains that item.",
-      note: "// Print the list after adding the new car",
-      prompt: "Print the cars array so its stored item appears.",
+      title: "Show the car without brackets",
+      explanation: "console.log(cars[0]) sends only the first item in the array to the console. Position 0 means the first item, so the console prints Ford without square brackets.",
+      note: "// Print the first car after adding it to the list",
+      prompt: "Print the first car so it appears without array brackets.",
       starter: 'const cars = [];\nconst newCar = prompt("What car do you want to add?");\ncars.push(newCar);\n\n',
-      answer: 'const cars = [];\nconst newCar = prompt("What car do you want to add?");\ncars.push(newCar);\n\nconsole.log(cars);',
-      output: ["What car do you want to add?  →  Ford", '["Ford"]'],
+      answer: 'const cars = [];\nconst newCar = prompt("What car do you want to add?");\ncars.push(newCar);\n\nconsole.log(cars[0]);',
+      output: ["What car do you want to add?  →  Ford", "Ford"],
     },
     {
       eyebrow: "14 · Sets",
@@ -156,9 +156,9 @@ const lessons: Record<Language, Lesson[]> = {
       explanation: "Array positions start at zero. cars[0] retrieves the first item, which is Ford because it was the first value pushed into the array.",
       note: "// Look up and print the first car in the array",
       prompt: "Use position 0 to retrieve the car you just added.",
-      starter: 'const cars = [];\nconst newCar = prompt("What car do you want to add?");\ncars.push(newCar);\nconsole.log(cars);\n\n',
-      answer: 'const cars = [];\nconst newCar = prompt("What car do you want to add?");\ncars.push(newCar);\nconsole.log(cars);\n\nconsole.log(cars[0]);',
-      output: ["What car do you want to add?  →  Ford", '["Ford"]', "Item at position 0  →  Ford"],
+      starter: 'const cars = [];\nconst newCar = prompt("What car do you want to add?");\ncars.push(newCar);\nconsole.log(cars[0]);\n\n',
+      answer: 'const cars = [];\nconst newCar = prompt("What car do you want to add?");\ncars.push(newCar);\nconsole.log(cars[0]);\n\nconsole.log(cars[0]);',
+      output: ["What car do you want to add?  →  Ford", "Ford", "Item at position 0  →  Ford"],
     },
     {
       eyebrow: "16 · Objects",
@@ -600,7 +600,7 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
     6: [{ code: "[ ... ]", name: "Array", meaning: "Keeps several values together in one list." }, { code: "for ... of", name: "Loop", meaning: "Visits every item in the array." }, { code: "fruit", name: "Current item", meaning: "Temporarily holds the item being visited." }],
     7: [{ code: "const", name: "Short for constant", meaning: "Creates a variable that cannot be reassigned. Use let instead when the variable itself must receive a different value later." }, { code: "cars", name: "Variable name", meaning: "The label used to find this array later." }, { code: "[]", name: "Empty array", meaning: "Creates a list containing zero items. The list can still grow even though cars was declared with const." }, { code: ";", name: "End instruction", meaning: "Marks the end of the variable declaration." }],
     8: [{ code: "newCar", name: "Saved answer", meaning: "Holds the car name returned by prompt." }, { code: "cars.push", name: "Add an item", meaning: "Push adds a new value to the end of the cars array." }, { code: "(newCar)", name: "Item to add", meaning: "Passes the user's saved answer into push." }, { code: ";", name: "End instruction", meaning: "Marks where the push instruction ends." }],
-    9: [{ code: "console.log", name: "Display", meaning: "Sends something to the console." }, { code: "cars", name: "Whole array", meaning: "Passes the complete cars list to console.log." }, { code: '["Ford"]', name: "Printed result", meaning: "Shows that Ford is now stored as the first list item." }],
+    9: [{ code: "console.log", name: "Display", meaning: "Sends something to the console." }, { code: "cars[0]", name: "First item", meaning: "Selects the first car instead of passing the whole array." }, { code: "Ford", name: "Printed result", meaning: "Prints the car name without square brackets." }],
     10: [{ code: "cars", name: "The array", meaning: "The list containing the car that was pushed." }, { code: "[0]", name: "First position", meaning: "Zero selects the first item because array counting starts at zero." }, { code: "cars[0]", name: "Look it up", meaning: "Retrieves Ford from the first position." }, { code: "console.log", name: "Display it", meaning: "Prints the retrieved car in the console." }],
     11: [{ code: "{ key: value }", name: "Object", meaning: "Groups values under names such as BMW and Ford." }, { code: "cars[brand]", name: "Look up", meaning: "Uses brand to find the matching car." }, { code: ".colour", name: "Property", meaning: "Selects the colour stored on that car." }],
     12: [{ code: "setTimeout", name: "Schedule", meaning: "Asks JavaScript to run some code later." }, { code: "() => ...", name: "Code to run", meaning: "A short function waiting inside the timer." }, { code: "1000", name: "Delay", meaning: "One thousand milliseconds means one second." }],
@@ -878,12 +878,17 @@ export default function Home() {
   const ghostSource = current ? withoutGuideComments(current.answer, language ?? "javascript") : "";
   const visibleGhost = ghostSource.slice(0, ghostLength);
   const guideCode = alignedGuide(code, visibleGhost);
+  const breakdownIndex = language === "javascript"
+    ? index >= 14 ? index - 4 : index >= 9 ? index - 3 : index >= 6 ? index - 1 : index
+    : language === "csharp"
+      ? index >= 15 ? index - 4 : index >= 10 ? index - 3 : index >= 7 ? index - 1 : index
+      : index;
   const breakdown = language
     ? current?.referenceKind === "comparisons" ? undefined
-      : (index === 4 && nullBreakdowns[language])
-      || (index === 7 && regexBreakdowns[language])
-      || (index === 12 && setsBreakdowns[language])
-      || breakdowns[language][language === "javascript" || language === "csharp" ? (index > 12 ? index - 3 : index > 7 ? index - 2 : index) : index]
+      : ((current?.title === "Mark a value as not ready yet") && nullBreakdowns[language])
+      || ((current?.title === "Let names beginning with J enter") && regexBreakdowns[language])
+      || ((current?.title === "Remove duplicate names") && setsBreakdowns[language])
+      || breakdowns[language][breakdownIndex]
     : undefined;
   const progress = language ? Math.round((index / lessons[language].length) * 100) : 0;
   const diagnostic = useMemo(() => current ? syntaxDiagnostic(code, current.answer) : [], [code, current]);
