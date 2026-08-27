@@ -47,7 +47,16 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What is your name?  →  Alex", "Hello Alex"],
     },
     {
-      eyebrow: "04 · Console",
+      eyebrow: "04 · Classes",
+      title: "Create and use a class",
+      explanation: "A function is called with its name, such as correct(). A class is used in a similar way, but you put new before its name: new Car(\"Ford\", 2014). People sometimes call this ‘calling the class’, but its proper name is creating an object, or an instance, from the class. The class is defined before the code that creates objects from it.",
+      note: "// Define the class first, then use new Car(...) to create objects",
+      prompt: "Create the Car class, then call its constructor with new to make Ford and Audi objects.",
+      answer: 'class Car {\n  constructor(name, year) {\n    // this.name is the property stored in the car object.\n    // name is the value passed into the constructor.\n    this.name = name;\n\n    // this.year is the property stored in the car object.\n    // year is the value passed into the constructor.\n    this.year = year;\n  }\n}\n\nconst myCar1 = new Car("Ford", 2014);\nconst myCar2 = new Car("Audi", 2019);\n\nconsole.log(myCar1);\nconsole.log(myCar2);',
+      output: ['Car { name: "Ford", year: 2014 }', 'Car { name: "Audi", year: 2019 }'],
+    },
+    {
+      eyebrow: "05 · Console",
       title: "Clear the screen",
       explanation: "The console is where your text program shows its output. console.clear() removes everything currently shown there.",
       note: "// Clear all previous console output",
@@ -56,7 +65,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Console cleared."],
     },
     {
-      eyebrow: "05 · If and else with words",
+      eyebrow: "06 · If and else with words",
       title: "Right answer or wrong answer",
       explanation: "if checks whether the word in answer is exactly green. When it is green, the program prints Right! The else block runs for every other word and prints Wrong!",
       note: "// Print Right for green, or Wrong for any other answer",
@@ -65,7 +74,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What color is grass?  →  green", "Right!"],
     },
     {
-      eyebrow: "06 · Null values",
+      eyebrow: "07 · Null values",
       title: "Mark a value as not ready yet",
       explanation: "null deliberately means that a variable has no value yet. It is different from zero or an empty string, and the variable may receive a real value later. === null checks specifically for that missing value.",
       note: "// null means there is deliberately no result yet",
@@ -74,7 +83,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["No result yet"],
     },
     {
-      eyebrow: "07 · Combined conditions",
+      eyebrow: "08 · Combined conditions",
       title: "Check whether a value is in a range",
       explanation: "A range needs two comparisons. >= checks the lower limit, <= checks the upper limit, and && means both conditions must be true at the same time.",
       note: "// && means AND. Both conditions must be true.",
@@ -84,7 +93,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Your age is between 0 and 18."],
     },
     {
-      eyebrow: "08 · Comparison reference",
+      eyebrow: "09 · Comparison reference",
       title: "Compare two values",
       explanation: "Comparison operators ask a question about two values and produce true or false. Keep this page as a quick reference: the code stays nearly identical while the symbol changes the question being asked.",
       note: "// Compare values using equality, inequality, and size operators",
@@ -95,7 +104,7 @@ const lessons: Record<Language, Lesson[]> = {
       referenceKind: "comparisons",
     },
     {
-      eyebrow: "09 · Regular expressions",
+      eyebrow: "10 · Regular expressions",
       title: "Let names beginning with J enter",
       explanation: "A regular expression checks text against a pattern. /^J/i means: the slashes hold the pattern, ^ anchors the check to the beginning, J is the required first letter, and i ignores uppercase or lowercase. It accepts any word beginning with J—not only names—and rejects J when it appears later in the text.",
       note: "// Let people into the club when their name begins with J",
@@ -104,7 +113,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Jaden can enter the club.", "James can enter the club.", "Jessica can enter the club.", "Sarah cannot enter the club.", "Ben cannot enter the club."],
     },
     {
-      eyebrow: "10 · Arrays",
+      eyebrow: "11 · Arrays",
       title: "Make and search a car array",
       explanation: "This is called an array. The square brackets [] create an empty array, which is a list that can hold several values. push adds the car typed into the first prompt. includes searches the array for the text typed into the second prompt. If it finds an exact match, console.log prints that car. JavaScript comments begin with // rather than #.",
       note: "// Make an array, add one car, then search for it",
@@ -113,7 +122,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Add car:  →  Ford", "Search:  →  Ford", "Ford"],
     },
     {
-      eyebrow: "11 · Sets",
+      eyebrow: "12 · Sets",
       title: "Remove duplicate names",
       explanation: "A Set stores only unique values. Passing names into new Set(names) removes repeated names, and [...uniqueNames] spreads the remaining values back into an array for printing.",
       note: "// Ask for three names, then remove any duplicates",
@@ -122,7 +131,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Enter the first name:  →  Alex", "Enter the second name:  →  Sam", "Enter the third name:  →  Alex", '["Alex", "Sam"]'],
     },
     {
-      eyebrow: "12 · Objects",
+      eyebrow: "13 · Objects",
       title: "Search a word object",
       explanation: "This is called an object. The curly braces { } hold named values. bonjour and hola are keys, and each key stores the value hello. The prompt saves a word in search. words[search] uses square brackets to look up the matching key, then console.log prints its value.",
       note: "// Make a word object, search for a key, then print its value",
@@ -131,7 +140,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Search:  →  bonjour", "hello"],
     },
     {
-      eyebrow: "13 · Random object key",
+      eyebrow: "14 · Random object key",
       title: "Choose a random word",
       explanation: "Object.keys(words) makes an array containing the object's keys: bonjour and hola. Math.random() creates a random decimal from 0 up to, but not including, 1. Multiplying by 2 gives a number from 0 up to 2, and Math.floor removes the decimal to produce position 0 or 1. The square brackets then select the key at that position.",
       note: "// Choose either bonjour or hola at random",
@@ -140,7 +149,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["bonjour"],
     },
     {
-      eyebrow: "14 · Timers",
+      eyebrow: "15 · Timers",
       title: "Run code later",
       explanation: "setTimeout schedules a function to run after a delay. The delay is measured in milliseconds, so 1000 means one second.",
       note: "// Print One, Two, and Three one second apart",
@@ -149,22 +158,13 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["One", "Two", "Three"],
     },
     {
-      eyebrow: "15 · Date and time",
+      eyebrow: "16 · Date and time",
       title: "Get the current moment",
       explanation: "new Date() creates a Date object containing the current date and time from the device running the code. console.log then displays that value.",
       note: "// Create the current date and time, then print it",
       prompt: "Store a new Date in currentDateTime and show it in the console.",
       answer: "const currentDateTime = new Date();\nconsole.log(currentDateTime);",
       output: ["Thu Aug 06 2026 19:05:00 GMT+0100 (British Summer Time)"],
-    },
-    {
-      eyebrow: "16 · Classes",
-      title: "Create and use a class",
-      explanation: "A function is called with its name, such as correct(). A class is used in a similar way, but you put new before its name: new Car(\"Ford\", 2014). People sometimes call this ‘calling the class’, but its proper name is creating an object, or an instance, from the class. The values inside the parentheses are sent to the constructor.",
-      note: "// Create the class first, then use new Car(...) to create an object",
-      prompt: "Create the Car class, then call its constructor with new to make Ford and Audi objects.",
-      answer: 'class Car {\n  constructor(name, year) {\n    // this.name is the property stored in the car object.\n    // name is the value passed into the constructor.\n    this.name = name;\n\n    // this.year is the property stored in the car object.\n    // year is the value passed into the constructor.\n    this.year = year;\n  }\n}\n\nconst myCar1 = new Car("Ford", 2014);\nconst myCar2 = new Car("Audi", 2019);\n\nconsole.log(myCar1);\nconsole.log(myCar2);',
-      output: ['Car { name: "Ford", year: 2014 }', 'Car { name: "Audi", year: 2019 }'],
     },
   ],
   csharp: [
@@ -205,7 +205,16 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What is your name?  →  Ada", "Hello Ada"],
     },
     {
-      eyebrow: "05 · Console",
+      eyebrow: "05 · Classes",
+      title: "Create and use a class",
+      explanation: "A method is called with its name, such as Correct(). A class is used in a similar way, but you put new before its name: new Car(\"Ford\", 2014). The Car class is defined before Program, and Main then creates objects, or instances, from that class.",
+      note: "// Define Car first, then create Car objects inside Main",
+      prompt: "Create the Car class above Program, then use new inside Main to make Ford and Audi objects.",
+      answer: 'class Car\n{\n  public string Name { get; set; }\n  public int Year { get; set; }\n\n  public Car(string name, int year)\n  {\n    // this.Name is the property stored in the car object.\n    // name is the value passed into the constructor.\n    this.Name = name;\n\n    // this.Year is the property stored in the car object.\n    // year is the value passed into the constructor.\n    this.Year = year;\n  }\n}\n\nclass Program\n{\n  static void Main()\n  {\n    Car myCar1 = new Car("Ford", 2014);\n    Car myCar2 = new Car("Audi", 2019);\n\n    Console.WriteLine($"{myCar1.Name}, {myCar1.Year}");\n    Console.WriteLine($"{myCar2.Name}, {myCar2.Year}");\n  }\n}',
+      output: ["Ford, 2014", "Audi, 2019"],
+    },
+    {
+      eyebrow: "06 · Console",
       title: "Clear the screen",
       explanation: "The console is where a C# text program shows its output. Console.Clear() removes everything currently shown there.",
       note: "// Clear all previous console output",
@@ -214,7 +223,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Console cleared."],
     },
     {
-      eyebrow: "06 · If and else with words",
+      eyebrow: "07 · If and else with words",
       title: "Right answer or wrong answer",
       explanation: "if checks whether the word in answer is exactly green. When it is green, the program prints Right! The else block runs for every other word and prints Wrong!",
       note: "// Print Right for green, or Wrong for any other answer",
@@ -223,7 +232,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What color is grass?  →  green", "Right!"],
     },
     {
-      eyebrow: "07 · Null values",
+      eyebrow: "08 · Null values",
       title: "Mark a value as not ready yet",
       explanation: "null deliberately means that a variable has no value yet. string? allows this text variable to hold either text or null, and == null checks whether the value is still missing.",
       note: "// null means there is deliberately no result yet",
@@ -232,7 +241,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["No result yet"],
     },
     {
-      eyebrow: "08 · Combined conditions",
+      eyebrow: "09 · Combined conditions",
       title: "Check whether a value is in a range",
       explanation: "A range needs two comparisons. >= checks the lower limit, <= checks the upper limit, and && means both conditions must be true at the same time.",
       note: "// && means AND. Both conditions must be true.",
@@ -242,7 +251,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Your age is between 0 and 18."],
     },
     {
-      eyebrow: "09 · Comparison reference",
+      eyebrow: "10 · Comparison reference",
       title: "Compare two values",
       explanation: "Comparison operators ask a question about two values and produce true or false. Keep this page as a quick reference: the code stays nearly identical while the symbol changes the question being asked.",
       note: "// Compare values using equality, inequality, and size operators",
@@ -253,7 +262,7 @@ const lessons: Record<Language, Lesson[]> = {
       referenceKind: "comparisons",
     },
     {
-      eyebrow: "10 · Regular expressions",
+      eyebrow: "11 · Regular expressions",
       title: "Let names beginning with J enter",
       explanation: "A regular expression checks text against a pattern. Regex comes from System.Text.RegularExpressions. ^J means the text must begin with J, while RegexOptions.IgnoreCase accepts uppercase or lowercase. It accepts any word beginning with J—not only names—and rejects J when it appears later in the text.",
       note: "// Let people into the club when their name begins with J",
@@ -262,7 +271,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Jaden can enter the club.", "James can enter the club.", "Jessica can enter the club.", "Sarah cannot enter the club.", "Ben cannot enter the club."],
     },
     {
-      eyebrow: "11 · Arrays",
+      eyebrow: "12 · Arrays",
       title: "Keep a list",
       explanation: "A C# array keeps several values of the same type. Square brackets mark the array, and a foreach loop visits each item one at a time.",
       note: "// Store three fruits, then print each one",
@@ -271,7 +280,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Apple", "Banana", "Orange"],
     },
     {
-      eyebrow: "12 · Empty list",
+      eyebrow: "13 · Empty list",
       title: "Start an empty car list",
       explanation: "List<string> creates a flexible list that stores text, and new List<string>() starts it with zero items. C# has a const keyword too, but const is only for values fixed at compile time; a growing List cannot be const. This is why the C# version begins with List<string> rather than copying JavaScript's const.",
       note: "// Create an empty list that will hold car names",
@@ -280,7 +289,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["cars  →  []", "The list currently has 0 items."],
     },
     {
-      eyebrow: "13 · Add to a list",
+      eyebrow: "14 · Add to a list",
       title: "Put a car into the list",
       explanation: "Console.ReadLine() collects the user's answer. cars.Add(newCar) takes that saved text and adds it to the end of the cars list.",
       note: "// Ask for a car, then add the answer to cars",
@@ -290,7 +299,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Before: []", "What car do you want to add?  →  Ford", 'After Add: ["Ford"]'],
     },
     {
-      eyebrow: "14 · Print a list",
+      eyebrow: "15 · Print a list",
       title: "Show the finished car list",
       explanation: "string.Join joins every list item into readable text. Console.WriteLine then prints that text, showing the car that was added in the previous step.",
       note: "// Join and print the items stored in cars",
@@ -300,7 +309,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What car do you want to add?  →  Ford", "[Ford]"],
     },
     {
-      eyebrow: "15 · Sets",
+      eyebrow: "16 · Sets",
       title: "Remove duplicate names",
       explanation: "A HashSet stores only unique values. Passing names into new HashSet<string>(names) removes repeated names, and string.Join makes the remaining values readable for printing.",
       note: "// Ask for three names, then remove any duplicates",
@@ -309,7 +318,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Enter the first name:  →  Alex", "Enter the second name:  →  Sam", "Enter the third name:  →  Alex", "[Alex, Sam]"],
     },
     {
-      eyebrow: "16 · Array positions",
+      eyebrow: "17 · Array positions",
       title: "Look up the car you added",
       explanation: "C# list positions start at zero. cars[0] retrieves the first item, which is Ford because it was the first value added to the list.",
       note: "// Look up and print the first car in the list",
@@ -319,7 +328,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What car do you want to add?  →  Ford", "[Ford]", "Item at position 0  →  Ford"],
     },
     {
-      eyebrow: "17 · Objects",
+      eyebrow: "18 · Objects",
       title: "Give values names",
       explanation: "C# objects keep related values in named properties. Here, an anonymous object groups a car's Brand and Colour together.",
       note: "// Create a car object and print its properties",
@@ -328,7 +337,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Brand: BMW", "Colour: Blue"],
     },
     {
-      eyebrow: "18 · Timers",
+      eyebrow: "19 · Timers",
       title: "Run code later",
       explanation: "Task.Delay pauses asynchronous C# code for a number of milliseconds. Using await lets each message appear after another one-second delay.",
       note: "// Print One, Two, and Three one second apart",
@@ -337,22 +346,13 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["One", "Two", "Three"],
     },
     {
-      eyebrow: "19 · Date and time",
+      eyebrow: "20 · Date and time",
       title: "Get the current moment",
       explanation: "DateTime.Now gets the computer's current local date and time. Storing it in currentDateTime lets the program use or display that moment later.",
       note: "// Get the current date and time, then print it",
       prompt: "Store DateTime.Now in currentDateTime and show it in the console.",
       answer: "DateTime currentDateTime = DateTime.Now;\nConsole.WriteLine(currentDateTime);",
       output: ["06/08/2026 19:05:00"],
-    },
-    {
-      eyebrow: "20 · Classes",
-      title: "Create and use a class",
-      explanation: "A method is called with its name, such as Correct(). A class is used in a similar way, but you put new before its name: new Car(\"Ford\", 2014). People sometimes call this ‘calling the class’, but its proper name is creating an object, or an instance, from the class. The values inside the parentheses are sent to the constructor.",
-      note: "// Create the class first, then use new Car(...) to create an object",
-      prompt: "Create the Car class, then call its constructor with new inside Main to make Ford and Audi objects.",
-      answer: 'class Car\n{\n  public string Name { get; set; }\n  public int Year { get; set; }\n\n  public Car(string name, int year)\n  {\n    // this.Name is the property stored in the car object.\n    // name is the value passed into the constructor.\n    this.Name = name;\n\n    // this.Year is the property stored in the car object.\n    // year is the value passed into the constructor.\n    this.Year = year;\n  }\n}\n\nclass Program\n{\n  static void Main()\n  {\n    Car myCar1 = new Car("Ford", 2014);\n    Car myCar2 = new Car("Audi", 2019);\n\n    Console.WriteLine($"{myCar1.Name}, {myCar1.Year}");\n    Console.WriteLine($"{myCar2.Name}, {myCar2.Year}");\n  }\n}',
-      output: ["Ford, 2014", "Audi, 2019"],
     },
   ],
   html: [
@@ -565,29 +565,27 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
     0: [{ code: "function", name: "Create", meaning: "Starts a reusable block of code." }, { code: "correct()", name: "Name", meaning: "Names the function so you can call it later." }, { code: "{ ... }", name: "Instructions", meaning: "Holds the code the function will run." }, { code: "correct();", name: "Call it", meaning: "Runs the function you created." }, { code: ";", name: "End instruction", meaning: "Marks where an instruction ends. JavaScript can sometimes work without it, but using it consistently makes the ending clear." }],
     1: [{ code: "while (true)", name: "Repeat", meaning: "Keeps asking for input until code inside stops the loop." }, { code: "prompt", name: "Input", meaning: "Asks the user for an answer." }, { code: "break", name: "Stop", meaning: "Leaves the loop when the if condition is true." }],
     2: [{ code: "let", name: "Create", meaning: "Makes a variable that can remember something." }, { code: "name", name: "Label", meaning: "Shows that you choose a useful name for the saved value." }, { code: "=", name: "Save", meaning: "Puts the value on the right into the variable on the left." }],
-    4: [{ code: "if ( ... )", name: "Check", meaning: "Runs a block only when its condition is true." }, { code: 'answer === "green"', name: "Condition", meaning: "Checks whether the saved answer is exactly green." }, { code: "else", name: "Otherwise", meaning: "Runs when the condition is false." }],
-    5: [{ code: ">= 0", name: "Lower limit", meaning: "Checks that age is zero or greater." }, { code: "&&", name: "Two ampersands", meaning: "Read this as AND: the condition on each side must be true." }, { code: "<= 18", name: "Upper limit", meaning: "Checks that age is eighteen or less." }],
-    11: [{ code: "{ ... }", name: "Object brackets", meaning: "Curly braces hold the object's named values." }, { code: "bonjour: \"hello\"", name: "Key and value", meaning: "bonjour is the key to search for, and hello is the value stored under it." }, { code: "words[search]", name: "Look it up", meaning: "Uses the saved search as a key and retrieves its value from words." }],
-    12: [{ code: "setTimeout", name: "Schedule", meaning: "Asks JavaScript to run some code later." }, { code: "() => ...", name: "Code to run", meaning: "A short function waiting inside the timer." }, { code: "1000", name: "Delay", meaning: "One thousand milliseconds means one second." }],
-    13: [{ code: "new Date()", name: "Current moment", meaning: "Creates a Date using the device's current date and time." }],
-    14: [{ code: "class Car", name: "Create the class", meaning: "Defines the blueprint shared by every Car object." }, { code: "constructor(name, year)", name: "Receive values", meaning: "Runs when new Car(...) creates an object." }, { code: "this.name = name", name: "Store a property", meaning: "Saves the received name on this particular car object." }, { code: "new Car(\"Ford\", 2014)", name: "Use the class", meaning: "Calls the constructor and creates one Car object. This is also called making an instance." }],
+    5: [{ code: "if ( ... )", name: "Check", meaning: "Runs a block only when its condition is true." }, { code: 'answer === "green"', name: "Condition", meaning: "Checks whether the saved answer is exactly green." }, { code: "else", name: "Otherwise", meaning: "Runs when the condition is false." }],
+    7: [{ code: ">= 0", name: "Lower limit", meaning: "Checks that age is zero or greater." }, { code: "&&", name: "Two ampersands", meaning: "Read this as AND: the condition on each side must be true." }, { code: "<= 18", name: "Upper limit", meaning: "Checks that age is eighteen or less." }],
+    12: [{ code: "{ ... }", name: "Object brackets", meaning: "Curly braces hold the object's named values." }, { code: "bonjour: \"hello\"", name: "Key and value", meaning: "bonjour is the key to search for, and hello is the value stored under it." }, { code: "words[search]", name: "Look it up", meaning: "Uses the saved search as a key and retrieves its value from words." }],
+    14: [{ code: "setTimeout", name: "Schedule", meaning: "Asks JavaScript to run some code later." }, { code: "() => ...", name: "Code to run", meaning: "A short function waiting inside the timer." }, { code: "1000", name: "Delay", meaning: "One thousand milliseconds means one second." }],
+    15: [{ code: "new Date()", name: "Current moment", meaning: "Creates a Date using the device's current date and time." }],
   },
   csharp: {
     0: [{ code: "void", name: "Result type", meaning: "Says this method does not send a value back." }, { code: "Correct()", name: "Name", meaning: "Names the method so you can call it later." }, { code: "{ ... }", name: "Instructions", meaning: "Holds the code the method will run." }, { code: "Correct();", name: "Call it", meaning: "Runs the method you created." }, { code: ";", name: "End statement", meaning: "Marks where a statement ends. C# requires it after statements such as calling a method or printing text." }],
     1: [{ code: "\\n", name: "New line", meaning: "Moves the next word onto a new line in the terminal." }],
     2: [{ code: "while (true)", name: "Repeat", meaning: "Keeps asking for input until code inside stops the loop." }, { code: "Console.ReadLine", name: "Input", meaning: "Reads the user's answer." }, { code: "break", name: "Stop", meaning: "Leaves the loop when the if condition is true." }],
     3: [{ code: "string", name: "Type", meaning: "Says this variable will store text." }, { code: "name", name: "Label", meaning: "Shows that you choose a useful name for the saved value." }, { code: "=", name: "Save", meaning: "Puts the value on the right into the variable on the left." }],
-    5: [{ code: "if ( ... )", name: "Check", meaning: "Runs a block only when its condition is true." }, { code: 'answer == "green"', name: "Condition", meaning: "Checks whether the saved answer is green." }, { code: "else", name: "Otherwise", meaning: "Runs when the condition is false." }],
-    6: [{ code: ">= 0", name: "Lower limit", meaning: "Checks that age is zero or greater." }, { code: "&&", name: "Two ampersands", meaning: "Read this as AND: the condition on each side must be true." }, { code: "<= 18", name: "Upper limit", meaning: "Checks that age is eighteen or less." }],
-    7: [{ code: "string[]", name: "Array type", meaning: "Says fruits is a list of text values." }, { code: "foreach", name: "Loop", meaning: "Visits every item in the array." }, { code: "fruit", name: "Current item", meaning: "Temporarily holds the item being visited." }],
-    8: [{ code: "List<string>", name: "Flexible text list", meaning: "Creates a list that can grow and accepts string values." }, { code: "new List<string>()", name: "Empty list", meaning: "Builds the list with zero items inside it." }],
-    9: [{ code: "cars.Add(newCar)", name: "Add an item", meaning: "Adds the saved car to the end of the cars list." }],
-    10: [{ code: "string.Join", name: "Join items", meaning: "Turns all list items into one readable piece of text." }, { code: '", "', name: "Separator", meaning: "Places a comma and space between multiple cars." }],
-    11: [{ code: "cars[0]", name: "First position", meaning: "Zero retrieves the first item because list counting starts at zero." }],
-    12: [{ code: "var", name: "Inferred type", meaning: "Lets C# work out the variable's type from the value assigned to it." }, { code: "new { ... }", name: "Object", meaning: "Groups related values into one thing." }, { code: "car.Brand", name: "Property", meaning: "Reads the Brand value stored on car." }],
-    13: [{ code: "Task.Delay", name: "Timer", meaning: "Creates a pause for a number of milliseconds." }, { code: "1000", name: "Duration", meaning: "One thousand milliseconds means one second." }, { code: "await", name: "Wait", meaning: "Pauses here before moving to the next line." }],
-    14: [{ code: "DateTime", name: "Type", meaning: "Represents a date and a time in C#." }, { code: "DateTime.Now", name: "Current moment", meaning: "Reads the computer's current local date and time." }],
-    15: [{ code: "class Car", name: "Create the class", meaning: "Defines the blueprint shared by every Car object." }, { code: "public string Name", name: "Property", meaning: "Stores a text name that other code can read or change." }, { code: "Car(string name, int year)", name: "Constructor", meaning: "Receives the starting values when new Car(...) creates an object." }, { code: "new Car(\"Ford\", 2014)", name: "Use the class", meaning: "Calls the constructor and creates one Car object. This is also called making an instance." }],
+    6: [{ code: "if ( ... )", name: "Check", meaning: "Runs a block only when its condition is true." }, { code: 'answer == "green"', name: "Condition", meaning: "Checks whether the saved answer is green." }, { code: "else", name: "Otherwise", meaning: "Runs when the condition is false." }],
+    8: [{ code: ">= 0", name: "Lower limit", meaning: "Checks that age is zero or greater." }, { code: "&&", name: "Two ampersands", meaning: "Read this as AND: the condition on each side must be true." }, { code: "<= 18", name: "Upper limit", meaning: "Checks that age is eighteen or less." }],
+    11: [{ code: "string[]", name: "Array type", meaning: "Says fruits is a list of text values." }, { code: "foreach", name: "Loop", meaning: "Visits every item in the array." }, { code: "fruit", name: "Current item", meaning: "Temporarily holds the item being visited." }],
+    12: [{ code: "List<string>", name: "Flexible text list", meaning: "Creates a list that can grow and accepts string values." }, { code: "new List<string>()", name: "Empty list", meaning: "Builds the list with zero items inside it." }],
+    13: [{ code: "cars.Add(newCar)", name: "Add an item", meaning: "Adds the saved car to the end of the cars list." }],
+    14: [{ code: "string.Join", name: "Join items", meaning: "Turns all list items into one readable piece of text." }, { code: '", "', name: "Separator", meaning: "Places a comma and space between multiple cars." }],
+    16: [{ code: "cars[0]", name: "First position", meaning: "Zero retrieves the first item because list counting starts at zero." }],
+    17: [{ code: "var", name: "Inferred type", meaning: "Lets C# work out the variable's type from the value assigned to it." }, { code: "new { ... }", name: "Object", meaning: "Groups related values into one thing." }, { code: "car.Brand", name: "Property", meaning: "Reads the Brand value stored on car." }],
+    18: [{ code: "Task.Delay", name: "Timer", meaning: "Creates a pause for a number of milliseconds." }, { code: "1000", name: "Duration", meaning: "One thousand milliseconds means one second." }, { code: "await", name: "Wait", meaning: "Pauses here before moving to the next line." }],
+    19: [{ code: "DateTime", name: "Type", meaning: "Represents a date and a time in C#." }, { code: "DateTime.Now", name: "Current moment", meaning: "Reads the computer's current local date and time." }],
   },
   html: {
     0: [{ code: "<!DOCTYPE", name: "Declaration", meaning: "Tells the browser what kind of document follows." }, { code: "html", name: "Modern HTML", meaning: "Selects the current HTML standard." }],
@@ -647,6 +645,21 @@ const randomWordBreakdown: CodePart[] = [
   { code: "Math.floor(...)", name: "Remove the decimal", meaning: "Turns the random number into position 0 or position 1." },
   { code: "[ ... ]", name: "Choose that key", meaning: "Uses the random position to select either bonjour or hola from the keys array." },
 ];
+
+const classBreakdowns: Partial<Record<Language, CodePart[]>> = {
+  javascript: [
+    { code: "class Car", name: "Create the class", meaning: "Defines the blueprint before any Car objects are created." },
+    { code: "constructor(name, year)", name: "Receive values", meaning: "Runs when new Car(...) creates an object." },
+    { code: "this.name = name", name: "Store a property", meaning: "Saves the received name on this particular car object." },
+    { code: "new Car(\"Ford\", 2014)", name: "Create an instance", meaning: "Calls the constructor and creates one Car object." },
+  ],
+  csharp: [
+    { code: "class Car", name: "Define Car first", meaning: "Places the Car blueprint before the Program class that uses it." },
+    { code: "public string Name", name: "Property", meaning: "Stores a text name that other code can read or change." },
+    { code: "Car(string name, int year)", name: "Constructor", meaning: "Receives the starting values when new Car(...) creates an object." },
+    { code: "new Car(\"Ford\", 2014)", name: "Create an instance", meaning: "Creates one Car object inside Main." },
+  ],
+};
 
 const regexBreakdowns: Partial<Record<Language, CodePart[]>> = {
   javascript: [
@@ -861,14 +874,11 @@ export default function Home() {
   const ghostSource = current ? withoutGuideComments(current.answer, language ?? "javascript") : "";
   const visibleGhost = ghostSource.slice(0, ghostLength);
   const guideCode = alignedGuide(code, visibleGhost);
-  const breakdownIndex = language === "javascript"
-    ? index >= 13 ? index - 1 : index >= 11 ? index : index >= 6 ? index - 1 : index
-    : language === "csharp"
-      ? index >= 15 ? index - 4 : index >= 10 ? index - 3 : index >= 7 ? index - 1 : index
-      : index;
+  const breakdownIndex = index;
   const breakdown = language
     ? current?.referenceKind === "comparisons" ? undefined
       : ((current?.title === "Mark a value as not ready yet") && nullBreakdowns[language])
+      || ((current?.title === "Create and use a class") && classBreakdowns[language])
       || ((current?.title === "Let names beginning with J enter") && regexBreakdowns[language])
       || ((current?.title === "Make and search a car array") && carArrayBreakdown)
       || ((current?.title === "Choose a random word") && randomWordBreakdown)
