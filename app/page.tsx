@@ -812,6 +812,20 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
   })}{caretIndex !== undefined && !caretPlaced && <i className="editor-caret" />}</>;
 }
 
+function LearningCode({ code, starter, language, caretIndex }: { code: string; starter?: string; language: Language; caretIndex: number }) {
+  const learnedLength = starter && code.startsWith(starter) ? starter.length : 0;
+  if (!learnedLength) return <span className="new-code"><HighlightedCode code={code} language={language} caretIndex={caretIndex} /></span>;
+
+  const learnedCode = code.slice(0, learnedLength);
+  const newCode = code.slice(learnedLength);
+  const caretInLearnedCode = caretIndex <= learnedLength;
+
+  return <>
+    <span className="learned-code"><HighlightedCode code={learnedCode} language={language} caretIndex={caretInLearnedCode ? caretIndex : undefined} /></span>
+    <span className="new-code"><HighlightedCode code={newCode} language={language} caretIndex={!caretInLearnedCode ? caretIndex - learnedLength : undefined} /></span>
+  </>;
+}
+
 function SettingsPanel({ open, themeMode, showGuide, colourTyping, onThemeChange, onGuideChange, onColourTypingChange, onClose }: { open: boolean; themeMode: ThemeMode; showGuide: boolean; colourTyping: boolean; onThemeChange: (mode: ThemeMode) => void; onGuideChange: (show: boolean) => void; onColourTypingChange: (show: boolean) => void; onClose: () => void }) {
   if (!open) return null;
   return <div className="settings-backdrop" role="presentation" onMouseDown={onClose}>
@@ -1203,7 +1217,7 @@ export default function Home() {
           </div> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className="file-tab"><span>◆</span> {challengeFile(language)}</div><div className="panel-actions"><span>UTF-8</span><button onClick={() => { setCode(""); setCaretIndex(0); }} title="Reset code">↻ Reset</button></div></div>
-            <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className="code-guide" aria-hidden="true"><span>CODE GUIDE</span><code><HighlightedCode code={guideCode} language={language} /></code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><HighlightedCode code={code} language={language} caretIndex={caretIndex} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : "// Type your code here..."} /></div>
+            <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className="code-guide" aria-hidden="true"><span>CODE GUIDE</span><code><HighlightedCode code={guideCode} language={language} /></code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : "// Type your code here..."} /></div>
           </div>
           <div className="console-panel">
             <div className="console-bar"><span><i /> CONSOLE</span><button onClick={() => setStatus("idle")}>Clear</button></div>
