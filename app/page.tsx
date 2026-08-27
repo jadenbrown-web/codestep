@@ -152,7 +152,7 @@ const lessons: Record<Language, Lesson[]> = {
       eyebrow: "15 · Application practice",
       title: "Build a random word quiz",
       explanation: "This mini application combines the pieces already learned. It chooses a random key, displays that word as the prompt, looks up the matching value in words, and prints Correct or Wrong after checking the answer.",
-      note: "// Ask a random translation question and check the answer",
+      note: "// random chooses a word, prompt displays that word, answer stores what the user types, and words[random] uses the randomly chosen word to find its correct answer in the dictionary. The if statement compares the user's answer with that correct answer.",
       prompt: "Combine the word object and random key code to make a translation quiz.",
       answer: 'const words = {\n  bonjour: "hello",\n  hola: "hello"\n};\n\nlet random = Object.keys(words)[Math.floor(Math.random() * 2)];\n\nlet answer = prompt(random);\n\nif (answer == words[random]) {\n  console.log("Correct");\n} else {\n  console.log("Wrong");\n}',
       output: ["bonjour  →  hello", "Correct"],
