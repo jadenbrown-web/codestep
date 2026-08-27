@@ -149,7 +149,16 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["bonjour"],
     },
     {
-      eyebrow: "15 · Timers",
+      eyebrow: "15 · Application practice",
+      title: "Build a random word quiz",
+      explanation: "This mini application combines the pieces already learned. It chooses a random key, displays that word as the prompt, looks up the matching value in words, and prints Correct or Wrong after checking the answer.",
+      note: "// Ask a random translation question and check the answer",
+      prompt: "Combine the word object and random key code to make a translation quiz.",
+      answer: 'const words = {\n  bonjour: "hello",\n  hola: "hello"\n};\n\nlet random = Object.keys(words)[Math.floor(Math.random() * 2)];\n\nlet answer = prompt(random);\n\nif (answer == words[random]) {\n  console.log("Correct");\n} else {\n  console.log("Wrong");\n}',
+      output: ["bonjour  →  hello", "Correct"],
+    },
+    {
+      eyebrow: "16 · Timers",
       title: "Run code later",
       explanation: "setTimeout schedules a function to run after a delay. The delay is measured in milliseconds, so 1000 means one second.",
       note: "// Print One, Two, and Three one second apart",
@@ -158,7 +167,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["One", "Two", "Three"],
     },
     {
-      eyebrow: "16 · Date and time",
+      eyebrow: "17 · Date and time",
       title: "Get the current moment",
       explanation: "new Date() creates a Date object containing the current date and time from the device running the code. console.log then displays that value.",
       note: "// Create the current date and time, then print it",
@@ -568,8 +577,8 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
     5: [{ code: "if ( ... )", name: "Check", meaning: "Runs a block only when its condition is true." }, { code: 'answer === "green"', name: "Condition", meaning: "Checks whether the saved answer is exactly green." }, { code: "else", name: "Otherwise", meaning: "Runs when the condition is false." }],
     7: [{ code: ">= 0", name: "Lower limit", meaning: "Checks that age is zero or greater." }, { code: "&&", name: "Two ampersands", meaning: "Read this as AND: the condition on each side must be true." }, { code: "<= 18", name: "Upper limit", meaning: "Checks that age is eighteen or less." }],
     12: [{ code: "{ ... }", name: "Object brackets", meaning: "Curly braces hold the object's named values." }, { code: "bonjour: \"hello\"", name: "Key and value", meaning: "bonjour is the key to search for, and hello is the value stored under it." }, { code: "words[search]", name: "Look it up", meaning: "Uses the saved search as a key and retrieves its value from words." }],
-    14: [{ code: "setTimeout", name: "Schedule", meaning: "Asks JavaScript to run some code later." }, { code: "() => ...", name: "Code to run", meaning: "A short function waiting inside the timer." }, { code: "1000", name: "Delay", meaning: "One thousand milliseconds means one second." }],
-    15: [{ code: "new Date()", name: "Current moment", meaning: "Creates a Date using the device's current date and time." }],
+    15: [{ code: "setTimeout", name: "Schedule", meaning: "Asks JavaScript to run some code later." }, { code: "() => ...", name: "Code to run", meaning: "A short function waiting inside the timer." }, { code: "1000", name: "Delay", meaning: "One thousand milliseconds means one second." }],
+    16: [{ code: "new Date()", name: "Current moment", meaning: "Creates a Date using the device's current date and time." }],
   },
   csharp: {
     0: [{ code: "void", name: "Result type", meaning: "Says this method does not send a value back." }, { code: "Correct()", name: "Name", meaning: "Names the method so you can call it later." }, { code: "{ ... }", name: "Instructions", meaning: "Holds the code the method will run." }, { code: "Correct();", name: "Call it", meaning: "Runs the method you created." }, { code: ";", name: "End statement", meaning: "Marks where a statement ends. C# requires it after statements such as calling a method or printing text." }],
