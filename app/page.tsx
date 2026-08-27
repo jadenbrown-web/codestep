@@ -630,16 +630,12 @@ const nullBreakdowns: Partial<Record<Language, CodePart[]>> = {
 
 const setsBreakdowns: Partial<Record<Language, CodePart[]>> = {
   javascript: [
-    { code: "names", name: "Source array", meaning: "Holds all three answers, including any repeated names." },
     { code: "new Set(names)", name: "Remove duplicates", meaning: "Creates a Set from names. A Set keeps only one copy of each value." },
-    { code: "uniqueNames", name: "Set variable", meaning: "Labels the new collection of unique names so it can be used later." },
     { code: "[...uniqueNames]", name: "Spread into an array", meaning: "The three dots copy every Set value into a new array for familiar array-style output." },
   ],
   csharp: [
-    { code: "names", name: "Source list", meaning: "Holds all three answers, including any repeated names." },
     { code: "HashSet<string>", name: "Unique text collection", meaning: "Defines a collection that stores no duplicate text values." },
     { code: "new HashSet<string>(names)", name: "Remove duplicates", meaning: "Creates the HashSet from names and keeps only one copy of each value." },
-    { code: "string.Join", name: "Readable output", meaning: "Joins the unique values together so they can be printed on one line." },
   ],
 };
 
