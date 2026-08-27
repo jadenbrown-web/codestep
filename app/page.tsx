@@ -105,44 +105,15 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       eyebrow: "10 · Arrays",
-      title: "Keep a list",
-      explanation: "A JavaScript list is called an array. Square brackets hold its items, and a for...of loop visits each item one at a time.",
-      note: "// Store three fruits, then print each one",
-      prompt: "Create the fruits array and loop through it.",
-      answer: 'let fruits = ["Apple", "Banana", "Orange"];\n\nfor (let fruit of fruits) {\n  console.log(fruit);\n}',
-      output: ["Apple", "Banana", "Orange"],
+      title: "Make and search a car array",
+      explanation: "This is called an array. The square brackets [] create an empty array, which is a list that can hold several values. push adds the car typed into the first prompt. includes searches the array for the text typed into the second prompt. If it finds an exact match, console.log prints that car. JavaScript comments begin with // rather than #.",
+      note: "// Make an array, add one car, then search for it",
+      prompt: "Create the cars array, add a car, and search for that car.",
+      answer: 'const cars = [];\n\ncars.push(prompt("Add car:"));\n\nlet search = prompt("Search:");\n\nif (cars.includes(search)) console.log(search);',
+      output: ["Add car:  →  Ford", "Search:  →  Ford", "Ford"],
     },
     {
-      eyebrow: "11 · Constant array",
-      title: "Start an empty car list",
-      explanation: "const is short for constant. Like let, it creates a named variable, but const prevents that variable from being reassigned to a different value later. Here cars must keep pointing to the same array, although .push() can still add items inside that array.",
-      note: "// Create an empty list that will hold cars",
-      prompt: "Create the constant cars array with no items inside it.",
-      answer: "const cars = [];",
-      output: ["cars  →  []", "The list currently has 0 items."],
-    },
-    {
-      eyebrow: "12 · Add to an array",
-      title: "Put a car into the list",
-      explanation: "prompt collects a car name from the user. cars.push(newCar) takes that saved answer and adds it to the end of the cars array.",
-      note: "// Ask for a car, then add the answer to cars",
-      prompt: "Use push to add newCar to the empty cars array.",
-      starter: 'const cars = [];\nconst newCar = prompt("What car do you want to add?");\n\n',
-      answer: 'const cars = [];\nconst newCar = prompt("What car do you want to add?");\n\ncars.push(newCar);',
-      output: ["Before: []", "What car do you want to add?  →  Ford", 'After push: ["Ford"]'],
-    },
-    {
-      eyebrow: "13 · Print an array",
-      title: "Show the car without brackets",
-      explanation: "console.log(cars[0]) sends only the first item in the array to the console. Position 0 means the first item, so the console prints Ford without square brackets.",
-      note: "// Print the first car after adding it to the list",
-      prompt: "Print the first car so it appears without array brackets.",
-      starter: 'const cars = [];\nconst newCar = prompt("What car do you want to add?");\ncars.push(newCar);\n\n',
-      answer: 'const cars = [];\nconst newCar = prompt("What car do you want to add?");\ncars.push(newCar);\n\nconsole.log(cars[0]);',
-      output: ["What car do you want to add?  →  Ford", "Ford"],
-    },
-    {
-      eyebrow: "14 · Sets",
+      eyebrow: "11 · Sets",
       title: "Remove duplicate names",
       explanation: "A Set stores only unique values. Passing names into new Set(names) removes repeated names, and [...uniqueNames] spreads the remaining values back into an array for printing.",
       note: "// Ask for three names, then remove any duplicates",
@@ -151,17 +122,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Enter the first name:  →  Alex", "Enter the second name:  →  Sam", "Enter the third name:  →  Alex", '["Alex", "Sam"]'],
     },
     {
-      eyebrow: "15 · Array positions",
-      title: "Look up the car you added",
-      explanation: "Array positions start at zero. cars[0] retrieves the first item, which is Ford because it was the first value pushed into the array.",
-      note: "// Look up and print the first car in the array",
-      prompt: "Use position 0 to retrieve the car you just added.",
-      starter: 'const cars = [];\nconst newCar = prompt("What car do you want to add?");\ncars.push(newCar);\nconsole.log(cars[0]);\n\n',
-      answer: 'const cars = [];\nconst newCar = prompt("What car do you want to add?");\ncars.push(newCar);\nconsole.log(cars[0]);\n\nconsole.log(cars[0]);',
-      output: ["What car do you want to add?  →  Ford", "Ford", "Item at position 0  →  Ford"],
-    },
-    {
-      eyebrow: "16 · Objects",
+      eyebrow: "12 · Objects",
       title: "Give values names",
       explanation: "Objects keep related values under named keys. Here, BMW and Ford are keys, and each car has a colour property.",
       note: "// Look up a car brand and print its colour",
@@ -170,7 +131,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Enter BMW or Ford:  →  BMW", "Brand: BMW", "Colour: Blue"],
     },
     {
-      eyebrow: "17 · Timers",
+      eyebrow: "13 · Timers",
       title: "Run code later",
       explanation: "setTimeout schedules a function to run after a delay. The delay is measured in milliseconds, so 1000 means one second.",
       note: "// Print One, Two, and Three one second apart",
@@ -179,7 +140,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["One", "Two", "Three"],
     },
     {
-      eyebrow: "18 · Date and time",
+      eyebrow: "14 · Date and time",
       title: "Get the current moment",
       explanation: "new Date() creates a Date object containing the current date and time from the device running the code. console.log then displays that value.",
       note: "// Create the current date and time, then print it",
@@ -188,7 +149,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Thu Aug 06 2026 19:05:00 GMT+0100 (British Summer Time)"],
     },
     {
-      eyebrow: "19 · Classes",
+      eyebrow: "15 · Classes",
       title: "Create and use a class",
       explanation: "A function is called with its name, such as correct(). A class is used in a similar way, but you put new before its name: new Car(\"Ford\", 2014). People sometimes call this ‘calling the class’, but its proper name is creating an object, or an instance, from the class. The values inside the parentheses are sent to the constructor.",
       note: "// Create the class first, then use new Car(...) to create an object",
@@ -678,6 +639,15 @@ const setsBreakdowns: Partial<Record<Language, CodePart[]>> = {
   ],
 };
 
+const carArrayBreakdown: CodePart[] = [
+  { code: "const cars = [];", name: "Make the array", meaning: "The square brackets create an empty array. An array is JavaScript's name for a list." },
+  { code: "cars.push", name: "Add a car", meaning: "push adds the answer from the Add car prompt to the end of the cars array." },
+  { code: "let search", name: "Save the search", meaning: "Stores the text typed into the Search prompt so the program can check it." },
+  { code: "cars.includes(search)", name: "Search the array", meaning: "Checks whether the cars array contains an exact match for the saved search." },
+  { code: "console.log(search)", name: "Show the match", meaning: "Prints the searched car when includes finds it." },
+  { code: "//", name: "JavaScript comment", meaning: "Two slashes add an explanation that JavaScript does not run. JavaScript uses // rather than # for comments." },
+];
+
 const regexBreakdowns: Partial<Record<Language, CodePart[]>> = {
   javascript: [
     { code: "/ ... /", name: "Pattern", meaning: "The forward slashes mark the beginning and end of a regular expression." },
@@ -879,7 +849,7 @@ export default function Home() {
   const visibleGhost = ghostSource.slice(0, ghostLength);
   const guideCode = alignedGuide(code, visibleGhost);
   const breakdownIndex = language === "javascript"
-    ? index >= 14 ? index - 4 : index >= 9 ? index - 3 : index >= 6 ? index - 1 : index
+    ? index >= 11 ? index : index >= 6 ? index - 1 : index
     : language === "csharp"
       ? index >= 15 ? index - 4 : index >= 10 ? index - 3 : index >= 7 ? index - 1 : index
       : index;
@@ -887,6 +857,7 @@ export default function Home() {
     ? current?.referenceKind === "comparisons" ? undefined
       : ((current?.title === "Mark a value as not ready yet") && nullBreakdowns[language])
       || ((current?.title === "Let names beginning with J enter") && regexBreakdowns[language])
+      || ((current?.title === "Make and search a car array") && carArrayBreakdown)
       || ((current?.title === "Remove duplicate names") && setsBreakdowns[language])
       || breakdowns[language][breakdownIndex]
     : undefined;
