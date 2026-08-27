@@ -131,7 +131,16 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Search:  →  bonjour", "hello"],
     },
     {
-      eyebrow: "13 · Timers",
+      eyebrow: "13 · Random object key",
+      title: "Choose a random word",
+      explanation: "Object.keys(words) makes an array containing the object's keys: bonjour and hola. Math.random() creates a random decimal from 0 up to, but not including, 1. Multiplying by 2 gives a number from 0 up to 2, and Math.floor removes the decimal to produce position 0 or 1. The square brackets then select the key at that position.",
+      note: "// Choose either bonjour or hola at random",
+      prompt: "Create the words object and randomly select one of its keys.",
+      answer: 'const words = {\n  bonjour: "hello",\n  hola: "hello"\n};\n\nlet random = Object.keys(words)[Math.floor(Math.random() * 2)];\n\nconsole.log(random);',
+      output: ["bonjour"],
+    },
+    {
+      eyebrow: "14 · Timers",
       title: "Run code later",
       explanation: "setTimeout schedules a function to run after a delay. The delay is measured in milliseconds, so 1000 means one second.",
       note: "// Print One, Two, and Three one second apart",
@@ -140,7 +149,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["One", "Two", "Three"],
     },
     {
-      eyebrow: "14 · Date and time",
+      eyebrow: "15 · Date and time",
       title: "Get the current moment",
       explanation: "new Date() creates a Date object containing the current date and time from the device running the code. console.log then displays that value.",
       note: "// Create the current date and time, then print it",
@@ -149,7 +158,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Thu Aug 06 2026 19:05:00 GMT+0100 (British Summer Time)"],
     },
     {
-      eyebrow: "15 · Classes",
+      eyebrow: "16 · Classes",
       title: "Create and use a class",
       explanation: "A function is called with its name, such as correct(). A class is used in a similar way, but you put new before its name: new Car(\"Ford\", 2014). People sometimes call this ‘calling the class’, but its proper name is creating an object, or an instance, from the class. The values inside the parentheses are sent to the constructor.",
       note: "// Create the class first, then use new Car(...) to create an object",
@@ -640,6 +649,13 @@ const carArrayBreakdown: CodePart[] = [
   { code: "cars.includes(search)", name: "Search the array", meaning: "Checks whether the cars array contains an exact match for the saved search." },
 ];
 
+const randomWordBreakdown: CodePart[] = [
+  { code: "Object.keys(words)", name: "Get the keys", meaning: "Creates an array containing bonjour and hola, the two keys from words." },
+  { code: "Math.random() * 2", name: "Make a random position", meaning: "Creates a random number from 0 up to 2 because there are two keys." },
+  { code: "Math.floor(...)", name: "Remove the decimal", meaning: "Turns the random number into position 0 or position 1." },
+  { code: "[ ... ]", name: "Choose that key", meaning: "Uses the random position to select either bonjour or hola from the keys array." },
+];
+
 const regexBreakdowns: Partial<Record<Language, CodePart[]>> = {
   javascript: [
     { code: "/ ... /", name: "Pattern", meaning: "The forward slashes mark the beginning and end of a regular expression." },
@@ -855,7 +871,7 @@ export default function Home() {
   const visibleGhost = ghostSource.slice(0, ghostLength);
   const guideCode = alignedGuide(code, visibleGhost);
   const breakdownIndex = language === "javascript"
-    ? index >= 11 ? index : index >= 6 ? index - 1 : index
+    ? index >= 13 ? index - 1 : index >= 11 ? index : index >= 6 ? index - 1 : index
     : language === "csharp"
       ? index >= 15 ? index - 4 : index >= 10 ? index - 3 : index >= 7 ? index - 1 : index
       : index;
@@ -864,6 +880,7 @@ export default function Home() {
       : ((current?.title === "Mark a value as not ready yet") && nullBreakdowns[language])
       || ((current?.title === "Let names beginning with J enter") && regexBreakdowns[language])
       || ((current?.title === "Make and search a car array") && carArrayBreakdown)
+      || ((current?.title === "Choose a random word") && randomWordBreakdown)
       || ((current?.title === "Remove duplicate names") && setsBreakdowns[language])
       || breakdowns[language][breakdownIndex]
     : undefined;
