@@ -31,7 +31,7 @@ const lessons: Record<Language, Lesson[]> = {
     {
       eyebrow: "02 · While loops",
       title: "Repeat input until the answer is correct",
-      explanation: "while (true) repeats the input and output because true never changes. The if block checks the input. When the answer is correct, break immediately leaves the loop. A wrong answer reaches the bottom and the loop asks for input again. This is JavaScript code—not HTML—and an endless version can freeze a browser page.",
+      explanation: "while (true) { } repeats forever because true never changes. On its own, it never reaches an ending. If you put that endless loop inside an HTML page, the page can freeze. This version works because break leaves the loop as soon as the answer is correct.",
       note: "// Ask for input, show output, and break inside the if block",
       prompt: "Create the loop with input, output, and break inside if.",
       answer: 'while (true) {\n  let answer = prompt("What is 1 + 1?");\n  console.log(answer);\n\n  if (answer == "2") {\n    console.log("Correct!");\n    break;\n  }\n\n  console.log("Try again.");\n}',
@@ -498,11 +498,20 @@ const lessons: Record<Language, Lesson[]> = {
     {
       eyebrow: "15 · Browser-safe repetition",
       title: "Use a button instead of while (true)",
-      explanation: "while (true) is JavaScript, so it will not work when typed as HTML. Even inside a script element, a loop that never gets to break can freeze the page. In HTML, let a button call the function once per click. return ends the function after either the if or else result; the browser then stays responsive and waits for the next click.",
+      explanation: "while (true) is JavaScript, not HTML. Even inside a script element, an endless loop can freeze the page. A button is safer for an HTML page: each click runs checkAnswer once, then the page waits for another click.",
       note: "<!-- A click safely runs one answer check at a time -->",
       prompt: "Create the button and function that check one answer per click.",
-      answer: '<button onclick="checkAnswer()">Check answer</button>\n<p id="result"></p>\n\n<script>\n  function checkAnswer() {\n    let answer = prompt("What is 1 + 1?");\n\n    if (answer == "2") {\n      document.getElementById("result").textContent = "Correct!";\n      return;\n    } else {\n      document.getElementById("result").textContent = "Incorrect! The answer is 2.";\n      return;\n    }\n  }\n</script>',
-      output: ["Button clicked.", "What is 1 + 1?  →  2", "Correct!", "return ends this button click safely."],
+      answer: '<button onclick="checkAnswer()">Check answer</button>\n<p id="result"></p>\n\n<script>\n  function checkAnswer() {\n    let answer = prompt("What is 1 + 1?");\n\n    if (answer == "2") {\n      document.getElementById("result").textContent = "Correct!";\n    } else {\n      document.getElementById("result").textContent = "Incorrect! The answer is 2.";\n    }\n  }\n</script>',
+      output: ["Button clicked.", "What is 1 + 1?  →  2", "Correct!", "The page waits for another click."],
+    },
+    {
+      eyebrow: "16 · Return values",
+      title: "Send a value back with return",
+      explanation: "return sends a value back to the place where a function was called, and the function ends immediately. Here, getMessage() returns the text Hello. That returned text is then placed in the paragraph.",
+      note: "<!-- Return a value from a function and show it on the page -->",
+      prompt: "Create the function that returns Hello, then show its returned value.",
+      answer: '<p id="message"></p>\n\n<script>\n  function getMessage() {\n    return "Hello";\n  }\n\n  document.getElementById("message").textContent = getMessage();\n</script>',
+      output: ["Hello", "return sends Hello back to getMessage()."],
     },
   ],
   css: [
@@ -610,7 +619,8 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
     11: [{ code: "<video>", name: "Video element", meaning: "Creates a video player inside the webpage." }, { code: "controls", name: "Playback controls", meaning: "Shows the browser's play, pause, volume, and timeline controls." }],
     12: [{ code: "<audio>", name: "Audio element", meaning: "Creates an audio player without a video picture area." }],
     13: [{ code: 'id="p1"', name: "Unique ID", meaning: "Gives this element the unique name p1." }, { code: "#p1", name: "Matching CSS", meaning: "CSS uses a hash before the ID name to select this exact element." }],
-    14: [{ code: "onclick", name: "Wait for a click", meaning: "Runs checkAnswer once when the visitor presses the button." }, { code: "if / else", name: "Two results", meaning: "Chooses the correct or incorrect message." }, { code: "return", name: "End this function", meaning: "Stops this one button action; unlike break, it does not need a loop." }],
+    14: [{ code: "onclick", name: "Wait for a click", meaning: "Runs checkAnswer once when the visitor presses the button." }, { code: ".textContent", name: "Change the page text", meaning: "Places the result inside the selected paragraph." }],
+    15: [{ code: 'return "Hello"', name: "Send a value back", meaning: "Ends getMessage and sends Hello back to the code that called it." }, { code: "getMessage()", name: "Use the returned value", meaning: "Calls the function and receives the text that return sent back." }],
   },
   css: {
     0: [{ code: "body", name: "Selector", meaning: "Chooses the HTML body element to style." }, { code: "background-color", name: "Property", meaning: "Chooses the colour behind the element." }, { code: ":", name: "Property separator", meaning: "Separates the property name from its value." }, { code: "lightblue", name: "Value", meaning: "The background colour to apply." }, { code: ";", name: "Rule ending", meaning: "Ends this CSS declaration so another can follow." }],
