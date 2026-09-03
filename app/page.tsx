@@ -114,12 +114,12 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       eyebrow: "11 · Arrays",
-      title: "Make and search a car array",
-      explanation: "This is called an array. The square brackets [] create an empty array, which is a list that can hold several values. push adds the car typed into the first prompt. includes searches the array for the text typed into the second prompt. If it finds an exact match, console.log prints that car. JavaScript comments begin with // rather than #.",
-      note: "// Make an array, add one car, then search for it",
-      prompt: "Create the cars array, add a car, and search for that car.",
-      answer: 'const cars = [];\n\ncars.push(prompt("Add car:"));\n\nlet search = prompt("Search:");\n\nif (cars.includes(search)) console.log(search);',
-      output: ["Add car:  →  Ford", "Search:  →  Ford", "Ford"],
+      title: "Make and search a names array",
+      explanation: "This is called an array. The square brackets [] create an empty array, which is a list that can hold several values. push adds a name to the array, and includes checks whether the searched name is in it.",
+      note: "// Make an array, add one name, then search for it",
+      prompt: "Create the names array, add a name, and search for that name.",
+      answer: 'const names = [];\n\nnames.push(prompt("Add a name:"));\n\nlet search = prompt("Search for a name:");\n\nif (names.includes(search)) {\n  console.log(search);\n}',
+      output: ["Add a name:  →  Jaden", "Search for a name:  →  Jaden", "Jaden"],
     },
     {
       eyebrow: "12 · Sets",
@@ -642,10 +642,10 @@ const setsBreakdowns: Partial<Record<Language, CodePart[]>> = {
   ],
 };
 
-const carArrayBreakdown: CodePart[] = [
+const namesArrayBreakdown: CodePart[] = [
   { code: "[]", name: "Make the array", meaning: "The square brackets create an empty array. An array is JavaScript's name for a list." },
-  { code: "cars.push", name: "Add a car", meaning: "push adds the answer from the Add car prompt to the end of the cars array." },
-  { code: "cars.includes(search)", name: "Search the array", meaning: "Checks whether the cars array contains an exact match for the saved search." },
+  { code: "names.push", name: "Add a name", meaning: "push adds a name to the end of the names array." },
+  { code: "names.includes(search)", name: "Search the array", meaning: "includes checks whether the names array contains an exact match for the saved search." },
 ];
 
 const randomWordBreakdown: CodePart[] = [
@@ -889,7 +889,7 @@ export default function Home() {
       : ((current?.title === "Mark a value as not ready yet") && nullBreakdowns[language])
       || ((current?.title === "Create and use a class") && classBreakdowns[language])
       || ((current?.title === "Let names beginning with J enter") && regexBreakdowns[language])
-      || ((current?.title === "Make and search a car array") && carArrayBreakdown)
+      || ((current?.title === "Make and search a names array") && namesArrayBreakdown)
       || ((current?.title === "Choose a random word") && randomWordBreakdown)
       || ((current?.title === "Remove duplicate names") && setsBreakdowns[language])
       || breakdowns[language][breakdownIndex]
