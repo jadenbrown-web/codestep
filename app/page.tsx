@@ -20,7 +20,16 @@ type Lesson = {
 const lessons: Record<Language, Lesson[]> = {
   javascript: [
     {
-      eyebrow: "01 · Functions",
+      eyebrow: "01 · Console output",
+      title: "Print several lines at once",
+      explanation: "console.log displays text in the console. Inside the quotation marks, each \\n starts a new line, so one instruction can print four fruits on four separate lines.",
+      note: "// Use \\n to start a new line in the console",
+      prompt: "Print Apple, Banana, Orange, and Pear on separate lines.",
+      answer: 'console.log("Apple\\nBanana\\nOrange\\nPear");',
+      output: ["Apple", "Banana", "Orange", "Pear"],
+    },
+    {
+      eyebrow: "02 · Functions",
       title: "Make something happen",
       explanation: "A function is a named block of code. Curly braces { } group the instructions that belong to it. The code waits until you call the function.",
       note: "// Create a function named correct that prints correct",
@@ -29,7 +38,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["correct"],
     },
     {
-      eyebrow: "02 · While loops",
+      eyebrow: "03 · While loops",
       title: "Repeat input until the answer is correct",
       explanation: "while (true) { } repeats forever because true never changes. On its own, it never reaches an ending. If you put that endless loop inside an HTML page, the page can freeze. This version works because break leaves the loop as soon as the answer is correct.",
       note: "// Ask for input, show output, and break inside the if block",
@@ -38,7 +47,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["INPUT  →  2", "OUTPUT  →  2", "Correct!", "break leaves the loop."],
     },
     {
-      eyebrow: "03 · Variables",
+      eyebrow: "04 · Variables",
       title: "Remember a value",
       explanation: "let creates a variable—a labelled place to keep a value. prompt asks the user a question and saves their answer.",
       note: "// Ask for a name and greet the user",
@@ -47,7 +56,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What is your name?  →  Alex", "Hello Alex"],
     },
     {
-      eyebrow: "04 · Classes",
+      eyebrow: "05 · Classes",
       title: "Create and use a class",
       explanation: "A function is called with its name, such as correct(). A class is used in a similar way, but you put new before its name: new Car(\"Ford\", 2014). People sometimes call this ‘calling the class’, but its proper name is creating an object, or an instance, from the class. The class is defined before the code that creates objects from it.",
       note: "// Define the class first, then use new Car(...) to create objects",
@@ -56,7 +65,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ['Car { name: "Ford", year: 2014 }', 'Car { name: "Audi", year: 2019 }'],
     },
     {
-      eyebrow: "05 · Console",
+      eyebrow: "06 · Console",
       title: "Clear the screen",
       explanation: "The console is where your text program shows its output. console.clear() removes everything currently shown there.",
       note: "// Clear all previous console output",
@@ -65,7 +74,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Console cleared."],
     },
     {
-      eyebrow: "06 · If and else with words",
+      eyebrow: "07 · If and else with words",
       title: "Right answer or wrong answer",
       explanation: "if checks whether the word in answer is exactly green. When it is green, the program prints Right! The else block runs for every other word and prints Wrong!",
       note: "// Print Right for green, or Wrong for any other answer",
@@ -74,7 +83,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["What color is grass?  →  green", "Right!"],
     },
     {
-      eyebrow: "07 · Null values",
+      eyebrow: "08 · Null values",
       title: "Mark a value as not ready yet",
       explanation: "null deliberately means that a variable has no value yet. It is different from zero or an empty string, and the variable may receive a real value later. === null checks specifically for that missing value.",
       note: "// null means there is deliberately no result yet",
@@ -83,7 +92,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["No result yet"],
     },
     {
-      eyebrow: "08 · Combined conditions",
+      eyebrow: "09 · Combined conditions",
       title: "Check whether a value is in a range",
       explanation: "A range needs two comparisons. >= checks the lower limit, <= checks the upper limit, and && means both conditions must be true at the same time.",
       note: "// && means AND. Both conditions must be true.",
@@ -93,7 +102,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Your age is between 0 and 18."],
     },
     {
-      eyebrow: "09 · Comparison reference",
+      eyebrow: "10 · Comparison reference",
       title: "Compare two values",
       explanation: "Comparison operators ask a question about two values and produce true or false. Keep this page as a quick reference: the code stays nearly identical while the symbol changes the question being asked.",
       note: "// Compare values using equality, inequality, and size operators",
@@ -104,7 +113,7 @@ const lessons: Record<Language, Lesson[]> = {
       referenceKind: "comparisons",
     },
     {
-      eyebrow: "10 · Regular expressions",
+      eyebrow: "11 · Regular expressions",
       title: "Let names beginning with J enter",
       explanation: "A regular expression checks text against a pattern. /^J/i means: the slashes hold the pattern, ^ anchors the check to the beginning, J is the required first letter, and i ignores uppercase or lowercase. It accepts any word beginning with J—not only names—and rejects J when it appears later in the text.",
       note: "// Let people into the club when their name begins with J",
@@ -113,7 +122,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Jaden can enter the club.", "James can enter the club.", "Jessica can enter the club.", "Sarah cannot enter the club.", "Ben cannot enter the club."],
     },
     {
-      eyebrow: "11 · Arrays",
+      eyebrow: "12 · Arrays",
       title: "Make and search a names array",
       explanation: "This is called an array. The square brackets [] create an empty array, which is a list that can hold several values. push adds a name to the array, and includes checks whether the searched name is in it.",
       note: "// Make an array, add one name, then search for it",
@@ -122,7 +131,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Add a name:  →  Jaden", "Search for a name:  →  Jaden", "Jaden"],
     },
     {
-      eyebrow: "12 · Sets",
+      eyebrow: "13 · Sets",
       title: "Remove duplicate names",
       explanation: "A Set stores only unique values. Passing names into new Set(names) removes repeated names, and [...uniqueNames] spreads the remaining values back into an array for printing.",
       note: "// Ask for three names, then remove any duplicates",
@@ -131,7 +140,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Enter the first name:  →  Alex", "Enter the second name:  →  Sam", "Enter the third name:  →  Alex", '["Alex", "Sam"]'],
     },
     {
-      eyebrow: "13 · Objects",
+      eyebrow: "14 · Objects",
       title: "Search a word object",
       explanation: "This is called an object. The curly braces { } hold named values. bonjour and hola are keys, and each key stores the value hello. The prompt saves a word in search. words[search] uses square brackets to look up the matching key, then console.log prints its value.",
       note: "// Make a word object, search for a key, then print its value",
@@ -140,7 +149,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["Search:  →  bonjour", "hello"],
     },
     {
-      eyebrow: "14 · Random object key",
+      eyebrow: "15 · Random object key",
       title: "Choose a random word",
       explanation: "Object.keys(words) makes an array containing the object's keys: bonjour and hola. Math.random() creates a random decimal from 0 up to, but not including, 1. Multiplying by 2 gives a number from 0 up to 2, and Math.floor removes the decimal to produce position 0 or 1. The square brackets then select the key at that position.",
       note: "// Choose either bonjour or hola at random",
@@ -149,7 +158,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["bonjour"],
     },
     {
-      eyebrow: "15 · Application practice",
+      eyebrow: "16 · Application practice",
       title: "Build a random word quiz",
       explanation: "This mini application combines the pieces already learned. It chooses a random key, displays that word as the prompt, looks up the matching value in words, and prints Correct or Wrong after checking the answer.",
       note: "// random chooses a word, prompt displays that word, answer stores what the user types, and words[random] uses the randomly chosen word to find its correct answer in the dictionary. The if statement compares the user's answer with that correct answer.",
@@ -158,7 +167,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["bonjour  →  hello", "Correct"],
     },
     {
-      eyebrow: "16 · Timers",
+      eyebrow: "17 · Timers",
       title: "Run code later",
       explanation: "setTimeout schedules a function to run after a delay. The delay is measured in milliseconds, so 1000 means one second.",
       note: "// Print One, Two, and Three one second apart",
@@ -167,7 +176,7 @@ const lessons: Record<Language, Lesson[]> = {
       output: ["One", "Two", "Three"],
     },
     {
-      eyebrow: "17 · Date and time",
+      eyebrow: "18 · Date and time",
       title: "Get the current moment",
       explanation: "new Date() creates a Date object containing the current date and time from the device running the code. console.log then displays that value.",
       note: "// Create the current date and time, then print it",
@@ -589,14 +598,15 @@ type CodePart = { code: string; name: string; meaning: string };
 
 const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
   javascript: {
-    0: [{ code: "function", name: "Create", meaning: "Starts a reusable block of code." }, { code: "correct()", name: "Name", meaning: "Names the function so you can call it later." }, { code: "{ ... }", name: "Instructions", meaning: "Holds the code the function will run." }, { code: "correct();", name: "Call it", meaning: "Runs the function you created." }, { code: ";", name: "End instruction", meaning: "Marks where an instruction ends. JavaScript can sometimes work without it, but using it consistently makes the ending clear." }],
-    1: [{ code: "while (true)", name: "Repeat", meaning: "Keeps asking for input until code inside stops the loop." }, { code: "prompt", name: "Input", meaning: "Asks the user for an answer." }, { code: "break", name: "Stop", meaning: "Leaves the loop when the if condition is true." }],
-    2: [{ code: "let", name: "Create", meaning: "Makes a variable that can remember something." }, { code: "name", name: "Label", meaning: "Shows that you choose a useful name for the saved value." }, { code: "=", name: "Save", meaning: "Puts the value on the right into the variable on the left." }],
-    5: [{ code: "if ( ... )", name: "Check", meaning: "Runs a block only when its condition is true." }, { code: 'answer === "green"', name: "Condition", meaning: "Checks whether the saved answer is exactly green." }, { code: "else", name: "Otherwise", meaning: "Runs when the condition is false." }],
-    7: [{ code: ">= 0", name: "Lower limit", meaning: "Checks that age is zero or greater." }, { code: "&&", name: "Two ampersands", meaning: "Read this as AND: the condition on each side must be true." }, { code: "<= 18", name: "Upper limit", meaning: "Checks that age is eighteen or less." }],
-    12: [{ code: "{ ... }", name: "Object brackets", meaning: "Curly braces hold the object's named values." }, { code: "bonjour: \"hello\"", name: "Key and value", meaning: "bonjour is the key to search for, and hello is the value stored under it." }, { code: "words[search]", name: "Look it up", meaning: "Uses the saved search as a key and retrieves its value from words." }],
-    15: [{ code: "setTimeout", name: "Schedule", meaning: "Asks JavaScript to run some code later." }, { code: "() => ...", name: "Code to run", meaning: "A short function waiting inside the timer." }, { code: "1000", name: "Delay", meaning: "One thousand milliseconds means one second." }],
-    16: [{ code: "new Date()", name: "Current moment", meaning: "Creates a Date using the device's current date and time." }],
+    0: [{ code: "\\n", name: "New line", meaning: "Moves the next word onto a new line in the console." }],
+    1: [{ code: "function", name: "Create", meaning: "Starts a reusable block of code." }, { code: "correct()", name: "Name", meaning: "Names the function so you can call it later." }, { code: "{ ... }", name: "Instructions", meaning: "Holds the code the function will run." }, { code: "correct();", name: "Call it", meaning: "Runs the function you created." }, { code: ";", name: "End instruction", meaning: "Marks where an instruction ends. JavaScript can sometimes work without it, but using it consistently makes the ending clear." }],
+    2: [{ code: "while (true)", name: "Repeat", meaning: "Keeps asking for input until code inside stops the loop." }, { code: "prompt", name: "Input", meaning: "Asks the user for an answer." }, { code: "break", name: "Stop", meaning: "Leaves the loop when the if condition is true." }],
+    3: [{ code: "let", name: "Create", meaning: "Makes a variable that can remember something." }, { code: "name", name: "Label", meaning: "Shows that you choose a useful name for the saved value." }, { code: "=", name: "Save", meaning: "Puts the value on the right into the variable on the left." }],
+    6: [{ code: "if ( ... )", name: "Check", meaning: "Runs a block only when its condition is true." }, { code: 'answer === "green"', name: "Condition", meaning: "Checks whether the saved answer is exactly green." }, { code: "else", name: "Otherwise", meaning: "Runs when the condition is false." }],
+    8: [{ code: ">= 0", name: "Lower limit", meaning: "Checks that age is zero or greater." }, { code: "&&", name: "Two ampersands", meaning: "Read this as AND: the condition on each side must be true." }, { code: "<= 18", name: "Upper limit", meaning: "Checks that age is eighteen or less." }],
+    13: [{ code: "{ ... }", name: "Object brackets", meaning: "Curly braces hold the object's named values." }, { code: "bonjour: \"hello\"", name: "Key and value", meaning: "bonjour is the key to search for, and hello is the value stored under it." }, { code: "words[search]", name: "Look it up", meaning: "Uses the saved search as a key and retrieves its value from words." }],
+    16: [{ code: "setTimeout", name: "Schedule", meaning: "Asks JavaScript to run some code later." }, { code: "() => ...", name: "Code to run", meaning: "A short function waiting inside the timer." }, { code: "1000", name: "Delay", meaning: "One thousand milliseconds means one second." }],
+    17: [{ code: "new Date()", name: "Current moment", meaning: "Creates a Date using the device's current date and time." }],
   },
   csharp: {
     0: [{ code: "void", name: "Result type", meaning: "Says this method does not send a value back." }, { code: "Correct()", name: "Name", meaning: "Names the method so you can call it later." }, { code: "{ ... }", name: "Instructions", meaning: "Holds the code the method will run." }, { code: "Correct();", name: "Call it", meaning: "Runs the method you created." }, { code: ";", name: "End statement", meaning: "Marks where a statement ends. C# requires it after statements such as calling a method or printing text." }],
