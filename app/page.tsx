@@ -220,7 +220,7 @@ const lessons: Record<Language, Lesson[]> = {
       note: "// Ask for a name and greet the user",
       prompt: "Create a name variable, then print Hello with an interpolated string.",
       answer: 'Console.WriteLine("What is your name?");\nstring name = Console.ReadLine();\nConsole.WriteLine($"Hello {name}");',
-      output: ["What is your name?  →  Ada", "Hello Ada"],
+      output: ["What is your name?  →  Alex", "Hello Alex"],
     },
     {
       eyebrow: "06 · Classes",
