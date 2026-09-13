@@ -2,12 +2,15 @@
 
 import { useEffect, useRef, useState, type PointerEvent, type ReactNode, type DragEvent, type KeyboardEvent } from "react";
 import { createPortal } from "react-dom";
+import { availableCodeBlocks, splitCodeBlocks } from "./code-blocks";
 
 type Drag = { text: string; from?: number; startX: number; startY: number; x: number; y: number; moved: boolean };
 
 export default function CodeBlocks({ code, answer, onChange, renderCode }: { code: string; answer: string; onChange: (code: string) => void; renderCode: (code: string) => ReactNode }) {
-  const lines = code ? code.split("\n") : [];
-  const choices = [...new Set(answer.split("\n").filter(line => line.trim()))].sort((a, b) => a.trim().localeCompare(b.trim()));
+  const lines = splitCodeBlocks(code);
+  const choices = availableCodeBlocks(answer, code);
+  const latestCode = useRef(code);
+  latestCode.current = code;
   const program = useRef<HTMLDivElement>(null);
   const drag = useRef<Drag | null>(null);
   const frame = useRef<number | null>(null);
@@ -19,10 +22,12 @@ export default function CodeBlocks({ code, answer, onChange, renderCode }: { cod
   useEffect(() => () => { if (frame.current !== null) cancelAnimationFrame(frame.current); }, []);
 
   function insert(text: string, at = lines.length, from?: number) {
-    const next = [...lines];
+    if (from === undefined && !availableCodeBlocks(answer, latestCode.current).some(block => block.text === text)) return;
+    const next = splitCodeBlocks(latestCode.current);
     if (from !== undefined) { next.splice(from, 1); if (from < at) at--; }
     next.splice(at, 0, text);
-    onChange(next.join("\n"));
+    latestCode.current = next.join("\n");
+    onChange(latestCode.current);
     setMessage(from === undefined ? "Block added." : "Block moved.");
   }
 
@@ -95,15 +100,16 @@ export default function CodeBlocks({ code, answer, onChange, renderCode }: { cod
         <div className="block-row-actions">
           <button aria-label={`Move line ${i + 1} up`} disabled={i === 0} onClick={() => insert(line, i - 1, i)}>↑</button>
           <button aria-label={`Move line ${i + 1} down`} disabled={i === lines.length - 1} onClick={() => insert(line, i + 2, i)}>↓</button>
-          <button aria-label={`Remove line ${i + 1}`} onClick={() => { onChange(lines.filter((_, n) => n !== i).join("\n")); setMessage("Block removed."); }}>×</button>
+          <button aria-label={`Remove line ${i + 1}`} onClick={() => { latestCode.current = lines.filter((_, n) => n !== i).join("\n"); onChange(latestCode.current); setMessage("Block returned to the tray."); }}>×</button>
         </div>
       </div>)}
       <div className={`block-drop-end ${target === lines.length ? "drop-active" : ""}`}>{preview ? "Drop your block here" : lines.length ? "Drag a block here to add it at the end" : "Drag your first block here"}</div>
     </div>
     <div className="block-bank" role="group" aria-label="Available code blocks">
       <b>Lesson blocks</b>
-      <div className="block-choices">{choices.map(text => <button key={text} className={`code-block-choice ${preview?.text === text && preview.from === undefined ? "block-source" : ""}`} onPointerDown={event => start(event, text)} {...pointerHandlers} onClick={() => { if (suppressClick.current) { suppressClick.current = false; return; } insert(text); }}><span className="block-grip" aria-hidden="true">⠿</span><code>{renderCode(text.trim())}</code></button>)}</div>
-      <small>Blocks can be used more than once. Brackets and punctuation are included.</small>
+      <div className="block-choices">{choices.map(({ text, id }) => <button key={id} className={`code-block-choice ${preview?.text === text && preview.from === undefined ? "block-source" : ""}`} onPointerDown={event => start(event, text)} {...pointerHandlers} onClick={() => { if (suppressClick.current) { suppressClick.current = false; return; } insert(text); }}><span className="block-grip" aria-hidden="true">⠿</span><code>{renderCode(text.trim())}</code></button>)}</div>
+      {!choices.length && <p className="block-instructions">All lesson blocks are in your code.</p>}
+      <small>Each block can be placed once. Remove it from your code to return it here. Parentheses stay attached to their code.</small>
     </div>
     {preview && createPortal(<div className="block-drag-preview" aria-hidden="true" style={{ left: Math.max(8, Math.min(preview.x - 60, window.innerWidth - Math.min(330, window.innerWidth - 24) - 8)), top: Math.max(8, preview.y - 68), width: Math.min(330, window.innerWidth - 24) }}><span className="block-grip">⠿</span><code>{renderCode(preview.text)}</code></div>, document.body)}
     <span className="block-announcement" role="status" aria-live="polite">{message}</span>
