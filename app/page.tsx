@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 
+import CodeBlocks from "./CodeBlocks";
+
 type Language = "javascript" | "csharp" | "html" | "css";
 type ThemeMode = "light" | "dark" | "system";
 type Lesson = {
@@ -877,7 +879,7 @@ function LearningCode({ code, starter, language, caretIndex }: { code: string; s
   </>;
 }
 
-function SettingsPanel({ open, themeMode, showGuide, colourTyping, onThemeChange, onGuideChange, onColourTypingChange, onClose }: { open: boolean; themeMode: ThemeMode; showGuide: boolean; colourTyping: boolean; onThemeChange: (mode: ThemeMode) => void; onGuideChange: (show: boolean) => void; onColourTypingChange: (show: boolean) => void; onClose: () => void }) {
+function SettingsPanel({ open, themeMode, showGuide, colourTyping, blockMode, onBlockModeChange, onThemeChange, onGuideChange, onColourTypingChange, onClose }: { open: boolean; themeMode: ThemeMode; showGuide: boolean; colourTyping: boolean; blockMode: boolean; onBlockModeChange: (enabled: boolean) => void; onThemeChange: (mode: ThemeMode) => void; onGuideChange: (show: boolean) => void; onColourTypingChange: (show: boolean) => void; onClose: () => void }) {
   if (!open) return null;
   return <div className="settings-backdrop" role="presentation" onMouseDown={onClose}>
     <section className="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settings-title" onMouseDown={(event) => event.stopPropagation()}>
@@ -885,6 +887,7 @@ function SettingsPanel({ open, themeMode, showGuide, colourTyping, onThemeChange
       <div className="settings-group"><b>Appearance</b><span>Choose a theme or follow your device setting.</span><div className="theme-options">
         {(["light", "dark", "system"] as ThemeMode[]).map((mode) => <button key={mode} className={themeMode === mode ? "selected" : ""} onClick={() => onThemeChange(mode)}><i>{mode === "light" ? "☀" : mode === "dark" ? "☾" : "◐"}</i><span>{mode[0].toUpperCase() + mode.slice(1)}</span><small>{mode === "system" ? "Use device setting" : `${mode} appearance`}</small></button>)}
       </div></div>
+      <div className="settings-group guide-setting"><div><b>Code blocks</b><span>Tap or drag ready-made lines into your code. Turn off to type instead. Your choice is saved on this device.</span></div><button aria-label="Code blocks" className={`switch ${blockMode ? "on" : ""}`} role="switch" aria-checked={blockMode} onClick={() => onBlockModeChange(!blockMode)}><i /></button></div>
       <div className="settings-group guide-setting"><div><b>Code guide</b><span>Show a faint, colour-coded copy of the expected answer in the editor.</span></div><button className={`switch ${showGuide ? "on" : ""}`} role="switch" aria-checked={showGuide} onClick={() => onGuideChange(!showGuide)}><i /></button></div>
       <div className="settings-group guide-setting"><div><b>Colour typed code</b><span>Give your typed code the same syntax colours as the ghost guide.</span></div><button className={`switch ${colourTyping ? "on" : ""}`} role="switch" aria-checked={colourTyping} onClick={() => onColourTypingChange(!colourTyping)}><i /></button></div>
       <p className="settings-foot">The guide shows only the code you need to type. Lesson comments stay in the explanation panel.</p>
@@ -907,6 +910,34 @@ export default function Home() {
   const [themeMode, setThemeMode] = useState<ThemeMode>("system");
   const [showGuide, setShowGuide] = useState(true);
   const [colourTyping, setColourTyping] = useState(true);
+  const [blockMode, setBlockMode] = useState(false);
+
+  useEffect(() => {
+    const mobile = window.matchMedia("(max-width: 850px), (pointer: coarse)");
+    let saved: string | null = null;
+    try { saved = localStorage.getItem("codestep-code-blocks"); } catch {}
+    if (saved === "true" || saved === "false") setBlockMode(saved === "true");
+    else setBlockMode(mobile.matches);
+    if (mobile.matches) setNavOpen(false);
+    const update = () => {
+      try { saved = localStorage.getItem("codestep-code-blocks"); } catch {}
+      if (saved !== "true" && saved !== "false") setBlockMode(mobile.matches);
+    };
+    mobile.addEventListener("change", update);
+    return () => mobile.removeEventListener("change", update);
+  }, []);
+
+  function changeBlockMode(enabled: boolean) {
+    setBlockMode(enabled);
+    try { localStorage.setItem("codestep-code-blocks", String(enabled)); } catch {}
+  }
+
+  function changeBlockCode(next: string) {
+    setCode(next);
+    setCaretIndex(next.length);
+    setStatus("idle");
+  }
+
   const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0, html: 0, css: 0 });
 
   const current = language ? lessons[language][index] : null;
@@ -1116,7 +1147,7 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <SettingsPanel open={settingsOpen} themeMode={themeMode} showGuide={showGuide} colourTyping={colourTyping} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onColourTypingChange={setColourTyping} onClose={() => setSettingsOpen(false)} />
+      <SettingsPanel open={settingsOpen} themeMode={themeMode} showGuide={showGuide} colourTyping={colourTyping} blockMode={blockMode} onBlockModeChange={changeBlockMode} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onColourTypingChange={setColourTyping} onClose={() => setSettingsOpen(false)} />
       </>
     );
   }
@@ -1188,10 +1219,10 @@ export default function Home() {
             <div><code>&lt;a href=&quot;...&quot;&gt;</code><p><b>Link</b><span>Creates clickable text and stores its destination in href.</span></p></div>
           </div> : <>
             <div className="comment-card"><div className="comment-label">READ THE COMMENT</div><code>{current!.note}</code></div>
-            <div className="tip">Type over the guide in the editor, then press Enter to check it. Spaces and indentation are accepted.</div>
+            <div className="tip">{blockMode ? "Tap or drag lesson blocks into your code, then choose Check code." : "Type over the guide in the editor, then press Enter to check it. Spaces and indentation are accepted."}</div>
           </>}
         </aside>
-        <section className="workspace">
+        <section className={`workspace ${blockMode ? "blocks-workspace" : ""}`}>
           {current!.referenceOnly ? current!.referenceKind === "comparisons" ? <div className="comparison-reference-preview">
             <div className="preview-bar"><span>◆</span> {language === "javascript" ? "JAVASCRIPT" : "C SHARP"} COMPARISON REFERENCE</div>
             <div className="comparison-start"><code>{language === "javascript" ? "let x = 5;" : "int x = 5;"}</code><span>Each row below asks a different question about the same value.</span></div>
@@ -1265,8 +1296,8 @@ export default function Home() {
             <button className="reference-next" onClick={nextLesson}>Continue to the next lesson →</button>
           </div> : <>
           <div className="editor-panel">
-            <div className="panel-bar"><div className="file-tab"><span>◆</span> {challengeFile(language)}</div><div className="panel-actions"><span>UTF-8</span><button onClick={() => { setCode(""); setCaretIndex(0); }} title="Reset code">↻ Reset</button></div></div>
-            <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className="code-guide" aria-hidden="true"><span>CODE GUIDE</span><code><HighlightedCode code={guideCode} language={language} /></code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : "// Type your code here..."} /></div>
+            <div className="panel-bar"><div className="file-tab"><span>◆</span> {challengeFile(language)}</div><div className="panel-actions"><button className="editor-mode-button" onClick={() => changeBlockMode(!blockMode)}>{blockMode ? "Use keyboard" : "Use blocks"}</button><button onClick={() => changeBlockCode(current!.starter || "")} title="Reset code">↻ Reset</button></div></div>
+            {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={ghostSource} onChange={changeBlockCode} /> : <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className="code-guide" aria-hidden="true"><span>CODE GUIDE</span><code><HighlightedCode code={guideCode} language={language} /></code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : "// Type your code here..."} /></div>}
           </div>
           <div className="console-panel">
             <div className="console-bar"><span><i /> CONSOLE</span><button onClick={() => setStatus("idle")}>Clear</button></div>
@@ -1277,14 +1308,14 @@ export default function Home() {
             </div>
           </div>
           <div className={`feedback ${status}`}>
-            <div>{status === "correct" ? <><span className="feedback-icon">✓</span><p><b>That’s correct!</b><small>Press Enter again or choose the next lesson.</small></p></> : status === "wrong" ? <><span className="feedback-icon">!</span><p><b>Keep going</b><small>You’re close. Compare each symbol with the explanation.</small></p></> : <p><b>Ready to run?</b><small>When your code matches the example, press Enter.</small></p>}</div>
+            <div>{status === "correct" ? <><span className="feedback-icon">✓</span><p><b>That’s correct!</b><small>{blockMode ? "Choose the next lesson when you’re ready." : "Press Enter again or choose the next lesson."}</small></p></> : status === "wrong" ? <><span className="feedback-icon">!</span><p><b>Keep going</b><small>You’re close. Compare each symbol with the explanation.</small></p></> : <p><b>Ready to run?</b><small>{blockMode ? "Arrange your blocks, then choose Check code." : "When your code matches the example, press Enter."}</small></p>}</div>
             {status === "correct" ? <button onClick={nextLesson}>{index === lessons[language].length - 1 ? "Finish path" : "Next lesson"} →</button> : <button onClick={checkCode} disabled={!code.trim()}>▶ Check code</button>}
           </div>
           </>}
         </section>
       </div>
     </main>
-    <SettingsPanel open={settingsOpen} themeMode={themeMode} showGuide={showGuide} colourTyping={colourTyping} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onColourTypingChange={setColourTyping} onClose={() => setSettingsOpen(false)} />
+    <SettingsPanel open={settingsOpen} themeMode={themeMode} showGuide={showGuide} colourTyping={colourTyping} blockMode={blockMode} onBlockModeChange={changeBlockMode} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onColourTypingChange={setColourTyping} onClose={() => setSettingsOpen(false)} />
     </>
   );
 }
