@@ -116,3 +116,18 @@ html[data-theme="dark"] .drawer-lessons button[class*="tone-"] .lesson-state,htm
 .block-choices{padding:6px 18px 10px 6px}.block-program{scrollbar-gutter:stable}.block-builder .block-drop-end{min-height:66px}
 @media(max-width:850px){.block-choices{max-height:none}.block-bank{padding-right:8px}.block-builder .code-block-choice{min-height:52px}.block-builder .placed-block{min-height:52px}}
 @media(prefers-reduced-motion:reduce){.block-builder .code-block-choice,.block-builder .placed-block{transition:none}}
+/* Keep phone block rows compact without shrinking touch targets. */
+.block-row-actions .block-options-toggle{display:none}.block-action-buttons{display:flex}
+@media(max-width:850px){
+  .lesson-layout{align-content:start;grid-auto-rows:max-content}
+  .block-builder .block-row{display:grid;grid-template-columns:18px minmax(0,1fr) 44px;align-items:center;gap:5px;padding:3px 0}
+  .block-row .block-number{width:18px}.block-row .placed-block{width:100%;padding:8px;gap:6px}
+  .block-row .block-row-actions{position:relative;width:44px;margin:0;align-self:start}
+  .block-row-actions .block-options-toggle{display:block;font-size:24px}
+  .block-row-actions .block-action-buttons{display:none;position:absolute;z-index:5;right:0;top:44px;padding:4px;border:1px solid #6f917e;border-radius:7px;background:#21392b;box-shadow:0 5px 16px #0007}
+  .block-row-actions.actions-open .block-action-buttons{display:flex}
+  .block-builder .block-drop-end{min-height:44px;padding:9px 6px;font-size:12px}
+  .block-program{padding:4px;max-height:min(340px,44dvh)}
+  .block-bank{margin-top:10px;padding-right:0}.block-choices{margin:6px 0;padding:4px 8px 6px 4px;gap:6px}
+  .block-instructions{margin-bottom:8px}.block-builder{padding:10px}
+}

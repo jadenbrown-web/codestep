@@ -18,10 +18,12 @@ export default function CodeBlocks({ code, answer, onChange, renderCode }: { cod
   const [preview, setPreview] = useState<Drag | null>(null);
   const [target, setTarget] = useState<number | null>(null);
   const [message, setMessage] = useState("");
+  const [openActions, setOpenActions] = useState<number | null>(null);
 
   useEffect(() => () => { if (frame.current !== null) cancelAnimationFrame(frame.current); }, []);
 
   function insert(text: string, at = lines.length, from?: number) {
+    setOpenActions(null);
     if (from === undefined && !availableCodeBlocks(answer, latestCode.current).some(block => block.text === text)) return;
     const next = splitCodeBlocks(latestCode.current);
     if (from !== undefined) { next.splice(from, 1); if (from < at) at--; }
@@ -55,6 +57,7 @@ export default function CodeBlocks({ code, answer, onChange, renderCode }: { cod
 
   function start(event: PointerEvent<HTMLButtonElement>, text: string, from?: number) {
     if (event.button !== 0 || !event.isPrimary) return;
+    setOpenActions(null);
     suppressClick.current = false;
     drag.current = { text, from, startX: event.clientX, startY: event.clientY, x: event.clientX, y: event.clientY, moved: false };
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -97,10 +100,13 @@ export default function CodeBlocks({ code, answer, onChange, renderCode }: { cod
       {lines.map((line, i) => <div key={i} data-code-row={i} className={`block-row ${target === i ? "drop-active" : ""} ${preview?.from === i ? "block-source" : ""}`}>
         <span className="block-number">{i + 1}</span>
         <button className="placed-block" aria-label={`Drag line ${i + 1}: ${line || "Blank line"}`} onPointerDown={event => start(event, line, i)} {...pointerHandlers}><span className="block-grip" aria-hidden="true">⠿</span><code>{renderCode(line || "Blank line")}</code></button>
-        <div className="block-row-actions">
+        <div className={`block-row-actions ${openActions === i ? "actions-open" : ""}`} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setOpenActions(null); }} onKeyDown={event => { if (event.key === "Escape") { setOpenActions(null); event.currentTarget.querySelector<HTMLButtonElement>(".block-options-toggle")?.focus(); } }}>
+          <button className="block-options-toggle" aria-label={`Options for block ${i + 1}`} aria-expanded={openActions === i} onClick={() => setOpenActions(openActions === i ? null : i)}>⋯</button>
+          <div className="block-action-buttons">
           <button aria-label={`Move line ${i + 1} up`} disabled={i === 0} onClick={() => insert(line, i - 1, i)}>↑</button>
           <button aria-label={`Move line ${i + 1} down`} disabled={i === lines.length - 1} onClick={() => insert(line, i + 2, i)}>↓</button>
-          <button aria-label={`Remove line ${i + 1}`} onClick={() => { latestCode.current = lines.filter((_, n) => n !== i).join("\n"); onChange(latestCode.current); setMessage("Block returned to the tray."); }}>×</button>
+          <button aria-label={`Remove line ${i + 1}`} onClick={() => { setOpenActions(null); latestCode.current = lines.filter((_, n) => n !== i).join("\n"); onChange(latestCode.current); setMessage("Block returned to the tray."); }}>×</button>
+          </div>
         </div>
       </div>)}
       <div className={`block-drop-end ${target === lines.length ? "drop-active" : ""}`}>{preview ? "Drop your block here" : lines.length ? "Drag a block here to add it at the end" : "Drag your first block here"}</div>
