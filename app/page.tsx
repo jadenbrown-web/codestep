@@ -171,11 +171,11 @@ const lessons: Record<Language, Lesson[]> = {
     {
       eyebrow: "17 · Timers",
       title: "Run code later",
-      explanation: "setTimeout schedules a function to run after a delay. The delay is measured in milliseconds, so 1000 means one second.",
-      note: "// Print One, Two, and Three one second apart",
-      prompt: "Schedule each message with the correct delay.",
-      answer: 'setTimeout(() => console.log("One"), 1000);\nsetTimeout(() => console.log("Two"), 2000);\nsetTimeout(() => console.log("Three"), 3000);',
-      output: ["One", "Two", "Three"],
+      explanation: "setTimeout schedules a function to run after a delay. The delay is measured in milliseconds, so 1000 means one second. Put code inside the braces to run it later. This example leaves the function empty, so it produces no console output.",
+      note: "// 1000 milliseconds = 1 second",
+      prompt: "Schedule an empty function with a one-second delay.",
+      answer: 'setTimeout(() => {\n}, 1000);',
+      output: [],
     },
     {
       eyebrow: "18 · Date and time",
