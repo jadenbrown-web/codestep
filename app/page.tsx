@@ -126,11 +126,11 @@ const lessons: Record<Language, Lesson[]> = {
     {
       eyebrow: "12 · Arrays",
       title: "Make and search a names array",
-      explanation: "This is called an array. The square brackets [] create an empty array, which is a list that can hold several values. push adds a name to the array, and includes checks whether the searched name is in it.",
+      explanation: "The square brackets [] create an empty array: a list that can hold several values. prompt asks the user for a name, and push() adds that answer to names. A second prompt saves what to look for in search. includes() checks whether that value is in the array and returns true or false; it does not add anything. if/else prints name found or name not found. Matching is case-sensitive: Jaden and jaden are different.",
       note: "// Make an array, add one name, then search for it",
-      prompt: "Create the names array, add a name, and search for that name.",
-      answer: 'const names = [];\n\nnames.push(prompt("Add a name:"));\n\nlet search = prompt("Search for a name:");\n\nif (names.includes(search)) {\n  console.log(search);\n}',
-      output: ["Add a name:  →  Jaden", "Search for a name:  →  Jaden", "Jaden"],
+      prompt: "Create an empty array, add a name, ask what to search for, and use if/else to print whether it was found.",
+      answer: 'const names = [];\n\nnames.push(prompt("add a name"));\n\nconst search = prompt("search for a name");\n\nif (names.includes(search)) {\n  console.log("name found");\n} else {\n  console.log("name not found");\n}',
+      output: ["add a name  →  Jaden", "search for a name  →  Jaden", "name found"],
     },
     {
       eyebrow: "13 · Sets",
@@ -688,8 +688,10 @@ const setsBreakdowns: Partial<Record<Language, CodePart[]>> = {
 
 const namesArrayBreakdown: CodePart[] = [
   { code: "[]", name: "Make the array", meaning: "The square brackets create an empty array. An array is JavaScript's name for a list." },
-  { code: "names.push", name: "Add a name", meaning: "push adds a name to the end of the names array." },
-  { code: "names.includes(search)", name: "Search the array", meaning: "includes checks whether the names array contains an exact match for the saved search." },
+  { code: 'names.push(prompt("add a name"))', name: "Add a name", meaning: "prompt runs first and asks for a name. push() adds the entered name to the end of the names array." },
+  { code: 'const search = prompt("search for a name")', name: "Ask what to find", meaning: "Stores the second answer in search. This does not add another name to the array." },
+  { code: "names.includes(search)", name: "Search the array", meaning: "Returns true when names contains an exact match for search, or false when it does not. includes() checks the array without changing it." },
+  { code: "if / else", name: "Show the result", meaning: "if prints name found when includes() returns true. else prints name not found when it returns false. Add Jaden and search for Ben or jaden to get name not found." },
 ];
 
 const randomWordBreakdown: CodePart[] = [
