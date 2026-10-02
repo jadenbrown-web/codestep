@@ -382,24 +382,34 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "14 · If and else",
-      "title": "Choose between two messages",
-      "explanation": "if checks the condition in (). When speed is greater than 100, its {} block prints Too fast! Otherwise, the else block prints Speed is OK. Each block groups the instructions for that case.",
-      "note": "// Print Too fast! for speed above 100; otherwise print Speed is OK.",
-      "prompt": "Print Too fast! for speed above 100; otherwise print Speed is OK.",
-      "answer": "let speed = 120;\n\nif (speed > 100) {\n  console.log(\"Too fast!\");\n} else {\n  console.log(\"Speed is OK.\");\n}",
+      "title": "Choose between several messages",
+      "explanation": "if starts the decision. Add else if between the first if and the final else when you need another condition in the same decision. Conditions are checked from top to bottom and only the first matching block runs. At 120, both comparisons would be true, but only Too fast! prints. At 60, the else if block prints Speed is OK. At 0, else prints Stopped. You can add more else if blocks before the final else. Each condition uses parentheses and each body uses braces.",
+      "note": "// Print Too fast! above 100, Speed is OK. above 0, or Stopped. otherwise.",
+      "prompt": "Use three branches to choose the speed message.",
+      "answer": "let speed = 120;\n\nif (speed > 100) {\n  console.log(\"Too fast!\");\n} else if (speed > 0) {\n  console.log(\"Speed is OK.\");\n} else {\n  console.log(\"Stopped.\");\n}",
       "output": [
         "Too fast!"
       ],
       "parts": [
         {
-          "code": ">",
-          "name": "Greater than",
-          "meaning": "Checks whether the value on the left is bigger."
+          "code": "if",
+          "name": "First condition",
+          "meaning": "Checks speed > 100 first."
+        },
+        {
+          "code": "else if (speed > 0)",
+          "name": "Another condition",
+          "meaning": "Checks speed > 0 only when the first condition was false. Put additional branches here rather than starting a separate decision."
         },
         {
           "code": "else",
-          "name": "Otherwise",
-          "meaning": "Runs when the if condition is false."
+          "name": "Fallback",
+          "meaning": "Runs when none of the earlier conditions matched. It has no condition."
+        },
+        {
+          "code": ">",
+          "name": "Greater than",
+          "meaning": "Use the stricter speed > 100 check first. Putting speed > 0 first would catch 120 before the Too fast! branch."
         }
       ]
     },
@@ -586,6 +596,92 @@ const lessons: Record<Language, Lesson[]> = {
         "Ben cannot enter the club."
       ],
       "parts": []
+    },
+    {
+      "title": "Get a filename from a path",
+      "eyebrow": "Files and paths · Files and paths",
+      "explanation": "Build the first piece of a sheet-music finder. A path is a location: sheet-music is the folder and chopin-nocturne.png is the filename. Extracting the name only handles the path; it does not check whether the file exists or read its contents. The .png extension identifies the intended file format, not the words or notes in the picture.",
+      "note": "// Extract the filename without opening the image.",
+      "prompt": "Print the filename from the score path.",
+      "answer": "import { basename } from \"node:path\";\n\nconst file = \"sheet-music/chopin-nocturne.png\";\nconsole.log(basename(file));",
+      "output": [
+        "chopin-nocturne.png"
+      ],
+      "parts": [
+        {
+          "code": "import { basename } from \"node:path\"",
+          "name": "Import a path tool",
+          "meaning": "Uses the built-in Node.js library; no npm package is needed."
+        },
+        {
+          "code": "basename(file)",
+          "name": "Get the filename",
+          "meaning": "Returns the last part of the path, including .png."
+        }
+      ],
+      "runHint": "Use Node.js, not a browser console. Save as file-finder.mjs and run node file-finder.mjs.",
+      "outputNote": "Example preview. Extracting a filename does not access your computer or prove that the file exists."
+    },
+    {
+      "title": "List files in a folder",
+      "eyebrow": "Files and paths · Files and paths",
+      "explanation": "Now let the program discover files rather than typing every filename into a list. Scan the sheet-music folder, skip folders, and print each filename. This reads the folder listing, not the image contents. Only this folder is searched; files inside subfolders are not included. The folder must exist and be readable, or listing it can raise an error.",
+      "note": "// List each file in your sheet-music folder.",
+      "prompt": "Print filenames from the sheet-music folder, skipping folders.",
+      "answer": "import { readdirSync } from \"node:fs\";\n\nconst files = readdirSync(\"sheet-music\", { withFileTypes: true });\n\nfor (const file of files) {\n  if (file.isFile()) {\n    console.log(file.name);\n  }\n}",
+      "output": [
+        "chopin-nocturne.png",
+        "practice-notes.txt"
+      ],
+      "parts": [
+        {
+          "code": "readdirSync",
+          "name": "List the folder",
+          "meaning": "Reads directory entries synchronously. Simple for this small terminal example; it blocks until finished."
+        },
+        {
+          "code": "withFileTypes: true",
+          "name": "Include entry types",
+          "meaning": "Returns entries with names and methods for checking whether they are files."
+        },
+        {
+          "code": "file.isFile()",
+          "name": "Keep files",
+          "meaning": "Skips folders; file.name gives the filename."
+        }
+      ],
+      "runHint": "Use Node.js, not a browser console. Save as file-finder.mjs and run node file-finder.mjs. Run from the folder containing sheet-music. Create sheet-music there and put a real image inside named chopin-nocturne.png. Add practice-notes.txt to try listing more than one file.",
+      "outputNote": "Example preview for a folder containing these two files. Order may vary. CodeStep checks your code and shows sample output; run it locally to list your own files."
+    },
+    {
+      "title": "Find a sheet-music file",
+      "eyebrow": "Files and paths · Files and paths",
+      "explanation": "Finish this small file-finding program by checking for the score at its expected location and showing a useful result. When you already know the folder and filename, checking that path is simpler than looping through the entire folder. This checks for a file; it does not open the image or recognise its printed title. Use the exact spelling and capitalisation so the example works across systems.",
+      "note": "// Check whether the score exists before using it.",
+      "prompt": "Print Found: and the filename, or File not found.",
+      "answer": "import { existsSync, statSync } from \"node:fs\";\nimport { basename } from \"node:path\";\n\nconst file = \"sheet-music/chopin-nocturne.png\";\n\nif (existsSync(file) && statSync(file).isFile()) {\n  console.log(\"Found: \" + basename(file));\n} else {\n  console.log(\"File not found\");\n}",
+      "output": [
+        "Found: chopin-nocturne.png"
+      ],
+      "parts": [
+        {
+          "code": "existsSync(file)",
+          "name": "Check existence",
+          "meaning": "Checks whether this path exists."
+        },
+        {
+          "code": "&&",
+          "name": "Check both conditions",
+          "meaning": "Only calls statSync when the first check is true, avoiding an error for an already missing file."
+        },
+        {
+          "code": "statSync(file).isFile()",
+          "name": "Check the type",
+          "meaning": "Checks that the entry is a regular file, not a folder. A file removed between checks can still cause an error."
+        }
+      ],
+      "runHint": "Use Node.js, not a browser console. Save as file-finder.mjs and run node file-finder.mjs. Run from the folder containing sheet-music. Create sheet-music there and put a real image inside named chopin-nocturne.png. Add practice-notes.txt to try listing more than one file.",
+      "outputNote": "Example preview with the score present. Remove or rename it locally to try the File not found branch. CodeStep does not inspect your device."
     },
     {
       "eyebrow": "23 · Application practice",
@@ -932,24 +1028,34 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "13 · If and else",
-      "title": "Choose between two messages",
-      "explanation": "if checks the condition in (). When speed is greater than 100, its {} block prints Too fast! Otherwise, the else block prints Speed is OK. Each block groups the instructions for that case.",
-      "note": "// Print Too fast! for speed above 100; otherwise print Speed is OK.",
-      "prompt": "Print Too fast! for speed above 100; otherwise print Speed is OK.",
-      "answer": "int speed = 120;\n\nif (speed > 100) {\n  Console.WriteLine(\"Too fast!\");\n} else {\n  Console.WriteLine(\"Speed is OK.\");\n}",
+      "title": "Choose between several messages",
+      "explanation": "if starts the decision. Add else if between the first if and the final else when you need another condition in the same decision. Conditions are checked from top to bottom and only the first matching block runs. At 120, both comparisons would be true, but only Too fast! prints. At 60, the else if block prints Speed is OK. At 0, else prints Stopped. You can add more else if blocks before the final else. Each condition uses parentheses and each body uses braces.",
+      "note": "// Print Too fast! above 100, Speed is OK. above 0, or Stopped. otherwise.",
+      "prompt": "Use three branches to choose the speed message.",
+      "answer": "int speed = 120;\n\nif (speed > 100) {\n  Console.WriteLine(\"Too fast!\");\n} else if (speed > 0) {\n  Console.WriteLine(\"Speed is OK.\");\n} else {\n  Console.WriteLine(\"Stopped.\");\n}",
       "output": [
         "Too fast!"
       ],
       "parts": [
         {
-          "code": ">",
-          "name": "Greater than",
-          "meaning": "Checks whether the value on the left is bigger."
+          "code": "if",
+          "name": "First condition",
+          "meaning": "Checks speed > 100 first."
+        },
+        {
+          "code": "else if (speed > 0)",
+          "name": "Another condition",
+          "meaning": "Checks speed > 0 only when the first condition was false. Put additional branches here rather than starting a separate decision."
         },
         {
           "code": "else",
-          "name": "Otherwise",
-          "meaning": "Runs when the if condition is false."
+          "name": "Fallback",
+          "meaning": "Runs when none of the earlier conditions matched. It has no condition."
+        },
+        {
+          "code": ">",
+          "name": "Greater than",
+          "meaning": "Use the stricter speed > 100 check first. Putting speed > 0 first would catch 120 before the Too fast! branch."
         }
       ],
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
@@ -1145,6 +1251,87 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "parts": [],
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+    },
+    {
+      "title": "Get a filename from a path",
+      "eyebrow": "Files and paths · Files and paths",
+      "explanation": "Build the first piece of a sheet-music finder. A path is a location: sheet-music is the folder and chopin-nocturne.png is the filename. Extracting the name only handles the path; it does not check whether the file exists or read its contents. The .png extension identifies the intended file format, not the words or notes in the picture.",
+      "note": "// Extract the filename without opening the image.",
+      "prompt": "Print the filename from the score path.",
+      "answer": "using System;\nusing System.IO;\n\nstring file = \"sheet-music/chopin-nocturne.png\";\nConsole.WriteLine(Path.GetFileName(file));",
+      "output": [
+        "chopin-nocturne.png"
+      ],
+      "parts": [
+        {
+          "code": "using System.IO;",
+          "name": "Use filesystem tools",
+          "meaning": "Makes Path, File and Directory available by their short names."
+        },
+        {
+          "code": "Path.GetFileName(file)",
+          "name": "Get the filename",
+          "meaning": "Extracts the final component of the path, including .png."
+        }
+      ],
+      "runHint": "Use a .NET console project. Put this top-level code in Program.cs and run dotnet run.",
+      "outputNote": "Example preview. Extracting a filename does not access your computer or prove that the file exists."
+    },
+    {
+      "title": "List files in a folder",
+      "eyebrow": "Files and paths · Files and paths",
+      "explanation": "Now let the program discover files rather than typing every filename into a list. Scan the sheet-music folder, skip folders, and print each filename. This reads the folder listing, not the image contents. Only this folder is searched; files inside subfolders are not included. The folder must exist and be readable, or listing it can raise an error.",
+      "note": "// List each file in your sheet-music folder.",
+      "prompt": "Print filenames from the sheet-music folder, skipping folders.",
+      "answer": "using System;\nusing System.IO;\n\nstring[] files = Directory.GetFiles(\"sheet-music\");\n\nforeach (string file in files) {\n  Console.WriteLine(Path.GetFileName(file));\n}",
+      "output": [
+        "chopin-nocturne.png",
+        "practice-notes.txt"
+      ],
+      "parts": [
+        {
+          "code": "Directory.GetFiles",
+          "name": "List the folder",
+          "meaning": "Returns paths to files directly inside the folder; it does not include subfolders."
+        },
+        {
+          "code": "string[]",
+          "name": "Store file paths",
+          "meaning": "An array of text values."
+        },
+        {
+          "code": "foreach",
+          "name": "Repeat",
+          "meaning": "Visits every returned path; GetFileName removes the folder part."
+        }
+      ],
+      "runHint": "Use a .NET console project. Put this top-level code in Program.cs and run dotnet run. Run from the folder containing sheet-music. Create sheet-music there and put a real image inside named chopin-nocturne.png. Add practice-notes.txt to try listing more than one file.",
+      "outputNote": "Example preview for a folder containing these two files. Order may vary. CodeStep checks your code and shows sample output; run it locally to list your own files."
+    },
+    {
+      "title": "Find a sheet-music file",
+      "eyebrow": "Files and paths · Files and paths",
+      "explanation": "Finish this small file-finding program by checking for the score at its expected location and showing a useful result. When you already know the folder and filename, checking that path is simpler than looping through the entire folder. This checks for a file; it does not open the image or recognise its printed title. Use the exact spelling and capitalisation so the example works across systems.",
+      "note": "// Check whether the score exists before using it.",
+      "prompt": "Print Found: and the filename, or File not found.",
+      "answer": "using System;\nusing System.IO;\n\nstring file = \"sheet-music/chopin-nocturne.png\";\n\nif (File.Exists(file)) {\n  Console.WriteLine(\"Found: \" + Path.GetFileName(file));\n} else {\n  Console.WriteLine(\"File not found\");\n}",
+      "output": [
+        "Found: chopin-nocturne.png"
+      ],
+      "parts": [
+        {
+          "code": "File.Exists(file)",
+          "name": "Look up the file",
+          "meaning": "Returns true for an existing file. False can also mean access is unavailable; it is not always proof the file is missing."
+        },
+        {
+          "code": "if / else",
+          "name": "Report the result",
+          "meaning": "Shows the filename if found, or File not found otherwise."
+        }
+      ],
+      "runHint": "Use a .NET console project. Put this top-level code in Program.cs and run dotnet run. Run from the folder containing sheet-music. Create sheet-music there and put a real image inside named chopin-nocturne.png. Add practice-notes.txt to try listing more than one file.",
+      "outputNote": "Example preview with the score present. Remove or rename it locally to try the File not found branch. CodeStep does not inspect your device."
     },
     {
       "eyebrow": "22 · Application practice",
@@ -1733,24 +1920,34 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "13 · If and else",
-      "title": "Choose between two messages",
-      "explanation": "if checks whether speed is greater than 100. Its indented body prints Too fast! when true. Otherwise, else runs its indented body. Python uses a colon and indentation instead of curly braces.",
-      "note": "# Print Too fast! for speed above 100; otherwise print Speed is OK.",
-      "prompt": "Print Too fast! for speed above 100; otherwise print Speed is OK.",
-      "answer": "speed = 120\n\nif speed > 100:\n    print(\"Too fast!\")\nelse:\n    print(\"Speed is OK.\")",
+      "title": "Choose between several messages",
+      "explanation": "if starts the decision. Add elif (short for else if) between if and else when you need another condition in the same decision. Python checks from top to bottom and runs only the first matching branch. At 120, both comparisons would be true, but only Too fast! prints. At 60, the elif branch prints Speed is OK. At 0, else prints Stopped. Keep if, elif and else aligned; indent their bodies and end each condition with a colon. You can add more elif branches before the final else.",
+      "note": "# Print Too fast! above 100, Speed is OK. above 0, or Stopped. otherwise.",
+      "prompt": "Use three branches to choose the speed message.",
+      "answer": "speed = 120\n\nif speed > 100:\n    print(\"Too fast!\")\nelif speed > 0:\n    print(\"Speed is OK.\")\nelse:\n    print(\"Stopped.\")",
       "output": [
         "Too fast!"
       ],
       "parts": [
         {
-          "code": "if / else",
-          "name": "Choose",
-          "meaning": "Runs one of the indented bodies."
+          "code": "if",
+          "name": "First condition",
+          "meaning": "Checks speed > 100 first."
+        },
+        {
+          "code": "elif speed > 0:",
+          "name": "Another condition",
+          "meaning": "Checks speed > 0 only when the first condition was false. Put additional branches here rather than starting a separate decision."
+        },
+        {
+          "code": "else",
+          "name": "Fallback",
+          "meaning": "Runs when none of the earlier conditions matched. It has no condition."
         },
         {
           "code": ">",
           "name": "Greater than",
-          "meaning": "Checks whether the left value is larger."
+          "meaning": "Use the stricter speed > 100 check first. Putting speed > 0 first would catch 120 before the Too fast! branch."
         }
       ],
       "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
@@ -1958,6 +2155,92 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "title": "Get a filename from a path",
+      "eyebrow": "Files and paths · Files and paths",
+      "explanation": "Build the first piece of a sheet-music finder. A path is a location: sheet-music is the folder and chopin-nocturne.png is the filename. Extracting the name only handles the path; it does not check whether the file exists or read its contents. The .png extension identifies the intended file format, not the words or notes in the picture.",
+      "note": "# Extract the filename without opening the image.",
+      "prompt": "Print the filename from the score path.",
+      "answer": "from pathlib import Path\n\nfile = Path(\"sheet-music/chopin-nocturne.png\")\nprint(file.name)",
+      "output": [
+        "chopin-nocturne.png"
+      ],
+      "parts": [
+        {
+          "code": "from pathlib import Path",
+          "name": "Import a path tool",
+          "meaning": "Path comes with Python; no package installation is needed."
+        },
+        {
+          "code": "Path(...)",
+          "name": "Describe a location",
+          "meaning": "Creates a path object, without opening the file."
+        },
+        {
+          "code": "file.name",
+          "name": "Get the filename",
+          "meaning": "Returns chopin-nocturne.png, including its extension."
+        }
+      ],
+      "runHint": "Save as file-finder.py and run python file-finder.py (or python3 file-finder.py).",
+      "outputNote": "Example preview. Extracting a filename does not access your computer or prove that the file exists."
+    },
+    {
+      "title": "List files in a folder",
+      "eyebrow": "Files and paths · Files and paths",
+      "explanation": "Now let the program discover files rather than typing every filename into a list. Scan the sheet-music folder, skip folders, and print each filename. This reads the folder listing, not the image contents. Only this folder is searched; files inside subfolders are not included. The folder must exist and be readable, or listing it can raise an error.",
+      "note": "# List each file in your sheet-music folder.",
+      "prompt": "Print filenames from the sheet-music folder, skipping folders.",
+      "answer": "from pathlib import Path\n\nfolder = Path(\"sheet-music\")\n\nfor file in folder.iterdir():\n    if file.is_file():\n        print(file.name)",
+      "output": [
+        "chopin-nocturne.png",
+        "practice-notes.txt"
+      ],
+      "parts": [
+        {
+          "code": "folder.iterdir()",
+          "name": "List the folder",
+          "meaning": "Visits entries directly inside sheet-music, without searching subfolders."
+        },
+        {
+          "code": "file.is_file()",
+          "name": "Keep files",
+          "meaning": "Skips folders."
+        },
+        {
+          "code": "for file in ...",
+          "name": "Repeat",
+          "meaning": "Checks each entry, rather than printing only the first."
+        }
+      ],
+      "runHint": "Save as file-finder.py and run python file-finder.py (or python3 file-finder.py). Run from the folder containing sheet-music. Create sheet-music there and put a real image inside named chopin-nocturne.png. Add practice-notes.txt to try listing more than one file.",
+      "outputNote": "Example preview for a folder containing these two files. Order may vary. CodeStep checks your code and shows sample output; run it locally to list your own files."
+    },
+    {
+      "title": "Find a sheet-music file",
+      "eyebrow": "Files and paths · Files and paths",
+      "explanation": "Finish this small file-finding program by checking for the score at its expected location and showing a useful result. When you already know the folder and filename, checking that path is simpler than looping through the entire folder. This checks for a file; it does not open the image or recognise its printed title. Use the exact spelling and capitalisation so the example works across systems.",
+      "note": "# Check whether the score exists before using it.",
+      "prompt": "Print Found: and the filename, or File not found.",
+      "answer": "from pathlib import Path\n\nfile = Path(\"sheet-music/chopin-nocturne.png\")\n\nif file.is_file():\n    print(\"Found: \" + file.name)\nelse:\n    print(\"File not found\")",
+      "output": [
+        "Found: chopin-nocturne.png"
+      ],
+      "parts": [
+        {
+          "code": "file.is_file()",
+          "name": "Look up the file",
+          "meaning": "Checks the actual filesystem; a missing file or a directory returns false."
+        },
+        {
+          "code": "if / else",
+          "name": "Report the result",
+          "meaning": "Prints the filename when found, or File not found otherwise."
+        }
+      ],
+      "runHint": "Save as file-finder.py and run python file-finder.py (or python3 file-finder.py). Run from the folder containing sheet-music. Create sheet-music there and put a real image inside named chopin-nocturne.png. Add practice-notes.txt to try listing more than one file.",
+      "outputNote": "Example preview with the score present. Remove or rename it locally to try the File not found branch. CodeStep does not inspect your device."
     },
     {
       "eyebrow": "22 · Application practice",
@@ -2293,24 +2576,34 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "13 · If and else",
-      "title": "Choose between two messages",
-      "explanation": "if checks the condition inside (). Its {} block prints Too fast! when speed is greater than 100. Otherwise, the else block prints Speed is OK.",
-      "note": "// Print Too fast! for speed above 100; otherwise print Speed is OK.",
-      "prompt": "Print Too fast! for speed above 100; otherwise print Speed is OK.",
-      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  int speed = 120;\n\n  if (speed > 100) {\n    std::cout << \"Too fast!\\n\";\n  } else {\n    std::cout << \"Speed is OK.\\n\";\n  }\n}",
+      "title": "Choose between several messages",
+      "explanation": "if starts the decision. Add else if between the first if and the final else when you need another condition in the same decision. Conditions are checked from top to bottom and only the first matching block runs. At 120, both comparisons would be true, but only Too fast! prints. At 60, the else if block prints Speed is OK. At 0, else prints Stopped. You can add more else if blocks before the final else. Each condition uses parentheses and each body uses braces.",
+      "note": "// Print Too fast! above 100, Speed is OK. above 0, or Stopped. otherwise.",
+      "prompt": "Use three branches to choose the speed message.",
+      "answer": "#include <iostream>\n\nint main() {\n  int speed = 120;\n\n  if (speed > 100) {\n    std::cout << \"Too fast!\\n\";\n  } else if (speed > 0) {\n    std::cout << \"Speed is OK.\\n\";\n  } else {\n    std::cout << \"Stopped.\\n\";\n  }\n}",
       "output": [
         "Too fast!"
       ],
       "parts": [
         {
-          "code": "if / else",
-          "name": "Choose",
-          "meaning": "Runs one of the two blocks."
+          "code": "if",
+          "name": "First condition",
+          "meaning": "Checks speed > 100 first."
+        },
+        {
+          "code": "else if (speed > 0)",
+          "name": "Another condition",
+          "meaning": "Checks speed > 0 only when the first condition was false. Put additional branches here rather than starting a separate decision."
+        },
+        {
+          "code": "else",
+          "name": "Fallback",
+          "meaning": "Runs when none of the earlier conditions matched. It has no condition."
         },
         {
           "code": ">",
           "name": "Greater than",
-          "meaning": "Checks whether the left value is larger."
+          "meaning": "Use the stricter speed > 100 check first. Putting speed > 0 first would catch 120 before the Too fast! branch."
         }
       ],
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
@@ -2520,6 +2813,92 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
+      "title": "Get a filename from a path",
+      "eyebrow": "Files and paths · Files and paths",
+      "explanation": "Build the first piece of a sheet-music finder. A path is a location: sheet-music is the folder and chopin-nocturne.png is the filename. Extracting the name only handles the path; it does not check whether the file exists or read its contents. The .png extension identifies the intended file format, not the words or notes in the picture.",
+      "note": "// Extract the filename without opening the image.",
+      "prompt": "Print the filename from the score path.",
+      "answer": "#include <iostream>\n#include <filesystem>\n\nint main() {\n  std::filesystem::path file = \"sheet-music/chopin-nocturne.png\";\n  std::cout << file.filename().string() << \"\\n\";\n}",
+      "output": [
+        "chopin-nocturne.png"
+      ],
+      "parts": [
+        {
+          "code": "#include <filesystem>",
+          "name": "Use filesystem tools",
+          "meaning": "Makes C++17 filesystem declarations available."
+        },
+        {
+          "code": "std::filesystem::path",
+          "name": "Describe a location",
+          "meaning": "Stores a filesystem path without opening the file."
+        },
+        {
+          "code": "file.filename().string()",
+          "name": "Get printable filename text",
+          "meaning": "filename extracts the last component; string converts the path to text for cout."
+        }
+      ],
+      "runHint": "Save as file-finder.cpp, compile with g++ -std=c++17 file-finder.cpp -o file-finder, then run ./file-finder (Windows: .\\file-finder.exe). A C++17 compiler is required.",
+      "outputNote": "Example preview. Extracting a filename does not access your computer or prove that the file exists."
+    },
+    {
+      "title": "List files in a folder",
+      "eyebrow": "Files and paths · Files and paths",
+      "explanation": "Now let the program discover files rather than typing every filename into a list. Scan the sheet-music folder, skip folders, and print each filename. This reads the folder listing, not the image contents. Only this folder is searched; files inside subfolders are not included. The folder must exist and be readable, or listing it can raise an error.",
+      "note": "// List each file in your sheet-music folder.",
+      "prompt": "Print filenames from the sheet-music folder, skipping folders.",
+      "answer": "#include <iostream>\n#include <filesystem>\n\nint main() {\n  for (const auto& file : std::filesystem::directory_iterator(\"sheet-music\")) {\n    if (file.is_regular_file()) {\n      std::cout << file.path().filename().string() << \"\\n\";\n    }\n  }\n}",
+      "output": [
+        "chopin-nocturne.png",
+        "practice-notes.txt"
+      ],
+      "parts": [
+        {
+          "code": "std::filesystem::directory_iterator",
+          "name": "List the folder",
+          "meaning": "Visits entries directly inside the folder, without searching subfolders."
+        },
+        {
+          "code": "const auto& file",
+          "name": "Use each entry",
+          "meaning": "auto lets the compiler infer the entry type; & avoids copying it and const prevents changing it here."
+        },
+        {
+          "code": "file.is_regular_file()",
+          "name": "Keep files",
+          "meaning": "Skips folders; path().filename().string() gets printable filename text."
+        }
+      ],
+      "runHint": "Save as file-finder.cpp, compile with g++ -std=c++17 file-finder.cpp -o file-finder, then run ./file-finder (Windows: .\\file-finder.exe). A C++17 compiler is required. Run from the folder containing sheet-music. Create sheet-music there and put a real image inside named chopin-nocturne.png. Add practice-notes.txt to try listing more than one file.",
+      "outputNote": "Example preview for a folder containing these two files. Order may vary. CodeStep checks your code and shows sample output; run it locally to list your own files."
+    },
+    {
+      "title": "Find a sheet-music file",
+      "eyebrow": "Files and paths · Files and paths",
+      "explanation": "Finish this small file-finding program by checking for the score at its expected location and showing a useful result. When you already know the folder and filename, checking that path is simpler than looping through the entire folder. This checks for a file; it does not open the image or recognise its printed title. Use the exact spelling and capitalisation so the example works across systems.",
+      "note": "// Check whether the score exists before using it.",
+      "prompt": "Print Found: and the filename, or File not found.",
+      "answer": "#include <iostream>\n#include <filesystem>\n\nint main() {\n  std::filesystem::path file = \"sheet-music/chopin-nocturne.png\";\n\n  if (std::filesystem::is_regular_file(file)) {\n    std::cout << \"Found: \" << file.filename().string() << \"\\n\";\n  } else {\n    std::cout << \"File not found\\n\";\n  }\n}",
+      "output": [
+        "Found: chopin-nocturne.png"
+      ],
+      "parts": [
+        {
+          "code": "std::filesystem::is_regular_file(file)",
+          "name": "Look up the file",
+          "meaning": "Checks the filesystem for a regular file at this location."
+        },
+        {
+          "code": "if / else",
+          "name": "Report the result",
+          "meaning": "Prints the filename if found, or File not found otherwise."
+        }
+      ],
+      "runHint": "Save as file-finder.cpp, compile with g++ -std=c++17 file-finder.cpp -o file-finder, then run ./file-finder (Windows: .\\file-finder.exe). A C++17 compiler is required. Run from the folder containing sheet-music. Create sheet-music there and put a real image inside named chopin-nocturne.png. Add practice-notes.txt to try listing more than one file.",
+      "outputNote": "Example preview with the score present. Remove or rename it locally to try the File not found branch. CodeStep does not inspect your device."
+    },
+    {
       "eyebrow": "22 · Application practice",
       "title": "Build a random word quiz",
       "explanation": "Combine the map, random choice, terminal input, and if/else. std::getline reads the answer. words[random] retrieves the chosen key’s translation. == checks the answer and prints Correct or Wrong.",
@@ -2617,7 +2996,7 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
   },
 };
 
-const breakdownLessonTitles: Record<Language, string[]> = {"javascript": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Print the current date and time", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Ask for a name in VS Code", "Choose between two messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "csharp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Print the current date and time", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between two messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "html": ["Tell the browser it is HTML", "Start the HTML page", "Name the browser tab", "Add visible page content", "Separate content into boxes", "Create a heading hierarchy", "Open another page", "Explore HTML text elements", "Show the current date and time", "Link two HTML pages", "Place an image on the page", "Place a video on the page", "Place audio on the page", "Give one element a unique name", "Use a button instead of while (true)", "Send a value back with return"], "css": ["Colour the page background", "Colour and centre text", "Style one unique element", "Compare website fonts", "Explore borders and colour formats", "Create a rounded dotted border"], "python": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Print the current date and time", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between two messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "cpp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Print the current date and time", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between two messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"]};
+const breakdownLessonTitles: Record<Language, string[]> = {"javascript": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Print the current date and time", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Ask for a name in VS Code", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "csharp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Print the current date and time", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "html": ["Tell the browser it is HTML", "Start the HTML page", "Name the browser tab", "Add visible page content", "Separate content into boxes", "Create a heading hierarchy", "Open another page", "Explore HTML text elements", "Show the current date and time", "Link two HTML pages", "Place an image on the page", "Place a video on the page", "Place audio on the page", "Give one element a unique name", "Use a button instead of while (true)", "Send a value back with return"], "css": ["Colour the page background", "Colour and centre text", "Style one unique element", "Compare website fonts", "Explore borders and colour formats", "Create a rounded dotted border"], "python": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Print the current date and time", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "cpp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Print the current date and time", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"]};
 
 const nullBreakdowns: Partial<Record<Language, CodePart[]>> = {
   javascript: [
@@ -2892,6 +3271,7 @@ function SettingsPanel({ open, themeMode, showGuide, colourTyping, blockMode, on
 }
 
 const cppHeaderNotes: Record<string, string> = {
+  filesystem: "Declares C++17 paths, directory iterators, and checks for files. Compile these examples with C++17 or newer.",
   iostream: "Declares terminal input and output, including std::cout (print), std::cin (read), and std::endl (new line and flush).",
   string: "Declares std::string for storing text and string-based std::getline for reading a whole line.",
   vector: "Declares std::vector, a list that can grow when you add items.",
@@ -3285,6 +3665,23 @@ export default function Home() {
           <h1>{current!.title}</h1>
           <p>{current!.explanation}</p>
           <button className="compare-language-button" onClick={() => setComparisonOpen(true)}>Compare with another language</button>
+          {current!.title === "Choose between several messages" && <details className="symbol-guide" open>
+            <summary>Several outcomes or separate checks?</summary>
+            <p><b>One outcome:</b> {language === "python" ? "if / elif / else" : "if / else if / else"} belongs to one decision. Add another branch before the final else. Only the first true branch runs.</p>
+            <p><b>Several actions:</b> write separate if statements when each check should run independently. A speed of 120 is both too fast and moving, so this example prints both messages.</p>
+            <pre><code><HighlightedCode language={language} code={language === "python" ? 'speed = 120\n\nif speed > 100:\n    print("Too fast!")\n\nif speed > 0:\n    print("Moving.")' : language === "cpp" ? '#include <iostream>\n\nint main() {\n  int speed = 120;\n\n  if (speed > 100) {\n    std::cout << "Too fast!\\n";\n  }\n\n  if (speed > 0) {\n    std::cout << "Moving.\\n";\n  }\n}' : `${language === "csharp" ? "int" : "let"} speed = 120;\n\nif (speed > 100) {\n  ${language === "csharp" ? "Console.WriteLine" : "console.log"}("Too fast!");\n}\n\nif (speed > 0) {\n  ${language === "csharp" ? "Console.WriteLine" : "console.log"}("Moving.");\n}`} /></code></pre>
+            <p><b>Output:</b> Too fast! followed by Moving. Each if is checked even if the earlier one ran. With separate if statements, an else belongs to its nearest matching if; it is not a fallback for all the earlier checks.</p>
+            <p><b>Try the lesson:</b> first complete the three-branch code. Run it locally with speed set to 60 and then 0 to see the other branches. CodeStep’s console shows the sample result for 120.</p>
+          </details>}
+          {current!.eyebrow.includes("Files and paths") && <details className="symbol-guide" open>
+            <summary>Filename, file contents, and image text</summary>
+            <p><b>Filename:</b> chopin-nocturne.png is the name stored in the folder listing. The program can list or compare it without opening the picture.</p>
+            <p><b>File contents:</b> a text file contains encoded text; a PNG contains image data. Reading a PNG as bytes gives its data, rather than the words you can see in the image.</p>
+            <p><b>Text inside a picture:</b> OCR (optical character recognition) uses an extra tool to recognise visible words from pixels. It can make mistakes. Reading musical notation needs specialised recognition. Neither is needed to find a file by its name.</p>
+            <p><b>Where the program looks:</b> sheet-music/chopin-nocturne.png is a relative path, starting from the terminal’s current working folder. It is not automatically relative to your code file. An absolute path gives the full location. Use forward slashes in these examples; backslashes inside ordinary strings need escaping.</p>
+            <p><b>Try it:</b> create a sheet-music folder in your working folder and place an image inside named chopin-nocturne.png. Add practice-notes.txt and a subfolder to see which entries get listed. Listing needs folder access; missing or inaccessible folders can cause errors.</p>
+            <p><b>Next step in a program:</b> keep the found path to pass to an image viewer or another function. Looking up a file is separate from opening, reading, or saving it.</p>
+          </details>}
           {language === "cpp" && <CppSetupGuide key={current!.title} lesson={current!} initiallyOpen={index < 2} />}
           {language === "csharp" && <details className="symbol-guide csharp-essentials" open={index < 2}>
             <summary>C# essentials</summary>
