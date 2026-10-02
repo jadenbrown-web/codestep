@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 
 import CodeBlocks from "./CodeBlocks";
 
@@ -67,131 +67,12 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "02 · ANSI colours",
-      "title": "Choose a text colour",
-      "explanation": "ANSI escape codes choose terminal text colours: 31 is red, 32 green, 33 yellow, 34 blue, 35 magenta, and 36 cyan. Code 0 resets the colour so later output returns to normal. These codes work in terminals that support ANSI colours. The lesson console previews the colours.",
-      "note": "// Print Red text and Green text, then reset the colour.",
-      "prompt": "Print Red text and Green text, then reset the colour.",
-      "answer": "const red = \"\\x1b[31m\";\nconst green = \"\\x1b[32m\";\nconst reset = \"\\x1b[0m\";\n\nconsole.log(`${red}Red text${reset}`);\nconsole.log(`${green}Green text${reset}`);",
-      "output": [
-        "Red text",
-        "Green text"
-      ],
-      "parts": [
-        {
-          "code": "\\x1b[0m",
-          "name": "Reset",
-          "meaning": "Returns terminal text to its normal colour."
-        }
-      ],
-      "outputColors": [
-        "#ef4444",
-        "#4ade80"
-      ]
-    },
-    {
-      "eyebrow": "03 · Time",
-      "title": "Run code after a delay",
-      "explanation": "setTimeout schedules the code inside its arrow function to run after 2000 milliseconds, or 2 seconds. () => creates the function; {} holds its instructions. The rest of the program can continue while the timer waits.",
-      "note": "// Wait 2 seconds, then print Time reached!",
-      "prompt": "Wait 2 seconds, then print Time reached!",
-      "answer": "setTimeout(() => {\n  console.log(\"Time reached!\");\n}, 2000);",
-      "output": [
-        "Time reached!"
-      ],
-      "parts": [
-        {
-          "code": "() => {}",
-          "name": "Arrow function",
-          "meaning": "An unnamed function: empty () means no parameters and {} holds the body."
-        },
-        {
-          "code": "2000",
-          "name": "Milliseconds",
-          "meaning": "1000 milliseconds = 1 second."
-        }
-      ],
-      "outputNote": "Example output after the 2-second delay."
-    },
-    {
-      "eyebrow": "04 · Date and time",
-      "title": "Print the current date and time",
-      "explanation": "new Date() captures the current local date and time from the device. console.log(time) prints that Date. The display depends on the device, time zone, and when you run it. getHours() reads the hour from 0 to 23; getMinutes() reads the minute from 0 to 59.",
-      "note": "// Store the current date and time in time, then print it.",
-      "prompt": "Store the current date and time in time, then print it.",
-      "answer": "let time = new Date();\nconsole.log(time);",
-      "output": [
-        "02/10/2026 17:20:00"
-      ],
-      "parts": [
-        {
-          "code": "new Date()",
-          "name": "Current moment",
-          "meaning": "Creates a Date containing the current date and time."
-        }
-      ],
-      "outputNote": "Example date and time; running the code uses your device’s current moment."
-    },
-    {
-      "eyebrow": "05 · Date and time",
-      "title": "Check for a particular time",
-      "explanation": "This checks the local time once. getHours() and getMinutes() read parts of time. === compares values and types; && requires both comparisons to be true. The message prints only if this code runs during 17:20. An if statement alone does not keep watching the clock.",
-      "note": "// Print Time reached! if the local hour is 17 and the minute is 20.",
-      "prompt": "Print Time reached! if the local hour is 17 and the minute is 20.",
-      "answer": "let time = new Date();\n\nlet hour = time.getHours();\nlet minute = time.getMinutes();\n\nif (hour === 17 && minute === 20) {\n  console.log(\"Time reached!\");\n}",
-      "output": [
-        "Time reached!"
-      ],
-      "parts": [
-        {
-          "code": "time.getHours()",
-          "name": "Hour",
-          "meaning": "Reads the hour from 0 to 23."
-        },
-        {
-          "code": "time.getMinutes()",
-          "name": "Minute",
-          "meaning": "Reads the minute from 0 to 59."
-        },
-        {
-          "code": "&&",
-          "name": "Both",
-          "meaning": "The hour and minute must both match."
-        }
-      ],
-      "outputNote": "Example output when the clock is 17:20. At other times, this snippet prints nothing."
-    },
-    {
-      "eyebrow": "06 · Date and time",
-      "title": "Keep checking until the time is reached",
-      "explanation": "This checks the clock every second while the program stays open. Each check creates a fresh Date. At 17:20 it prints once and clearInterval stops future checks. If 17:20 has passed, it waits for the next day. Browser timers may run late, especially in background tabs, so this is a learning example rather than an exact alarm.",
-      "note": "// Keep checking the local clock and print Time reached! once at 17:20.",
-      "prompt": "Keep checking the local clock and print Time reached! once at 17:20.",
-      "answer": "const timer = setInterval(() => {\n  let time = new Date();\n  let hour = time.getHours();\n  let minute = time.getMinutes();\n\n  if (hour === 17 && minute === 20) {\n    console.log(\"Time reached!\");\n    clearInterval(timer);\n  }\n}, 1000);",
-      "output": [
-        "Time reached!"
-      ],
-      "parts": [
-        {
-          "code": "setInterval",
-          "name": "Repeat checks",
-          "meaning": "Runs the callback repeatedly with a delay between checks."
-        },
-        {
-          "code": "clearInterval(timer)",
-          "name": "Stop",
-          "meaning": "Cancels the repeating timer after the matching time."
-        }
-      ],
-      "outputNote": "Example output at 17:20. The lesson preview does not wait for the clock."
-    },
-    {
-      "eyebrow": "07 · Functions",
+      "eyebrow": "02 · Functions",
       "title": "Make something happen",
       "explanation": "A function is a named block of code. Curly braces { } group the instructions that belong to it. The code waits until you call the function.",
-      "note": "// Create a function named correct that prints correct",
+      "note": "// Define correct: save the instructions under a name.\n// Call correct() after the definition to run those instructions.\n// Defining it alone prints nothing; removing the call means it never runs.",
       "prompt": "Create correct, then call it to print correct.",
-      "answer": "function correct() {\n  console.log(\"correct\");\n}\n\ncorrect();",
+      "answer": "// Define the function.\nfunction correct() {\n  console.log(\"correct\");\n}\n\n// Call the function to run its body.\ncorrect();",
       "output": [
         "correct"
       ],
@@ -222,6 +103,125 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Marks where an instruction ends. JavaScript can sometimes work without it, but using it consistently makes the ending clear."
         }
       ]
+    },
+    {
+      "eyebrow": "03 · ANSI colours",
+      "title": "Choose a text colour",
+      "explanation": "ANSI escape codes choose terminal text colours: 31 is red, 32 green, 33 yellow, 34 blue, 35 magenta, and 36 cyan. Code 0 resets the colour so later output returns to normal. These codes work in terminals that support ANSI colours. The lesson console previews the colours.",
+      "note": "// Print Red text and Green text, then reset the colour.",
+      "prompt": "Print Red text and Green text, then reset the colour.",
+      "answer": "const red = \"\\x1b[31m\";\nconst green = \"\\x1b[32m\";\nconst reset = \"\\x1b[0m\";\n\nconsole.log(`${red}Red text${reset}`);\nconsole.log(`${green}Green text${reset}`);",
+      "output": [
+        "Red text",
+        "Green text"
+      ],
+      "parts": [
+        {
+          "code": "\\x1b[0m",
+          "name": "Reset",
+          "meaning": "Returns terminal text to its normal colour."
+        }
+      ],
+      "outputColors": [
+        "#ef4444",
+        "#4ade80"
+      ]
+    },
+    {
+      "eyebrow": "04 · Time",
+      "title": "Run code after a delay",
+      "explanation": "setTimeout schedules the code inside its arrow function to run after 2000 milliseconds, or 2 seconds. () => creates the function; {} holds its instructions. The rest of the program can continue while the timer waits.",
+      "note": "// Wait 2 seconds, then print Time reached!",
+      "prompt": "Wait 2 seconds, then print Time reached!",
+      "answer": "setTimeout(() => {\n  console.log(\"Time reached!\");\n}, 2000);",
+      "output": [
+        "Time reached!"
+      ],
+      "parts": [
+        {
+          "code": "() => {}",
+          "name": "Arrow function",
+          "meaning": "An unnamed function: empty () means no parameters and {} holds the body."
+        },
+        {
+          "code": "2000",
+          "name": "Milliseconds",
+          "meaning": "1000 milliseconds = 1 second."
+        }
+      ],
+      "outputNote": "Example output after the 2-second delay."
+    },
+    {
+      "eyebrow": "05 · Date and time",
+      "title": "Print the current date and time",
+      "explanation": "new Date() captures the current local date and time from the device. console.log(time) prints that Date. The display depends on the device, time zone, and when you run it. getHours() reads the hour from 0 to 23; getMinutes() reads the minute from 0 to 59.",
+      "note": "// Store the current date and time in time, then print it.",
+      "prompt": "Store the current date and time in time, then print it.",
+      "answer": "let time = new Date();\nconsole.log(time);",
+      "output": [
+        "02/10/2026 17:20:00"
+      ],
+      "parts": [
+        {
+          "code": "new Date()",
+          "name": "Current moment",
+          "meaning": "Creates a Date containing the current date and time."
+        }
+      ],
+      "outputNote": "Example date and time; running the code uses your device’s current moment."
+    },
+    {
+      "eyebrow": "06 · Date and time",
+      "title": "Check for a particular time",
+      "explanation": "This checks the local time once. getHours() and getMinutes() read parts of time. === compares values and types; && requires both comparisons to be true. The message prints only if this code runs during 17:20. An if statement alone does not keep watching the clock.",
+      "note": "// Print Time reached! if the local hour is 17 and the minute is 20.",
+      "prompt": "Print Time reached! if the local hour is 17 and the minute is 20.",
+      "answer": "let time = new Date();\n\nlet hour = time.getHours();\nlet minute = time.getMinutes();\n\nif (hour === 17 && minute === 20) {\n  console.log(\"Time reached!\");\n}",
+      "output": [
+        "Time reached!"
+      ],
+      "parts": [
+        {
+          "code": "time.getHours()",
+          "name": "Hour",
+          "meaning": "Reads the hour from 0 to 23."
+        },
+        {
+          "code": "time.getMinutes()",
+          "name": "Minute",
+          "meaning": "Reads the minute from 0 to 59."
+        },
+        {
+          "code": "&&",
+          "name": "Both",
+          "meaning": "The hour and minute must both match."
+        }
+      ],
+      "outputNote": "Example output when the clock is 17:20. At other times, this snippet prints nothing."
+    },
+    {
+      "eyebrow": "07 · Date and time",
+      "title": "Keep checking until the time is reached",
+      "explanation": "This checks the clock every second while the program stays open. Each check creates a fresh Date. At 17:20 it prints once and clearInterval stops future checks. If 17:20 has passed, it waits for the next day. Browser timers may run late, especially in background tabs, so this is a learning example rather than an exact alarm.",
+      "note": "// Keep checking the local clock and print Time reached! once at 17:20.",
+      "prompt": "Keep checking the local clock and print Time reached! once at 17:20.",
+      "answer": "const timer = setInterval(() => {\n  let time = new Date();\n  let hour = time.getHours();\n  let minute = time.getMinutes();\n\n  if (hour === 17 && minute === 20) {\n    console.log(\"Time reached!\");\n    clearInterval(timer);\n  }\n}, 1000);",
+      "output": [
+        "Time reached!"
+      ],
+      "parts": [
+        {
+          "code": "setInterval",
+          "name": "Repeat checks",
+          "meaning": "Runs the callback repeatedly with a delay between checks."
+        },
+        {
+          "code": "clearInterval(timer)",
+          "name": "Stop",
+          "meaning": "Cancels the repeating timer after the matching time."
+        }
+      ],
+      "outputNote": "Example output at 17:20. The lesson preview does not wait for the clock."
     },
     {
       "eyebrow": "08 · Functions",
@@ -640,134 +640,16 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "outputColors": [
         "#ef4444"
-      ]
+      ],
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "02 · ANSI colours",
-      "title": "Choose a text colour",
-      "explanation": "ANSI escape codes choose terminal text colours: 31 is red, 32 green, 33 yellow, 34 blue, 35 magenta, and 36 cyan. Code 0 resets the colour so later output returns to normal. These codes work in terminals that support ANSI colours. The lesson console previews the colours.",
-      "note": "// Print Red text and Green text, then reset the colour.",
-      "prompt": "Print Red text and Green text, then reset the colour.",
-      "answer": "const string red = \"\\u001b[31m\";\nconst string green = \"\\u001b[32m\";\nconst string reset = \"\\u001b[0m\";\n\nConsole.WriteLine($\"{red}Red text{reset}\");\nConsole.WriteLine($\"{green}Green text{reset}\");",
-      "output": [
-        "Red text",
-        "Green text"
-      ],
-      "parts": [
-        {
-          "code": "\\u001b[0m",
-          "name": "Reset",
-          "meaning": "Returns terminal text to its normal colour."
-        }
-      ],
-      "outputColors": [
-        "#ef4444",
-        "#4ade80"
-      ]
-    },
-    {
-      "eyebrow": "03 · Time",
-      "title": "Run code after a delay",
-      "explanation": "Task.Delay creates a wait of 2000 milliseconds, or 2 seconds. await waits for it to finish before running the next instruction in this flow. This does not block the thread. The following Console.WriteLine prints the message after the delay.",
-      "note": "// Wait 2 seconds, then print Time reached!",
-      "prompt": "Wait 2 seconds, then print Time reached!",
-      "answer": "await System.Threading.Tasks.Task.Delay(2000);\nConsole.WriteLine(\"Time reached!\");",
-      "output": [
-        "Time reached!"
-      ],
-      "parts": [
-        {
-          "code": "await",
-          "name": "Wait here",
-          "meaning": "Continues this flow after the asynchronous wait finishes."
-        },
-        {
-          "code": "2000",
-          "name": "Milliseconds",
-          "meaning": "1000 milliseconds = 1 second."
-        }
-      ],
-      "outputNote": "Example output after the 2-second delay."
-    },
-    {
-      "eyebrow": "04 · Date and time",
-      "title": "Print the current date and time",
-      "explanation": "DateTime.Now captures the current local date and time from the device. Console.WriteLine(time) prints it. The display depends on the device, time zone, and when you run it. Hour reads the hour from 0 to 23; Minute reads the minute from 0 to 59.",
-      "note": "// Store the current date and time in time, then print it.",
-      "prompt": "Store the current date and time in time, then print it.",
-      "answer": "DateTime time = DateTime.Now;\nConsole.WriteLine(time);",
-      "output": [
-        "02/10/2026 17:20:00"
-      ],
-      "parts": [
-        {
-          "code": "DateTime.Now",
-          "name": "Current moment",
-          "meaning": "Gets the current local date and time."
-        }
-      ],
-      "outputNote": "Example date and time; running the code uses your device’s current moment."
-    },
-    {
-      "eyebrow": "05 · Date and time",
-      "title": "Check for a particular time",
-      "explanation": "This checks the local time once. Hour and Minute read parts of time. == compares values; && requires both comparisons to be true. The message prints only if this code runs during 17:20. An if statement alone does not keep watching the clock.",
-      "note": "// Print Time reached! if the local hour is 17 and the minute is 20.",
-      "prompt": "Print Time reached! if the local hour is 17 and the minute is 20.",
-      "answer": "DateTime time = DateTime.Now;\n\nint hour = time.Hour;\nint minute = time.Minute;\n\nif (hour == 17 && minute == 20) {\n  Console.WriteLine(\"Time reached!\");\n}",
-      "output": [
-        "Time reached!"
-      ],
-      "parts": [
-        {
-          "code": "time.Hour",
-          "name": "Hour",
-          "meaning": "Reads the hour from 0 to 23."
-        },
-        {
-          "code": "time.Minute",
-          "name": "Minute",
-          "meaning": "Reads the minute from 0 to 59."
-        },
-        {
-          "code": "&&",
-          "name": "Both",
-          "meaning": "The hour and minute must both match."
-        }
-      ],
-      "outputNote": "Example output when the clock is 17:20. At other times, this snippet prints nothing."
-    },
-    {
-      "eyebrow": "06 · Date and time",
-      "title": "Keep checking until the time is reached",
-      "explanation": "This loop checks a fresh DateTime.Now every second while the program stays open. At 17:20 it prints once and break stops the loop. Task.Delay gives the loop a 1-second wait between checks. If 17:20 has passed, it waits for the next day. Checks can run late, so this is a learning example rather than an exact alarm.",
-      "note": "// Keep checking the local clock and print Time reached! once at 17:20.",
-      "prompt": "Keep checking the local clock and print Time reached! once at 17:20.",
-      "answer": "while (true) {\n  DateTime time = DateTime.Now;\n  int hour = time.Hour;\n  int minute = time.Minute;\n\n  if (hour == 17 && minute == 20) {\n    Console.WriteLine(\"Time reached!\");\n    break;\n  }\n\n  await System.Threading.Tasks.Task.Delay(1000);\n}",
-      "output": [
-        "Time reached!"
-      ],
-      "parts": [
-        {
-          "code": "while (true)",
-          "name": "Repeat checks",
-          "meaning": "Keeps repeating until break ends the loop."
-        },
-        {
-          "code": "break",
-          "name": "Stop",
-          "meaning": "Leaves the loop after the matching time."
-        }
-      ],
-      "outputNote": "Example output at 17:20. The lesson preview does not wait for the clock."
-    },
-    {
-      "eyebrow": "07 · Functions",
+      "eyebrow": "02 · Functions",
       "title": "Make something happen",
-      "explanation": "A C# method is a named block of code. void means it does not return a value, and curly braces { } group the instructions that run when you call it.",
-      "note": "// Create a function named correct that prints correct",
+      "explanation": "A function saves instructions under a name so you can run them again. Here void correct() is a local function in a C# console program. void means it returns no value; () holds its inputs (none here); { } encloses its body. correct(); calls it after the definition. Defining it alone does not run it. A function inside a class is called a method. Modern console projects allow top-level code, so you do not need a Program class or Main method for this example.",
+      "note": "// Define correct: save the instructions under a name.\n// Call correct() after the definition to run those instructions.\n// Defining it alone prints nothing; removing the call means it never runs.",
       "prompt": "Create correct, then call it to print correct.",
-      "answer": "void correct() {\n  Console.WriteLine(\"correct\");\n}\n\ncorrect();",
+      "answer": "// Define the function.\nvoid correct() {\n  Console.WriteLine(\"correct\");\n}\n\n// Call the function to run its body.\ncorrect();",
       "output": [
         "correct"
       ],
@@ -797,7 +679,132 @@ const lessons: Record<Language, Lesson[]> = {
           "name": "End statement",
           "meaning": "Marks where a statement ends. C# requires it after statements such as calling a method or printing text."
         }
-      ]
+      ],
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+    },
+    {
+      "eyebrow": "03 · ANSI colours",
+      "title": "Choose a text colour",
+      "explanation": "ANSI escape codes choose terminal text colours: 31 is red, 32 green, 33 yellow, 34 blue, 35 magenta, and 36 cyan. Code 0 resets the colour so later output returns to normal. These codes work in terminals that support ANSI colours. The lesson console previews the colours.",
+      "note": "// Print Red text and Green text, then reset the colour.",
+      "prompt": "Print Red text and Green text, then reset the colour.",
+      "answer": "const string red = \"\\u001b[31m\";\nconst string green = \"\\u001b[32m\";\nconst string reset = \"\\u001b[0m\";\n\nConsole.WriteLine($\"{red}Red text{reset}\");\nConsole.WriteLine($\"{green}Green text{reset}\");",
+      "output": [
+        "Red text",
+        "Green text"
+      ],
+      "parts": [
+        {
+          "code": "\\u001b[0m",
+          "name": "Reset",
+          "meaning": "Returns terminal text to its normal colour."
+        }
+      ],
+      "outputColors": [
+        "#ef4444",
+        "#4ade80"
+      ],
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+    },
+    {
+      "eyebrow": "04 · Time",
+      "title": "Run code after a delay",
+      "explanation": "Task.Delay creates a wait of 2000 milliseconds, or 2 seconds. await waits for it to finish before running the next instruction in this flow. This does not block the thread. The following Console.WriteLine prints the message after the delay.",
+      "note": "// Wait 2 seconds, then print Time reached!",
+      "prompt": "Wait 2 seconds, then print Time reached!",
+      "answer": "await System.Threading.Tasks.Task.Delay(2000);\nConsole.WriteLine(\"Time reached!\");",
+      "output": [
+        "Time reached!"
+      ],
+      "parts": [
+        {
+          "code": "await",
+          "name": "Wait here",
+          "meaning": "Continues this flow after the asynchronous wait finishes."
+        },
+        {
+          "code": "2000",
+          "name": "Milliseconds",
+          "meaning": "1000 milliseconds = 1 second."
+        }
+      ],
+      "outputNote": "Example output after the 2-second delay.",
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+    },
+    {
+      "eyebrow": "05 · Date and time",
+      "title": "Print the current date and time",
+      "explanation": "DateTime.Now captures the current local date and time from the device. Console.WriteLine(time) prints it. The display depends on the device, time zone, and when you run it. Hour reads the hour from 0 to 23; Minute reads the minute from 0 to 59.",
+      "note": "// Store the current date and time in time, then print it.",
+      "prompt": "Store the current date and time in time, then print it.",
+      "answer": "DateTime time = DateTime.Now;\nConsole.WriteLine(time);",
+      "output": [
+        "02/10/2026 17:20:00"
+      ],
+      "parts": [
+        {
+          "code": "DateTime.Now",
+          "name": "Current moment",
+          "meaning": "Gets the current local date and time."
+        }
+      ],
+      "outputNote": "Example date and time; running the code uses your device’s current moment.",
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+    },
+    {
+      "eyebrow": "06 · Date and time",
+      "title": "Check for a particular time",
+      "explanation": "This checks the local time once. Hour and Minute read parts of time. == compares values; && requires both comparisons to be true. The message prints only if this code runs during 17:20. An if statement alone does not keep watching the clock.",
+      "note": "// Print Time reached! if the local hour is 17 and the minute is 20.",
+      "prompt": "Print Time reached! if the local hour is 17 and the minute is 20.",
+      "answer": "DateTime time = DateTime.Now;\n\nint hour = time.Hour;\nint minute = time.Minute;\n\nif (hour == 17 && minute == 20) {\n  Console.WriteLine(\"Time reached!\");\n}",
+      "output": [
+        "Time reached!"
+      ],
+      "parts": [
+        {
+          "code": "time.Hour",
+          "name": "Hour",
+          "meaning": "Reads the hour from 0 to 23."
+        },
+        {
+          "code": "time.Minute",
+          "name": "Minute",
+          "meaning": "Reads the minute from 0 to 59."
+        },
+        {
+          "code": "&&",
+          "name": "Both",
+          "meaning": "The hour and minute must both match."
+        }
+      ],
+      "outputNote": "Example output when the clock is 17:20. At other times, this snippet prints nothing.",
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+    },
+    {
+      "eyebrow": "07 · Date and time",
+      "title": "Keep checking until the time is reached",
+      "explanation": "This loop checks a fresh DateTime.Now every second while the program stays open. At 17:20 it prints once and break stops the loop. Task.Delay gives the loop a 1-second wait between checks. If 17:20 has passed, it waits for the next day. Checks can run late, so this is a learning example rather than an exact alarm.",
+      "note": "// Keep checking the local clock and print Time reached! once at 17:20.",
+      "prompt": "Keep checking the local clock and print Time reached! once at 17:20.",
+      "answer": "while (true) {\n  DateTime time = DateTime.Now;\n  int hour = time.Hour;\n  int minute = time.Minute;\n\n  if (hour == 17 && minute == 20) {\n    Console.WriteLine(\"Time reached!\");\n    break;\n  }\n\n  await System.Threading.Tasks.Task.Delay(1000);\n}",
+      "output": [
+        "Time reached!"
+      ],
+      "parts": [
+        {
+          "code": "while (true)",
+          "name": "Repeat checks",
+          "meaning": "Keeps repeating until break ends the loop."
+        },
+        {
+          "code": "break",
+          "name": "Stop",
+          "meaning": "Leaves the loop after the matching time."
+        }
+      ],
+      "outputNote": "Example output at 17:20. The lesson preview does not wait for the clock.",
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "08 · Functions",
@@ -820,7 +827,8 @@ const lessons: Record<Language, Lesson[]> = {
           "name": "Nested calls",
           "meaning": "getMessage runs first; Console.WriteLine receives Hello."
         }
-      ]
+      ],
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "09 · Classes",
@@ -833,7 +841,8 @@ const lessons: Record<Language, Lesson[]> = {
         "Ford, 2014",
         "Audi, 2019"
       ],
-      "parts": []
+      "parts": [],
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "10 · Loops",
@@ -864,7 +873,8 @@ const lessons: Record<Language, Lesson[]> = {
           "name": "Stop",
           "meaning": "Leaves the loop when the if condition is true."
         }
-      ]
+      ],
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "11 · Variables",
@@ -887,7 +897,8 @@ const lessons: Record<Language, Lesson[]> = {
           "name": "Constant",
           "meaning": "Stores a compile-time value that cannot be reassigned."
         }
-      ]
+      ],
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "12 · Variables",
@@ -916,7 +927,8 @@ const lessons: Record<Language, Lesson[]> = {
           "name": "Save",
           "meaning": "Puts the value on the right into the variable on the left."
         }
-      ]
+      ],
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "13 · If and else",
@@ -939,7 +951,8 @@ const lessons: Record<Language, Lesson[]> = {
           "name": "Otherwise",
           "meaning": "Runs when the if condition is false."
         }
-      ]
+      ],
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "14 · Combined conditions and comparisons",
@@ -978,7 +991,8 @@ const lessons: Record<Language, Lesson[]> = {
           "name": "Not",
           "meaning": "Reverses true and false."
         }
-      ]
+      ],
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "15 · Dictionary",
@@ -1003,7 +1017,8 @@ const lessons: Record<Language, Lesson[]> = {
           "name": "Safe lookup",
           "meaning": "Returns true and sets translation when the key is found."
         }
-      ]
+      ],
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "16 · Expressions",
@@ -1026,7 +1041,8 @@ const lessons: Record<Language, Lesson[]> = {
           "name": "Boolean expression",
           "meaning": "Produces true or false."
         }
-      ]
+      ],
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "17 · Random",
@@ -1050,7 +1066,8 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Looks up the key at that position."
         }
       ],
-      "outputNote": "Example output; either bonjour or hola can be chosen."
+      "outputNote": "Example output; either bonjour or hola can be chosen.",
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "18 · Arrays and lists",
@@ -1080,7 +1097,8 @@ const lessons: Record<Language, Lesson[]> = {
           "name": "Search",
           "meaning": "Checks for the exact value without changing the list."
         }
-      ]
+      ],
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "19 · Sets",
@@ -1095,7 +1113,8 @@ const lessons: Record<Language, Lesson[]> = {
         "Enter the third name:  →  Alex",
         "[Alex, Sam]"
       ],
-      "parts": []
+      "parts": [],
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "20 · Null",
@@ -1107,7 +1126,8 @@ const lessons: Record<Language, Lesson[]> = {
       "output": [
         "No result yet"
       ],
-      "parts": []
+      "parts": [],
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "21 · Regular expressions",
@@ -1123,7 +1143,8 @@ const lessons: Record<Language, Lesson[]> = {
         "Sarah cannot enter the club.",
         "Ben cannot enter the club."
       ],
-      "parts": []
+      "parts": [],
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "22 · Application practice",
@@ -1137,7 +1158,8 @@ const lessons: Record<Language, Lesson[]> = {
         "Correct"
       ],
       "parts": [],
-      "outputNote": "Example run: bonjour is chosen and the user enters hello."
+      "outputNote": "Example run: bonjour is chosen and the user enters hello.",
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     }
   ],
   "html": [
@@ -1441,7 +1463,31 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
     },
     {
-      "eyebrow": "02 · ANSI colours",
+      "eyebrow": "02 · Functions",
+      "title": "Make something happen",
+      "explanation": "def defines a function named correct. Empty () means it has no parameters. The colon and indented body group its instructions. The body waits until correct() calls the function.",
+      "note": "# Define correct: save the instructions under a name.\n# Call correct() after the definition to run those instructions.\n# Defining it alone prints nothing; removing the call means it never runs.",
+      "prompt": "Create correct, then call it to print correct.",
+      "answer": "# Define the function.\ndef correct():\n    print(\"correct\")\n\n# Call the function to run its body.\ncorrect()",
+      "output": [
+        "correct"
+      ],
+      "parts": [
+        {
+          "code": "def correct():",
+          "name": "Define a function",
+          "meaning": "Names a function with no parameters."
+        },
+        {
+          "code": "correct()",
+          "name": "Call it",
+          "meaning": "Runs the function body."
+        }
+      ],
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "03 · ANSI colours",
       "title": "Choose a text colour",
       "explanation": "ANSI escape codes choose terminal text colours: 31 is red, 32 green, 33 yellow, 34 blue, 35 magenta, and 36 cyan. Code 0 resets the colour so later output returns to normal. These codes work in terminals that support ANSI colours. The lesson console previews the colours.",
       "note": "# Print Red text and Green text, then reset the colour.",
@@ -1465,7 +1511,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
     },
     {
-      "eyebrow": "03 · Time",
+      "eyebrow": "04 · Time",
       "title": "Run code after a delay",
       "explanation": "import time makes the time module available. time.sleep(2) pauses this program for 2 seconds, then print displays the message. Unlike JavaScript setTimeout, this sleep blocks the current flow.",
       "note": "# Wait 2 seconds, then print Time reached!",
@@ -1490,7 +1536,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
     },
     {
-      "eyebrow": "04 · Date and time",
+      "eyebrow": "05 · Date and time",
       "title": "Print the current date and time",
       "explanation": "datetime.now() captures the device’s current local date and time. print(time) displays that moment. time.hour and time.minute read its hour and minute. The output changes with the clock.",
       "note": "# Store the current date and time in time, then print it.",
@@ -1510,7 +1556,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
     },
     {
-      "eyebrow": "05 · Date and time",
+      "eyebrow": "06 · Date and time",
       "title": "Check for a particular time",
       "explanation": "This checks the local clock once. == compares values and and requires both checks to be true. A colon starts the if body, and indentation identifies the code inside it. This prints only if run during 17:20; it does not keep watching the clock.",
       "note": "# Print Time reached! if the local hour is 17 and the minute is 20.",
@@ -1535,7 +1581,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
     },
     {
-      "eyebrow": "06 · Date and time",
+      "eyebrow": "07 · Date and time",
       "title": "Keep checking until the time is reached",
       "explanation": "The loop creates a fresh local time each second. At 17:20 it prints once and break leaves the loop. time.sleep(1) pauses between checks. Keep the program open; if 17:20 has passed, it waits until the next day. Checks can run late.",
       "note": "# Keep checking the local clock and print Time reached! once at 17:20.",
@@ -1557,30 +1603,6 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "outputNote": "Example output at 17:20. The lesson preview does not wait for the clock.",
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
-    },
-    {
-      "eyebrow": "07 · Functions",
-      "title": "Make something happen",
-      "explanation": "def defines a function named correct. Empty () means it has no parameters. The colon and indented body group its instructions. The body waits until correct() calls the function.",
-      "note": "# Create a function named correct that prints correct",
-      "prompt": "Create correct, then call it to print correct.",
-      "answer": "def correct():\n    print(\"correct\")\n\ncorrect()",
-      "output": [
-        "correct"
-      ],
-      "parts": [
-        {
-          "code": "def correct():",
-          "name": "Define a function",
-          "meaning": "Names a function with no parameters."
-        },
-        {
-          "code": "correct()",
-          "name": "Call it",
-          "meaning": "Runs the function body."
-        }
-      ],
       "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
     },
     {
@@ -1996,7 +2018,31 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "02 · ANSI colours",
+      "eyebrow": "02 · Functions",
+      "title": "Make something happen",
+      "explanation": "void declares a function that returns no value. Empty () means it has no parameters. {} groups its instructions. Defining correct before main makes it available when main calls correct().",
+      "note": "// Define correct: save the instructions under a name.\n// Call correct() after the definition to run those instructions.\n// Defining it alone prints nothing; removing the call means it never runs.",
+      "prompt": "Create correct, then call it to print correct.",
+      "answer": "// Define the function.\n#include <iostream>\n#include <string>\n\nvoid correct() {\n  std::cout << \"correct\\n\";\n}\n\nint main() {\n  // Call the function to run its body.\n  correct();\n}",
+      "output": [
+        "correct"
+      ],
+      "parts": [
+        {
+          "code": "void correct()",
+          "name": "Function",
+          "meaning": "A function that returns no value."
+        },
+        {
+          "code": "correct();",
+          "name": "Call",
+          "meaning": "Runs its body."
+        }
+      ],
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "03 · ANSI colours",
       "title": "Choose a text colour",
       "explanation": "ANSI escape codes choose terminal text colours: 31 is red, 32 green, 33 yellow, 34 blue, 35 magenta, and 36 cyan. Code 0 resets the colour so later output returns to normal. These codes work in terminals that support ANSI colours. The lesson console previews the colours.",
       "note": "// Print Red text and Green text, then reset the colour.",
@@ -2020,7 +2066,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "03 · Time",
+      "eyebrow": "04 · Time",
       "title": "Run code after a delay",
       "explanation": "<thread> and <chrono> provide sleep_for and a duration. std::this_thread::sleep_for(std::chrono::seconds(2)) blocks this thread for 2 seconds, then the next statement prints the message.",
       "note": "// Wait 2 seconds, then print Time reached!",
@@ -2045,7 +2091,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "04 · Date and time",
+      "eyebrow": "05 · Date and time",
       "title": "Print the current date and time",
       "explanation": "std::time gets the current moment. std::localtime converts it to local calendar parts. Copying the result into time keeps that snapshot. std::put_time formats it for printing. tm_hour and tm_min read the hour and minute.",
       "note": "// Store the current date and time in time, then print it.",
@@ -2070,7 +2116,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "05 · Date and time",
+      "eyebrow": "06 · Date and time",
       "title": "Check for a particular time",
       "explanation": "This checks the local clock once. tm_hour is the hour from 0 to 23; tm_min is the minute from 0 to 59. == compares values and && requires both checks to be true. This prints only if run during 17:20; it does not keep watching the clock.",
       "note": "// Print Time reached! if the local hour is 17 and the minute is 20.",
@@ -2095,7 +2141,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "06 · Date and time",
+      "eyebrow": "07 · Date and time",
       "title": "Keep checking until the time is reached",
       "explanation": "The loop gets a fresh local time each second. At 17:20 it prints once and break leaves the loop. sleep_for waits between checks. Keep the program open; if 17:20 has passed, it waits until the next day. Checks can run late.",
       "note": "// Keep checking the local clock and print Time reached! once at 17:20.",
@@ -2117,30 +2163,6 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "outputNote": "Example output at 17:20. The lesson preview does not wait for the clock.",
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
-    },
-    {
-      "eyebrow": "07 · Functions",
-      "title": "Make something happen",
-      "explanation": "void declares a function that returns no value. Empty () means it has no parameters. {} groups its instructions. Defining correct before main makes it available when main calls correct().",
-      "note": "// Create a function named correct that prints correct",
-      "prompt": "Create correct, then call it to print correct.",
-      "answer": "#include <iostream>\n#include <string>\n\nvoid correct() {\n  std::cout << \"correct\\n\";\n}\n\nint main() {\n  correct();\n}",
-      "output": [
-        "correct"
-      ],
-      "parts": [
-        {
-          "code": "void correct()",
-          "name": "Function",
-          "meaning": "A function that returns no value."
-        },
-        {
-          "code": "correct();",
-          "name": "Call",
-          "meaning": "Runs its body."
-        }
-      ],
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
@@ -2595,6 +2617,8 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
   },
 };
 
+const breakdownLessonTitles: Record<Language, string[]> = {"javascript": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Print the current date and time", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Ask for a name in VS Code", "Choose between two messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "csharp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Print the current date and time", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between two messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "html": ["Tell the browser it is HTML", "Start the HTML page", "Name the browser tab", "Add visible page content", "Separate content into boxes", "Create a heading hierarchy", "Open another page", "Explore HTML text elements", "Show the current date and time", "Link two HTML pages", "Place an image on the page", "Place a video on the page", "Place audio on the page", "Give one element a unique name", "Use a button instead of while (true)", "Send a value back with return"], "css": ["Colour the page background", "Colour and centre text", "Style one unique element", "Compare website fonts", "Explore borders and colour formats", "Create a rounded dotted border"], "python": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Print the current date and time", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between two messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "cpp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Print the current date and time", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between two messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"]};
+
 const nullBreakdowns: Partial<Record<Language, CodePart[]>> = {
   javascript: [
     { code: "null", name: "No value yet", meaning: "Deliberately stores no value for now; result can receive one later." },
@@ -2865,6 +2889,52 @@ function SettingsPanel({ open, themeMode, showGuide, colourTyping, blockMode, on
   </div>;
 }
 
+const homeDemos: Record<Language, { code: string; file: string }> = {
+  javascript: { file: "hello.js", code: 'function sayHello() {\n  console.log("Hello, coder!");\n}\n\nsayHello();' },
+  csharp: { file: "Program.cs", code: 'void SayHello() {\n  Console.WriteLine("Hello, coder!");\n}\n\nSayHello();' },
+  python: { file: "hello.py", code: 'def sayHello():\n    print("Hello, coder!")\n\nsayHello()' },
+  cpp: { file: "hello.cpp", code: '#include <iostream>\n\nvoid sayHello() {\n  std::cout << "Hello, coder!\\n";\n}\n\nint main() {\n  sayHello();\n}' },
+  html: { file: "index.html", code: '<!DOCTYPE html>\n<html lang="en">\n<body>\n  <p>Hello, coder!</p>\n</body>\n</html>' },
+  css: { file: "styles.css + HTML", code: '/* HTML: <p class="hello">Hello, coder!</p> */\n.hello {\n  color: green;\n  font-family: monospace;\n}' },
+};
+
+function matchingLesson(source: Lesson, target: Language) {
+  const aliases: Record<string, string[]> = {
+    "Print the current date and time": ["Show the current date and time"],
+    "Show the current date and time": ["Print the current date and time"],
+    "Use one function inside another": ["Send a value back with return"],
+    "Send a value back with return": ["Use one function inside another"],
+    "Repeat input until the answer is correct": ["Use a button instead of while (true)"],
+    "Use a button instead of while (true)": ["Repeat input until the answer is correct"],
+    "Give one element a unique name": ["Style one unique element"],
+    "Style one unique element": ["Give one element a unique name"],
+  };
+  return lessons[target].find(item => item.title === source.title)
+    ?? lessons[target].find(item => aliases[source.title]?.includes(item.title));
+}
+
+function LanguageComparison({ language, lesson, onClose }: { language: Language; lesson: Lesson; onClose: () => void }) {
+  const dialog = useRef<HTMLDialogElement>(null);
+  const [target, setTarget] = useState<Language>(language === "javascript" ? "cpp" : "javascript");
+  const [pickedTitle, setPickedTitle] = useState("");
+  const equivalent = matchingLesson(lesson, target);
+  const other = lessons[target].find(item => item.title === pickedTitle) ?? equivalent;
+  useEffect(() => { dialog.current?.showModal(); }, []);
+  useEffect(() => { setPickedTitle(""); }, [lesson, target]);
+  return <dialog ref={dialog} className="language-comparison" onCancel={onClose} onClick={event => { if (event.target === event.currentTarget) onClose(); }} aria-labelledby="language-comparison-title">
+    <div className="language-comparison-head"><h2 id="language-comparison-title">Compare code</h2><button onClick={onClose} aria-label="Close language comparison">×</button></div>
+    <div className="language-comparison-controls"><label>Compare {languageName(language)} with <select value={target} onChange={event => setTarget(event.target.value as Language)}>{(Object.keys(lessons) as Language[]).filter(item => item !== language).map(item => <option key={item} value={item}>{languageName(item)}</option>)}</select></label>
+      {!equivalent && <p>{target === "html" || target === "css" || language === "html" || language === "css" ? "HTML describes page content and CSS styles it; they do not have a direct equivalent for every programming task." : "There is no matching lesson for this topic yet."} Choose an example below to view alongside your lesson.</p>}
+      <label>{equivalent ? "Example" : "Choose an example"}<select value={other?.title ?? ""} onChange={event => setPickedTitle(event.target.value)}><option value="" disabled>Select a lesson</option>{lessons[target].map(item => <option key={item.title} value={item.title}>{item.title}</option>)}</select></label>
+      {other && other !== equivalent && <p>These examples cover different topics.</p>}
+    </div>
+    <div className="language-comparison-columns">
+      <section><h3>{languageName(language)}</h3><b>{lesson.title}</b><pre><code><HighlightedCode code={lesson.answer} language={language} /></code></pre><p>{lesson.explanation}</p></section>
+      <section><h3>{languageName(target)}</h3>{other ? <><b>{other.title}</b><pre><code><HighlightedCode code={other.answer} language={target} /></code></pre><p>{other.explanation}</p>{other.runHint && <p>{other.runHint}</p>}</> : <p>Select an example to show its code here.</p>}</section>
+    </div>
+  </dialog>;
+}
+
 export default function Home() {
   const [language, setLanguage] = useState<Language | null>(null);
   const [index, setIndex] = useState(0);
@@ -2872,6 +2942,8 @@ export default function Home() {
   const [caretIndex, setCaretIndex] = useState(0);
   const [status, setStatus] = useState<"idle" | "wrong" | "correct">("idle");
   const [typedOutput, setTypedOutput] = useState("");
+  const [homeDemoLanguage, setHomeDemoLanguage] = useState<Language>("javascript");
+  const [comparisonOpen, setComparisonOpen] = useState(false);
   const [homeCodeLength, setHomeCodeLength] = useState(0);
   const [homeOutputLength, setHomeOutputLength] = useState(0);
   const [ghostLength, setGhostLength] = useState(0);
@@ -2897,6 +2969,16 @@ export default function Home() {
     return () => mobile.removeEventListener("change", update);
   }, []);
 
+  useEffect(() => {
+    const choices = Object.keys(homeDemos) as Language[];
+    let previous = "";
+    try { previous = sessionStorage.getItem("codestep-last-demo") ?? ""; } catch {}
+    const available = choices.filter(item => item !== previous);
+    const chosen = available[Math.floor(Math.random() * available.length)];
+    setHomeDemoLanguage(chosen);
+    try { sessionStorage.setItem("codestep-last-demo", chosen); } catch {}
+  }, []);
+
   function changeBlockMode(enabled: boolean) {
     setBlockMode(enabled);
     try { localStorage.setItem("codestep-code-blocks", String(enabled)); } catch {}
@@ -2914,7 +2996,7 @@ export default function Home() {
   const ghostSource = current ? withoutGuideComments(current.answer, language ?? "javascript") : "";
   const visibleGhost = ghostSource.slice(0, ghostLength);
   const guideCode = alignedGuide(code, visibleGhost);
-  const breakdownIndex = index;
+  const breakdownIndex = language && current ? Object.keys(breakdowns[language]).map(Number).find(key => breakdownLessonTitles[language][key] === current.title) ?? index : index;
   const breakdown = language
     ? current?.parts?.length ? current.parts : current?.referenceKind === "comparisons" ? undefined
       : ((current?.title === "Mark a value as not ready yet") && nullBreakdowns[language])
@@ -2996,7 +3078,7 @@ export default function Home() {
 
   useEffect(() => {
     if (language) return;
-    const demoCode = 'function sayHello() {\n  console.log("Hello, coder!");\n}\n\nsayHello();';
+    const demoCode = homeDemos[homeDemoLanguage].code;
     const demoOutput = "Hello, coder!";
     setHomeCodeLength(0);
     setHomeOutputLength(0);
@@ -3016,7 +3098,7 @@ export default function Home() {
     };
     timer = setTimeout(typeCode, 220);
     return () => clearTimeout(timer);
-  }, [language]);
+  }, [language, homeDemoLanguage]);
 
   const lineNumbers = useMemo(() => Array.from({ length: Math.max(8, code.split("\n").length) }, (_, i) => i + 1), [code]);
 
@@ -3079,7 +3161,7 @@ export default function Home() {
   }
 
   if (!language) {
-    const homeDemoCode = 'function sayHello() {\n  console.log("Hello, coder!");\n}\n\nsayHello();';
+    const homeDemoCode = homeDemos[homeDemoLanguage].code;
     const homeDemoOutput = "Hello, coder!";
     return (
       <>
@@ -3087,8 +3169,8 @@ export default function Home() {
         <header className="home-nav"><div className="brand"><span className="brand-mark">&gt;_</span> Code<span>Step</span></div><div className="home-actions"><div className="nav-note">LEARN BY TYPING</div><button className="settings-button" onClick={() => setSettingsOpen(true)}>⚙ <span>Settings</span></button></div></header>
         <section className="hero">
           <div className="terminal-card" aria-hidden="true">
-            <div className="terminal-top"><i/><i/><i/><span>first-steps.js</span></div>
-            <div className="terminal-code"><div className="terminal-lines"><small>1</small><small>2</small><small>3</small><small>4</small><small>5</small></div><pre><code><HighlightedCode code={homeDemoCode.slice(0, homeCodeLength)} language="javascript" /></code></pre></div>
+            <div className="terminal-top"><i/><i/><i/><span>{languageName(homeDemoLanguage)} · {homeDemos[homeDemoLanguage].file}</span></div>
+            <div className="terminal-code"><div className="terminal-lines">{homeDemoCode.split("\n").map((_, i) => <small key={i}>{i + 1}</small>)}</div><pre><code><HighlightedCode code={homeDemoCode.slice(0, homeCodeLength)} language={homeDemoLanguage} /></code></pre></div>
             <div className="terminal-output"><span>›</span> {homeDemoOutput.slice(0, homeOutputLength)}<i>▋</i></div>
             <div className="success-pill"><span>✓</span><div><b>Nice work!</b><small>Your code ran successfully</small></div></div>
           </div>
@@ -3136,6 +3218,7 @@ export default function Home() {
 
   return (
     <>
+    {comparisonOpen && <LanguageComparison language={language} lesson={current!} onClose={() => setComparisonOpen(false)} />}
     <main className="lesson-shell">
       <header className="lesson-nav">
         <div className="lesson-brand-group"><button className="drawer-toggle" onClick={() => setNavOpen((open) => !open)} aria-label={navOpen ? "Close lesson list" : "Open lesson list"} aria-expanded={navOpen}><span>☰</span></button><button className="brand brand-button" onClick={() => setLanguage(null)}><span className="brand-mark">&gt;_</span> Code<span>Step</span></button></div>
@@ -3161,6 +3244,14 @@ export default function Home() {
           <div className="lesson-number">{String(index + 1).padStart(2, "0")} · {current!.eyebrow.split("·")[1]}</div>
           <h1>{current!.title}</h1>
           <p>{current!.explanation}</p>
+          <button className="compare-language-button" onClick={() => setComparisonOpen(true)}>Compare with another language</button>
+          {language === "csharp" && <details className="symbol-guide csharp-essentials" open={index < 2}>
+            <summary>C# essentials</summary>
+            <p>C# is a separate language from JavaScript and C++. Use the .NET SDK and a console project: <code>dotnet new console</code>, then <code>dotnet run</code>.</p>
+            <p>Declare types with <code>string</code> (text), <code>int</code> (whole numbers), <code>double</code> (decimals), and <code>bool</code> (true/false). <code>var</code> infers a fixed type from the initial value; it does not let that type change.</p>
+            <p>Names are case-sensitive: <code>Console.WriteLine</code> prints and <code>Console.ReadLine()</code> reads text, possibly null. End statements with <code>;</code>. Use <code>==</code> to compare and <code>=</code> to assign. C# has no JavaScript <code>===</code>.</p>
+            <p>Use <code>using System;</code> to bring library names into scope when needed. Modern console projects include common imports automatically. Top-level examples go in Program.cs; class examples include their own Main entry point, so replace the file rather than combining both styles.</p>
+          </details>}
           {current!.compareNode && <section className="runtime-guide" aria-label="Browser and Node input">
             <h2>The same name question in two places</h2>
             <h3>Browser · prompt()</h3><pre><code><HighlightedCode language="javascript" code={"let name = prompt(\"What is your name?\");\nconsole.log(`Hello ${name}`);"} /></code></pre>
