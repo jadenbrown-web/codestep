@@ -2818,20 +2818,22 @@ function SyntaxDiagnostic({ parts }: { parts: DiagnosticPart[] }) {
 }
 
 function HighlightedCode({ code, language, caretIndex }: { code: string; language: Language; caretIndex?: number }) {
-  const pattern = language === "html"
+  let pattern = language === "html"
     ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|div|section|script|img|video|audio|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|src|alt|controls|id|lang|charset)\b|\b(?:background-color)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:#])/g
     : language === "css"
     ? /(\/\*[\s\S]*?\*\/|#[0-9a-fA-F]{3,8}\b|#[A-Za-z_]\w*|\b(?:body|p|background-color|color|text-align|font-family|border|border-radius|solid|dotted|center|lightblue|red|blue|tomato)\b|\d+(?:px)?|[{}();:.,])/g
     : language === "python"
     ? /(#.*|f?"[^"\n]*"|f?'[^'\n]*'|\b(?:def|class|self|return|import|from|if|else|for|in|while|True|False|None|break|and|or|not|is)\b|\b(?:print|input|datetime|random|re|time|set|list|sorted)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|[{}()[\];=.:<>+*%/-])/g
     : /(\/\/[^\n]*|\/\^[A-Za-z]+\/[gimsuy]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:def|self|import|from|True|False|None|and|or|not|is|function|class|constructor|this|let|const|double|bool|out|auto|include|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime|List|Set|HashSet|Dictionary|Random|std|cout|cin|vector|map|optional|print|input|datetime|random|re|time|Regex|RegexOptions)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|&&|>=|<=|\+\+|--|[{}()[\];=.:<>?^/])/g;
+  if (language === "cpp") pattern = new RegExp(String.raw`#[ \t]*include[ \t]+(?:<[^>\n]+>|"[^"\n]+")|` + pattern.source, "g");
   const parts: { text: string; kind: string }[] = [];
   let lastIndex = 0;
   for (const match of code.matchAll(pattern)) {
     if (match.index! > lastIndex) parts.push({ text: code.slice(lastIndex, match.index), kind: "plain" });
     const text = match[0];
     let kind = "punctuation";
-    if (/^(\/\/|\/\*|<!--)/.test(text) || (language === "python" && text.startsWith("#"))) kind = "comment";
+    if (language === "cpp" && /^#[ \t]*include/.test(text)) kind = "header";
+    else if (/^(\/\/|\/\*|<!--)/.test(text) || (language === "python" && text.startsWith("#"))) kind = "comment";
     else if (/^f?["'`]/.test(text) || /^\/\^/.test(text)) kind = "string";
     else if (/^(function|class|constructor|this|let|const|double|bool|out|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|div|section|script|img|video|audio|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
     else if (/^(console|Console|Task|Date|DateTime|List|Set|HashSet|Dictionary|Random|Regex|RegexOptions|log)$/.test(text)) kind = "api";
@@ -2920,6 +2922,7 @@ function CppSetupGuide({ lesson, initiallyOpen = false }: { lesson: Lesson; init
       <div><dt>Defining and calling a function</dt><dd><code>void correct() {"{ ... }"}</code> defines instructions; <code>correct();</code> runs them. In these examples, define your function before main, then call it inside main. Otherwise, you need a declaration before its first use. Do not call correct from inside its own body just to start it: that repeatedly calls itself.</dd></div>
       <div><dt>Can it be simpler?</dt><dd>For a program that only prints, you need just <code>&lt;iostream&gt;</code>, <code>int main()</code>, its braces, and the print statement. Add other headers only when you use their tools. <code>using std::cout;</code> lets you write cout without std::, but keeping std:: makes its source clear.</dd></div>
     </dl>
+    <p>Code colours are reading aids, not errors. A header such as <code>&lt;string&gt;</code> names a library header; <code>std::string</code> is a text type; <code>"Hello"</code> is an actual string value.</p>
     <h3>Headers in this lesson</h3>
     {headers.map(header => <p key={header}><code>{`#include <${header}>`}</code> — {cppHeaderNotes[header] ?? "Makes this header’s declarations available to the example."}</p>)}
     <p>If you remove a required header, the compiler may report an unknown name. Another header can sometimes include it indirectly; include what your code uses so it does not depend on that accident.</p>
