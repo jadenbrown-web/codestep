@@ -1416,6 +1416,42 @@ const lessons: Record<Language, Lesson[]> = {
       "outputNote": "Example preview with the score present. Remove or rename it locally to try the File not found branch. CodeStep does not inspect your device."
     },
     {
+      "eyebrow": "Threads · Concurrent work",
+      "title": "Start two threads and wait for them",
+      "explanation": "Thread starts another path of execution in a .NET console program. The short () => expression is an inline action telling each thread what to print; writing a separate named method is unnecessary here. Start both threads before Join waits for each to finish. The two lines can appear in either order, and quick printing alone does not prove they ran at precisely the same instant. Use threads when work needs its own execution path; a delay does not create a thread.",
+      "note": "// Start both print jobs, then wait for both to finish.",
+      "prompt": "Set up two threads, start them, and wait for both messages.",
+      "answer": "using System;\nusing System.Threading;\n\nThread thread1 = new Thread(() => Console.WriteLine(\"Thread 1 is running!\"));\nThread thread2 = new Thread(() => Console.WriteLine(\"Thread 2 is running at the same time!\"));\n\nthread1.Start();\nthread2.Start();\n\nthread1.Join();\nthread2.Join();",
+      "output": [
+        "Thread 1 is running!",
+        "Thread 2 is running at the same time!"
+      ],
+      "outputNote": "Sample output only: the messages can appear in either order. CodeStep checks the code and previews one possible run; it does not start threads in the lesson console.",
+      "runHint": "Put this top-level code in Program.cs inside a .NET console project and run dotnet run. Either message can appear first.",
+      "parts": [
+        {
+          "code": "using System.Threading;",
+          "name": "Use thread tools",
+          "meaning": "Makes Thread available by its short name."
+        },
+        {
+          "code": "() => Console.WriteLine(...)",
+          "name": "Give the thread work",
+          "meaning": "An inline action (lambda) tells the thread what to print; it does not print at construction time."
+        },
+        {
+          "code": "Start()",
+          "name": "Start running",
+          "meaning": "Starts both threads before the main program waits."
+        },
+        {
+          "code": "Join()",
+          "name": "Wait for completion",
+          "meaning": "The main thread waits for each worker to finish."
+        }
+      ]
+    },
+    {
       "eyebrow": "22 · Application practice",
       "title": "Build a random word quiz",
       "explanation": "Combine the dictionary, random choice, input, and if/else. Choose a word, ask for its translation, then compare the answer with the stored value.",
@@ -2366,6 +2402,47 @@ const lessons: Record<Language, Lesson[]> = {
       "outputNote": "Example preview with the score present. Remove or rename it locally to try the File not found branch. CodeStep does not inspect your device."
     },
     {
+      "eyebrow": "Threads · Concurrent work",
+      "title": "Start two threads and wait for them",
+      "explanation": "This uses your two-print example. A thread is another path of execution in the same program. Thread(...) sets up work; target=print hands it the print function without calling it now. args=(\"...\",) supplies one argument, so the comma matters: it makes a one-item tuple. start() starts each thread. Both starts happen before join() waits, so the work can overlap. join() waits for a thread to finish; it does not start the thread or control which message prints first. Printing is so quick that the output alone cannot show how much overlap occurred. Standard Python builds have a GIL, so threads are especially useful for waiting on I/O rather than speeding up pure Python calculations.",
+      "note": "# Start both print jobs, then wait for both to finish.",
+      "prompt": "Set up two threads, start them, and wait for both messages.",
+      "answer": "import threading\n\nthread1 = threading.Thread(\n    target=print,\n    args=(\"Thread 1 is running!\",)\n)\n\nthread2 = threading.Thread(\n    target=print,\n    args=(\"Thread 2 is running at the same time!\",)\n)\n\nthread1.start()\nthread2.start()\n\nthread1.join()\nthread2.join()",
+      "output": [
+        "Thread 1 is running!",
+        "Thread 2 is running at the same time!"
+      ],
+      "outputNote": "Sample output only: the messages can appear in either order. CodeStep checks the code and previews one possible run; it does not start threads in the lesson console.",
+      "runHint": "Save as challenge.py and run python challenge.py (or python3 challenge.py). Run it several times; either message can appear first.",
+      "parts": [
+        {
+          "code": "import threading",
+          "name": "Load the module",
+          "meaning": "Makes Python’s built-in Thread class available."
+        },
+        {
+          "code": "target=print",
+          "name": "Choose the work",
+          "meaning": "Passes print itself to the thread. Writing print(...) here would run it immediately on the main thread."
+        },
+        {
+          "code": "args=(\"Thread 1 is running!\",)",
+          "name": "Pass the text",
+          "meaning": "A one-item tuple needs the trailing comma. Thread calls print with this text when it starts."
+        },
+        {
+          "code": "thread1.start()",
+          "name": "Start the first thread",
+          "meaning": "Schedules its target to run, then returns; start thread2 before waiting."
+        },
+        {
+          "code": "thread1.join()",
+          "name": "Wait for completion",
+          "meaning": "The main thread waits until thread1 finishes. Then it waits for thread2 too."
+        }
+      ]
+    },
+    {
       "eyebrow": "22 · Application practice",
       "title": "Build a random word quiz",
       "explanation": "Combine the dictionary, random choice, input, and if/else. input displays the chosen word. words[word] retrieves its expected translation. == checks the entered answer and prints Correct or Wrong.",
@@ -3061,6 +3138,42 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "runHint": "Save as file-finder.cpp, compile with g++ -std=c++17 file-finder.cpp -o file-finder, then run ./file-finder (Windows: .\\file-finder.exe). A C++17 compiler is required. Run from the folder containing sheet-music. Create sheet-music there and put a real image inside named chopin-nocturne.png. Add practice-notes.txt to try listing more than one file.",
       "outputNote": "Example preview with the score present. Remove or rename it locally to try the File not found branch. CodeStep does not inspect your device."
+    },
+    {
+      "eyebrow": "Threads · Concurrent work",
+      "title": "Start two threads and wait for them",
+      "explanation": "std::thread starts a separate path of execution when constructed with work. The [] { ... } expression is an inline lambda containing the print instruction, so this example needs no named function. Construct both threads, then join each one before main ends. Their print order can change; console output may even mix if two threads write at once. Include <thread> for std::thread. A delay or an ordinary sequential pair of print statements would not create extra threads.",
+      "note": "// Start both print jobs, then wait for both to finish.",
+      "prompt": "Set up two threads, start them, and wait for both messages.",
+      "answer": "#include <iostream>\n#include <thread>\n\nint main() {\n  std::thread thread1([] { std::cout << \"Thread 1 is running!\\n\"; });\n  std::thread thread2([] { std::cout << \"Thread 2 is running at the same time!\\n\"; });\n\n  thread1.join();\n  thread2.join();\n}",
+      "output": [
+        "Thread 1 is running!",
+        "Thread 2 is running at the same time!"
+      ],
+      "outputNote": "Sample output only: the messages can appear in either order. CodeStep checks the code and previews one possible run; it does not start threads in the lesson console.",
+      "runHint": "Save as challenge.cpp. Compile with g++ -std=c++17 -pthread challenge.cpp -o challenge and run ./challenge (Windows with an appropriate C++ compiler: challenge.exe). Either line can appear first.",
+      "parts": [
+        {
+          "code": "#include <thread>",
+          "name": "Use threads",
+          "meaning": "Declares std::thread and its join method."
+        },
+        {
+          "code": "[] { ... }",
+          "name": "Give the thread work",
+          "meaning": "This inline lambda is the code the new thread runs; no separately named function is needed."
+        },
+        {
+          "code": "std::thread thread1(...)",
+          "name": "Create and start",
+          "meaning": "Creating a std::thread with work starts it immediately."
+        },
+        {
+          "code": "join()",
+          "name": "Wait for completion",
+          "meaning": "The main thread waits for both workers before ending main."
+        }
+      ]
     },
     {
       "eyebrow": "22 · Application practice",
