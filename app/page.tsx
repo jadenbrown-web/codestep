@@ -2889,6 +2889,43 @@ function SettingsPanel({ open, themeMode, showGuide, colourTyping, blockMode, on
   </div>;
 }
 
+const cppHeaderNotes: Record<string, string> = {
+  iostream: "Declares terminal input and output, including std::cout (print), std::cin (read), and std::endl (new line and flush).",
+  string: "Declares std::string for storing text and string-based std::getline for reading a whole line.",
+  vector: "Declares std::vector, a list that can grow when you add items.",
+  map: "Declares std::map, which stores keys with their associated values.",
+  set: "Declares std::set, a collection of unique, sorted values.",
+  algorithm: "Declares operations on collections, such as std::find for searching.",
+  optional: "Declares std::optional and std::nullopt for a value that may be absent.",
+  random: "Declares random-number generators and distributions for choosing values.",
+  regex: "Declares std::regex and pattern-matching operations.",
+  ctime: "Declares time utilities, including std::time, std::tm, and std::localtime.",
+  iomanip: "Declares output formatting tools, such as std::put_time for displaying a time.",
+  chrono: "Declares clocks and durations, such as std::chrono::seconds(2).",
+  thread: "Declares thread utilities, including std::this_thread::sleep_for for pausing the current thread.",
+};
+
+function CppSetupGuide({ lesson, initiallyOpen = false }: { lesson: Lesson; initiallyOpen?: boolean }) {
+  const headers = [...new Set(Array.from(lesson.answer.matchAll(/#include <([^>]+)>/g), match => match[1]))];
+  return <details className="cpp-setup-guide" open={initiallyOpen}>
+    <summary>Understand the C++ setup code</summary>
+    <pre><code><HighlightedCode language="cpp" code={'#include <iostream> // Make cout available.\n\nint main() {        // The program starts here.\n  std::cout << "Hello\\n";\n  return 0;         // Tell the system it finished successfully.\n}'} /></code></pre>
+    <dl>
+      <div><dt><code>#include &lt;iostream&gt;</code></dt><dd><code>#include</code> is a preprocessor instruction: it brings a header’s declarations into this file before compilation. A header describes library tools your code can use. The angle brackets <code>&lt; &gt;</code> tell the compiler to search its configured include locations. This does not install a library. Use <code>#include "myfile.h"</code> for a project header, usually searched relative to the current file first. Include directives do not need a semicolon.</dd></div>
+      <div><dt><code>int main()</code></dt><dd><code>main</code> is the starting function for a normal C++ console program. <code>int</code> means it returns a whole number to the operating system; it is not the number your program prints. Empty <code>()</code> means this version takes no parameters. Write ordinary executable statements inside main or another function. Removing main from this standalone example prevents it from linking as a normal executable.</dd></div>
+      <div><dt><code>{"{ ... }"}</code></dt><dd>The braces mark the start and end of the function body. Indentation makes it easier to read; the braces determine which instructions belong to it.</dd></div>
+      <div><dt><code>std::cout &lt;&lt; "Hello\\n";</code></dt><dd><code>std</code> is the standard-library namespace, a group of names. <code>::</code> selects a name inside it. <code>cout</code> is the standard output stream; <code>&lt;&lt;</code> sends the text into it. <code>\n</code> starts a new line and <code>;</code> ends the statement. Removing <code>std::</code> makes cout unknown unless you have brought that name into scope.</dd></div>
+      <div><dt><code>return 0;</code></dt><dd>Ends main and sends a success status to the operating system. A nonzero status usually signals a problem. You can leave this line out at the end of main: C++ automatically returns 0 there. That special rule does not apply to ordinary functions that must return a value.</dd></div>
+      <div><dt><code>int</code>, <code>void</code>, and <code>std::string</code></dt><dd>Types describe values. <code>int score = 5;</code> stores a whole number; <code>double speed = 5.5;</code> stores a decimal; <code>bool ready = true;</code> stores true or false; <code>std::string name = "Jaden";</code> stores text. Before a function name, its type describes what it returns: <code>void correct()</code> returns no value. main must return int, so do not replace it with void main.</dd></div>
+      <div><dt>Defining and calling a function</dt><dd><code>void correct() {"{ ... }"}</code> defines instructions; <code>correct();</code> runs them. In these examples, define your function before main, then call it inside main. Otherwise, you need a declaration before its first use. Do not call correct from inside its own body just to start it: that repeatedly calls itself.</dd></div>
+      <div><dt>Can it be simpler?</dt><dd>For a program that only prints, you need just <code>&lt;iostream&gt;</code>, <code>int main()</code>, its braces, and the print statement. Add other headers only when you use their tools. <code>using std::cout;</code> lets you write cout without std::, but keeping std:: makes its source clear.</dd></div>
+    </dl>
+    <h3>Headers in this lesson</h3>
+    {headers.map(header => <p key={header}><code>{`#include <${header}>`}</code> — {cppHeaderNotes[header] ?? "Makes this header’s declarations available to the example."}</p>)}
+    <p>If you remove a required header, the compiler may report an unknown name. Another header can sometimes include it indirectly; include what your code uses so it does not depend on that accident.</p>
+  </details>;
+}
+
 const homeDemos: Record<Language, { code: string; file: string }> = {
   javascript: { file: "hello.js", code: 'function sayHello() {\n  console.log("Hello, coder!");\n}\n\nsayHello();' },
   csharp: { file: "Program.cs", code: 'void SayHello() {\n  Console.WriteLine("Hello, coder!");\n}\n\nSayHello();' },
@@ -2923,14 +2960,14 @@ function LanguageComparison({ language, lesson, onClose }: { language: Language;
   useEffect(() => { setPickedTitle(""); }, [lesson, target]);
   return <dialog ref={dialog} className="language-comparison" onCancel={onClose} onClick={event => { if (event.target === event.currentTarget) onClose(); }} aria-labelledby="language-comparison-title">
     <div className="language-comparison-head"><h2 id="language-comparison-title">Compare code</h2><button onClick={onClose} aria-label="Close language comparison">×</button></div>
-    <div className="language-comparison-controls"><label>Compare {languageName(language)} with <select value={target} onChange={event => setTarget(event.target.value as Language)}>{(Object.keys(lessons) as Language[]).filter(item => item !== language).map(item => <option key={item} value={item}>{languageName(item)}</option>)}</select></label>
+    <div className="language-comparison-controls"><div className="compare-language-choices"><span>Compare {languageName(language)} with</span><div role="group" aria-label="Comparison language">{(Object.keys(lessons) as Language[]).filter(item => item !== language).map(item => <button key={item} aria-pressed={target === item} onClick={() => { setTarget(item); setPickedTitle(""); }}>{languageName(item)}</button>)}</div></div>
       {!equivalent && <p>{target === "html" || target === "css" || language === "html" || language === "css" ? "HTML describes page content and CSS styles it; they do not have a direct equivalent for every programming task." : "There is no matching lesson for this topic yet."} Choose an example below to view alongside your lesson.</p>}
-      <label>{equivalent ? "Example" : "Choose an example"}<select value={other?.title ?? ""} onChange={event => setPickedTitle(event.target.value)}><option value="" disabled>Select a lesson</option>{lessons[target].map(item => <option key={item.title} value={item.title}>{item.title}</option>)}</select></label>
+      <details key={target} className="compare-example-picker"><summary><span>Example</span><b>{other?.title ?? "Choose an example"}</b><span className="example-picker-hint">Change</span></summary><div className="compare-example-list" role="group" aria-label={`${languageName(target)} examples`}>{lessons[target].map((item, i) => <button key={item.title} aria-pressed={other?.title === item.title} onClick={event => { setPickedTitle(item.title); const picker = event.currentTarget.closest("details"); if (picker) { picker.open = false; picker.querySelector("summary")?.focus(); } }}><span>{String(i + 1).padStart(2, "0")}</span><b>{item.title}</b>{other?.title === item.title && <span aria-hidden="true">✓</span>}</button>)}</div></details>
       {other && other !== equivalent && <p>These examples cover different topics.</p>}
     </div>
     <div className="language-comparison-columns">
       <section><h3>{languageName(language)}</h3><b>{lesson.title}</b><pre><code><HighlightedCode code={lesson.answer} language={language} /></code></pre><p>{lesson.explanation}</p></section>
-      <section><h3>{languageName(target)}</h3>{other ? <><b>{other.title}</b><pre><code><HighlightedCode code={other.answer} language={target} /></code></pre><p>{other.explanation}</p>{other.runHint && <p>{other.runHint}</p>}</> : <p>Select an example to show its code here.</p>}</section>
+      <section><h3>{languageName(target)}</h3>{other ? <><b>{other.title}</b><pre><code><HighlightedCode code={other.answer} language={target} /></code></pre><p>{other.explanation}</p>{target === "cpp" && <CppSetupGuide key={other.title} lesson={other} />}{other.runHint && <p>{other.runHint}</p>}</> : <p>Select an example to show its code here.</p>}</section>
     </div>
   </dialog>;
 }
@@ -3245,6 +3282,7 @@ export default function Home() {
           <h1>{current!.title}</h1>
           <p>{current!.explanation}</p>
           <button className="compare-language-button" onClick={() => setComparisonOpen(true)}>Compare with another language</button>
+          {language === "cpp" && <CppSetupGuide key={current!.title} lesson={current!} initiallyOpen={index < 2} />}
           {language === "csharp" && <details className="symbol-guide csharp-essentials" open={index < 2}>
             <summary>C# essentials</summary>
             <p>C# is a separate language from JavaScript and C++. Use the .NET SDK and a console project: <code>dotnet new console</code>, then <code>dotnet run</code>.</p>
