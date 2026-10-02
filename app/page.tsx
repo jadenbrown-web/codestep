@@ -15,585 +15,1354 @@ type Lesson = {
   starter?: string;
   answer: string;
   output: string[];
+  parts?: CodePart[];
+  outputColors?: string[];
+  outputNote?: string;
   referenceOnly?: boolean;
   referenceKind?: "text" | "fonts" | "pages" | "css" | "comparisons";
 };
 
 const lessons: Record<Language, Lesson[]> = {
-  javascript: [
+  "javascript": [
     {
-      eyebrow: "01 · Console output",
-      title: "Print several lines at once",
-      explanation: "console.log prints the text inside quotation marks. Write \\n inside the string wherever you want a new line. In console.log(\" Hello \\n Welcome \\n Goodbye\"), the first \\n puts Welcome on the next line and the second puts Goodbye on another line. const red stores the red terminal colour code, and ${red} inserts it before the red-text message.",
-      note: "// Use \\n to start a new line in the console",
-      prompt: "Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
-      answer: 'const red = "\\x1b[31m";\nconsole.log(`${red} This is red text`);\n\nconsole.log(" Hello \\n Welcome \\n Goodbye");',
-      output: [" This is red text", " Hello ", " Welcome ", " Goodbye"],
+      "eyebrow": "01 · Console output",
+      "title": "Print several lines at once",
+      "explanation": "console.log prints the text inside quotation marks. Write \\n inside the string wherever you want a new line. In console.log(\" Hello \\n Welcome \\n Goodbye\"), the first \\n puts Welcome on the next line and the second puts Goodbye on another line. const red stores the red terminal colour code, and ${red} inserts it before the red-text message.",
+      "note": "// Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
+      "prompt": "Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
+      "answer": "const red = \"\\x1b[31m\";\nconsole.log(`${red} This is red text`);\n\nconsole.log(\" Hello \\n Welcome \\n Goodbye\");",
+      "output": [
+        " This is red text",
+        " Hello ",
+        " Welcome ",
+        " Goodbye"
+      ],
+      "parts": [
+        {
+          "code": "console.log",
+          "name": "Print",
+          "meaning": "Prints the value inside its parentheses."
+        },
+        {
+          "code": "\\n",
+          "name": "New line",
+          "meaning": "Write this inside the quoted string to start the next line."
+        },
+        {
+          "code": "\\x1b[31m",
+          "name": "ANSI red",
+          "meaning": "The escape character followed by [31m selects red terminal text."
+        },
+        {
+          "code": "${red}",
+          "name": "Insert a value",
+          "meaning": "Inside backticks, inserts the value stored in red."
+        }
+      ],
+      "outputColors": [
+        "#ef4444"
+      ]
     },
     {
-      eyebrow: "02 · Functions",
-      title: "Make something happen",
-      explanation: "A function is a named block of code. Curly braces { } group the instructions that belong to it. The code waits until you call the function.",
-      note: "// Create a function named correct that prints correct",
-      prompt: "Type the function, then call it on the last line.",
-      answer: 'function correct() {\n  console.log("correct");\n}\n\ncorrect();',
-      output: ["correct"],
+      "eyebrow": "02 · ANSI colours",
+      "title": "Choose a text colour",
+      "explanation": "ANSI escape codes choose terminal text colours: 31 is red, 32 green, 33 yellow, 34 blue, 35 magenta, and 36 cyan. Code 0 resets the colour so later output returns to normal. These codes work in terminals that support ANSI colours. The lesson console previews the colours.",
+      "note": "// Print Red text and Green text, then reset the colour.",
+      "prompt": "Print Red text and Green text, then reset the colour.",
+      "answer": "const red = \"\\x1b[31m\";\nconst green = \"\\x1b[32m\";\nconst reset = \"\\x1b[0m\";\n\nconsole.log(`${red}Red text${reset}`);\nconsole.log(`${green}Green text${reset}`);",
+      "output": [
+        "Red text",
+        "Green text"
+      ],
+      "parts": [
+        {
+          "code": "\\x1b[0m",
+          "name": "Reset",
+          "meaning": "Returns terminal text to its normal colour."
+        }
+      ],
+      "outputColors": [
+        "#ef4444",
+        "#4ade80"
+      ]
     },
     {
-      eyebrow: "03 · While loops",
-      title: "Repeat input until the answer is correct",
-      explanation: "while (true) { } repeats forever because true never changes. On its own, it never reaches an ending. If you put that endless loop inside an HTML page, the page can freeze. This version works because break leaves the loop as soon as the answer is correct.",
-      note: "// Ask for input, show output, and break inside the if block",
-      prompt: "Create the loop with input, output, and break inside if.",
-      answer: 'while (true) {\n  let answer = prompt("What is 1 + 1?");\n  console.log(answer);\n\n  if (answer == "2") {\n    console.log("Correct!");\n    break;\n  }\n\n  console.log("Try again.");\n}',
-      output: ["INPUT  →  2", "OUTPUT  →  2", "Correct!", "break leaves the loop."],
+      "eyebrow": "03 · Time",
+      "title": "Run code after a delay",
+      "explanation": "setTimeout schedules the code inside its arrow function to run after 2000 milliseconds, or 2 seconds. () => creates the function; {} holds its instructions. The rest of the program can continue while the timer waits.",
+      "note": "// Wait 2 seconds, then print Time reached!",
+      "prompt": "Wait 2 seconds, then print Time reached!",
+      "answer": "setTimeout(() => {\n  console.log(\"Time reached!\");\n}, 2000);",
+      "output": [
+        "Time reached!"
+      ],
+      "parts": [
+        {
+          "code": "() => {}",
+          "name": "Arrow function",
+          "meaning": "An unnamed function: empty () means no parameters and {} holds the body."
+        },
+        {
+          "code": "2000",
+          "name": "Milliseconds",
+          "meaning": "1000 milliseconds = 1 second."
+        }
+      ],
+      "outputNote": "Example output after the 2-second delay."
     },
     {
-      eyebrow: "04 · Variables",
-      title: "Remember a value",
-      explanation: "let creates a variable—a labelled place to keep a value. prompt asks the user a question and saves their answer.",
-      note: "// Ask for a name and greet the user",
-      prompt: "Create a name variable, then print Hello with a template string.",
-      answer: 'let name = prompt("What is your name?");\nconsole.log(`Hello ${name}`);',
-      output: ["What is your name?  →  Alex", "Hello Alex"],
+      "eyebrow": "04 · Date and time",
+      "title": "Print the current date and time",
+      "explanation": "new Date() captures the current local date and time from the device. console.log(time) prints that Date. The display depends on the device, time zone, and when you run it. getHours() reads the hour from 0 to 23; getMinutes() reads the minute from 0 to 59.",
+      "note": "// Store the current date and time in time, then print it.",
+      "prompt": "Store the current date and time in time, then print it.",
+      "answer": "let time = new Date();\nconsole.log(time);",
+      "output": [
+        "02/10/2026 17:20:00"
+      ],
+      "parts": [
+        {
+          "code": "new Date()",
+          "name": "Current moment",
+          "meaning": "Creates a Date containing the current date and time."
+        }
+      ],
+      "outputNote": "Example date and time; running the code uses your device’s current moment."
     },
     {
-      eyebrow: "05 · Classes",
-      title: "Create and use a class",
-      explanation: "A function is called with its name, such as correct(). A class is used in a similar way, but you put new before its name: new Car(\"Ford\", 2014). People sometimes call this ‘calling the class’, but its proper name is creating an object, or an instance, from the class. The class is defined before the code that creates objects from it.",
-      note: "// Define the class first, then use new Car(...) to create objects",
-      prompt: "Create the Car class, then call its constructor with new to make Ford and Audi objects.",
-      answer: 'class Car {\n  constructor(name, year) {\n    // this.name is the property stored in the car object.\n    // name is the value passed into the constructor.\n    this.name = name;\n\n    // this.year is the property stored in the car object.\n    // year is the value passed into the constructor.\n    this.year = year;\n  }\n}\n\nconst myCar1 = new Car("Ford", 2014);\nconst myCar2 = new Car("Audi", 2019);\n\nconsole.log(myCar1);\nconsole.log(myCar2);',
-      output: ['Car { name: "Ford", year: 2014 }', 'Car { name: "Audi", year: 2019 }'],
+      "eyebrow": "05 · Date and time",
+      "title": "Check for a particular time",
+      "explanation": "This checks the local time once. getHours() and getMinutes() read parts of time. === compares values and types; && requires both comparisons to be true. The message prints only if this code runs during 17:20. An if statement alone does not keep watching the clock.",
+      "note": "// Print Time reached! if the local hour is 17 and the minute is 20.",
+      "prompt": "Print Time reached! if the local hour is 17 and the minute is 20.",
+      "answer": "let time = new Date();\n\nlet hour = time.getHours();\nlet minute = time.getMinutes();\n\nif (hour === 17 && minute === 20) {\n  console.log(\"Time reached!\");\n}",
+      "output": [
+        "Time reached!"
+      ],
+      "parts": [
+        {
+          "code": "time.getHours()",
+          "name": "Hour",
+          "meaning": "Reads the hour from 0 to 23."
+        },
+        {
+          "code": "time.getMinutes()",
+          "name": "Minute",
+          "meaning": "Reads the minute from 0 to 59."
+        },
+        {
+          "code": "&&",
+          "name": "Both",
+          "meaning": "The hour and minute must both match."
+        }
+      ],
+      "outputNote": "Example output when the clock is 17:20. At other times, this snippet prints nothing."
     },
     {
-      eyebrow: "06 · Console",
-      title: "Clear the screen",
-      explanation: "The console is where your text program shows its output. console.clear() removes everything currently shown there.",
-      note: "// Clear all previous console output",
-      prompt: "Write the single line that clears the console.",
-      answer: "console.clear();",
-      output: ["Console cleared."],
+      "eyebrow": "06 · Date and time",
+      "title": "Keep checking until the time is reached",
+      "explanation": "This checks the clock every second while the program stays open. Each check creates a fresh Date. At 17:20 it prints once and clearInterval stops future checks. If 17:20 has passed, it waits for the next day. Browser timers may run late, especially in background tabs, so this is a learning example rather than an exact alarm.",
+      "note": "// Keep checking the local clock and print Time reached! once at 17:20.",
+      "prompt": "Keep checking the local clock and print Time reached! once at 17:20.",
+      "answer": "const timer = setInterval(() => {\n  let time = new Date();\n  let hour = time.getHours();\n  let minute = time.getMinutes();\n\n  if (hour === 17 && minute === 20) {\n    console.log(\"Time reached!\");\n    clearInterval(timer);\n  }\n}, 1000);",
+      "output": [
+        "Time reached!"
+      ],
+      "parts": [
+        {
+          "code": "setInterval",
+          "name": "Repeat checks",
+          "meaning": "Runs the callback repeatedly with a delay between checks."
+        },
+        {
+          "code": "clearInterval(timer)",
+          "name": "Stop",
+          "meaning": "Cancels the repeating timer after the matching time."
+        }
+      ],
+      "outputNote": "Example output at 17:20. The lesson preview does not wait for the clock."
     },
     {
-      eyebrow: "07 · If and else with words",
-      title: "Right answer or wrong answer",
-      explanation: "if checks whether the word in answer is exactly green. When it is green, the program prints Right! The else block runs for every other word and prints Wrong!",
-      note: "// Print Right for green, or Wrong for any other answer",
-      prompt: "Ask what colour grass is, then use if and else to check the word.",
-      answer: 'let answer = prompt("What color is grass?");\n\nif (answer === "green") {\n  console.log("Right!");\n} else {\n  console.log("Wrong!");\n}',
-      output: ["What color is grass?  →  green", "Right!"],
+      "eyebrow": "07 · Functions",
+      "title": "Make something happen",
+      "explanation": "A function is a named block of code. Curly braces { } group the instructions that belong to it. The code waits until you call the function.",
+      "note": "// Create a function named correct that prints correct",
+      "prompt": "Create correct, then call it to print correct.",
+      "answer": "function correct() {\n  console.log(\"correct\");\n}\n\ncorrect();",
+      "output": [
+        "correct"
+      ],
+      "parts": [
+        {
+          "code": "function",
+          "name": "Create",
+          "meaning": "Starts a reusable block of code."
+        },
+        {
+          "code": "correct()",
+          "name": "Name",
+          "meaning": "Names the function so you can call it later."
+        },
+        {
+          "code": "{ ... }",
+          "name": "Instructions",
+          "meaning": "Holds the code the function will run."
+        },
+        {
+          "code": "correct();",
+          "name": "Call it",
+          "meaning": "Runs the function you created."
+        },
+        {
+          "code": ";",
+          "name": "End instruction",
+          "meaning": "Marks where an instruction ends. JavaScript can sometimes work without it, but using it consistently makes the ending clear."
+        }
+      ]
     },
     {
-      eyebrow: "08 · Null values",
-      title: "Mark a value as not ready yet",
-      explanation: "null deliberately means that a variable has no value yet. It is different from zero or an empty string, and the variable may receive a real value later. === null checks specifically for that missing value.",
-      note: "// null means there is deliberately no result yet",
-      prompt: "Set result to null, then print the message for its current state.",
-      answer: 'let result = null; // There is no result yet\n\nif (result === null) {\n  console.log("No result yet");\n} else {\n  console.log("Result is ready");\n}',
-      output: ["No result yet"],
+      "eyebrow": "08 · Functions",
+      "title": "Use one function inside another",
+      "explanation": "getMessage() returns Hello. In console.log(getMessage()), the inner function runs first, then console.log prints its returned value. Each call has its own pair of parentheses. In console.log((getMessage())), the extra parentheses only group the result; (( is not a special sign for multiple functions.",
+      "note": "// Return Hello from getMessage, then print it by calling the function inside the print call.",
+      "prompt": "Return Hello from getMessage, then print it by calling the function inside the print call.",
+      "answer": "function getMessage() {\n  return \"Hello\";\n}\n\nconsole.log(getMessage());",
+      "output": [
+        "Hello"
+      ],
+      "parts": [
+        {
+          "code": "return",
+          "name": "Send back",
+          "meaning": "Ends the function and sends its value back to the caller."
+        },
+        {
+          "code": "console.log(getMessage())",
+          "name": "Nested calls",
+          "meaning": "getMessage runs first; console.log receives Hello."
+        }
+      ]
     },
     {
-      eyebrow: "09 · Combined conditions",
-      title: "Check whether a value is in a range",
-      explanation: "A range needs two comparisons. >= checks the lower limit, <= checks the upper limit, and && means both conditions must be true at the same time.",
-      note: "// && means AND. Both conditions must be true.",
-      prompt: "Use && to check both ends of the age range.",
-      starter: "let age = 16;\n\n",
-      answer: 'let age = 16;\n\n// && means AND. Both conditions must be true.\nif (age >= 0 && age <= 18) {\n  console.log("Your age is between 0 and 18.");\n} else {\n  console.log("Your age is above 18.");\n}',
-      output: ["Your age is between 0 and 18."],
+      "eyebrow": "09 · Classes",
+      "title": "Create and use a class",
+      "explanation": "A function is called with its name, such as correct(). A class is used in a similar way, but you put new before its name: new Car(\"Ford\", 2014). People sometimes call this ‘calling the class’, but its proper name is creating an object, or an instance, from the class. The class is defined before the code that creates objects from it.",
+      "note": "// Define the class first, then use new Car(...) to create objects",
+      "prompt": "Create the Car class, then call its constructor with new to make Ford and Audi objects.",
+      "answer": "class Car {\n  constructor(name, year) {\n    // this.name is the property stored in the car object.\n    // name is the value passed into the constructor.\n    this.name = name;\n\n    // this.year is the property stored in the car object.\n    // year is the value passed into the constructor.\n    this.year = year;\n  }\n}\n\nconst myCar1 = new Car(\"Ford\", 2014);\nconst myCar2 = new Car(\"Audi\", 2019);\n\nconsole.log(`${myCar1.name}, ${myCar1.year}`);\nconsole.log(`${myCar2.name}, ${myCar2.year}`);",
+      "output": [
+        "Ford, 2014",
+        "Audi, 2019"
+      ],
+      "parts": []
     },
     {
-      eyebrow: "10 · Comparison reference",
-      title: "Compare two values",
-      explanation: "Comparison operators ask a question about two values and produce true or false. Keep this page as a quick reference: the code stays nearly identical while the symbol changes the question being asked.",
-      note: "// Compare values using equality, inequality, and size operators",
-      prompt: "Explore the comparison operators and their results.",
-      answer: "let x = 5;\nconsole.log(x === 5);",
-      output: ["Comparison reference explored."],
-      referenceOnly: true,
-      referenceKind: "comparisons",
+      "eyebrow": "10 · Loops",
+      "title": "Repeat input until the answer is correct",
+      "explanation": "while (true) { } repeats forever because true never changes. On its own, it never reaches an ending. If you put that endless loop inside an HTML page, the page can freeze. This version works because break leaves the loop as soon as the answer is correct.",
+      "note": "// Create the loop with input, output, and break inside if.",
+      "prompt": "Create the loop with input, output, and break inside if.",
+      "answer": "while (true) {\n  let answer = prompt(\"What is 1 + 1?\");\n  console.log(answer);\n\n  if (answer == \"2\") {\n    console.log(\"Correct!\");\n    break;\n  }\n\n  console.log(\"Try again.\");\n}",
+      "output": [
+        "INPUT  →  2",
+        "OUTPUT  →  2",
+        "Correct!",
+        "break leaves the loop."
+      ],
+      "parts": [
+        {
+          "code": "while (true)",
+          "name": "Repeat",
+          "meaning": "Keeps asking for input until code inside stops the loop."
+        },
+        {
+          "code": "prompt",
+          "name": "Input",
+          "meaning": "Asks the user for an answer."
+        },
+        {
+          "code": "break",
+          "name": "Stop",
+          "meaning": "Leaves the loop when the if condition is true."
+        }
+      ]
     },
     {
-      eyebrow: "11 · Regular expressions",
-      title: "Let names beginning with J enter",
-      explanation: "A regular expression checks text against a pattern. /^J/i means: the slashes hold the pattern, ^ anchors the check to the beginning, J is the required first letter, and i ignores uppercase or lowercase. It accepts any word beginning with J—not only names—and rejects J when it appears later in the text.",
-      note: "// Let people into the club when their name begins with J",
-      prompt: "Check the five names and print who may enter the club.",
-      answer: 'const names = ["Jaden", "James", "Jessica", "Sarah", "Ben"];\n\nfor (const name of names) {\n  if (/^J/i.test(name)) {\n    console.log(name + " can enter the club.");\n  } else {\n    console.log(name + " cannot enter the club.");\n  }\n}',
-      output: ["Jaden can enter the club.", "James can enter the club.", "Jessica can enter the club.", "Sarah cannot enter the club.", "Ben cannot enter the club."],
+      "eyebrow": "11 · Variables",
+      "title": "Use changeable and fixed values",
+      "explanation": "let creates a variable you can reassign. const creates a binding you cannot reassign. Here speed changes from 80 to 100; maxSpeed stays 100. const does not freeze an array or object: you can still change its contents.",
+      "note": "// Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
+      "prompt": "Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
+      "answer": "let speed = 80;\nconst maxSpeed = 100;\n\nspeed = 100;\nconsole.log(`Speed: ${speed}`);",
+      "output": [
+        "Speed: 100"
+      ],
+      "parts": [
+        {
+          "code": "let",
+          "name": "Changeable",
+          "meaning": "Allows a later assignment to the same variable."
+        },
+        {
+          "code": "const",
+          "name": "Fixed binding",
+          "meaning": "Prevents reassigning the variable."
+        }
+      ]
     },
     {
-      eyebrow: "12 · Arrays",
-      title: "Make and search a names array",
-      explanation: "The square brackets [] create an empty array: a list that can hold several values. prompt asks the user for a name, and push() adds that answer to names. A second prompt saves what to look for in search. includes() checks whether that value is in the array and returns true or false; it does not add anything. if/else prints name found or name not found. Matching is case-sensitive: Jaden and jaden are different.",
-      note: "// Make an array, add one name, then search for it",
-      prompt: "Create an empty array, add a name, ask what to search for, and use if/else to print whether it was found.",
-      answer: 'const names = [];\n\nnames.push(prompt("add a name"));\n\nconst search = prompt("search for a name");\n\nif (names.includes(search)) {\n  console.log("name found");\n} else {\n  console.log("name not found");\n}',
-      output: ["add a name  →  Jaden", "search for a name  →  Jaden", "name found"],
+      "eyebrow": "12 · Variables",
+      "title": "Remember a value",
+      "explanation": "let creates a variable—a labelled place to keep a value. prompt asks the user a question and saves their answer.",
+      "note": "// Ask for a name and greet the user",
+      "prompt": "Create a name variable, then print Hello with a template string.",
+      "answer": "let name = prompt(\"What is your name?\");\nconsole.log(`Hello ${name}`);",
+      "output": [
+        "What is your name?  →  Alex",
+        "Hello Alex"
+      ],
+      "parts": [
+        {
+          "code": "let",
+          "name": "Create",
+          "meaning": "Makes a variable that can remember something."
+        },
+        {
+          "code": "name",
+          "name": "Label",
+          "meaning": "Shows that you choose a useful name for the saved value."
+        },
+        {
+          "code": "=",
+          "name": "Save",
+          "meaning": "Puts the value on the right into the variable on the left."
+        }
+      ]
     },
     {
-      eyebrow: "13 · Sets",
-      title: "Remove duplicate names",
-      explanation: "A Set stores only unique values. Passing names into new Set(names) removes repeated names, and [...uniqueNames] spreads the remaining values back into an array for printing.",
-      note: "// Ask for three names, then remove any duplicates",
-      prompt: "Collect three names, create a Set, and print its unique values.",
-      answer: 'const names = [];\n\nnames.push(prompt("Enter the first name:"));\nnames.push(prompt("Enter the second name:"));\nnames.push(prompt("Enter the third name:"));\n\nconst uniqueNames = new Set(names);\n\nconsole.log([...uniqueNames]);',
-      output: ["Enter the first name:  →  Alex", "Enter the second name:  →  Sam", "Enter the third name:  →  Alex", '["Alex", "Sam"]'],
+      "eyebrow": "13 · If and else",
+      "title": "Choose between two messages",
+      "explanation": "if checks the condition in (). When speed is greater than 100, its {} block prints Too fast! Otherwise, the else block prints Speed is OK. Each block groups the instructions for that case.",
+      "note": "// Print Too fast! for speed above 100; otherwise print Speed is OK.",
+      "prompt": "Print Too fast! for speed above 100; otherwise print Speed is OK.",
+      "answer": "let speed = 120;\n\nif (speed > 100) {\n  console.log(\"Too fast!\");\n} else {\n  console.log(\"Speed is OK.\");\n}",
+      "output": [
+        "Too fast!"
+      ],
+      "parts": [
+        {
+          "code": ">",
+          "name": "Greater than",
+          "meaning": "Checks whether the value on the left is bigger."
+        },
+        {
+          "code": "else",
+          "name": "Otherwise",
+          "meaning": "Runs when the if condition is false."
+        }
+      ]
     },
     {
-      eyebrow: "14 · Objects",
-      title: "Search a word object",
-      explanation: "This is called an object. The curly braces { } hold named values. bonjour and hola are keys, and each key stores the value hello. The prompt saves a word in search. words[search] uses square brackets to look up the matching key, then console.log prints its value.",
-      note: "// Make a word object, search for a key, then print its value",
-      prompt: "Create the words object and search it with the user's answer.",
-      answer: 'const words = {\n  bonjour: "hello",\n  hola: "hello"\n};\n\nlet search = prompt("Search:");\n\nconsole.log(words[search]);',
-      output: ["Search:  →  bonjour", "hello"],
+      "eyebrow": "14 · Combined conditions and comparisons",
+      "title": "Check whether a value is in a range",
+      "explanation": "A range needs two comparisons. >= checks the lower limit, <= checks the upper limit, and && means both conditions must be true at the same time. == means equal value; === checks value and type, and !== means not equal value or type. > means greater than, < less than, >= greater than or equal, and <= less than or equal. && means AND, || means OR, and ! means NOT.",
+      "note": "// && means AND. Both conditions must be true.",
+      "prompt": "Use && to check both ends of the age range.",
+      "starter": "let age = 16;\n\n",
+      "answer": "let age = 16;\n\n// && means AND. Both conditions must be true.\nif (age >= 0 && age <= 18) {\n  console.log(\"Your age is between 0 and 18.\");\n} else {\n  console.log(\"Your age is above 18.\");\n}",
+      "output": [
+        "Your age is between 0 and 18."
+      ],
+      "parts": [
+        {
+          "code": ">= 0",
+          "name": "Lower limit",
+          "meaning": "Checks that age is zero or greater."
+        },
+        {
+          "code": "&&",
+          "name": "Two ampersands",
+          "meaning": "Read this as AND: the condition on each side must be true."
+        },
+        {
+          "code": "<= 18",
+          "name": "Upper limit",
+          "meaning": "Checks that age is eighteen or less."
+        },
+        {
+          "code": "||",
+          "name": "Either",
+          "meaning": "At least one condition must be true."
+        },
+        {
+          "code": "!",
+          "name": "Not",
+          "meaning": "Reverses true and false."
+        }
+      ]
     },
     {
-      eyebrow: "15 · Random object key",
-      title: "Choose a random word",
-      explanation: "Object.keys(words) makes an array containing the object's keys: bonjour and hola. Math.random() creates a random decimal from 0 up to, but not including, 1. Multiplying by 2 gives a number from 0 up to 2, and Math.floor removes the decimal to produce position 0 or 1. The square brackets then select the key at that position.",
-      note: "// Choose either bonjour or hola at random",
-      prompt: "Create the words object and randomly select one of its keys.",
-      answer: 'const words = {\n  bonjour: "hello",\n  hola: "hello"\n};\n\nlet random = Object.keys(words)[Math.floor(Math.random() * 2)];\n\nconsole.log(random);',
-      output: ["bonjour"],
+      "eyebrow": "15 · Dictionary",
+      "title": "Search a word dictionary",
+      "explanation": "A dictionary connects keys to values. JavaScript can use an object for this: {} contains bonjour and hola, with hello stored under each key. words[search] looks up the value for the key entered by the user. Object.values(words) lists the stored values; joining them makes readable console text. An unknown key produces undefined.",
+      "note": "// Create the word dictionary, show its values, then search for a word.",
+      "prompt": "Create the word dictionary, show its values, then search for a word.",
+      "answer": "const words = {\n  bonjour: \"hello\",\n  hola: \"hello\"\n};\n\nconsole.log(Object.values(words).join(\", \"));\nlet search = prompt(\"Search:\");\nconsole.log(words[search]);",
+      "output": [
+        "hello, hello",
+        "Search:  →  bonjour",
+        "hello"
+      ],
+      "parts": [
+        {
+          "code": "{ bonjour: \"hello\" }",
+          "name": "Key and value",
+          "meaning": "bonjour is the key; hello is its value."
+        },
+        {
+          "code": "words[search]",
+          "name": "Look up",
+          "meaning": "Square brackets retrieve the value for the saved key."
+        }
+      ]
     },
     {
-      eyebrow: "16 · Application practice",
-      title: "Build a random word quiz",
-      explanation: "This mini application combines the pieces already learned. It chooses a random key, displays that word as the prompt, looks up the matching value in words, and prints Correct or Wrong after checking the answer.",
-      note: "// random chooses a word, prompt displays that word, answer stores what the user types, and words[random] uses the randomly chosen word to find its correct answer in the dictionary. The if statement compares the user's answer with that correct answer.",
-      prompt: "Combine the word object and random key code to make a translation quiz.",
-      answer: 'const words = {\n  bonjour: "hello",\n  hola: "hello"\n};\n\nlet random = Object.keys(words)[Math.floor(Math.random() * 2)];\n\nlet answer = prompt(random);\n\nif (answer == words[random]) {\n  console.log("Correct");\n} else {\n  console.log("Wrong");\n}',
-      output: ["bonjour  →  hello", "Correct"],
+      "eyebrow": "16 · Expressions",
+      "title": "Calculate a value",
+      "explanation": "An expression produces a value. 80 + 20 produces 100. speed > 100 produces false when speed is 100. A statement performs an instruction, such as saving that result or printing it. + adds, - subtracts, * multiplies, / divides, and % gives the remainder. C# integer division discards the fractional part; use a double such as 5.0 when you need a decimal result.",
+      "note": "// Calculate speed with 80 + 20, then print Speed: 100.",
+      "prompt": "Calculate speed with 80 + 20, then print Speed: 100.",
+      "answer": "let speed = 80 + 20;\nconsole.log(`Speed: ${speed}`);",
+      "output": [
+        "Speed: 100"
+      ],
+      "parts": [
+        {
+          "code": "80 + 20",
+          "name": "Expression",
+          "meaning": "Produces the value 100."
+        },
+        {
+          "code": "speed > 100",
+          "name": "Boolean expression",
+          "meaning": "Produces true or false."
+        }
+      ]
     },
     {
-      eyebrow: "17 · Timers",
-      title: "Run code later",
-      explanation: "correct() calls the first function, then incorrect() calls the second. Each console.log runs immediately because it appears before setTimeout. setTimeout schedules the arrow function to run after 2000 milliseconds (2 seconds); it does not pause the code. Both messages appear straight away, in order. Each timer has an empty body {}, so nothing happens when it finishes. The two timers start one after the other without waiting for each other; a busy browser may run them later than 2 seconds.",
-      note: "// Both messages print immediately; the empty timers do nothing later",
-      prompt: "Type both functions exactly as shown, then call correct() and incorrect().",
-      answer: "function correct(){\n    console.log(\"correct\");\n    setTimeout(() => {}, 2000);\n}\n\nfunction incorrect(){\n    console.log(\"thats is incorrect\");\n    setTimeout(()=> {},2000);\n}\n\ncorrect();\nincorrect();",
-      output: ["correct", "thats is incorrect"],
+      "eyebrow": "17 · Random",
+      "title": "Choose a random word",
+      "explanation": "Object.keys(words) makes an array containing the object's keys: bonjour and hola. Math.random() creates a random decimal from 0 up to, but not including, 1. Multiplying by 2 gives a number from 0 up to 2, and Math.floor removes the decimal to produce position 0 or 1. The square brackets then select the key at that position.",
+      "note": "// Create the word dictionary and randomly select one of its keys.",
+      "prompt": "Create the word dictionary and randomly select one of its keys.",
+      "answer": "const words = {\n  bonjour: \"hello\",\n  hola: \"hello\"\n};\n\nlet random = Object.keys(words)[Math.floor(Math.random() * 2)];\n\nconsole.log(random);",
+      "output": [
+        "bonjour"
+      ],
+      "parts": [
+        {
+          "code": "Math.random()",
+          "name": "Random fraction",
+          "meaning": "Produces a number from 0 up to, but not including, 1."
+        },
+        {
+          "code": "Math.floor",
+          "name": "Whole position",
+          "meaning": "Rounds down to an array position."
+        }
+      ],
+      "outputNote": "Example output; either bonjour or hola can be chosen."
     },
     {
-      eyebrow: "18 · Date and time",
-      title: "Get the current moment",
-      explanation: "new Date() creates a Date object containing the current date and time from the device running the code. console.log then displays that value.",
-      note: "// Create the current date and time, then print it",
-      prompt: "Store a new Date in currentDateTime and show it in the console.",
-      answer: "const currentDateTime = new Date();\nconsole.log(currentDateTime);",
-      output: ["Thu Aug 06 2026 19:05:00 GMT+0100 (British Summer Time)"],
+      "eyebrow": "18 · Arrays and lists",
+      "title": "Make and search a names array",
+      "explanation": "The square brackets [] create an empty array: a list that can hold several values. prompt asks the user for a name, and push() adds that answer to names. A second prompt saves what to look for in search. includes() checks whether that value is in the array and returns true or false; it does not add anything. if/else prints name found or name not found. Matching is case-sensitive: Jaden and jaden are different.",
+      "note": "// Create an empty collection, add a name, ask what to search for, and print whether it was found.",
+      "prompt": "Create an empty collection, add a name, ask what to search for, and print whether it was found.",
+      "answer": "const names = [];\n\nnames.push(prompt(\"add a name\"));\n\nconst search = prompt(\"search for a name\");\n\nif (names.includes(search)) {\n  console.log(\"name found\");\n} else {\n  console.log(\"name not found\");\n}",
+      "output": [
+        "add a name  →  Jaden",
+        "search for a name  →  Jaden",
+        "name found"
+      ],
+      "parts": [
+        {
+          "code": "[]",
+          "name": "Empty array",
+          "meaning": "Creates a list of values."
+        },
+        {
+          "code": "names.push(prompt(\"add a name\"))",
+          "name": "Nested calls",
+          "meaning": "prompt runs first; push receives and adds its answer."
+        },
+        {
+          "code": "names.includes(search)",
+          "name": "Search",
+          "meaning": "Checks for the exact value without changing the array."
+        }
+      ]
     },
+    {
+      "eyebrow": "19 · Sets",
+      "title": "Remove duplicate names",
+      "explanation": "A Set stores only unique values. Passing names into new Set(names) removes repeated names, and [...uniqueNames] spreads the remaining values back into an array for printing.",
+      "note": "// Ask for three names, then remove any duplicates",
+      "prompt": "Collect three names, create a Set, and print its unique values.",
+      "answer": "const names = [];\n\nnames.push(prompt(\"Enter the first name:\"));\nnames.push(prompt(\"Enter the second name:\"));\nnames.push(prompt(\"Enter the third name:\"));\n\nconst uniqueNames = new Set(names);\n\nconsole.log(`[${[...uniqueNames].join(\", \")}]`);",
+      "output": [
+        "Enter the first name:  →  Alex",
+        "Enter the second name:  →  Sam",
+        "Enter the third name:  →  Alex",
+        "[Alex, Sam]"
+      ],
+      "parts": []
+    },
+    {
+      "eyebrow": "20 · Null",
+      "title": "Mark a value as not ready yet",
+      "explanation": "null deliberately means that a variable has no value yet. It is different from zero or an empty string, and the variable may receive a real value later. === null checks specifically for that missing value.",
+      "note": "// null means there is deliberately no result yet",
+      "prompt": "Set result to null, then print the message for its current state.",
+      "answer": "let result = null; // There is no result yet\n\nif (result === null) {\n  console.log(\"No result yet\");\n} else {\n  console.log(\"Result is ready\");\n}",
+      "output": [
+        "No result yet"
+      ],
+      "parts": []
+    },
+    {
+      "eyebrow": "21 · Regular expressions",
+      "title": "Let names beginning with J enter",
+      "explanation": "A regular expression checks text against a pattern. /^J/i means: the slashes hold the pattern, ^ anchors the check to the beginning, J is the required first letter, and i ignores uppercase or lowercase. It accepts any word beginning with J—not only names—and rejects J when it appears later in the text.",
+      "note": "// Let people into the club when their name begins with J",
+      "prompt": "Check the five names and print who may enter the club.",
+      "answer": "const names = [\"Jaden\", \"James\", \"Jessica\", \"Sarah\", \"Ben\"];\n\nfor (const name of names) {\n  if (/^J/i.test(name)) {\n    console.log(name + \" can enter the club.\");\n  } else {\n    console.log(name + \" cannot enter the club.\");\n  }\n}",
+      "output": [
+        "Jaden can enter the club.",
+        "James can enter the club.",
+        "Jessica can enter the club.",
+        "Sarah cannot enter the club.",
+        "Ben cannot enter the club."
+      ],
+      "parts": []
+    },
+    {
+      "eyebrow": "22 · Application practice",
+      "title": "Build a random word quiz",
+      "explanation": "Combine the dictionary, random choice, input, and if/else. Choose a word, ask for its translation, then compare the answer with the stored value.",
+      "note": "// Combine the word dictionary and random key code to make a translation quiz.",
+      "prompt": "Combine the word dictionary and random key code to make a translation quiz.",
+      "answer": "const words = {\n  bonjour: \"hello\",\n  hola: \"hello\"\n};\n\nlet random = Object.keys(words)[Math.floor(Math.random() * 2)];\n\nlet answer = prompt(random);\n\nif (answer == words[random]) {\n  console.log(\"Correct\");\n} else {\n  console.log(\"Wrong\");\n}",
+      "output": [
+        "bonjour  →  hello",
+        "Correct"
+      ],
+      "parts": [],
+      "outputNote": "Example run: bonjour is chosen and the user enters hello."
+    }
   ],
-  csharp: [
+  "csharp": [
     {
-      eyebrow: "01 · Methods",
-      title: "Make something happen",
-      explanation: "A C# method is a named block of code. void means it does not return a value, and curly braces { } group the instructions that run when you call it.",
-      note: "// Create a method named Correct that prints correct",
-      prompt: "Type the method, then call it on the last line.",
-      answer: 'void Correct() {\n  Console.WriteLine("correct");\n}\n\nCorrect();',
-      output: ["correct"],
+      "eyebrow": "01 · Console output",
+      "title": "Print several lines at once",
+      "explanation": "Console.WriteLine prints the text inside quotation marks. Write \\n inside the string wherever you want a new line. The first \\n puts Welcome on the next line and the second puts Goodbye on another line. const string red stores the red terminal colour code. $ before the string lets {red} insert it before the message. ANSI colours work in supporting terminals; this lesson previews red in its console.",
+      "note": "// Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
+      "prompt": "Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
+      "answer": "const string red = \"\\u001b[31m\";\nConsole.WriteLine($\"{red} This is red text\");\n\nConsole.WriteLine(\" Hello \\n Welcome \\n Goodbye\");",
+      "output": [
+        " This is red text",
+        " Hello ",
+        " Welcome ",
+        " Goodbye"
+      ],
+      "parts": [
+        {
+          "code": "Console.WriteLine",
+          "name": "Print",
+          "meaning": "Prints the value inside its parentheses."
+        },
+        {
+          "code": "\\n",
+          "name": "New line",
+          "meaning": "Write this inside the quoted string to start the next line."
+        },
+        {
+          "code": "\\u001b[31m",
+          "name": "ANSI red",
+          "meaning": "C# writes the escape character as \\u001b; [31m selects red terminal text."
+        },
+        {
+          "code": "$\"{red}\"",
+          "name": "Insert a value",
+          "meaning": "The $ enables interpolation; {red} inserts the stored value."
+        }
+      ],
+      "outputColors": [
+        "#ef4444"
+      ]
     },
     {
-      eyebrow: "02 · Console output",
-      title: "Print several lines at once",
-      explanation: "Console.WriteLine displays text in the terminal. Inside the quotation marks, each \\n starts a new line, so one statement can print four fruits on four separate lines.",
-      note: "// Use \\n to start a new line in the terminal",
-      prompt: "Print Apple, Banana, Orange, and Pear on separate lines.",
-      answer: 'Console.WriteLine("Apple\\nBanana\\nOrange\\nPear");',
-      output: ["Apple", "Banana", "Orange", "Pear"],
+      "eyebrow": "02 · ANSI colours",
+      "title": "Choose a text colour",
+      "explanation": "ANSI escape codes choose terminal text colours: 31 is red, 32 green, 33 yellow, 34 blue, 35 magenta, and 36 cyan. Code 0 resets the colour so later output returns to normal. These codes work in terminals that support ANSI colours. The lesson console previews the colours.",
+      "note": "// Print Red text and Green text, then reset the colour.",
+      "prompt": "Print Red text and Green text, then reset the colour.",
+      "answer": "const string red = \"\\u001b[31m\";\nconst string green = \"\\u001b[32m\";\nconst string reset = \"\\u001b[0m\";\n\nConsole.WriteLine($\"{red}Red text{reset}\");\nConsole.WriteLine($\"{green}Green text{reset}\");",
+      "output": [
+        "Red text",
+        "Green text"
+      ],
+      "parts": [
+        {
+          "code": "\\u001b[0m",
+          "name": "Reset",
+          "meaning": "Returns terminal text to its normal colour."
+        }
+      ],
+      "outputColors": [
+        "#ef4444",
+        "#4ade80"
+      ]
     },
     {
-      eyebrow: "03 · While loops",
-      title: "Repeat input until the answer is correct",
-      explanation: "while (true) { } repeats forever because true never changes. On its own, it never reaches an ending. This version works because break immediately leaves the loop as soon as the answer is correct.",
-      note: "// Ask for input, show output, and break inside the if block",
-      prompt: "Create the loop with input, output, and break inside if.",
-      answer: 'while (true)\n{\n  Console.WriteLine("What is 1 + 1?");\n  string answer = Console.ReadLine();\n  Console.WriteLine(answer);\n\n  if (answer == "2")\n  {\n    Console.WriteLine("Correct!");\n    break;\n  }\n\n  Console.WriteLine("Try again.");\n}',
-      output: ["INPUT  →  2", "OUTPUT  →  2", "Correct!", "break leaves the loop."],
+      "eyebrow": "03 · Time",
+      "title": "Run code after a delay",
+      "explanation": "Task.Delay creates a wait of 2000 milliseconds, or 2 seconds. await waits for it to finish before running the next instruction in this flow. This does not block the thread. The following Console.WriteLine prints the message after the delay.",
+      "note": "// Wait 2 seconds, then print Time reached!",
+      "prompt": "Wait 2 seconds, then print Time reached!",
+      "answer": "await System.Threading.Tasks.Task.Delay(2000);\nConsole.WriteLine(\"Time reached!\");",
+      "output": [
+        "Time reached!"
+      ],
+      "parts": [
+        {
+          "code": "await",
+          "name": "Wait here",
+          "meaning": "Continues this flow after the asynchronous wait finishes."
+        },
+        {
+          "code": "2000",
+          "name": "Milliseconds",
+          "meaning": "1000 milliseconds = 1 second."
+        }
+      ],
+      "outputNote": "Example output after the 2-second delay."
     },
     {
-      eyebrow: "04 · Return values",
-      title: "Send a value back with return",
-      explanation: "A method beginning with string must send text back. return sends the value back to the place where the method was called, and the method ends immediately. Here, GetMessage() returns Hello and that returned text is saved in message.",
-      note: "// Return text from a method, then print the returned value",
-      prompt: "Create the method that returns Hello, then use its returned value.",
-      answer: 'string GetMessage()\n{\n  return "Hello";\n}\n\nstring message = GetMessage();\nConsole.WriteLine(message);',
-      output: ["Hello", "return sends Hello back to GetMessage()."],
+      "eyebrow": "04 · Date and time",
+      "title": "Print the current date and time",
+      "explanation": "DateTime.Now captures the current local date and time from the device. Console.WriteLine(time) prints it. The display depends on the device, time zone, and when you run it. Hour reads the hour from 0 to 23; Minute reads the minute from 0 to 59.",
+      "note": "// Store the current date and time in time, then print it.",
+      "prompt": "Store the current date and time in time, then print it.",
+      "answer": "DateTime time = DateTime.Now;\nConsole.WriteLine(time);",
+      "output": [
+        "02/10/2026 17:20:00"
+      ],
+      "parts": [
+        {
+          "code": "DateTime.Now",
+          "name": "Current moment",
+          "meaning": "Gets the current local date and time."
+        }
+      ],
+      "outputNote": "Example date and time; running the code uses your device’s current moment."
     },
     {
-      eyebrow: "05 · Variables",
-      title: "Remember a value",
-      explanation: "string tells C# that a variable holds text. Console.ReadLine asks for input, and the answer can be stored in that variable for later.",
-      note: "// Ask for a name and greet the user",
-      prompt: "Create a name variable, then print Hello with an interpolated string.",
-      answer: 'Console.WriteLine("What is your name?");\nstring name = Console.ReadLine();\nConsole.WriteLine($"Hello {name}");',
-      output: ["What is your name?  →  Alex", "Hello Alex"],
+      "eyebrow": "05 · Date and time",
+      "title": "Check for a particular time",
+      "explanation": "This checks the local time once. Hour and Minute read parts of time. == compares values; && requires both comparisons to be true. The message prints only if this code runs during 17:20. An if statement alone does not keep watching the clock.",
+      "note": "// Print Time reached! if the local hour is 17 and the minute is 20.",
+      "prompt": "Print Time reached! if the local hour is 17 and the minute is 20.",
+      "answer": "DateTime time = DateTime.Now;\n\nint hour = time.Hour;\nint minute = time.Minute;\n\nif (hour == 17 && minute == 20) {\n  Console.WriteLine(\"Time reached!\");\n}",
+      "output": [
+        "Time reached!"
+      ],
+      "parts": [
+        {
+          "code": "time.Hour",
+          "name": "Hour",
+          "meaning": "Reads the hour from 0 to 23."
+        },
+        {
+          "code": "time.Minute",
+          "name": "Minute",
+          "meaning": "Reads the minute from 0 to 59."
+        },
+        {
+          "code": "&&",
+          "name": "Both",
+          "meaning": "The hour and minute must both match."
+        }
+      ],
+      "outputNote": "Example output when the clock is 17:20. At other times, this snippet prints nothing."
     },
     {
-      eyebrow: "06 · Classes",
-      title: "Create and use a class",
-      explanation: "A method is called with its name, such as Correct(). A class is used in a similar way, but you put new before its name: new Car(\"Ford\", 2014). The Car class is defined before Program, and Main then creates objects, or instances, from that class.",
-      note: "// Define Car first, then create Car objects inside Main",
-      prompt: "Create the Car class above Program, then use new inside Main to make Ford and Audi objects.",
-      answer: 'class Car\n{\n  public string Name { get; set; }\n  public int Year { get; set; }\n\n  public Car(string name, int year)\n  {\n    // this.Name is the property stored in the car object.\n    // name is the value passed into the constructor.\n    this.Name = name;\n\n    // this.Year is the property stored in the car object.\n    // year is the value passed into the constructor.\n    this.Year = year;\n  }\n}\n\nclass Program\n{\n  static void Main()\n  {\n    Car myCar1 = new Car("Ford", 2014);\n    Car myCar2 = new Car("Audi", 2019);\n\n    Console.WriteLine($"{myCar1.Name}, {myCar1.Year}");\n    Console.WriteLine($"{myCar2.Name}, {myCar2.Year}");\n  }\n}',
-      output: ["Ford, 2014", "Audi, 2019"],
+      "eyebrow": "06 · Date and time",
+      "title": "Keep checking until the time is reached",
+      "explanation": "This loop checks a fresh DateTime.Now every second while the program stays open. At 17:20 it prints once and break stops the loop. Task.Delay gives the loop a 1-second wait between checks. If 17:20 has passed, it waits for the next day. Checks can run late, so this is a learning example rather than an exact alarm.",
+      "note": "// Keep checking the local clock and print Time reached! once at 17:20.",
+      "prompt": "Keep checking the local clock and print Time reached! once at 17:20.",
+      "answer": "while (true) {\n  DateTime time = DateTime.Now;\n  int hour = time.Hour;\n  int minute = time.Minute;\n\n  if (hour == 17 && minute == 20) {\n    Console.WriteLine(\"Time reached!\");\n    break;\n  }\n\n  await System.Threading.Tasks.Task.Delay(1000);\n}",
+      "output": [
+        "Time reached!"
+      ],
+      "parts": [
+        {
+          "code": "while (true)",
+          "name": "Repeat checks",
+          "meaning": "Keeps repeating until break ends the loop."
+        },
+        {
+          "code": "break",
+          "name": "Stop",
+          "meaning": "Leaves the loop after the matching time."
+        }
+      ],
+      "outputNote": "Example output at 17:20. The lesson preview does not wait for the clock."
     },
     {
-      eyebrow: "07 · Console",
-      title: "Clear the screen",
-      explanation: "The console is where a C# text program shows its output. Console.Clear() removes everything currently shown there.",
-      note: "// Clear all previous console output",
-      prompt: "Write the single line that clears the console.",
-      answer: "Console.Clear();",
-      output: ["Console cleared."],
+      "eyebrow": "07 · Functions",
+      "title": "Make something happen",
+      "explanation": "A C# method is a named block of code. void means it does not return a value, and curly braces { } group the instructions that run when you call it.",
+      "note": "// Create a function named correct that prints correct",
+      "prompt": "Create correct, then call it to print correct.",
+      "answer": "void correct() {\n  Console.WriteLine(\"correct\");\n}\n\ncorrect();",
+      "output": [
+        "correct"
+      ],
+      "parts": [
+        {
+          "code": "void",
+          "name": "Result type",
+          "meaning": "Says this method does not send a value back."
+        },
+        {
+          "code": "correct()",
+          "name": "Name",
+          "meaning": "Names the method so you can call it later."
+        },
+        {
+          "code": "{ ... }",
+          "name": "Instructions",
+          "meaning": "Holds the code the method will run."
+        },
+        {
+          "code": "correct();",
+          "name": "Call it",
+          "meaning": "Runs the method you created."
+        },
+        {
+          "code": ";",
+          "name": "End statement",
+          "meaning": "Marks where a statement ends. C# requires it after statements such as calling a method or printing text."
+        }
+      ]
     },
     {
-      eyebrow: "08 · If and else with words",
-      title: "Right answer or wrong answer",
-      explanation: "if checks whether the word in answer is exactly green. When it is green, the program prints Right! The else block runs for every other word and prints Wrong!",
-      note: "// Print Right for green, or Wrong for any other answer",
-      prompt: "Ask what colour grass is, then use if and else to check the word.",
-      answer: 'Console.WriteLine("What color is grass?");\nstring answer = Console.ReadLine();\n\nif (answer == "green")\n{\n  Console.WriteLine("Right!");\n}\nelse\n{\n  Console.WriteLine("Wrong!");\n}',
-      output: ["What color is grass?  →  green", "Right!"],
+      "eyebrow": "08 · Functions",
+      "title": "Use one function inside another",
+      "explanation": "getMessage() returns Hello. In Console.WriteLine(getMessage()), the inner function runs first, then Console.WriteLine prints its returned value. Each call has its own pair of parentheses. In Console.WriteLine((getMessage())), the extra parentheses only group the result; (( is not a special sign for multiple functions.",
+      "note": "// Return Hello from getMessage, then print it by calling the function inside the print call.",
+      "prompt": "Return Hello from getMessage, then print it by calling the function inside the print call.",
+      "answer": "string getMessage() {\n  return \"Hello\";\n}\n\nConsole.WriteLine(getMessage());",
+      "output": [
+        "Hello"
+      ],
+      "parts": [
+        {
+          "code": "return",
+          "name": "Send back",
+          "meaning": "Ends the function and sends its value back to the caller."
+        },
+        {
+          "code": "Console.WriteLine(getMessage())",
+          "name": "Nested calls",
+          "meaning": "getMessage runs first; Console.WriteLine receives Hello."
+        }
+      ]
     },
     {
-      eyebrow: "09 · Null values",
-      title: "Mark a value as not ready yet",
-      explanation: "null deliberately means that a variable has no value yet. string? allows this text variable to hold either text or null, and == null checks whether the value is still missing.",
-      note: "// null means there is deliberately no result yet",
-      prompt: "Set the nullable result to null, then print the message for its current state.",
-      answer: 'string? result = null; // There is no result yet\n\nif (result == null)\n{\n  Console.WriteLine("No result yet");\n}\nelse\n{\n  Console.WriteLine("Result is ready");\n}',
-      output: ["No result yet"],
+      "eyebrow": "09 · Classes",
+      "title": "Create and use a class",
+      "explanation": "A method is called with its name, such as Correct(). A class is used in a similar way, but you put new before its name: new Car(\"Ford\", 2014). The Car class is defined before Program, and Main then creates objects, or instances, from that class.",
+      "note": "// Define Car first, then create Car objects inside Main",
+      "prompt": "Create the Car class, then call its constructor with new to make Ford and Audi objects.",
+      "answer": "class Car\n{\n  public string Name { get; set; }\n  public int Year { get; set; }\n\n  public Car(string name, int year)\n  {\n    // this.Name is the property stored in the car object.\n    // name is the value passed into the constructor.\n    this.Name = name;\n\n    // this.Year is the property stored in the car object.\n    // year is the value passed into the constructor.\n    this.Year = year;\n  }\n}\n\nclass Program\n{\n  static void Main()\n  {\n    Car myCar1 = new Car(\"Ford\", 2014);\n    Car myCar2 = new Car(\"Audi\", 2019);\n\n    Console.WriteLine($\"{myCar1.Name}, {myCar1.Year}\");\n    Console.WriteLine($\"{myCar2.Name}, {myCar2.Year}\");\n  }\n}",
+      "output": [
+        "Ford, 2014",
+        "Audi, 2019"
+      ],
+      "parts": []
     },
     {
-      eyebrow: "10 · Combined conditions",
-      title: "Check whether a value is in a range",
-      explanation: "A range needs two comparisons. >= checks the lower limit, <= checks the upper limit, and && means both conditions must be true at the same time.",
-      note: "// && means AND. Both conditions must be true.",
-      prompt: "Use && to check both ends of the age range.",
-      starter: "int age = 16;\n\n",
-      answer: 'int age = 16;\n\n// && means AND. Both conditions must be true.\nif (age >= 0 && age <= 18) {\n  Console.WriteLine("Your age is between 0 and 18.");\n} else {\n  Console.WriteLine("Your age is above 18.");\n}',
-      output: ["Your age is between 0 and 18."],
+      "eyebrow": "10 · Loops",
+      "title": "Repeat input until the answer is correct",
+      "explanation": "while (true) { } repeats forever because true never changes. On its own, it never reaches an ending. This version works because break immediately leaves the loop as soon as the answer is correct.",
+      "note": "// Create the loop with input, output, and break inside if.",
+      "prompt": "Create the loop with input, output, and break inside if.",
+      "answer": "while (true)\n{\n  Console.WriteLine(\"What is 1 + 1?\");\n  string answer = Console.ReadLine();\n  Console.WriteLine(answer);\n\n  if (answer == \"2\")\n  {\n    Console.WriteLine(\"Correct!\");\n    break;\n  }\n\n  Console.WriteLine(\"Try again.\");\n}",
+      "output": [
+        "INPUT  →  2",
+        "OUTPUT  →  2",
+        "Correct!",
+        "break leaves the loop."
+      ],
+      "parts": [
+        {
+          "code": "while (true)",
+          "name": "Repeat",
+          "meaning": "Keeps asking for input until code inside stops the loop."
+        },
+        {
+          "code": "Console.ReadLine",
+          "name": "Input",
+          "meaning": "Reads the user's answer."
+        },
+        {
+          "code": "break",
+          "name": "Stop",
+          "meaning": "Leaves the loop when the if condition is true."
+        }
+      ]
     },
     {
-      eyebrow: "11 · Comparison reference",
-      title: "Compare two values",
-      explanation: "Comparison operators ask a question about two values and produce true or false. Keep this page as a quick reference: the code stays nearly identical while the symbol changes the question being asked.",
-      note: "// Compare values using equality, inequality, and size operators",
-      prompt: "Explore the comparison operators and their results.",
-      answer: "int x = 5;\nConsole.WriteLine(x == 5);",
-      output: ["Comparison reference explored."],
-      referenceOnly: true,
-      referenceKind: "comparisons",
+      "eyebrow": "11 · Variables",
+      "title": "Use changeable and fixed values",
+      "explanation": "int creates a variable holding a whole number, which you can reassign. const int creates a compile-time constant you cannot reassign. Here speed changes from 80 to 100; maxSpeed stays 100. C# has no let keyword for normal variable declarations; string stores text and var lets the compiler infer a local variable’s type.",
+      "note": "// Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
+      "prompt": "Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
+      "answer": "int speed = 80;\nconst int maxSpeed = 100;\n\nspeed = 100;\nConsole.WriteLine($\"Speed: {speed}\");",
+      "output": [
+        "Speed: 100"
+      ],
+      "parts": [
+        {
+          "code": "int",
+          "name": "Whole number",
+          "meaning": "Declares the type of value speed stores."
+        },
+        {
+          "code": "const int",
+          "name": "Constant",
+          "meaning": "Stores a compile-time value that cannot be reassigned."
+        }
+      ]
     },
     {
-      eyebrow: "12 · Regular expressions",
-      title: "Let names beginning with J enter",
-      explanation: "A regular expression checks text against a pattern. Regex comes from System.Text.RegularExpressions. ^J means the text must begin with J, while RegexOptions.IgnoreCase accepts uppercase or lowercase. It accepts any word beginning with J—not only names—and rejects J when it appears later in the text.",
-      note: "// Let people into the club when their name begins with J",
-      prompt: "Check the five names and print who may enter the club.",
-      answer: 'using System.Text.RegularExpressions;\n\nstring[] names = { "Jaden", "James", "Jessica", "Sarah", "Ben" };\n\nforeach (string name in names) {\n  if (Regex.IsMatch(name, "^J", RegexOptions.IgnoreCase)) {\n    Console.WriteLine($"{name} can enter the club.");\n  } else {\n    Console.WriteLine($"{name} cannot enter the club.");\n  }\n}',
-      output: ["Jaden can enter the club.", "James can enter the club.", "Jessica can enter the club.", "Sarah cannot enter the club.", "Ben cannot enter the club."],
+      "eyebrow": "12 · Variables",
+      "title": "Remember a value",
+      "explanation": "string tells C# that a variable holds text. Console.ReadLine asks for input, and the answer can be stored in that variable for later.",
+      "note": "// Ask for a name and greet the user",
+      "prompt": "Create a name variable, then print Hello with a template string.",
+      "answer": "Console.WriteLine(\"What is your name?\");\nstring name = Console.ReadLine();\nConsole.WriteLine($\"Hello {name}\");",
+      "output": [
+        "What is your name?  →  Alex",
+        "Hello Alex"
+      ],
+      "parts": [
+        {
+          "code": "string",
+          "name": "Type",
+          "meaning": "Says this variable will store text."
+        },
+        {
+          "code": "name",
+          "name": "Label",
+          "meaning": "Shows that you choose a useful name for the saved value."
+        },
+        {
+          "code": "=",
+          "name": "Save",
+          "meaning": "Puts the value on the right into the variable on the left."
+        }
+      ]
     },
     {
-      eyebrow: "13 · Arrays",
-      title: "Keep a list",
-      explanation: "A C# array keeps several values of the same type. Square brackets mark the array, and a foreach loop visits each item one at a time.",
-      note: "// Store three fruits, then print each one",
-      prompt: "Create the fruits array and loop through it.",
-      answer: 'string[] fruits = { "Apple", "Banana", "Orange" };\n\nforeach (string fruit in fruits) {\n  Console.WriteLine(fruit);\n}',
-      output: ["Apple", "Banana", "Orange"],
+      "eyebrow": "13 · If and else",
+      "title": "Choose between two messages",
+      "explanation": "if checks the condition in (). When speed is greater than 100, its {} block prints Too fast! Otherwise, the else block prints Speed is OK. Each block groups the instructions for that case.",
+      "note": "// Print Too fast! for speed above 100; otherwise print Speed is OK.",
+      "prompt": "Print Too fast! for speed above 100; otherwise print Speed is OK.",
+      "answer": "int speed = 120;\n\nif (speed > 100) {\n  Console.WriteLine(\"Too fast!\");\n} else {\n  Console.WriteLine(\"Speed is OK.\");\n}",
+      "output": [
+        "Too fast!"
+      ],
+      "parts": [
+        {
+          "code": ">",
+          "name": "Greater than",
+          "meaning": "Checks whether the value on the left is bigger."
+        },
+        {
+          "code": "else",
+          "name": "Otherwise",
+          "meaning": "Runs when the if condition is false."
+        }
+      ]
     },
     {
-      eyebrow: "14 · Empty list",
-      title: "Start an empty car list",
-      explanation: "List<string> creates a flexible list that stores text, and new List<string>() starts it with zero items. C# has a const keyword too, but const is only for values fixed at compile time; a growing List cannot be const. This is why the C# version begins with List<string> rather than copying JavaScript's const.",
-      note: "// Create an empty list that will hold car names",
-      prompt: "Create the empty cars list for text values.",
-      answer: "List<string> cars = new List<string>();",
-      output: ["cars  →  []", "The list currently has 0 items."],
+      "eyebrow": "14 · Combined conditions and comparisons",
+      "title": "Check whether a value is in a range",
+      "explanation": "A range needs two comparisons. >= checks the lower limit, <= checks the upper limit, and && means both conditions must be true at the same time. == means equal value; != means not equal. > means greater than, < less than, >= greater than or equal, and <= less than or equal. && means AND, || means OR, and ! means NOT.",
+      "note": "// && means AND. Both conditions must be true.",
+      "prompt": "Use && to check both ends of the age range.",
+      "starter": "int age = 16;\n\n",
+      "answer": "int age = 16;\n\n// && means AND. Both conditions must be true.\nif (age >= 0 && age <= 18) {\n  Console.WriteLine(\"Your age is between 0 and 18.\");\n} else {\n  Console.WriteLine(\"Your age is above 18.\");\n}",
+      "output": [
+        "Your age is between 0 and 18."
+      ],
+      "parts": [
+        {
+          "code": ">= 0",
+          "name": "Lower limit",
+          "meaning": "Checks that age is zero or greater."
+        },
+        {
+          "code": "&&",
+          "name": "Two ampersands",
+          "meaning": "Read this as AND: the condition on each side must be true."
+        },
+        {
+          "code": "<= 18",
+          "name": "Upper limit",
+          "meaning": "Checks that age is eighteen or less."
+        },
+        {
+          "code": "||",
+          "name": "Either",
+          "meaning": "At least one condition must be true."
+        },
+        {
+          "code": "!",
+          "name": "Not",
+          "meaning": "Reverses true and false."
+        }
+      ]
     },
     {
-      eyebrow: "15 · Add to a list",
-      title: "Put a car into the list",
-      explanation: "Console.ReadLine() collects the user's answer. cars.Add(newCar) takes that saved text and adds it to the end of the cars list.",
-      note: "// Ask for a car, then add the answer to cars",
-      prompt: "Use Add to put newCar into the empty cars list.",
-      starter: 'List<string> cars = new List<string>();\nConsole.WriteLine("What car do you want to add?");\nstring newCar = Console.ReadLine();\n\n',
-      answer: 'List<string> cars = new List<string>();\nConsole.WriteLine("What car do you want to add?");\nstring newCar = Console.ReadLine();\n\ncars.Add(newCar);',
-      output: ["Before: []", "What car do you want to add?  →  Ford", 'After Add: ["Ford"]'],
+      "eyebrow": "15 · Dictionary",
+      "title": "Search a word dictionary",
+      "explanation": "A Dictionary connects keys to values. Dictionary<string, string> means text keys and text values. Its initializer uses {} to add bonjour and hola, with hello under each key. string.Join prints its values. TryGetValue checks whether the entered key exists and safely returns the value; words[search] is a direct lookup but throws if the key is missing.",
+      "note": "// Create the word dictionary, show its values, then search for a word.",
+      "prompt": "Create the word dictionary, show its values, then search for a word.",
+      "answer": "var words = new System.Collections.Generic.Dictionary<string, string> {\n  { \"bonjour\", \"hello\" },\n  { \"hola\", \"hello\" }\n};\n\nConsole.WriteLine(string.Join(\", \", words.Values));\nConsole.WriteLine(\"Search:\");\nstring search = Console.ReadLine() ?? \"\";\nif (words.TryGetValue(search, out string? translation)) {\n  Console.WriteLine(translation);\n} else {\n  Console.WriteLine(\"word not found\");\n}",
+      "output": [
+        "hello, hello",
+        "Search:  →  bonjour",
+        "hello"
+      ],
+      "parts": [
+        {
+          "code": "Dictionary<string, string>",
+          "name": "Key and value",
+          "meaning": "The two types describe the keys and values."
+        },
+        {
+          "code": "TryGetValue",
+          "name": "Safe lookup",
+          "meaning": "Returns true and sets translation when the key is found."
+        }
+      ]
     },
     {
-      eyebrow: "16 · Print a list",
-      title: "Show the finished car list",
-      explanation: "string.Join joins every list item into readable text. Console.WriteLine then prints that text, showing the car that was added in the previous step.",
-      note: "// Join and print the items stored in cars",
-      prompt: "Print the complete cars list in square brackets.",
-      starter: 'List<string> cars = new List<string>();\nConsole.WriteLine("What car do you want to add?");\nstring newCar = Console.ReadLine();\ncars.Add(newCar);\n\n',
-      answer: 'List<string> cars = new List<string>();\nConsole.WriteLine("What car do you want to add?");\nstring newCar = Console.ReadLine();\ncars.Add(newCar);\n\nConsole.WriteLine($"[{string.Join(", ", cars)}]");',
-      output: ["What car do you want to add?  →  Ford", "[Ford]"],
+      "eyebrow": "16 · Expressions",
+      "title": "Calculate a value",
+      "explanation": "An expression produces a value. 80 + 20 produces 100. speed > 100 produces false when speed is 100. A statement performs an instruction, such as saving that result or printing it. + adds, - subtracts, * multiplies, / divides, and % gives the remainder. C# integer division discards the fractional part; use a double such as 5.0 when you need a decimal result.",
+      "note": "// Calculate speed with 80 + 20, then print Speed: 100.",
+      "prompt": "Calculate speed with 80 + 20, then print Speed: 100.",
+      "answer": "int speed = 80 + 20;\nConsole.WriteLine($\"Speed: {speed}\");",
+      "output": [
+        "Speed: 100"
+      ],
+      "parts": [
+        {
+          "code": "80 + 20",
+          "name": "Expression",
+          "meaning": "Produces the value 100."
+        },
+        {
+          "code": "speed > 100",
+          "name": "Boolean expression",
+          "meaning": "Produces true or false."
+        }
+      ]
     },
     {
-      eyebrow: "17 · Sets",
-      title: "Remove duplicate names",
-      explanation: "A HashSet stores only unique values. Passing names into new HashSet<string>(names) removes repeated names, and string.Join makes the remaining values readable for printing.",
-      note: "// Ask for three names, then remove any duplicates",
-      prompt: "Collect three names, create a HashSet, and print its unique values.",
-      answer: 'List<string> names = new List<string>();\n\nConsole.WriteLine("Enter the first name:");\nnames.Add(Console.ReadLine());\nConsole.WriteLine("Enter the second name:");\nnames.Add(Console.ReadLine());\nConsole.WriteLine("Enter the third name:");\nnames.Add(Console.ReadLine());\n\nHashSet<string> uniqueNames = new HashSet<string>(names);\n\nConsole.WriteLine($"[{string.Join(", ", uniqueNames)}]");',
-      output: ["Enter the first name:  →  Alex", "Enter the second name:  →  Sam", "Enter the third name:  →  Alex", "[Alex, Sam]"],
+      "eyebrow": "17 · Random",
+      "title": "Choose a random word",
+      "explanation": "words.Keys contains bonjour and hola. CopyTo puts those keys into an array. Random.Shared.Next(keys.Length) chooses a position from zero up to, but not including, keys.Length. keys[position] retrieves the randomly chosen key.",
+      "note": "// Create the word dictionary and randomly select one of its keys.",
+      "prompt": "Create the word dictionary and randomly select one of its keys.",
+      "answer": "var words = new System.Collections.Generic.Dictionary<string, string> {\n  { \"bonjour\", \"hello\" },\n  { \"hola\", \"hello\" }\n};\n\nstring[] keys = new string[words.Count];\nwords.Keys.CopyTo(keys, 0);\nint position = Random.Shared.Next(keys.Length);\nstring random = keys[position];\n\nConsole.WriteLine(random);",
+      "output": [
+        "bonjour"
+      ],
+      "parts": [
+        {
+          "code": "Random.Shared.Next(keys.Length)",
+          "name": "Random position",
+          "meaning": "Chooses a whole number from 0 up to, but not including, the number of keys."
+        },
+        {
+          "code": "keys[position]",
+          "name": "Retrieve the key",
+          "meaning": "Looks up the key at that position."
+        }
+      ],
+      "outputNote": "Example output; either bonjour or hola can be chosen."
     },
     {
-      eyebrow: "18 · Array positions",
-      title: "Look up the car you added",
-      explanation: "C# list positions start at zero. cars[0] retrieves the first item, which is Ford because it was the first value added to the list.",
-      note: "// Look up and print the first car in the list",
-      prompt: "Use position 0 to retrieve the car you just added.",
-      starter: 'List<string> cars = new List<string>();\nConsole.WriteLine("What car do you want to add?");\nstring newCar = Console.ReadLine();\ncars.Add(newCar);\nConsole.WriteLine($"[{string.Join(", ", cars)}]");\n\n',
-      answer: 'List<string> cars = new List<string>();\nConsole.WriteLine("What car do you want to add?");\nstring newCar = Console.ReadLine();\ncars.Add(newCar);\nConsole.WriteLine($"[{string.Join(", ", cars)}]");\n\nConsole.WriteLine(cars[0]);',
-      output: ["What car do you want to add?  →  Ford", "[Ford]", "Item at position 0  →  Ford"],
+      "eyebrow": "18 · Arrays and lists",
+      "title": "Make and search a names array",
+      "explanation": "An array has a fixed length; a List can grow when you add values. This example uses List<string> so it matches JavaScript’s growing array. Add saves the entered name, Contains searches for an exact match, and if/else prints name found or name not found. Matching is case-sensitive. names[0] retrieves the first item after it has been added.",
+      "note": "// Create an empty collection, add a name, ask what to search for, and print whether it was found.",
+      "prompt": "Create an empty collection, add a name, ask what to search for, and print whether it was found.",
+      "answer": "var names = new System.Collections.Generic.List<string>();\n\nConsole.WriteLine(\"add a name\");\nnames.Add(Console.ReadLine() ?? \"\");\n\nConsole.WriteLine(\"search for a name\");\nstring search = Console.ReadLine() ?? \"\";\n\nif (names.Contains(search)) {\n  Console.WriteLine(\"name found\");\n} else {\n  Console.WriteLine(\"name not found\");\n}",
+      "output": [
+        "add a name  →  Jaden",
+        "search for a name  →  Jaden",
+        "name found"
+      ],
+      "parts": [
+        {
+          "code": "List<string>",
+          "name": "Growing list",
+          "meaning": "Stores text values and allows more items to be added."
+        },
+        {
+          "code": "names.Add",
+          "name": "Add",
+          "meaning": "Appends the entered name."
+        },
+        {
+          "code": "names.Contains(search)",
+          "name": "Search",
+          "meaning": "Checks for the exact value without changing the list."
+        }
+      ]
     },
     {
-      eyebrow: "19 · Objects",
-      title: "Give values names",
-      explanation: "C# objects keep related values in named properties. Here, an anonymous object groups a car's Brand and Colour together.",
-      note: "// Create a car object and print its properties",
-      prompt: "Create the car object, then print its brand and colour.",
-      answer: 'var car = new { Brand = "BMW", Colour = "Blue" };\n\nConsole.WriteLine($"Brand: {car.Brand}");\nConsole.WriteLine($"Colour: {car.Colour}");',
-      output: ["Brand: BMW", "Colour: Blue"],
+      "eyebrow": "19 · Sets",
+      "title": "Remove duplicate names",
+      "explanation": "A HashSet stores only unique values. Passing names into new HashSet<string>(names) removes repeated names, and string.Join makes the remaining values readable for printing.",
+      "note": "// Ask for three names, then remove any duplicates",
+      "prompt": "Collect three names, create a Set, and print its unique values.",
+      "answer": "List<string> names = new List<string>();\n\nConsole.WriteLine(\"Enter the first name:\");\nnames.Add(Console.ReadLine());\nConsole.WriteLine(\"Enter the second name:\");\nnames.Add(Console.ReadLine());\nConsole.WriteLine(\"Enter the third name:\");\nnames.Add(Console.ReadLine());\n\nHashSet<string> uniqueNames = new HashSet<string>(names);\n\nConsole.WriteLine($\"[{string.Join(\", \", uniqueNames)}]\");",
+      "output": [
+        "Enter the first name:  →  Alex",
+        "Enter the second name:  →  Sam",
+        "Enter the third name:  →  Alex",
+        "[Alex, Sam]"
+      ],
+      "parts": []
     },
     {
-      eyebrow: "20 · Timers",
-      title: "Run code later",
-      explanation: "Task.Delay pauses asynchronous C# code for a number of milliseconds. Using await lets each message appear after another one-second delay.",
-      note: "// Print One, Two, and Three one second apart",
-      prompt: "Wait one second before printing each message.",
-      answer: 'await Task.Delay(1000);\nConsole.WriteLine("One");\n\nawait Task.Delay(1000);\nConsole.WriteLine("Two");\n\nawait Task.Delay(1000);\nConsole.WriteLine("Three");',
-      output: ["One", "Two", "Three"],
+      "eyebrow": "20 · Null",
+      "title": "Mark a value as not ready yet",
+      "explanation": "null deliberately means that a variable has no value yet. string? allows this text variable to hold either text or null, and == null checks whether the value is still missing.",
+      "note": "// null means there is deliberately no result yet",
+      "prompt": "Set result to null, then print the message for its current state.",
+      "answer": "string? result = null; // There is no result yet\n\nif (result == null)\n{\n  Console.WriteLine(\"No result yet\");\n}\nelse\n{\n  Console.WriteLine(\"Result is ready\");\n}",
+      "output": [
+        "No result yet"
+      ],
+      "parts": []
     },
     {
-      eyebrow: "21 · Date and time",
-      title: "Get the current moment",
-      explanation: "DateTime.Now gets the computer's current local date and time. Storing it in currentDateTime lets the program use or display that moment later.",
-      note: "// Get the current date and time, then print it",
-      prompt: "Store DateTime.Now in currentDateTime and show it in the console.",
-      answer: "DateTime currentDateTime = DateTime.Now;\nConsole.WriteLine(currentDateTime);",
-      output: ["06/08/2026 19:05:00"],
+      "eyebrow": "21 · Regular expressions",
+      "title": "Let names beginning with J enter",
+      "explanation": "A regular expression checks text against a pattern. Regex comes from System.Text.RegularExpressions. ^J means the text must begin with J, while RegexOptions.IgnoreCase accepts uppercase or lowercase. It accepts any word beginning with J—not only names—and rejects J when it appears later in the text.",
+      "note": "// Let people into the club when their name begins with J",
+      "prompt": "Check the five names and print who may enter the club.",
+      "answer": "using System.Text.RegularExpressions;\n\nstring[] names = { \"Jaden\", \"James\", \"Jessica\", \"Sarah\", \"Ben\" };\n\nforeach (string name in names) {\n  if (Regex.IsMatch(name, \"^J\", RegexOptions.IgnoreCase)) {\n    Console.WriteLine($\"{name} can enter the club.\");\n  } else {\n    Console.WriteLine($\"{name} cannot enter the club.\");\n  }\n}",
+      "output": [
+        "Jaden can enter the club.",
+        "James can enter the club.",
+        "Jessica can enter the club.",
+        "Sarah cannot enter the club.",
+        "Ben cannot enter the club."
+      ],
+      "parts": []
     },
+    {
+      "eyebrow": "22 · Application practice",
+      "title": "Build a random word quiz",
+      "explanation": "Combine the dictionary, random choice, input, and if/else. Choose a word, ask for its translation, then compare the answer with the stored value.",
+      "note": "// Combine the word dictionary and random key code to make a translation quiz.",
+      "prompt": "Combine the word dictionary and random key code to make a translation quiz.",
+      "answer": "var words = new System.Collections.Generic.Dictionary<string, string> {\n  { \"bonjour\", \"hello\" },\n  { \"hola\", \"hello\" }\n};\n\nstring[] keys = new string[words.Count];\nwords.Keys.CopyTo(keys, 0);\nstring random = keys[Random.Shared.Next(keys.Length)];\n\nConsole.WriteLine(random);\nstring answer = Console.ReadLine() ?? \"\";\n\nif (answer == words[random]) {\n  Console.WriteLine(\"Correct\");\n} else {\n  Console.WriteLine(\"Wrong\");\n}",
+      "output": [
+        "bonjour  →  hello",
+        "Correct"
+      ],
+      "parts": [],
+      "outputNote": "Example run: bonjour is chosen and the user enters hello."
+    }
   ],
-  html: [
+  "html": [
     {
-      eyebrow: "01 · Doctype",
-      title: "Tell the browser it is HTML",
-      explanation: "The doctype declaration belongs at the very top of the file. It tells the browser to use modern HTML rules when it reads the page.",
-      note: "<!-- Declare this as a modern HTML document -->",
-      prompt: "Type the HTML doctype declaration.",
-      answer: "<!DOCTYPE html>",
-      output: ["HTML document type recognised."],
+      "eyebrow": "01 · Doctype",
+      "title": "Tell the browser it is HTML",
+      "explanation": "The doctype declaration belongs at the very top of the file. It tells the browser to use modern HTML rules when it reads the page.",
+      "note": "<!-- Declare this as a modern HTML document -->",
+      "prompt": "Type the HTML doctype declaration.",
+      "answer": "<!DOCTYPE html>",
+      "output": [
+        "HTML document type recognised."
+      ]
     },
     {
-      eyebrow: "02 · Page structure",
-      title: "Start the HTML page",
-      explanation: "The html element wraps the whole page. The lang attribute identifies the page language for browsers, search engines, and assistive technology. The forward slash marks the closing tag.",
-      note: "<!-- Wrap the English-language page in html tags -->",
-      prompt: "Create the outer html element and mark its language as English.",
-      answer: '<html lang="en">\n</html>',
-      output: ["Page wrapper created."],
+      "eyebrow": "02 · Page structure",
+      "title": "Start the HTML page",
+      "explanation": "The html element wraps the whole page. The lang attribute identifies the page language for browsers, search engines, and assistive technology. The forward slash marks the closing tag.",
+      "note": "<!-- Wrap the English-language page in html tags -->",
+      "prompt": "Create the outer html element and mark its language as English.",
+      "answer": "<html lang=\"en\">\n</html>",
+      "output": [
+        "Page wrapper created."
+      ]
     },
     {
-      eyebrow: "03 · Head and title",
-      title: "Name the browser tab",
-      explanation: "The head holds information about the page. meta charset UTF-8 lets it display a wide range of characters correctly, while title supplies the text shown on the browser tab.",
-      note: "<!-- Set the character encoding and browser-tab title -->",
-      prompt: "Create the head, set UTF-8, and give the page a title.",
-      answer: '<head>\n  <meta charset="UTF-8">\n  <title>My page</title>\n</head>',
-      output: ["Browser-tab title: My page"],
+      "eyebrow": "03 · Head and title",
+      "title": "Name the browser tab",
+      "explanation": "The head holds information about the page. meta charset UTF-8 lets it display a wide range of characters correctly, while title supplies the text shown on the browser tab.",
+      "note": "<!-- Set the character encoding and browser-tab title -->",
+      "prompt": "Create the head, set UTF-8, and give the page a title.",
+      "answer": "<head>\n  <meta charset=\"UTF-8\">\n  <title>My page</title>\n</head>",
+      "output": [
+        "Browser-tab title: My page"
+      ]
     },
     {
-      eyebrow: "04 · Body",
-      title: "Add visible page content",
-      explanation: "The body contains everything visitors see in the browser window, such as headings, paragraphs, links, images, and buttons.",
-      note: "<!-- Create the visible body of the page -->",
-      prompt: "Create an empty body element.",
-      answer: "<body>\n</body>",
-      output: ["Visible page area created."],
+      "eyebrow": "04 · Body",
+      "title": "Add visible page content",
+      "explanation": "The body contains everything visitors see in the browser window, such as headings, paragraphs, links, images, and buttons.",
+      "note": "<!-- Create the visible body of the page -->",
+      "prompt": "Create an empty body element.",
+      "answer": "<body>\n</body>",
+      "output": [
+        "Visible page area created."
+      ]
     },
     {
-      eyebrow: "05 · Div sections",
-      title: "Separate content into boxes",
-      explanation: "A div is a box or section used to group content inside the body. Each div starts a separate block. Here, the style attribute gives the first box a red background and the second box a blue background.",
-      note: "<!-- Put two separate coloured div boxes inside the body -->",
-      prompt: "Create the red and blue div sections inside the body.",
-      answer: '<!DOCTYPE html>\n<html>\n<body>\n\n  <div style="background-color: red;">\n    This text is inside the first div.\n  </div>\n\n  <div style="background-color: blue;">\n    This text is inside the second div.\n  </div>\n\n</body>\n</html>',
-      output: ["Red section: This text is inside the first div.", "Blue section: This text is inside the second div."],
+      "eyebrow": "05 · Div sections",
+      "title": "Separate content into boxes",
+      "explanation": "A div is a box or section used to group content inside the body. Each div starts a separate block. Here, the style attribute gives the first box a red background and the second box a blue background.",
+      "note": "<!-- Put two separate coloured div boxes inside the body -->",
+      "prompt": "Create the red and blue div sections inside the body.",
+      "answer": "<!DOCTYPE html>\n<html>\n<body>\n\n  <div style=\"background-color: red;\">\n    This text is inside the first div.\n  </div>\n\n  <div style=\"background-color: blue;\">\n    This text is inside the second div.\n  </div>\n\n</body>\n</html>",
+      "output": [
+        "Red section: This text is inside the first div.",
+        "Blue section: This text is inside the second div."
+      ]
     },
     {
-      eyebrow: "06 · Headings",
-      title: "Create a heading hierarchy",
-      explanation: "Headings organise the page. h1 is the main heading; h2 introduces a major section; h3 and h4 create smaller subsections below it.",
-      note: "<!-- Add a main heading and a section heading -->",
-      prompt: "Create an h1 followed by an h2.",
-      answer: "<h1>Main heading</h1>\n<h2>Main section</h2>",
-      output: ["Main heading", "Main section"],
+      "eyebrow": "06 · Headings",
+      "title": "Create a heading hierarchy",
+      "explanation": "Headings organise the page. h1 is the main heading; h2 introduces a major section; h3 and h4 create smaller subsections below it.",
+      "note": "<!-- Add a main heading and a section heading -->",
+      "prompt": "Create an h1 followed by an h2.",
+      "answer": "<h1>Main heading</h1>\n<h2>Main section</h2>",
+      "output": [
+        "Main heading",
+        "Main section"
+      ]
     },
     {
-      eyebrow: "07 · Links",
-      title: "Open another page",
-      explanation: "The a element creates a link. Its href attribute stores the destination, while the text between the tags is what the visitor clicks.",
-      note: "<!-- Link to a second HTML page -->",
-      prompt: "Create a link to page.html.",
-      answer: '<a href="page.html">Open page</a>',
-      output: ["Open page  →  page.html"],
+      "eyebrow": "07 · Links",
+      "title": "Open another page",
+      "explanation": "The a element creates a link. Its href attribute stores the destination, while the text between the tags is what the visitor clicks.",
+      "note": "<!-- Link to a second HTML page -->",
+      "prompt": "Create a link to page.html.",
+      "answer": "<a href=\"page.html\">Open page</a>",
+      "output": [
+        "Open page  →  page.html"
+      ]
     },
     {
-      eyebrow: "08 · Text elements",
-      title: "Explore HTML text elements",
-      explanation: "This is a reference page rather than a quiz. Compare headings, paragraphs, text-formatting elements, inline colour and alignment styles, and a link to another page.",
-      note: "<!-- A visual guide to HTML text elements -->",
-      prompt: "Explore the examples and what each element means.",
-      answer: '<p>This page shows some useful HTML elements.</p>\n\n<h2>Headings</h2>\n<h1>Main Title</h1>\n<h2>Section Heading</h2>\n<h3>Subsection</h3>\n<h4>Smaller Heading</h4>\n<h5>Even Smaller Heading</h5>\n<h6>Smallest Heading</h6>\n\n<h2>Paragraph</h2>\n<p>This is a paragraph.</p>\n\n<h2>Text Formatting</h2>\n<p><b>Bold text</b></p>\n<p><strong>Important text</strong></p>\n<p><i>Italic text</i></p>\n<p><em>Emphasized text</em></p>\n<p><mark>Marked text</mark></p>\n<p><small>Smaller text</small></p>\n<p><del>Deleted text</del></p>\n<p><ins>Inserted text</ins></p>\n<p>Subscript text: H<sub>2</sub>O</p>\n<p>Superscript text: 2<sup>3</sup> = 8</p>\n\n<h2>Colour and Alignment</h2>\n<h3 style="color: green;">This heading is green.</h3>\n<p style="text-align: center;">This paragraph is centred.</p>\n<p><a href="notes/html-basics-notes.html">Read the HTML basics notes</a></p>',
-      output: ["Reference explored."],
-      referenceOnly: true,
-      referenceKind: "text",
+      "eyebrow": "08 · Text elements",
+      "title": "Explore HTML text elements",
+      "explanation": "This is a reference page rather than a quiz. Compare headings, paragraphs, text-formatting elements, inline colour and alignment styles, and a link to another page.",
+      "note": "<!-- A visual guide to HTML text elements -->",
+      "prompt": "Explore the examples and what each element means.",
+      "answer": "<p>This page shows some useful HTML elements.</p>\n\n<h2>Headings</h2>\n<h1>Main Title</h1>\n<h2>Section Heading</h2>\n<h3>Subsection</h3>\n<h4>Smaller Heading</h4>\n<h5>Even Smaller Heading</h5>\n<h6>Smallest Heading</h6>\n\n<h2>Paragraph</h2>\n<p>This is a paragraph.</p>\n\n<h2>Text Formatting</h2>\n<p><b>Bold text</b></p>\n<p><strong>Important text</strong></p>\n<p><i>Italic text</i></p>\n<p><em>Emphasized text</em></p>\n<p><mark>Marked text</mark></p>\n<p><small>Smaller text</small></p>\n<p><del>Deleted text</del></p>\n<p><ins>Inserted text</ins></p>\n<p>Subscript text: H<sub>2</sub>O</p>\n<p>Superscript text: 2<sup>3</sup> = 8</p>\n\n<h2>Colour and Alignment</h2>\n<h3 style=\"color: green;\">This heading is green.</h3>\n<p style=\"text-align: center;\">This paragraph is centred.</p>\n<p><a href=\"notes/html-basics-notes.html\">Read the HTML basics notes</a></p>",
+      "output": [
+        "Reference explored."
+      ],
+      "referenceOnly": true,
+      "referenceKind": "text"
     },
     {
-      eyebrow: "09 · JavaScript in HTML",
-      title: "Show the current date and time",
-      explanation: "The script element lets an HTML page run JavaScript. new Date() creates the current date and time, and console.log displays it in the browser's developer console.",
-      note: "<!-- Run JavaScript from inside the HTML page -->",
-      prompt: "Put the date-and-time code inside a script element.",
-      answer: "<script>\n  const currentDateTime = new Date();\n  console.log(currentDateTime);\n</script>",
-      output: ["Current date and time printed in the browser console."],
+      "eyebrow": "09 · JavaScript in HTML",
+      "title": "Show the current date and time",
+      "explanation": "The script element lets an HTML page run JavaScript. new Date() creates the current date and time, and console.log displays it in the browser's developer console.",
+      "note": "<!-- Run JavaScript from inside the HTML page -->",
+      "prompt": "Put the date-and-time code inside a script element.",
+      "answer": "<script>\n  const currentDateTime = new Date();\n  console.log(currentDateTime);\n</script>",
+      "output": [
+        "Current date and time printed in the browser console."
+      ]
     },
     {
-      eyebrow: "10 · Multiple pages",
-      title: "Link two HTML pages",
-      explanation: "This is a two-file reference rather than a quiz. When both files are in the same folder, each href can use the other file's name as a relative path.",
-      note: "<!-- Link index.html and page2.html in both directions -->",
-      prompt: "Compare the two files and follow the links between them.",
-      answer: '<a href="page2.html">Go to Page 2</a>',
-      output: ["index.html ↔ page2.html"],
-      referenceOnly: true,
-      referenceKind: "pages",
+      "eyebrow": "10 · Multiple pages",
+      "title": "Link two HTML pages",
+      "explanation": "This is a two-file reference rather than a quiz. When both files are in the same folder, each href can use the other file's name as a relative path.",
+      "note": "<!-- Link index.html and page2.html in both directions -->",
+      "prompt": "Compare the two files and follow the links between them.",
+      "answer": "<a href=\"page2.html\">Go to Page 2</a>",
+      "output": [
+        "index.html ↔ page2.html"
+      ],
+      "referenceOnly": true,
+      "referenceKind": "pages"
     },
     {
-      eyebrow: "11 · Images",
-      title: "Place an image on the page",
-      explanation: "The img element displays an image. src tells the browser which file to load, while alt describes the image if it cannot be seen or loaded. If car.png is beside index.html, its filename is enough for src.",
-      note: "<!-- Display car.png from the same folder as this HTML file -->",
-      prompt: "Add the car image with useful alternative text.",
-      answer: '<img src="car.png" alt="A car">',
-      output: ["Image loaded: car.png", "Alternative text: A car"],
+      "eyebrow": "11 · Images",
+      "title": "Place an image on the page",
+      "explanation": "The img element displays an image. src tells the browser which file to load, while alt describes the image if it cannot be seen or loaded. If car.png is beside index.html, its filename is enough for src.",
+      "note": "<!-- Display car.png from the same folder as this HTML file -->",
+      "prompt": "Add the car image with useful alternative text.",
+      "answer": "<img src=\"car.png\" alt=\"A car\">",
+      "output": [
+        "Image loaded: car.png",
+        "Alternative text: A car"
+      ]
     },
     {
-      eyebrow: "12 · Videos",
-      title: "Place a video on the page",
-      explanation: "The video element places a video on the page, much like img places a picture. src tells the browser to load my-video.mp4, and controls adds the built-in play, pause, volume, and timeline controls. Keep the MP4 file beside the HTML file when using only its filename.",
-      note: "<!-- Display my-video.mp4 with playback controls -->",
-      prompt: "Add the video and let the visitor control its playback.",
-      answer: '<video src="my-video.mp4" controls></video>',
-      output: ["Video loaded: my-video.mp4", "Playback controls enabled."],
+      "eyebrow": "12 · Videos",
+      "title": "Place a video on the page",
+      "explanation": "The video element places a video on the page, much like img places a picture. src tells the browser to load my-video.mp4, and controls adds the built-in play, pause, volume, and timeline controls. Keep the MP4 file beside the HTML file when using only its filename.",
+      "note": "<!-- Display my-video.mp4 with playback controls -->",
+      "prompt": "Add the video and let the visitor control its playback.",
+      "answer": "<video src=\"my-video.mp4\" controls></video>",
+      "output": [
+        "Video loaded: my-video.mp4",
+        "Playback controls enabled."
+      ]
     },
     {
-      eyebrow: "13 · Audio",
-      title: "Place audio on the page",
-      explanation: "The audio element works much like video, but it plays sound without a picture area. src tells the browser to load my-audio.mp3, and controls adds play, pause, volume, and timeline controls. Keep the MP3 file beside the HTML file when using only its filename.",
-      note: "<!-- Play my-audio.mp3 with playback controls -->",
-      prompt: "Add the audio file and let the visitor control its playback.",
-      answer: '<audio src="my-audio.mp3" controls></audio>',
-      output: ["Audio loaded: my-audio.mp3", "Playback controls enabled."],
+      "eyebrow": "13 · Audio",
+      "title": "Place audio on the page",
+      "explanation": "The audio element works much like video, but it plays sound without a picture area. src tells the browser to load my-audio.mp3, and controls adds play, pause, volume, and timeline controls. Keep the MP3 file beside the HTML file when using only its filename.",
+      "note": "<!-- Play my-audio.mp3 with playback controls -->",
+      "prompt": "Add the audio file and let the visitor control its playback.",
+      "answer": "<audio src=\"my-audio.mp3\" controls></audio>",
+      "output": [
+        "Audio loaded: my-audio.mp3",
+        "Playback controls enabled."
+      ]
     },
     {
-      eyebrow: "14 · IDs for CSS",
-      title: "Give one element a unique name",
-      explanation: "The id attribute gives one HTML element a unique name. CSS can then select that exact element with a hash followed by the same name, such as #p1.",
-      note: "<!-- Give this particular paragraph the ID p1 -->",
-      prompt: "Add the p1 ID to the paragraph so CSS can target it.",
-      answer: '<p id="p1">This paragraph has its own ID.</p>',
-      output: ["Paragraph identified as p1.", "CSS can select it with #p1."],
+      "eyebrow": "14 · IDs for CSS",
+      "title": "Give one element a unique name",
+      "explanation": "The id attribute gives one HTML element a unique name. CSS can then select that exact element with a hash followed by the same name, such as #p1.",
+      "note": "<!-- Give this particular paragraph the ID p1 -->",
+      "prompt": "Add the p1 ID to the paragraph so CSS can target it.",
+      "answer": "<p id=\"p1\">This paragraph has its own ID.</p>",
+      "output": [
+        "Paragraph identified as p1.",
+        "CSS can select it with #p1."
+      ]
     },
     {
-      eyebrow: "15 · Browser-safe repetition",
-      title: "Use a button instead of while (true)",
-      explanation: "while (true) is JavaScript, not HTML. Even inside a script element, an endless loop can freeze the page. A button is safer for an HTML page: each click runs checkAnswer once, then the page waits for another click.",
-      note: "<!-- A click safely runs one answer check at a time -->",
-      prompt: "Create the button and function that check one answer per click.",
-      answer: '<button onclick="checkAnswer()">Check answer</button>\n<p id="result"></p>\n\n<script>\n  function checkAnswer() {\n    let answer = prompt("What is 1 + 1?");\n\n    if (answer == "2") {\n      document.getElementById("result").textContent = "Correct!";\n    } else {\n      document.getElementById("result").textContent = "Incorrect! The answer is 2.";\n    }\n  }\n</script>',
-      output: ["Button clicked.", "What is 1 + 1?  →  2", "Correct!", "The page waits for another click."],
+      "eyebrow": "15 · Browser-safe repetition",
+      "title": "Use a button instead of while (true)",
+      "explanation": "while (true) is JavaScript, not HTML. Even inside a script element, an endless loop can freeze the page. A button is safer for an HTML page: each click runs checkAnswer once, then the page waits for another click.",
+      "note": "<!-- A click safely runs one answer check at a time -->",
+      "prompt": "Create the button and function that check one answer per click.",
+      "answer": "<button onclick=\"checkAnswer()\">Check answer</button>\n<p id=\"result\"></p>\n\n<script>\n  function checkAnswer() {\n    let answer = prompt(\"What is 1 + 1?\");\n\n    if (answer == \"2\") {\n      document.getElementById(\"result\").textContent = \"Correct!\";\n    } else {\n      document.getElementById(\"result\").textContent = \"Incorrect! The answer is 2.\";\n    }\n  }\n</script>",
+      "output": [
+        "Button clicked.",
+        "What is 1 + 1?  →  2",
+        "Correct!",
+        "The page waits for another click."
+      ]
     },
     {
-      eyebrow: "16 · Return values",
-      title: "Send a value back with return",
-      explanation: "return sends a value back to the place where a function was called, and the function ends immediately. Here, getMessage() returns the text Hello. That returned text is then placed in the paragraph.",
-      note: "<!-- Return a value from a function and show it on the page -->",
-      prompt: "Create the function that returns Hello, then show its returned value.",
-      answer: '<p id="message"></p>\n\n<script>\n  function getMessage() {\n    return "Hello";\n  }\n\n  document.getElementById("message").textContent = getMessage();\n</script>',
-      output: ["Hello", "return sends Hello back to getMessage()."],
-    },
+      "eyebrow": "16 · Return values",
+      "title": "Send a value back with return",
+      "explanation": "return sends a value back to the place where a function was called, and the function ends immediately. Here, getMessage() returns the text Hello. That returned text is then placed in the paragraph.",
+      "note": "<!-- Return a value from a function and show it on the page -->",
+      "prompt": "Create the function that returns Hello, then show its returned value.",
+      "answer": "<p id=\"message\"></p>\n\n<script>\n  function getMessage() {\n    return \"Hello\";\n  }\n\n  document.getElementById(\"message\").textContent = getMessage();\n</script>",
+      "output": [
+        "Hello",
+        "return sends Hello back to getMessage()."
+      ]
+    }
   ],
-  css: [
+  "css": [
     {
-      eyebrow: "01 · Background colour",
-      title: "Colour the page background",
-      explanation: "CSS rules use a property and a value. background-color chooses the colour behind an element, while the colon separates the property from its value and the semicolon ends the instruction.",
-      note: "/* Give the page a light-blue background */",
-      prompt: "Write a body rule with a light-blue background.",
-      answer: "body {\n  background-color: lightblue;\n}",
-      output: ["The page background is light blue."],
+      "eyebrow": "01 · Background colour",
+      "title": "Colour the page background",
+      "explanation": "CSS rules use a property and a value. background-color chooses the colour behind an element, while the colon separates the property from its value and the semicolon ends the instruction.",
+      "note": "/* Give the page a light-blue background */",
+      "prompt": "Write a body rule with a light-blue background.",
+      "answer": "body {\n  background-color: lightblue;\n}",
+      "output": [
+        "The page background is light blue."
+      ]
     },
     {
-      eyebrow: "02 · Text styling",
-      title: "Colour and centre text",
-      explanation: "color changes the text colour. text-align controls horizontal alignment inside the selected element; center places its inline content in the middle.",
-      note: "/* Make every paragraph red and centred */",
-      prompt: "Style paragraphs with red, centred text.",
-      answer: "p {\n  color: red;\n  text-align: center;\n}",
-      output: ["Red paragraph text centred."],
+      "eyebrow": "02 · Text styling",
+      "title": "Colour and centre text",
+      "explanation": "color changes the text colour. text-align controls horizontal alignment inside the selected element; center places its inline content in the middle.",
+      "note": "/* Make every paragraph red and centred */",
+      "prompt": "Style paragraphs with red, centred text.",
+      "answer": "p {\n  color: red;\n  text-align: center;\n}",
+      "output": [
+        "Red paragraph text centred."
+      ]
     },
     {
-      eyebrow: "03 · ID selectors",
-      title: "Style one unique element",
-      explanation: "An ID selector begins with #. The selector #p1 matches the HTML element carrying id=\"p1\", so this rule changes only that particular element.",
-      note: "/* Select the HTML element whose ID is p1 */",
-      prompt: "Use its ID to make only p1 tomato coloured.",
-      answer: "#p1 {\n  color: tomato;\n}",
-      output: ["Only the element with id=\"p1\" turns tomato."],
+      "eyebrow": "03 · ID selectors",
+      "title": "Style one unique element",
+      "explanation": "An ID selector begins with #. The selector #p1 matches the HTML element carrying id=\"p1\", so this rule changes only that particular element.",
+      "note": "/* Select the HTML element whose ID is p1 */",
+      "prompt": "Use its ID to make only p1 tomato coloured.",
+      "answer": "#p1 {\n  color: tomato;\n}",
+      "output": [
+        "Only the element with id=\"p1\" turns tomato."
+      ]
     },
     {
-      eyebrow: "04 · Font families",
-      title: "Compare website fonts",
-      explanation: "This is a visual reference rather than a quiz. A browser uses the first available font in a font-family list, then tries each fallback. Named fonts are not guaranteed on every device, so finish every stack with a generic family.",
-      note: "/* Compare common fonts and safe fallbacks */",
-      prompt: "Compare the font samples and their fallback families.",
-      answer: "p { font-family: Arial, sans-serif; }",
-      output: ["Font reference explored."],
-      referenceOnly: true,
-      referenceKind: "fonts",
+      "eyebrow": "04 · Font families",
+      "title": "Compare website fonts",
+      "explanation": "This is a visual reference rather than a quiz. A browser uses the first available font in a font-family list, then tries each fallback. Named fonts are not guaranteed on every device, so finish every stack with a generic family.",
+      "note": "/* Compare common fonts and safe fallbacks */",
+      "prompt": "Compare the font samples and their fallback families.",
+      "answer": "p { font-family: Arial, sans-serif; }",
+      "output": [
+        "Font reference explored."
+      ],
+      "referenceOnly": true,
+      "referenceKind": "fonts"
     },
     {
-      eyebrow: "05 · Borders and colours",
-      title: "Explore borders and colour formats",
-      explanation: "This visual reference shows how CSS selectors target elements and how border, RGB, RGBA, and hexadecimal colour values change their appearance.",
-      note: "/* Compare borders, rounded corners, RGB, RGBA, and hex colours */",
-      prompt: "Explore the rendered CSS examples and their explanations.",
-      answer: "p.one { border: 5px solid red; }",
-      output: ["CSS reference explored."],
-      referenceOnly: true,
-      referenceKind: "css",
+      "eyebrow": "05 · Borders and colours",
+      "title": "Explore borders and colour formats",
+      "explanation": "This visual reference shows how CSS selectors target elements and how border, RGB, RGBA, and hexadecimal colour values change their appearance.",
+      "note": "/* Compare borders, rounded corners, RGB, RGBA, and hex colours */",
+      "prompt": "Explore the rendered CSS examples and their explanations.",
+      "answer": "p.one { border: 5px solid red; }",
+      "output": [
+        "CSS reference explored."
+      ],
+      "referenceOnly": true,
+      "referenceKind": "css"
     },
     {
-      eyebrow: "06 · Border practice",
-      title: "Create a rounded dotted border",
-      explanation: "A class selector targets elements carrying that class. The border shorthand sets width, style, and colour, while border-radius rounds the corners.",
-      note: "/* Give notice paragraphs a dotted blue rounded border */",
-      prompt: "Create the notice class with a dotted blue rounded border.",
-      answer: "p.notice {\n  border: 5px dotted blue;\n  border-radius: 5px;\n}",
-      output: ["Notice paragraphs have a dotted blue border with rounded corners."],
-    },
-  ],
+      "eyebrow": "06 · Border practice",
+      "title": "Create a rounded dotted border",
+      "explanation": "A class selector targets elements carrying that class. The border shorthand sets width, style, and colour, while border-radius rounds the corners.",
+      "note": "/* Give notice paragraphs a dotted blue rounded border */",
+      "prompt": "Create the notice class with a dotted blue rounded border.",
+      "answer": "p.notice {\n  border: 5px dotted blue;\n  border-radius: 5px;\n}",
+      "output": [
+        "Notice paragraphs have a dotted blue border with rounded corners."
+      ]
+    }
+  ]
 };
 
 type CodePart = { code: string; name: string; meaning: string };
@@ -844,7 +1613,7 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
     ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|div|section|script|img|video|audio|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|src|alt|controls|id|lang|charset)\b|\b(?:background-color)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:#])/g
     : language === "css"
     ? /(\/\*[\s\S]*?\*\/|#[0-9a-fA-F]{3,8}\b|#[A-Za-z_]\w*|\b(?:body|p|background-color|color|text-align|font-family|border|border-radius|solid|dotted|center|lightblue|red|blue|tomato)\b|\d+(?:px)?|[{}();:.,])/g
-    : /(\/\/[^\n]*|\/\^[A-Za-z]+\/[gimsuy]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|class|constructor|this|let|const|new|null|if|else|for|of|while|true|false|break|return|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime|List|Set|HashSet|Regex|RegexOptions)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|&&|>=|<=|\+\+|--|[{}()[\];=.:<>?^/])/g;
+    : /(\/\/[^\n]*|\/\^[A-Za-z]+\/[gimsuy]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|class|constructor|this|let|const|double|bool|out|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime|List|Set|HashSet|Dictionary|Random|Regex|RegexOptions)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|&&|>=|<=|\+\+|--|[{}()[\];=.:<>?^/])/g;
   const parts: { text: string; kind: string }[] = [];
   let lastIndex = 0;
   for (const match of code.matchAll(pattern)) {
@@ -853,8 +1622,8 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
     let kind = "punctuation";
     if (/^(\/\/|\/\*|<!--)/.test(text)) kind = "comment";
     else if (/^["'`]/.test(text) || /^\/\^/.test(text)) kind = "string";
-    else if (/^(function|class|constructor|this|let|const|new|null|if|else|for|of|while|true|false|break|return|setTimeout|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|div|section|script|img|video|audio|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
-    else if (/^(console|Console|Task|Date|DateTime|List|Set|HashSet|Regex|RegexOptions|log)$/.test(text)) kind = "api";
+    else if (/^(function|class|constructor|this|let|const|double|bool|out|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|div|section|script|img|video|audio|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
+    else if (/^(console|Console|Task|Date|DateTime|List|Set|HashSet|Dictionary|Random|Regex|RegexOptions|log)$/.test(text)) kind = "api";
     else if (/^(style|href|src|alt|controls|id|lang|charset)$/.test(text)) kind = "attribute";
     else if (/^(background-color|color|text-align|font-family|border|border-radius)$/.test(text)) kind = "api";
     else if (/^(body|p)$/.test(text)) kind = "keyword";
@@ -960,12 +1729,12 @@ export default function Home() {
   const guideCode = alignedGuide(code, visibleGhost);
   const breakdownIndex = index;
   const breakdown = language
-    ? current?.referenceKind === "comparisons" ? undefined
+    ? current?.parts?.length ? current.parts : current?.referenceKind === "comparisons" ? undefined
       : ((current?.title === "Mark a value as not ready yet") && nullBreakdowns[language])
       || ((current?.title === "Create and use a class") && classBreakdowns[language])
       || ((current?.title === "Let names beginning with J enter") && regexBreakdowns[language])
-      || ((current?.title === "Make and search a names array") && namesArrayBreakdown)
-      || ((current?.title === "Choose a random word") && randomWordBreakdown)
+      || ((current?.title === "Make and search a names array" && language === "javascript") && namesArrayBreakdown)
+      || ((current?.title === "Choose a random word" && language === "javascript") && randomWordBreakdown)
       || ((current?.title === "Remove duplicate names") && setsBreakdowns[language])
       || breakdowns[language][breakdownIndex]
     : undefined;
@@ -1193,12 +1962,33 @@ export default function Home() {
           <div className="lesson-number">{String(index + 1).padStart(2, "0")} · {current!.eyebrow.split("·")[1]}</div>
           <h1>{current!.title}</h1>
           <p>{current!.explanation}</p>
+          {(language === "javascript" || language === "csharp") && <details className="symbol-guide" open={index === 0}>
+            <summary>Brackets and symbols</summary>
+            <table><thead><tr><th>Symbol</th><th>Called</th><th>Example</th></tr></thead><tbody>
+              <tr><td><code>[]</code></td><td>Square brackets · array / lookup</td><td><code>{language === "javascript" ? '["Jaden", "Alex"]' : 'string[] names = { "Jaden", "Alex" };'}</code></td></tr>
+              <tr><td><code>{"{}"}</code></td><td>Curly braces · object / block</td><td><code>{language === "javascript" ? '{ name: "Jaden", age: 20 }' : 'new { Name = "Jaden", Age = 20 }'}</code></td></tr>
+              <tr><td><code>()</code></td><td>Parentheses · calls / conditions</td><td><code>{language === "javascript" ? 'console.log("Hello")' : 'Console.WriteLine("Hello")'}</code></td></tr>
+            </tbody></table>
+            <p><code>[]</code> creates JavaScript arrays or accesses an item by position or key. In C#, <code>string[]</code> declares an array type; <code>names[0]</code> accesses its first item. A List can grow; an array has a fixed length.</p>
+            <pre><code>{language === "javascript" ? 'let trains = ["Class 390", "Class 801"];' : 'string[] trains = { "Class 390", "Class 801" };'}</code></pre>
+            <p><code>()</code> holds function arguments and conditions. Each nested call has its own pair. Extra parentheses can group an expression; <code>((</code> has no special meaning for multiple functions.</p>
+            <pre><code>{language === "javascript" ? 'console.log("Hello");\nif (speed > 100) { }' : 'Console.WriteLine("Hello");\nif (speed > 100) { }'}</code></pre>
+            <p><code>{"{}"}</code> groups a block of instructions. It also creates an object literal in JavaScript. In C#, braces can hold blocks, class bodies, or object and collection initializers.</p>
+            <pre><code>{language === "javascript" ? 'if (speed > 100) {\n  console.log("Too fast!");\n}' : 'if (speed > 100) {\n  Console.WriteLine("Too fast!");\n}'}</code></pre>
+            <p><code>//</code> starts a comment that explains the code and is not executed. These speed examples show the bracket shapes; define speed before running them.</p>
+          </details>}
           {breakdown && <section className="code-breakdown" aria-label="Code breakdown">
             <div className="breakdown-label">BREAK IT DOWN</div>
             <div className="breakdown-grid">{breakdown.map((part, partIndex) => <div className="breakdown-part" key={`${part.code}-${partIndex}`}>
               <code><HighlightedCode code={part.code} language={language} /></code><div><b>{part.name}</b><span>{part.meaning}</span></div>
             </div>)}</div>
           </section>}
+          {current!.eyebrow.includes("Combined conditions") && <div className="comparison-guide" aria-label="Comparisons and combined conditions">
+            <div><code>{language === "javascript" ? "=== / !==" : "== / !="}</code><p><b>Equal / not equal</b><span>{language === "javascript" ? "Compare values and types. == converts types before comparing; prefer === here." : "Compare the two values."}</span></p></div>
+            <div><code>{"> / <"}</code><p><b>Greater / less than</b><span>The open side faces the larger value.</span></p></div>
+            <div><code>{">= / <="}</code><p><b>Include the boundary</b><span>Greater than or equal / less than or equal.</span></p></div>
+            <div><code>{"&& / || / !"}</code><p><b>AND / OR / NOT</b><span>Both conditions / at least one condition / reverse a condition.</span></p></div>
+          </div>}
           {current!.referenceOnly ? current!.referenceKind === "comparisons" ? <div className="comparison-guide">
             <div><code>{language === "javascript" ? "==" : "=="}</code><p><b>Equal value</b><span>{language === "javascript" ? "Converts types before comparing; usually prefer ===." : "Checks whether the two values are equal."}</span></p></div>
             {language === "javascript" && <div><code>===</code><p><b>Equal value and type</b><span>Strict equality checks the value and its data type.</span></p></div>}
@@ -1318,7 +2108,7 @@ export default function Home() {
             <div className="console-body">
               {status === "idle" && <span className="console-muted">Your program output will appear here...</span>}
               {status === "wrong" && <><SyntaxDiagnostic parts={diagnostic} /><div className="console-muted diagnostic-hint">Hover over or focus each underlined part to see what it means.</div></>}
-              {status === "correct" && <><div className="run-line"><span>✓</span> Code accepted — running...</div><div className="typed-output">{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={language === "javascript" && index === 0 && i === 0 ? { color: "#ef4444" } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}</div>)}</div></>}
+              {status === "correct" && <><div className="run-line"><span>✓</span> Code accepted — example output</div><div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={current?.outputColors?.[i] ? { color: current.outputColors[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}</div>)}</div></>}
             </div>
           </div>
           <div className={`feedback ${status}`}>
