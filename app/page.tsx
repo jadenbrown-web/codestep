@@ -24,11 +24,11 @@ const lessons: Record<Language, Lesson[]> = {
     {
       eyebrow: "01 · Console output",
       title: "Print several lines at once",
-      explanation: "console.log displays text in the console. Inside the quotation marks, each \\n starts a new line, so one instruction can print four fruits on four separate lines.",
+      explanation: "const red stores an ANSI escape code for red text in terminals. ${red} inserts it at the start of the message inside backticks. This lesson previews that message in red. console.log displays text in the console. Inside the quotation marks, each \\n starts a new line, so one instruction can print four fruits on four separate lines.",
       note: "// Use \\n to start a new line in the console",
-      prompt: "Print Apple, Banana, Orange, and Pear on separate lines.",
-      answer: 'console.log("Apple\\nBanana\\nOrange\\nPear");',
-      output: ["Apple", "Banana", "Orange", "Pear"],
+      prompt: "Print This is red text in red, then print Apple, Banana, Orange, and Pear on separate lines.",
+      answer: 'const red = "\\x1b[31m";\nconsole.log(`${red} This is red text`);\n\nconsole.log("Apple\\nBanana\\nOrange\\nPear");',
+      output: [" This is red text", "Apple", "Banana", "Orange", "Pear"],
     },
     {
       eyebrow: "02 · Functions",
@@ -600,7 +600,7 @@ type CodePart = { code: string; name: string; meaning: string };
 
 const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
   javascript: {
-    0: [{ code: "\\n", name: "New line", meaning: "Moves the next word onto a new line in the console." }],
+    0: [{ code: "\\x1b[31m", name: "Red text", meaning: "An ANSI escape code that switches terminal text to red." }, { code: "${red}", name: "Insert the colour", meaning: "Inside backticks, inserts the value stored in red before the message." }, { code: "\\n", name: "New line", meaning: "Moves the next word onto a new line in the console." }],
     1: [{ code: "function", name: "Create", meaning: "Starts a reusable block of code." }, { code: "correct()", name: "Name", meaning: "Names the function so you can call it later." }, { code: "{ ... }", name: "Instructions", meaning: "Holds the code the function will run." }, { code: "correct();", name: "Call it", meaning: "Runs the function you created." }, { code: ";", name: "End instruction", meaning: "Marks where an instruction ends. JavaScript can sometimes work without it, but using it consistently makes the ending clear." }],
     2: [{ code: "while (true)", name: "Repeat", meaning: "Keeps asking for input until code inside stops the loop." }, { code: "prompt", name: "Input", meaning: "Asks the user for an answer." }, { code: "break", name: "Stop", meaning: "Leaves the loop when the if condition is true." }],
     3: [{ code: "let", name: "Create", meaning: "Makes a variable that can remember something." }, { code: "name", name: "Label", meaning: "Shows that you choose a useful name for the saved value." }, { code: "=", name: "Save", meaning: "Puts the value on the right into the variable on the left." }],
@@ -1318,7 +1318,7 @@ export default function Home() {
             <div className="console-body">
               {status === "idle" && <span className="console-muted">Your program output will appear here...</span>}
               {status === "wrong" && <><SyntaxDiagnostic parts={diagnostic} /><div className="console-muted diagnostic-hint">Hover over or focus each underlined part to see what it means.</div></>}
-              {status === "correct" && <><div className="run-line"><span>✓</span> Code accepted — running...</div><div className="typed-output">{typedOutput.split("\n").map((line, i, lines) => <div key={i}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}</div>)}</div></>}
+              {status === "correct" && <><div className="run-line"><span>✓</span> Code accepted — running...</div><div className="typed-output">{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={language === "javascript" && index === 0 && i === 0 ? { color: "#ef4444" } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}</div>)}</div></>}
             </div>
           </div>
           <div className={`feedback ${status}`}>
