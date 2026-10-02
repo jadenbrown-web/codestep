@@ -155,7 +155,7 @@ const lessons: Record<Language, Lesson[]> = {
       "eyebrow": "05 · Date and time",
       "title": "Print the current date and time",
       "explanation": "new Date() captures the current local date and time from the device. console.log(time) prints that Date. The display depends on the device, time zone, and when you run it. getHours() reads the hour from 0 to 23; getMinutes() reads the minute from 0 to 59.",
-      "note": "// Store the current date and time in time, then print it.",
+      "note": "// Store the current date and time in time, then print it.\n// To record when a message was submitted, create the Date immediately after prompt() returns.",
       "prompt": "Store the current date and time in time, then print it.",
       "answer": "let time = new Date();\nconsole.log(time);",
       "output": [
