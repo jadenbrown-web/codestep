@@ -3312,16 +3312,16 @@ export default function Home() {
           {(language === "javascript" || language === "csharp") && <details className="symbol-guide" open={index === 0}>
             <summary>Brackets and symbols</summary>
             <table><thead><tr><th>Symbol</th><th>Called</th><th>Example</th></tr></thead><tbody>
-              <tr><td><code>[]</code></td><td>Square brackets · array / lookup</td><td><code>{language === "javascript" ? '["Jaden", "Alex"]' : 'string[] names = { "Jaden", "Alex" };'}</code></td></tr>
-              <tr><td><code>{"{}"}</code></td><td>Curly braces · object / block</td><td><code>{language === "javascript" ? '{ name: "Jaden", age: 20 }' : 'new { Name = "Jaden", Age = 20 }'}</code></td></tr>
-              <tr><td><code>()</code></td><td>Parentheses · calls / conditions</td><td><code>{language === "javascript" ? 'console.log("Hello")' : 'Console.WriteLine("Hello")'}</code></td></tr>
+              <tr><td><code>[]</code></td><td>Square brackets · array / lookup</td><td><code className="symbol-example"><HighlightedCode language={language} code={language === "javascript" ? '["Jaden", "Alex"]' : 'string[] names = { "Jaden", "Alex" };'} /></code></td></tr>
+              <tr><td><code>{"{}"}</code></td><td>Curly braces · object / block</td><td><code className="symbol-example"><HighlightedCode language={language} code={language === "javascript" ? '{ name: "Jaden", age: 20 }' : 'new { Name = "Jaden", Age = 20 }'} /></code></td></tr>
+              <tr><td><code>()</code></td><td>Parentheses · calls / conditions</td><td><code className="symbol-example"><HighlightedCode language={language} code={language === "javascript" ? 'console.log("Hello")' : 'Console.WriteLine("Hello")'} /></code></td></tr>
             </tbody></table>
             <p><code>[]</code> creates JavaScript arrays or accesses an item by position or key. In C#, <code>string[]</code> declares an array type; <code>names[0]</code> accesses its first item. A List can grow; an array has a fixed length.</p>
-            <pre><code>{language === "javascript" ? 'let trains = ["Class 390", "Class 801"];' : 'string[] trains = { "Class 390", "Class 801" };'}</code></pre>
+            <pre><code className="symbol-example"><HighlightedCode language={language} code={language === "javascript" ? 'let trains = ["Class 390", "Class 801"];' : 'string[] trains = { "Class 390", "Class 801" };'} /></code></pre>
             <p><code>()</code> holds function arguments and conditions. Each nested call has its own pair. Extra parentheses can group an expression; <code>((</code> has no special meaning for multiple functions.</p>
-            <pre><code>{language === "javascript" ? 'console.log("Hello");\nif (speed > 100) { }' : 'Console.WriteLine("Hello");\nif (speed > 100) { }'}</code></pre>
+            <pre><code className="symbol-example"><HighlightedCode language={language} code={language === "javascript" ? 'console.log("Hello");\nif (speed > 100) { }' : 'Console.WriteLine("Hello");\nif (speed > 100) { }'} /></code></pre>
             <p><code>{"{}"}</code> groups a block of instructions. It also creates an object literal in JavaScript. In C#, braces can hold blocks, class bodies, or object and collection initializers.</p>
-            <pre><code>{language === "javascript" ? 'if (speed > 100) {\n  console.log("Too fast!");\n}' : 'if (speed > 100) {\n  Console.WriteLine("Too fast!");\n}'}</code></pre>
+            <pre><code className="symbol-example"><HighlightedCode language={language} code={language === "javascript" ? 'if (speed > 100) {\n  console.log("Too fast!");\n}' : 'if (speed > 100) {\n  Console.WriteLine("Too fast!");\n}'} /></code></pre>
             <p><code>//</code> starts a comment that explains the code and is not executed. These speed examples show the bracket shapes; define speed before running them.</p>
           </details>}
           {breakdown && <section className="code-breakdown" aria-label="Code breakdown">

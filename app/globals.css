@@ -151,3 +151,17 @@ html[data-theme="dark"] .drawer-lessons button[class*="tone-"] .lesson-state,htm
 
 .compare-language-choices{width:100%;display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:14px}.compare-language-choices>div{display:flex;gap:7px;flex-wrap:wrap}.compare-language-choices button{padding:9px 14px;border:1px solid #728579;border-radius:8px;background:transparent;font-size:14px;cursor:pointer}.compare-language-choices button[aria-pressed="true"]{background:var(--green-dark);color:var(--cream);border-color:var(--green-dark)}.compare-example-picker{width:100%;border:1px solid #72857977;border-radius:10px;background:var(--cream)}.compare-example-picker summary{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 14px;cursor:pointer;list-style:none;font-size:14px}.compare-example-picker summary::-webkit-details-marker{display:none}.compare-example-picker summary>b{font-size:16px}.example-picker-hint{margin-left:auto;color:var(--green-dark);font-weight:600}.compare-example-list{max-height:230px;overflow-y:auto;overscroll-behavior:contain;padding:6px;border-top:1px solid #72857955}.compare-example-list button{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;text-align:left;border:0;border-radius:6px;background:transparent;cursor:pointer;font-size:14px}.compare-example-list button>b{flex:1;font-weight:500}.compare-example-list button>span{color:var(--green-dark);font:14px var(--mono)}.compare-example-list button:hover,.compare-example-list button[aria-pressed="true"]{background:#19a4631c}.compare-example-picker summary:focus-visible,.compare-language-choices button:focus-visible,.compare-example-list button:focus-visible{outline:2px solid var(--green-dark);outline-offset:2px}
 .syntax-header{color:#71cbea}
+
+/* Syntax colour in bracket examples; punctuation stays neutral. */
+.symbol-guide .symbol-example .syntax-keyword{color:#a32e58}
+.symbol-guide .symbol-example .syntax-api{color:#12647f}
+.symbol-guide .symbol-example .syntax-string{color:#376627}
+.symbol-guide .symbol-example .syntax-number{color:#815e09}
+.symbol-guide .symbol-example .syntax-function-name{color:#6b3e98}
+.symbol-guide .symbol-example .syntax-punctuation,.symbol-guide .symbol-example .syntax-plain{color:var(--ink)}
+.symbol-guide pre .symbol-example .syntax-keyword,html[data-theme="dark"] .symbol-guide .symbol-example .syntax-keyword{color:#ee7a92}
+.symbol-guide pre .symbol-example .syntax-api,html[data-theme="dark"] .symbol-guide .symbol-example .syntax-api{color:#71cbea}
+.symbol-guide pre .symbol-example .syntax-string,html[data-theme="dark"] .symbol-guide .symbol-example .syntax-string{color:#a7d48b}
+.symbol-guide pre .symbol-example .syntax-number,html[data-theme="dark"] .symbol-guide .symbol-example .syntax-number{color:#f2c75a}
+.symbol-guide pre .symbol-example .syntax-function-name,html[data-theme="dark"] .symbol-guide .symbol-example .syntax-function-name{color:#d7b5f5}
+.symbol-guide pre .symbol-example .syntax-punctuation,.symbol-guide pre .symbol-example .syntax-plain{color:#dce9e1}
