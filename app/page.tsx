@@ -414,6 +414,47 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
+      "eyebrow": "Menu · Repeated choices",
+      "title": "Build a start, options, exit menu",
+      "explanation": "This menu combines the loop you learned earlier with separate if checks from the previous lesson. Each time round, it asks for one choice. Type 1 to print Starting..., 2 to print Options..., or 3 to reach break and finish the loop. The choices cannot equal 1 and 2 at the same time, so these separate if statements do not cause two messages for one answer. An if / else if chain could also handle these mutually exclusive choices. Other input matches none of them, so the menu simply appears again. break exits only this loop; return would leave the current function. This exact prompt() example runs in a browser, not a Node.js terminal. Closing the prompt returns null, which matches no choice and opens it again; enter 3 to exit. A real browser interface would use buttons or a cancel check instead of a long prompt loop.",
+      "note": "// Keep asking for 1, 2, or 3. Exit on 3.",
+      "prompt": "Show the menu again after Start or Options, and leave the loop on Exit.",
+      "answer": "while (true) {\n    let choice = prompt(\"1. Start\\n2. Options\\n3. Exit\");\n\n    if (choice === \"1\") {\n        console.log(\"Starting...\");\n    }\n\n    if (choice === \"2\") {\n        console.log(\"Options...\");\n    }\n\n    if (choice === \"3\") {\n        break;\n    }\n}",
+      "output": [
+        "Starting...",
+        "Options..."
+      ],
+      "parts": [
+        {
+          "code": "while (true)",
+          "name": "Repeat the menu",
+          "meaning": "True stays true, so the menu repeats until break leaves the loop."
+        },
+        {
+          "code": "prompt(...)",
+          "name": "Read a choice",
+          "meaning": "Shows a browser prompt and returns text (or null if cancelled)."
+        },
+        {
+          "code": "if (choice === \"1\")",
+          "name": "Start",
+          "meaning": "Only choice 1 prints Starting...; the loop still continues afterward."
+        },
+        {
+          "code": "if (choice === \"2\")",
+          "name": "Options",
+          "meaning": "Only choice 2 prints Options...; the menu then appears again."
+        },
+        {
+          "code": "break",
+          "name": "Exit the loop",
+          "meaning": "Choice 3 stops the while loop. break does not mean an error, and it does not stop code after the loop from running."
+        }
+      ],
+      "outputNote": "Example: the user enters 1, then 2, then 3. The menu prompts are input, and choosing 3 exits without printing another line. CodeStep previews this sequence; run it locally to try other choices.",
+      "runHint": "Run in a browser console or script. Enter 1, then 2, then 3; this lesson previews the output instead of opening real prompts. In Node.js, prompt is not built in; use the readline approach from the name-input lesson."
+    },
+    {
       "eyebrow": "15 · Combined conditions and comparisons",
       "title": "Check whether a value is in a range",
       "explanation": "A range needs two comparisons. >= checks the lower limit, <= checks the upper limit, and && means both conditions must be true at the same time. == means equal value; === checks value and type, and !== means not equal value or type. > means greater than, < less than, >= greater than or equal, and <= less than or equal. && means AND, || means OR, and ! means NOT.",
@@ -1059,6 +1100,47 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+    },
+    {
+      "eyebrow": "Menu · Repeated choices",
+      "title": "Build a start, options, exit menu",
+      "explanation": "This menu combines the loop you learned earlier with separate if checks from the previous lesson. Each time round, it asks for one choice. Type 1 to print Starting..., 2 to print Options..., or 3 to reach break and finish the loop. The choices cannot equal 1 and 2 at the same time, so these separate if statements do not cause two messages for one answer. An if / else if chain could also handle these mutually exclusive choices. Other input matches none of them, so the menu simply appears again. break exits only this loop; return would leave the current function. The displayed choices are text, so compare with \"1\", \"2\", and \"3\".",
+      "note": "// Keep asking for 1, 2, or 3. Exit on 3.",
+      "prompt": "Show the menu again after Start or Options, and leave the loop on Exit.",
+      "answer": "using System;\n\nwhile (true) {\n    Console.WriteLine(\"1. Start\\n2. Options\\n3. Exit\");\n    string? choice = Console.ReadLine();\n    if (choice is null) break;\n\n    if (choice == \"1\") {\n        Console.WriteLine(\"Starting...\");\n    }\n\n    if (choice == \"2\") {\n        Console.WriteLine(\"Options...\");\n    }\n\n    if (choice == \"3\") {\n        break;\n    }\n}",
+      "output": [
+        "Starting...",
+        "Options..."
+      ],
+      "parts": [
+        {
+          "code": "while (true)",
+          "name": "Repeat the menu",
+          "meaning": "True stays true, so the menu repeats until break leaves the loop."
+        },
+        {
+          "code": "Console.ReadLine()",
+          "name": "Read a choice",
+          "meaning": "Reads the next response as text. The menu is shown again on the next loop."
+        },
+        {
+          "code": "if (choice == \"1\")",
+          "name": "Start",
+          "meaning": "Only choice 1 prints Starting...; the loop still continues afterward."
+        },
+        {
+          "code": "if (choice == \"2\")",
+          "name": "Options",
+          "meaning": "Only choice 2 prints Options...; the menu then appears again."
+        },
+        {
+          "code": "break",
+          "name": "Exit the loop",
+          "meaning": "Choice 3 stops the while loop. break does not mean an error, and it does not stop code after the loop from running."
+        }
+      ],
+      "outputNote": "Example: the user enters 1, then 2, then 3. The menu prompts are input, and choosing 3 exits without printing another line. CodeStep previews this sequence; run it locally to try other choices.",
+      "runHint": "Put this top-level code in Program.cs in a .NET console project and run dotnet run. Type 1, then 2, then 3 to end."
     },
     {
       "eyebrow": "14 · Combined conditions and comparisons",
@@ -1953,6 +2035,47 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
     },
     {
+      "eyebrow": "Menu · Repeated choices",
+      "title": "Build a start, options, exit menu",
+      "explanation": "This menu combines the loop you learned earlier with separate if checks from the previous lesson. Each time round, it asks for one choice. Type 1 to print Starting..., 2 to print Options..., or 3 to reach break and finish the loop. The choices cannot equal 1 and 2 at the same time, so these separate if statements do not cause two messages for one answer. An if / else if chain could also handle these mutually exclusive choices. Other input matches none of them, so the menu simply appears again. break exits only this loop; return would leave the current function. The displayed choices are text, so compare with \"1\", \"2\", and \"3\".",
+      "note": "# Keep asking for 1, 2, or 3. Exit on 3.",
+      "prompt": "Show the menu again after Start or Options, and leave the loop on Exit.",
+      "answer": "while True:\n    choice = input(\"1. Start\\n2. Options\\n3. Exit\\n\")\n\n    if choice == \"1\":\n        print(\"Starting...\")\n\n    if choice == \"2\":\n        print(\"Options...\")\n\n    if choice == \"3\":\n        break",
+      "output": [
+        "Starting...",
+        "Options..."
+      ],
+      "parts": [
+        {
+          "code": "while True:",
+          "name": "Repeat the menu",
+          "meaning": "True stays true, so the menu repeats until break leaves the loop."
+        },
+        {
+          "code": "input(...)",
+          "name": "Read a choice",
+          "meaning": "Reads the next response as text. The menu is shown again on the next loop."
+        },
+        {
+          "code": "if choice == \"1\":",
+          "name": "Start",
+          "meaning": "Only choice 1 prints Starting...; the loop still continues afterward."
+        },
+        {
+          "code": "if choice == \"2\":",
+          "name": "Options",
+          "meaning": "Only choice 2 prints Options...; the menu then appears again."
+        },
+        {
+          "code": "break",
+          "name": "Exit the loop",
+          "meaning": "Choice 3 stops the while loop. break does not mean an error, and it does not stop code after the loop from running."
+        }
+      ],
+      "outputNote": "Example: the user enters 1, then 2, then 3. The menu prompts are input, and choosing 3 exits without printing another line. CodeStep previews this sequence; run it locally to try other choices.",
+      "runHint": "Save as challenge.py and run python challenge.py (or python3 challenge.py). Type 1, then 2, then 3 to end."
+    },
+    {
       "eyebrow": "14 · Combined conditions and comparisons",
       "title": "Check whether a value is in a range",
       "explanation": ">= and <= include the boundary values. and requires both comparisons; or requires at least one; not reverses a condition. == means equal, != not equal, > greater than, and < less than. Python does not use && or ||.",
@@ -2607,6 +2730,47 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "Menu · Repeated choices",
+      "title": "Build a start, options, exit menu",
+      "explanation": "This menu combines the loop you learned earlier with separate if checks from the previous lesson. Each time round, it asks for one choice. Type 1 to print Starting..., 2 to print Options..., or 3 to reach break and finish the loop. The choices cannot equal 1 and 2 at the same time, so these separate if statements do not cause two messages for one answer. An if / else if chain could also handle these mutually exclusive choices. Other input matches none of them, so the menu simply appears again. break exits only this loop; return would leave the current function. The displayed choices are text, so compare with \"1\", \"2\", and \"3\".",
+      "note": "// Keep asking for 1, 2, or 3. Exit on 3.",
+      "prompt": "Show the menu again after Start or Options, and leave the loop on Exit.",
+      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n    while (true) {\n        std::cout << \"1. Start\\n2. Options\\n3. Exit\\n\";\n        std::string choice;\n        if (!std::getline(std::cin, choice)) break;\n\n        if (choice == \"1\") {\n            std::cout << \"Starting...\\n\";\n        }\n\n        if (choice == \"2\") {\n            std::cout << \"Options...\\n\";\n        }\n\n        if (choice == \"3\") {\n            break;\n        }\n    }\n}",
+      "output": [
+        "Starting...",
+        "Options..."
+      ],
+      "parts": [
+        {
+          "code": "while (true)",
+          "name": "Repeat the menu",
+          "meaning": "True stays true, so the menu repeats until break leaves the loop."
+        },
+        {
+          "code": "std::getline(std::cin, choice)",
+          "name": "Read a choice",
+          "meaning": "Reads the next response as text. The menu is shown again on the next loop."
+        },
+        {
+          "code": "if (choice == \"1\")",
+          "name": "Start",
+          "meaning": "Only choice 1 prints Starting...; the loop still continues afterward."
+        },
+        {
+          "code": "if (choice == \"2\")",
+          "name": "Options",
+          "meaning": "Only choice 2 prints Options...; the menu then appears again."
+        },
+        {
+          "code": "break",
+          "name": "Exit the loop",
+          "meaning": "Choice 3 stops the while loop. break does not mean an error, and it does not stop code after the loop from running."
+        }
+      ],
+      "outputNote": "Example: the user enters 1, then 2, then 3. The menu prompts are input, and choosing 3 exits without printing another line. CodeStep previews this sequence; run it locally to try other choices.",
+      "runHint": "Save as challenge.cpp; compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge (Windows: .\\challenge.exe). Type 1, then 2, then 3 to end."
     },
     {
       "eyebrow": "14 · Combined conditions and comparisons",
