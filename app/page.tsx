@@ -24,11 +24,11 @@ const lessons: Record<Language, Lesson[]> = {
     {
       eyebrow: "01 · Console output",
       title: "Print several lines at once",
-      explanation: "const red stores an ANSI escape code for red text in terminals. ${red} inserts it at the start of the message inside backticks. This lesson previews that message in red. console.log displays text in the console. Inside the quotation marks, each \\n starts a new line, so one instruction can print four fruits on four separate lines.",
+      explanation: "const red stores an ANSI escape code for red text in terminals. ${red} inserts it at the start of the message inside backticks. This lesson previews that message in red. console.log displays text in the console. Inside the quotation marks, each \\n starts a new line, so one instruction can print Hello, Welcome, and Goodbye on three separate lines.",
       note: "// Use \\n to start a new line in the console",
-      prompt: "Print This is red text in red, then print Apple, Banana, Orange, and Pear on separate lines.",
-      answer: 'const red = "\\x1b[31m";\nconsole.log(`${red} This is red text`);\n\nconsole.log("Apple\\nBanana\\nOrange\\nPear");',
-      output: [" This is red text", "Apple", "Banana", "Orange", "Pear"],
+      prompt: "Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
+      answer: 'const red = "\\x1b[31m";\nconsole.log(`${red} This is red text`);\n\nconsole.log(" Hello \\n Welcome \\n Goodbye");',
+      output: [" This is red text", " Hello ", " Welcome ", " Goodbye"],
     },
     {
       eyebrow: "02 · Functions",
