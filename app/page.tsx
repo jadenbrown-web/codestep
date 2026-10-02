@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState, type KeyboardEvent as ReactKeyboardEvent 
 
 import CodeBlocks from "./CodeBlocks";
 
-type Language = "javascript" | "csharp" | "html" | "css";
+type Language = "javascript" | "csharp" | "cpp" | "python" | "html" | "css";
 type ThemeMode = "light" | "dark" | "system";
 type Lesson = {
   title: string;
@@ -18,6 +18,9 @@ type Lesson = {
   parts?: CodePart[];
   outputColors?: string[];
   outputNote?: string;
+  fileName?: string;
+  runHint?: string;
+  compareNode?: boolean;
   referenceOnly?: boolean;
   referenceKind?: "text" | "fonts" | "pages" | "css" | "comparisons";
 };
@@ -337,10 +340,48 @@ const lessons: Record<Language, Lesson[]> = {
           "name": "Save",
           "meaning": "Puts the value on the right into the variable on the left."
         }
+      ],
+      "compareNode": true
+    },
+    {
+      "eyebrow": "13 · Variables",
+      "title": "Ask for a name in VS Code",
+      "explanation": "Browser prompt() opens a dialog. Node runs JavaScript in the terminal and does not provide browser prompt(), so it needs a little setup. createInterface connects process.stdin (what you type) and process.stdout (what you see). await input.question waits for your answer, then returns the text to name. input.close() tells Node “I’m done taking input.” It closes this interface so it no longer keeps waiting for terminal input.",
+      "note": "// Ask in the terminal, greet the user, then close input",
+      "prompt": "Set up terminal input, ask for a name, print Hello, then close input.",
+      "answer": "import { createInterface } from \"node:readline/promises\";\n\nconst input = createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\nlet name = await input.question(\"What is your name?\");\nconsole.log(`Hello ${name}`);\n\ninput.close();",
+      "output": [
+        "What is your name?  →  Alex",
+        "Hello Alex"
+      ],
+      "fileName": "name.mjs",
+      "runHint": "Save as name.mjs. With Node installed, open Terminal → New Terminal in VS Code and enter node name.mjs. Type your name and press Enter. The .mjs extension allows import and await at the top level without adding a package configuration.",
+      "compareNode": true,
+      "parts": [
+        {
+          "code": "import { createInterface }",
+          "name": "Load the input tool",
+          "meaning": "Imports the named createInterface function from Node’s built-in promise-based readline module; no npm install is needed."
+        },
+        {
+          "code": "process.stdin / process.stdout",
+          "name": "Terminal streams",
+          "meaning": "stdin receives what you type; stdout writes what you see."
+        },
+        {
+          "code": "await input.question(...)",
+          "name": "Wait for an answer",
+          "meaning": "The question returns a Promise; await waits for the typed line before the following code continues."
+        },
+        {
+          "code": "input.close()",
+          "name": "Finish taking input",
+          "meaning": "Closes the readline interface when the questions are finished."
+        }
       ]
     },
     {
-      "eyebrow": "13 · If and else",
+      "eyebrow": "14 · If and else",
       "title": "Choose between two messages",
       "explanation": "if checks the condition in (). When speed is greater than 100, its {} block prints Too fast! Otherwise, the else block prints Speed is OK. Each block groups the instructions for that case.",
       "note": "// Print Too fast! for speed above 100; otherwise print Speed is OK.",
@@ -363,7 +404,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "14 · Combined conditions and comparisons",
+      "eyebrow": "15 · Combined conditions and comparisons",
       "title": "Check whether a value is in a range",
       "explanation": "A range needs two comparisons. >= checks the lower limit, <= checks the upper limit, and && means both conditions must be true at the same time. == means equal value; === checks value and type, and !== means not equal value or type. > means greater than, < less than, >= greater than or equal, and <= less than or equal. && means AND, || means OR, and ! means NOT.",
       "note": "// && means AND. Both conditions must be true.",
@@ -402,7 +443,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "15 · Dictionary",
+      "eyebrow": "16 · Dictionary",
       "title": "Search a word dictionary",
       "explanation": "A dictionary connects keys to values. JavaScript can use an object for this: {} contains bonjour and hola, with hello stored under each key. words[search] looks up the value for the key entered by the user. Object.values(words) lists the stored values; joining them makes readable console text. An unknown key produces undefined.",
       "note": "// Create the word dictionary, show its values, then search for a word.",
@@ -427,7 +468,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "16 · Expressions",
+      "eyebrow": "17 · Expressions",
       "title": "Calculate a value",
       "explanation": "An expression produces a value. 80 + 20 produces 100. speed > 100 produces false when speed is 100. A statement performs an instruction, such as saving that result or printing it. + adds, - subtracts, * multiplies, / divides, and % gives the remainder. C# integer division discards the fractional part; use a double such as 5.0 when you need a decimal result.",
       "note": "// Calculate speed with 80 + 20, then print Speed: 100.",
@@ -450,7 +491,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "17 · Random",
+      "eyebrow": "18 · Random",
       "title": "Choose a random word",
       "explanation": "Object.keys(words) makes an array containing the object's keys: bonjour and hola. Math.random() creates a random decimal from 0 up to, but not including, 1. Multiplying by 2 gives a number from 0 up to 2, and Math.floor removes the decimal to produce position 0 or 1. The square brackets then select the key at that position.",
       "note": "// Create the word dictionary and randomly select one of its keys.",
@@ -474,7 +515,7 @@ const lessons: Record<Language, Lesson[]> = {
       "outputNote": "Example output; either bonjour or hola can be chosen."
     },
     {
-      "eyebrow": "18 · Arrays and lists",
+      "eyebrow": "19 · Arrays and lists",
       "title": "Make and search a names array",
       "explanation": "The square brackets [] create an empty array: a list that can hold several values. prompt asks the user for a name, and push() adds that answer to names. A second prompt saves what to look for in search. includes() checks whether that value is in the array and returns true or false; it does not add anything. if/else prints name found or name not found. Matching is case-sensitive: Jaden and jaden are different.",
       "note": "// Create an empty collection, add a name, ask what to search for, and print whether it was found.",
@@ -504,7 +545,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "19 · Sets",
+      "eyebrow": "20 · Sets",
       "title": "Remove duplicate names",
       "explanation": "A Set stores only unique values. Passing names into new Set(names) removes repeated names, and [...uniqueNames] spreads the remaining values back into an array for printing.",
       "note": "// Ask for three names, then remove any duplicates",
@@ -519,7 +560,7 @@ const lessons: Record<Language, Lesson[]> = {
       "parts": []
     },
     {
-      "eyebrow": "20 · Null",
+      "eyebrow": "21 · Null",
       "title": "Mark a value as not ready yet",
       "explanation": "null deliberately means that a variable has no value yet. It is different from zero or an empty string, and the variable may receive a real value later. === null checks specifically for that missing value.",
       "note": "// null means there is deliberately no result yet",
@@ -531,7 +572,7 @@ const lessons: Record<Language, Lesson[]> = {
       "parts": []
     },
     {
-      "eyebrow": "21 · Regular expressions",
+      "eyebrow": "22 · Regular expressions",
       "title": "Let names beginning with J enter",
       "explanation": "A regular expression checks text against a pattern. /^J/i means: the slashes hold the pattern, ^ anchors the check to the beginning, J is the required first letter, and i ignores uppercase or lowercase. It accepts any word beginning with J—not only names—and rejects J when it appears later in the text.",
       "note": "// Let people into the club when their name begins with J",
@@ -547,7 +588,7 @@ const lessons: Record<Language, Lesson[]> = {
       "parts": []
     },
     {
-      "eyebrow": "22 · Application practice",
+      "eyebrow": "23 · Application practice",
       "title": "Build a random word quiz",
       "explanation": "Combine the dictionary, random choice, input, and if/else. Choose a word, ask for its translation, then compare the answer with the stored value.",
       "note": "// Combine the word dictionary and random key code to make a translation quiz.",
@@ -1362,12 +1403,1134 @@ const lessons: Record<Language, Lesson[]> = {
         "Notice paragraphs have a dotted blue border with rounded corners."
       ]
     }
+  ],
+  "python": [
+    {
+      "eyebrow": "01 · Console output",
+      "title": "Print several lines at once",
+      "explanation": "print displays text. Write \\n inside a quoted string to start a new line. \\033 is the ANSI escape character and [31m selects red in supporting terminals. f before the string lets {red} insert a variable. Python uses assignment without let or const.",
+      "note": "# Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
+      "prompt": "Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
+      "answer": "red = \"\\033[31m\"\nprint(f\"{red} This is red text\")\n\nprint(\" Hello \\n Welcome \\n Goodbye\")",
+      "output": [
+        " This is red text",
+        " Hello ",
+        " Welcome ",
+        " Goodbye"
+      ],
+      "parts": [
+        {
+          "code": "print(...)",
+          "name": "Print",
+          "meaning": "Displays the value inside its parentheses."
+        },
+        {
+          "code": "\\n",
+          "name": "New line",
+          "meaning": "Starts a new line inside the string."
+        },
+        {
+          "code": "f\"{red}\"",
+          "name": "Insert a value",
+          "meaning": "The f enables variable insertion with curly braces."
+        }
+      ],
+      "outputColors": [
+        "#ef4444"
+      ],
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "02 · ANSI colours",
+      "title": "Choose a text colour",
+      "explanation": "ANSI escape codes choose terminal text colours: 31 is red, 32 green, 33 yellow, 34 blue, 35 magenta, and 36 cyan. Code 0 resets the colour so later output returns to normal. These codes work in terminals that support ANSI colours. The lesson console previews the colours.",
+      "note": "# Print Red text and Green text, then reset the colour.",
+      "prompt": "Print Red text and Green text, then reset the colour.",
+      "answer": "red = \"\\033[31m\"\ngreen = \"\\033[32m\"\nreset = \"\\033[0m\"\n\nprint(f\"{red}Red text{reset}\")\nprint(f\"{green}Green text{reset}\")",
+      "output": [
+        "Red text",
+        "Green text"
+      ],
+      "parts": [
+        {
+          "code": "\\033[0m",
+          "name": "Reset",
+          "meaning": "Returns terminal text to its normal colour."
+        }
+      ],
+      "outputColors": [
+        "#ef4444",
+        "#4ade80"
+      ],
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "03 · Time",
+      "title": "Run code after a delay",
+      "explanation": "import time makes the time module available. time.sleep(2) pauses this program for 2 seconds, then print displays the message. Unlike JavaScript setTimeout, this sleep blocks the current flow.",
+      "note": "# Wait 2 seconds, then print Time reached!",
+      "prompt": "Wait 2 seconds, then print Time reached!",
+      "answer": "import time\n\ntime.sleep(2)\nprint(\"Time reached!\")",
+      "output": [
+        "Time reached!"
+      ],
+      "parts": [
+        {
+          "code": "import time",
+          "name": "Load a module",
+          "meaning": "Makes the time module available."
+        },
+        {
+          "code": "time.sleep(2)",
+          "name": "Wait",
+          "meaning": "Pauses this flow for 2 seconds."
+        }
+      ],
+      "outputNote": "Example output after the 2-second delay.",
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "04 · Date and time",
+      "title": "Print the current date and time",
+      "explanation": "datetime.now() captures the device’s current local date and time. print(time) displays that moment. time.hour and time.minute read its hour and minute. The output changes with the clock.",
+      "note": "# Store the current date and time in time, then print it.",
+      "prompt": "Store the current date and time in time, then print it.",
+      "answer": "from datetime import datetime\n\ntime = datetime.now()\nprint(time)",
+      "output": [
+        "02/10/2026 17:20:00"
+      ],
+      "parts": [
+        {
+          "code": "datetime.now()",
+          "name": "Current moment",
+          "meaning": "Captures the local date and time."
+        }
+      ],
+      "outputNote": "Example date and time; running the code uses your device’s current moment.",
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "05 · Date and time",
+      "title": "Check for a particular time",
+      "explanation": "This checks the local clock once. == compares values and and requires both checks to be true. A colon starts the if body, and indentation identifies the code inside it. This prints only if run during 17:20; it does not keep watching the clock.",
+      "note": "# Print Time reached! if the local hour is 17 and the minute is 20.",
+      "prompt": "Print Time reached! if the local hour is 17 and the minute is 20.",
+      "answer": "from datetime import datetime\n\ntime = datetime.now()\n\nhour = time.hour\nminute = time.minute\n\nif hour == 17 and minute == 20:\n    print(\"Time reached!\")",
+      "output": [
+        "Time reached!"
+      ],
+      "parts": [
+        {
+          "code": "time.hour / time.minute",
+          "name": "Clock parts",
+          "meaning": "Read the hour and minute from the saved time."
+        },
+        {
+          "code": "and",
+          "name": "Both",
+          "meaning": "Both conditions must be true."
+        }
+      ],
+      "outputNote": "Example output when the clock is 17:20. At other times, this snippet prints nothing.",
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "06 · Date and time",
+      "title": "Keep checking until the time is reached",
+      "explanation": "The loop creates a fresh local time each second. At 17:20 it prints once and break leaves the loop. time.sleep(1) pauses between checks. Keep the program open; if 17:20 has passed, it waits until the next day. Checks can run late.",
+      "note": "# Keep checking the local clock and print Time reached! once at 17:20.",
+      "prompt": "Keep checking the local clock and print Time reached! once at 17:20.",
+      "answer": "from datetime import datetime\nimport time\n\nwhile True:\n    now = datetime.now()\n    hour = now.hour\n    minute = now.minute\n\n    if hour == 17 and minute == 20:\n        print(\"Time reached!\")\n        break\n\n    time.sleep(1)",
+      "output": [
+        "Time reached!"
+      ],
+      "parts": [
+        {
+          "code": "while True:",
+          "name": "Repeat",
+          "meaning": "Repeats the indented body until break."
+        },
+        {
+          "code": "break",
+          "name": "Stop",
+          "meaning": "Leaves the loop after the matching time."
+        }
+      ],
+      "outputNote": "Example output at 17:20. The lesson preview does not wait for the clock.",
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "07 · Functions",
+      "title": "Make something happen",
+      "explanation": "def defines a function named correct. Empty () means it has no parameters. The colon and indented body group its instructions. The body waits until correct() calls the function.",
+      "note": "# Create a function named correct that prints correct",
+      "prompt": "Create correct, then call it to print correct.",
+      "answer": "def correct():\n    print(\"correct\")\n\ncorrect()",
+      "output": [
+        "correct"
+      ],
+      "parts": [
+        {
+          "code": "def correct():",
+          "name": "Define a function",
+          "meaning": "Names a function with no parameters."
+        },
+        {
+          "code": "correct()",
+          "name": "Call it",
+          "meaning": "Runs the function body."
+        }
+      ],
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "08 · Functions",
+      "title": "Use one function inside another",
+      "explanation": "getMessage() returns Hello. In print(getMessage()), the inner function runs first and print receives the returned text. Each call has its own pair of parentheses. Extra parentheses group an expression; (( is not a special sign for multiple functions.",
+      "note": "# Return Hello from getMessage, then print it by calling the function inside the print call.",
+      "prompt": "Return Hello from getMessage, then print it by calling the function inside the print call.",
+      "answer": "def getMessage():\n    return \"Hello\"\n\nprint(getMessage())",
+      "output": [
+        "Hello"
+      ],
+      "parts": [
+        {
+          "code": "return",
+          "name": "Send back",
+          "meaning": "Returns the value to the caller."
+        },
+        {
+          "code": "print(getMessage())",
+          "name": "Nested calls",
+          "meaning": "The inner call runs first."
+        }
+      ],
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "09 · Classes",
+      "title": "Create and use a class",
+      "explanation": "class defines a type. Calling Car(\"Ford\", 2014) creates an object and __init__ sets it up. self refers to that object; self.name stores the supplied name. A colon and indentation group each body. The f-string prints its properties.",
+      "note": "# Define the class first, then use new Car(...) to create objects",
+      "prompt": "Create the Car class, then create Ford and Audi objects.",
+      "answer": "class Car:\n    def __init__(self, name, year):\n        self.name = name\n        self.year = year\n\nmyCar1 = Car(\"Ford\", 2014)\nmyCar2 = Car(\"Audi\", 2019)\n\nprint(f\"{myCar1.name}, {myCar1.year}\")\nprint(f\"{myCar2.name}, {myCar2.year}\")",
+      "output": [
+        "Ford, 2014",
+        "Audi, 2019"
+      ],
+      "parts": [
+        {
+          "code": "__init__",
+          "name": "Initialise",
+          "meaning": "Sets up a newly created object."
+        },
+        {
+          "code": "self.name",
+          "name": "Instance value",
+          "meaning": "Stores the name on this object."
+        }
+      ],
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "10 · Loops",
+      "title": "Repeat input until the answer is correct",
+      "explanation": "while True repeats until break stops the loop. input asks the question and returns the entered text. Indentation puts the answer check inside the loop and break inside if. Only \"2\" ends this loop.",
+      "note": "# Create the loop with input, output, and break inside if.",
+      "prompt": "Create the loop with input, output, and break inside if.",
+      "answer": "while True:\n    answer = input(\"What is 1 + 1?\")\n    print(answer)\n\n    if answer == \"2\":\n        print(\"Correct!\")\n        break\n\n    print(\"Try again.\")",
+      "output": [
+        "INPUT  →  2",
+        "OUTPUT  →  2",
+        "Correct!",
+        "break leaves the loop."
+      ],
+      "parts": [
+        {
+          "code": "input(...)",
+          "name": "Ask",
+          "meaning": "Waits for a typed line of terminal text."
+        },
+        {
+          "code": "break",
+          "name": "Stop",
+          "meaning": "Leaves the repeating loop."
+        }
+      ],
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "11 · Variables",
+      "title": "Use changeable and fixed values",
+      "explanation": "Assignment creates a name such as speed and can change its value later. Python has no let or const keyword. MAX_SPEED uses capital letters to signal a constant by convention, but Python still allows reassignment. The f-string inserts speed in the text.",
+      "note": "# Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
+      "prompt": "Create speed and MAX_SPEED, change speed to 100, then print Speed: 100.",
+      "answer": "speed = 80\nMAX_SPEED = 100\n\nspeed = 100\nprint(f\"Speed: {speed}\")",
+      "output": [
+        "Speed: 100"
+      ],
+      "parts": [
+        {
+          "code": "speed = 100",
+          "name": "Assignment",
+          "meaning": "Creates or changes a variable."
+        },
+        {
+          "code": "MAX_SPEED",
+          "name": "Constant convention",
+          "meaning": "Capital letters suggest a fixed value but do not enforce it."
+        }
+      ],
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "12 · Variables",
+      "title": "Remember a value",
+      "explanation": "input displays the question, waits for a line of terminal text, and returns it. name stores that text. The f before the string lets {name} insert the answer. Python needs no readline interface for this example.",
+      "note": "# Ask for a name and greet the user",
+      "prompt": "Create a name variable, then print Hello with a template string.",
+      "answer": "name = input(\"What is your name?\")\nprint(f\"Hello {name}\")",
+      "output": [
+        "What is your name?  →  Alex",
+        "Hello Alex"
+      ],
+      "parts": [
+        {
+          "code": "input(...)",
+          "name": "Ask",
+          "meaning": "Displays the question and returns the typed line."
+        },
+        {
+          "code": "f\"Hello {name}\"",
+          "name": "Insert a value",
+          "meaning": "Places the saved name inside the greeting."
+        }
+      ],
+      "fileName": "name.py",
+      "runHint": "Save as name.py and run python3 name.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "13 · If and else",
+      "title": "Choose between two messages",
+      "explanation": "if checks whether speed is greater than 100. Its indented body prints Too fast! when true. Otherwise, else runs its indented body. Python uses a colon and indentation instead of curly braces.",
+      "note": "# Print Too fast! for speed above 100; otherwise print Speed is OK.",
+      "prompt": "Print Too fast! for speed above 100; otherwise print Speed is OK.",
+      "answer": "speed = 120\n\nif speed > 100:\n    print(\"Too fast!\")\nelse:\n    print(\"Speed is OK.\")",
+      "output": [
+        "Too fast!"
+      ],
+      "parts": [
+        {
+          "code": "if / else",
+          "name": "Choose",
+          "meaning": "Runs one of the indented bodies."
+        },
+        {
+          "code": ">",
+          "name": "Greater than",
+          "meaning": "Checks whether the left value is larger."
+        }
+      ],
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "14 · Combined conditions and comparisons",
+      "title": "Check whether a value is in a range",
+      "explanation": ">= and <= include the boundary values. and requires both comparisons; or requires at least one; not reverses a condition. == means equal, != not equal, > greater than, and < less than. Python does not use && or ||.",
+      "note": "# && means AND. Both conditions must be true.",
+      "prompt": "Use && to check both ends of the age range.",
+      "answer": "age = 16\n\nif age >= 0 and age <= 18:\n    print(\"Your age is between 0 and 18.\")\nelse:\n    print(\"Your age is above 18.\")",
+      "output": [
+        "Your age is between 0 and 18."
+      ],
+      "parts": [
+        {
+          "code": ">= / <=",
+          "name": "Include the limit",
+          "meaning": "Compare including the boundary."
+        },
+        {
+          "code": "and / or / not",
+          "name": "Combine checks",
+          "meaning": "Both, either, or reverse a condition."
+        }
+      ],
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "15 · Dictionary",
+      "title": "Search a word dictionary",
+      "explanation": "{} creates a dictionary of keys and values. \"bonjour\" is a key and \"hello\" its value. values() gets the stored values; join prints them as readable text. get searches safely and returns word not found if the key is absent. words[search] is direct lookup but raises KeyError for a missing key.",
+      "note": "# Create the word dictionary, show its values, then search for a word.",
+      "prompt": "Create the word dictionary, show its values, then search for a word.",
+      "answer": "words = {\n    \"bonjour\": \"hello\",\n    \"hola\": \"hello\"\n}\n\nprint(\", \".join(words.values()))\nsearch = input(\"Search:\")\nprint(words.get(search, \"word not found\"))",
+      "output": [
+        "hello, hello",
+        "Search:  →  bonjour",
+        "hello"
+      ],
+      "parts": [
+        {
+          "code": "{ \"bonjour\": \"hello\" }",
+          "name": "Dictionary",
+          "meaning": "Connects a text key with a value."
+        },
+        {
+          "code": "words.get(...)",
+          "name": "Safe lookup",
+          "meaning": "Returns a fallback when no key is found."
+        }
+      ],
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "16 · Expressions",
+      "title": "Calculate a value",
+      "explanation": "An expression produces a value: 80 + 20 produces 100. speed > 100 produces False when speed is 100. + adds, - subtracts, * multiplies, / divides, // divides and rounds down, and % gives a remainder.",
+      "note": "# Calculate speed with 80 + 20, then print Speed: 100.",
+      "prompt": "Calculate speed with 80 + 20, then print Speed: 100.",
+      "answer": "speed = 80 + 20\nprint(f\"Speed: {speed}\")",
+      "output": [
+        "Speed: 100"
+      ],
+      "parts": [
+        {
+          "code": "80 + 20",
+          "name": "Expression",
+          "meaning": "Produces the value 100."
+        }
+      ],
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "17 · Random",
+      "title": "Choose a random word",
+      "explanation": "list(words) makes a list of dictionary keys. random.choice selects one key from that list. The answer changes between runs; either bonjour or hola may be printed.",
+      "note": "# Create the word dictionary and randomly select one of its keys.",
+      "prompt": "Create the word dictionary and randomly select one of its keys.",
+      "answer": "import random\n\nwords = {\n    \"bonjour\": \"hello\",\n    \"hola\": \"hello\"\n}\n\nword = random.choice(list(words))\nprint(word)",
+      "output": [
+        "bonjour"
+      ],
+      "parts": [
+        {
+          "code": "random.choice(...)",
+          "name": "Choose",
+          "meaning": "Selects an item from a non-empty sequence."
+        },
+        {
+          "code": "list(words)",
+          "name": "Keys as a list",
+          "meaning": "Copies the dictionary keys into a list."
+        }
+      ],
+      "outputNote": "Example output; either bonjour or hola can be chosen.",
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "18 · Arrays and lists",
+      "title": "Make and search a names array",
+      "explanation": "[] creates an empty list. input runs first inside append and append adds its answer. in checks membership without changing the list. Matching is case-sensitive. names[0] retrieves the first item after it is added.",
+      "note": "# Create an empty collection, add a name, ask what to search for, and print whether it was found.",
+      "prompt": "Create an empty collection, add a name, ask what to search for, and print whether it was found.",
+      "answer": "names = []\n\nnames.append(input(\"add a name\"))\n\nsearch = input(\"search for a name\")\n\nif search in names:\n    print(\"name found\")\nelse:\n    print(\"name not found\")",
+      "output": [
+        "add a name  →  Jaden",
+        "search for a name  →  Jaden",
+        "name found"
+      ],
+      "parts": [
+        {
+          "code": "[]",
+          "name": "Empty list",
+          "meaning": "Creates a growing collection."
+        },
+        {
+          "code": "append",
+          "name": "Add",
+          "meaning": "Adds a value to the end."
+        },
+        {
+          "code": "in",
+          "name": "Search",
+          "meaning": "Tests membership without changing the list."
+        }
+      ],
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "19 · Sets",
+      "title": "Remove duplicate names",
+      "explanation": "set(names) removes duplicates. Python sets do not promise a display order, so sorted makes an alphabetical list before join prints it. A set literal uses {\"Alex\", \"Sam\"}; empty {} creates a dictionary, so use set() for an empty set.",
+      "note": "# Ask for three names, then remove any duplicates",
+      "prompt": "Collect three names, create a set, and print its unique values.",
+      "answer": "names = []\n\nnames.append(input(\"Enter the first name:\"))\nnames.append(input(\"Enter the second name:\"))\nnames.append(input(\"Enter the third name:\"))\n\nuniqueNames = set(names)\n\nprint(\"[\" + \", \".join(sorted(uniqueNames)) + \"]\")",
+      "output": [
+        "Enter the first name:  →  Alex",
+        "Enter the second name:  →  Sam",
+        "Enter the third name:  →  Alex",
+        "[Alex, Sam]"
+      ],
+      "parts": [
+        {
+          "code": "set(names)",
+          "name": "Unique values",
+          "meaning": "Removes repeated values."
+        },
+        {
+          "code": "sorted",
+          "name": "Stable display",
+          "meaning": "Sorts the unique values before printing."
+        }
+      ],
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "20 · Null",
+      "title": "Mark a value as not ready yet",
+      "explanation": "None means there is deliberately no value yet. is None checks for that specific singleton. It is different from zero or an empty string. Assign a real value to result later.",
+      "note": "# null means there is deliberately no result yet",
+      "prompt": "Set result to null, then print the message for its current state.",
+      "answer": "result = None\n\nif result is None:\n    print(\"No result yet\")\nelse:\n    print(\"Result is ready\")",
+      "output": [
+        "No result yet"
+      ],
+      "parts": [
+        {
+          "code": "None",
+          "name": "No value yet",
+          "meaning": "Deliberately represents no result."
+        },
+        {
+          "code": "is None",
+          "name": "Check",
+          "meaning": "Checks for the None singleton."
+        }
+      ],
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "21 · Regular expressions",
+      "title": "Let names beginning with J enter",
+      "explanation": "re searches text with a pattern. ^ means the start, J is the required letter, and re.IGNORECASE accepts J or j. re.search returns a match object when found, which if treats as true.",
+      "note": "# Let people into the club when their name begins with J",
+      "prompt": "Check the five names and print who may enter the club.",
+      "answer": "import re\n\nnames = [\"Jaden\", \"James\", \"Jessica\", \"Sarah\", \"Ben\"]\n\nfor name in names:\n    if re.search(\"^J\", name, re.IGNORECASE):\n        print(name + \" can enter the club.\")\n    else:\n        print(name + \" cannot enter the club.\")",
+      "output": [
+        "Jaden can enter the club.",
+        "James can enter the club.",
+        "Jessica can enter the club.",
+        "Sarah cannot enter the club.",
+        "Ben cannot enter the club."
+      ],
+      "parts": [
+        {
+          "code": "\"^J\"",
+          "name": "Starts with J",
+          "meaning": "The caret anchors the pattern at the start."
+        },
+        {
+          "code": "re.IGNORECASE",
+          "name": "Ignore case",
+          "meaning": "Matches J or j."
+        }
+      ],
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "22 · Application practice",
+      "title": "Build a random word quiz",
+      "explanation": "Combine the dictionary, random choice, input, and if/else. input displays the chosen word. words[word] retrieves its expected translation. == checks the entered answer and prints Correct or Wrong.",
+      "note": "# Combine the word dictionary and random key code to make a translation quiz.",
+      "prompt": "Combine the word dictionary and random key code to make a translation quiz.",
+      "answer": "import random\n\nwords = {\n    \"bonjour\": \"hello\",\n    \"hola\": \"hello\"\n}\n\nword = random.choice(list(words))\nanswer = input(word)\n\nif answer == words[word]:\n    print(\"Correct\")\nelse:\n    print(\"Wrong\")",
+      "output": [
+        "bonjour  →  hello",
+        "Correct"
+      ],
+      "parts": [
+        {
+          "code": "words[word]",
+          "name": "Expected answer",
+          "meaning": "Looks up the chosen word’s translation."
+        },
+        {
+          "code": "==",
+          "name": "Check",
+          "meaning": "Compares the entered answer with the translation."
+        }
+      ],
+      "outputNote": "Example run: bonjour is chosen and the user enters hello.",
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    }
+  ],
+  "cpp": [
+    {
+      "eyebrow": "01 · Console output",
+      "title": "Print several lines at once",
+      "explanation": "std::cout prints to the terminal. << sends each value to it. Write \\n inside a string to start a new line. \\033[31m selects red in supporting terminals. #include loads declarations, std:: identifies standard-library names, and main is where execution begins. const std::string red stores the colour code.",
+      "note": "// Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
+      "prompt": "Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
+      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  const std::string red = \"\\033[31m\";\n  std::cout << red << \" This is red text\\n\";\n\n  std::cout << \" Hello \\n Welcome \\n Goodbye\\n\";\n}",
+      "output": [
+        " This is red text",
+        " Hello ",
+        " Welcome ",
+        " Goodbye"
+      ],
+      "parts": [
+        {
+          "code": "std::cout <<",
+          "name": "Print",
+          "meaning": "Sends a value to standard output."
+        },
+        {
+          "code": "\\n",
+          "name": "New line",
+          "meaning": "Starts a new line inside the string."
+        }
+      ],
+      "outputColors": [
+        "#ef4444"
+      ],
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "02 · ANSI colours",
+      "title": "Choose a text colour",
+      "explanation": "ANSI escape codes choose terminal text colours: 31 is red, 32 green, 33 yellow, 34 blue, 35 magenta, and 36 cyan. Code 0 resets the colour so later output returns to normal. These codes work in terminals that support ANSI colours. The lesson console previews the colours.",
+      "note": "// Print Red text and Green text, then reset the colour.",
+      "prompt": "Print Red text and Green text, then reset the colour.",
+      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  const std::string red = \"\\033[31m\";\n  const std::string green = \"\\033[32m\";\n  const std::string reset = \"\\033[0m\";\n\n  std::cout << red << \"Red text\" << reset << \"\\n\";\n  std::cout << green << \"Green text\" << reset << \"\\n\";\n}",
+      "output": [
+        "Red text",
+        "Green text"
+      ],
+      "parts": [
+        {
+          "code": "\\033[0m",
+          "name": "Reset",
+          "meaning": "Returns terminal text to its normal colour."
+        }
+      ],
+      "outputColors": [
+        "#ef4444",
+        "#4ade80"
+      ],
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "03 · Time",
+      "title": "Run code after a delay",
+      "explanation": "<thread> and <chrono> provide sleep_for and a duration. std::this_thread::sleep_for(std::chrono::seconds(2)) blocks this thread for 2 seconds, then the next statement prints the message.",
+      "note": "// Wait 2 seconds, then print Time reached!",
+      "prompt": "Wait 2 seconds, then print Time reached!",
+      "answer": "#include <iostream>\n#include <string>\n#include <thread>\n#include <chrono>\n\nint main() {\n  std::this_thread::sleep_for(std::chrono::seconds(2));\n  std::cout << \"Time reached!\\n\";\n}",
+      "output": [
+        "Time reached!"
+      ],
+      "parts": [
+        {
+          "code": "sleep_for",
+          "name": "Wait",
+          "meaning": "Pauses this thread for the supplied duration."
+        },
+        {
+          "code": "std::chrono::seconds(2)",
+          "name": "Duration",
+          "meaning": "Creates a duration of 2 seconds."
+        }
+      ],
+      "outputNote": "Example output after the 2-second delay.",
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "04 · Date and time",
+      "title": "Print the current date and time",
+      "explanation": "std::time gets the current moment. std::localtime converts it to local calendar parts. Copying the result into time keeps that snapshot. std::put_time formats it for printing. tm_hour and tm_min read the hour and minute.",
+      "note": "// Store the current date and time in time, then print it.",
+      "prompt": "Store the current date and time in time, then print it.",
+      "answer": "#include <iostream>\n#include <string>\n#include <ctime>\n#include <iomanip>\n\nint main() {\n  std::time_t now = std::time(nullptr);\n  std::tm time = *std::localtime(&now);\n  std::cout << std::put_time(&time, \"%d/%m/%Y %H:%M:%S\") << \"\\n\";\n}",
+      "output": [
+        "02/10/2026 17:20:00"
+      ],
+      "parts": [
+        {
+          "code": "std::localtime",
+          "name": "Local time",
+          "meaning": "Converts the current moment into local calendar parts."
+        },
+        {
+          "code": "std::put_time",
+          "name": "Format",
+          "meaning": "Formats the date and time for output."
+        }
+      ],
+      "outputNote": "Example date and time; running the code uses your device’s current moment.",
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "05 · Date and time",
+      "title": "Check for a particular time",
+      "explanation": "This checks the local clock once. tm_hour is the hour from 0 to 23; tm_min is the minute from 0 to 59. == compares values and && requires both checks to be true. This prints only if run during 17:20; it does not keep watching the clock.",
+      "note": "// Print Time reached! if the local hour is 17 and the minute is 20.",
+      "prompt": "Print Time reached! if the local hour is 17 and the minute is 20.",
+      "answer": "#include <iostream>\n#include <string>\n#include <ctime>\n\nint main() {\n  std::time_t now = std::time(nullptr);\n  std::tm time = *std::localtime(&now);\n\n  int hour = time.tm_hour;\n  int minute = time.tm_min;\n\n  if (hour == 17 && minute == 20) {\n    std::cout << \"Time reached!\\n\";\n  }\n}",
+      "output": [
+        "Time reached!"
+      ],
+      "parts": [
+        {
+          "code": "tm_hour / tm_min",
+          "name": "Clock parts",
+          "meaning": "Read the local hour and minute."
+        },
+        {
+          "code": "&&",
+          "name": "Both",
+          "meaning": "Requires both comparisons to be true."
+        }
+      ],
+      "outputNote": "Example output when the clock is 17:20. At other times, this snippet prints nothing.",
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "06 · Date and time",
+      "title": "Keep checking until the time is reached",
+      "explanation": "The loop gets a fresh local time each second. At 17:20 it prints once and break leaves the loop. sleep_for waits between checks. Keep the program open; if 17:20 has passed, it waits until the next day. Checks can run late.",
+      "note": "// Keep checking the local clock and print Time reached! once at 17:20.",
+      "prompt": "Keep checking the local clock and print Time reached! once at 17:20.",
+      "answer": "#include <iostream>\n#include <string>\n#include <ctime>\n#include <thread>\n#include <chrono>\n\nint main() {\n  while (true) {\n    std::time_t now = std::time(nullptr);\n    std::tm time = *std::localtime(&now);\n    int hour = time.tm_hour;\n    int minute = time.tm_min;\n\n    if (hour == 17 && minute == 20) {\n      std::cout << \"Time reached!\\n\";\n      break;\n    }\n\n    std::this_thread::sleep_for(std::chrono::seconds(1));\n  }\n}",
+      "output": [
+        "Time reached!"
+      ],
+      "parts": [
+        {
+          "code": "while (true)",
+          "name": "Repeat",
+          "meaning": "Repeats until break leaves the loop."
+        },
+        {
+          "code": "break",
+          "name": "Stop",
+          "meaning": "Ends the loop after the time matches."
+        }
+      ],
+      "outputNote": "Example output at 17:20. The lesson preview does not wait for the clock.",
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "07 · Functions",
+      "title": "Make something happen",
+      "explanation": "void declares a function that returns no value. Empty () means it has no parameters. {} groups its instructions. Defining correct before main makes it available when main calls correct().",
+      "note": "// Create a function named correct that prints correct",
+      "prompt": "Create correct, then call it to print correct.",
+      "answer": "#include <iostream>\n#include <string>\n\nvoid correct() {\n  std::cout << \"correct\\n\";\n}\n\nint main() {\n  correct();\n}",
+      "output": [
+        "correct"
+      ],
+      "parts": [
+        {
+          "code": "void correct()",
+          "name": "Function",
+          "meaning": "A function that returns no value."
+        },
+        {
+          "code": "correct();",
+          "name": "Call",
+          "meaning": "Runs its body."
+        }
+      ],
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "08 · Functions",
+      "title": "Use one function inside another",
+      "explanation": "getMessage() returns a std::string. std::cout prints its returned value. Nested calls have their own parentheses: getMessage runs first in anotherFunction(getMessage()). Extra parentheses group an expression; (( is not a special sign for multiple functions.",
+      "note": "// Return Hello from getMessage, then print it by calling the function inside the print call.",
+      "prompt": "Return Hello from getMessage, then print it by calling the function inside the print call.",
+      "answer": "#include <iostream>\n#include <string>\n\nstd::string getMessage() {\n  return \"Hello\";\n}\n\nint main() {\n  std::cout << getMessage() << \"\\n\";\n}",
+      "output": [
+        "Hello"
+      ],
+      "parts": [
+        {
+          "code": "std::string",
+          "name": "Text",
+          "meaning": "The type of text returned by this function."
+        },
+        {
+          "code": "return",
+          "name": "Send back",
+          "meaning": "Returns the value to the caller."
+        }
+      ],
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "09 · Classes",
+      "title": "Create and use a class",
+      "explanation": "class defines a type. public makes these members accessible from main. Car(...) is its constructor. this->name is the current object’s member; name is the constructor parameter. Car myCar1(\"Ford\", 2014) creates the object without new. A class declaration ends with };.",
+      "note": "// Define the class first, then use new Car(...) to create objects",
+      "prompt": "Create the Car class, then create Ford and Audi objects.",
+      "answer": "#include <iostream>\n#include <string>\n\nclass Car {\npublic:\n  std::string name;\n  int year;\n\n  Car(std::string name, int year) {\n    this->name = name;\n    this->year = year;\n  }\n};\n\nint main() {\n  Car myCar1(\"Ford\", 2014);\n  Car myCar2(\"Audi\", 2019);\n\n  std::cout << myCar1.name << \", \" << myCar1.year << \"\\n\";\n  std::cout << myCar2.name << \", \" << myCar2.year << \"\\n\";\n}",
+      "output": [
+        "Ford, 2014",
+        "Audi, 2019"
+      ],
+      "parts": [
+        {
+          "code": "public:",
+          "name": "Access",
+          "meaning": "Allows code outside the class to use these members."
+        },
+        {
+          "code": "this->name",
+          "name": "Member",
+          "meaning": "Refers to the name stored in the current object."
+        }
+      ],
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "10 · Loops",
+      "title": "Repeat input until the answer is correct",
+      "explanation": "while (true) repeats until break stops the loop. std::getline(std::cin, answer) reads a whole line of terminal input into answer. == checks for \"2\". The braces place the answer check inside the loop and break inside if.",
+      "note": "// Create the loop with input, output, and break inside if.",
+      "prompt": "Create the loop with input, output, and break inside if.",
+      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  while (true) {\n    std::cout << \"What is 1 + 1?\";\n    std::string answer;\n    std::getline(std::cin, answer);\n    std::cout << answer << \"\\n\";\n\n    if (answer == \"2\") {\n      std::cout << \"Correct!\\n\";\n      break;\n    }\n\n    std::cout << \"Try again.\\n\";\n  }\n}",
+      "output": [
+        "INPUT  →  2",
+        "OUTPUT  →  2",
+        "Correct!",
+        "break leaves the loop."
+      ],
+      "parts": [
+        {
+          "code": "std::getline",
+          "name": "Read a line",
+          "meaning": "Waits for a whole line of input and stores it in answer."
+        },
+        {
+          "code": "break",
+          "name": "Stop",
+          "meaning": "Leaves the loop."
+        }
+      ],
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "11 · Variables",
+      "title": "Use changeable and fixed values",
+      "explanation": "int declares a whole-number variable that can be reassigned. const int prevents reassignment. C++ has no let keyword. std::string stores text, and auto can infer a variable’s type from its initial value. << prints the text and number.",
+      "note": "// Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
+      "prompt": "Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
+      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  int speed = 80;\n  const int maxSpeed = 100;\n\n  speed = 100;\n  std::cout << \"Speed: \" << speed << \"\\n\";\n}",
+      "output": [
+        "Speed: 100"
+      ],
+      "parts": [
+        {
+          "code": "int",
+          "name": "Whole number",
+          "meaning": "Declares a whole-number variable."
+        },
+        {
+          "code": "const int",
+          "name": "Fixed value",
+          "meaning": "Prevents reassigning the number."
+        }
+      ],
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "12 · Variables",
+      "title": "Remember a value",
+      "explanation": "std::cout displays the question. std::string name declares a text variable. std::getline(std::cin, name) waits for a whole line and saves it in name. std::cout then prints Hello followed by that answer.",
+      "note": "// Ask for a name and greet the user",
+      "prompt": "Create a name variable, then print Hello with a template string.",
+      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  std::cout << \"What is your name?\";\n  std::string name;\n  std::getline(std::cin, name);\n  std::cout << \"Hello \" << name << \"\\n\";\n}",
+      "output": [
+        "What is your name?  →  Alex",
+        "Hello Alex"
+      ],
+      "parts": [
+        {
+          "code": "std::string name",
+          "name": "Text variable",
+          "meaning": "Declares where the entered text is stored."
+        },
+        {
+          "code": "std::getline(std::cin, name)",
+          "name": "Read a line",
+          "meaning": "Receives a whole line from the terminal."
+        }
+      ],
+      "fileName": "name.cpp",
+      "runHint": "Save as name.cpp. In the VS Code terminal compile with g++ -std=c++17 name.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "13 · If and else",
+      "title": "Choose between two messages",
+      "explanation": "if checks the condition inside (). Its {} block prints Too fast! when speed is greater than 100. Otherwise, the else block prints Speed is OK.",
+      "note": "// Print Too fast! for speed above 100; otherwise print Speed is OK.",
+      "prompt": "Print Too fast! for speed above 100; otherwise print Speed is OK.",
+      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  int speed = 120;\n\n  if (speed > 100) {\n    std::cout << \"Too fast!\\n\";\n  } else {\n    std::cout << \"Speed is OK.\\n\";\n  }\n}",
+      "output": [
+        "Too fast!"
+      ],
+      "parts": [
+        {
+          "code": "if / else",
+          "name": "Choose",
+          "meaning": "Runs one of the two blocks."
+        },
+        {
+          "code": ">",
+          "name": "Greater than",
+          "meaning": "Checks whether the left value is larger."
+        }
+      ],
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "14 · Combined conditions and comparisons",
+      "title": "Check whether a value is in a range",
+      "explanation": ">= and <= include the boundary values. && requires both comparisons; || requires at least one; ! reverses a condition. == means equal, != not equal, > greater than, and < less than.",
+      "note": "// && means AND. Both conditions must be true.",
+      "prompt": "Use && to check both ends of the age range.",
+      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  int age = 16;\n\n  if (age >= 0 && age <= 18) {\n    std::cout << \"Your age is between 0 and 18.\\n\";\n  } else {\n    std::cout << \"Your age is above 18.\\n\";\n  }\n}",
+      "output": [
+        "Your age is between 0 and 18."
+      ],
+      "parts": [
+        {
+          "code": ">= / <=",
+          "name": "Include the limit",
+          "meaning": "Compare including the boundary."
+        },
+        {
+          "code": "&& / || / !",
+          "name": "Combine checks",
+          "meaning": "Both, either, or reverse a condition."
+        }
+      ],
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "15 · Dictionary",
+      "title": "Search a word dictionary",
+      "explanation": "std::map stores key/value pairs. The two std::string types mean text keys and text values. find searches safely; end means no match. found->second is the matching value. [] retrieves a value, but a missing key would insert a default value, so use find when only searching.",
+      "note": "// Create the word dictionary, show its values, then search for a word.",
+      "prompt": "Create the word dictionary, show its values, then search for a word.",
+      "answer": "#include <iostream>\n#include <string>\n#include <map>\n\nint main() {\n  std::map<std::string, std::string> words = {\n    {\"bonjour\", \"hello\"},\n    {\"hola\", \"hello\"}\n  };\n\n  std::cout << words[\"bonjour\"] << \", \" << words[\"hola\"] << \"\\n\";\n  std::cout << \"Search:\";\n  std::string search;\n  std::getline(std::cin, search);\n  auto found = words.find(search);\n  if (found != words.end()) {\n    std::cout << found->second << \"\\n\";\n  } else {\n    std::cout << \"word not found\\n\";\n  }\n}",
+      "output": [
+        "hello, hello",
+        "Search:  →  bonjour",
+        "hello"
+      ],
+      "parts": [
+        {
+          "code": "std::map",
+          "name": "Dictionary",
+          "meaning": "Stores key/value pairs."
+        },
+        {
+          "code": "find",
+          "name": "Safe lookup",
+          "meaning": "Searches without inserting a missing key."
+        },
+        {
+          "code": "found->second",
+          "name": "Stored value",
+          "meaning": "Reads the matching entry’s value."
+        }
+      ],
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "16 · Expressions",
+      "title": "Calculate a value",
+      "explanation": "An expression produces a value: 80 + 20 produces 100. speed > 100 produces false when speed is 100. + adds, - subtracts, * multiplies, / divides, and % gives an integer remainder. Integer division truncates the fraction; use 5.0 for a floating-point result.",
+      "note": "// Calculate speed with 80 + 20, then print Speed: 100.",
+      "prompt": "Calculate speed with 80 + 20, then print Speed: 100.",
+      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  int speed = 80 + 20;\n  std::cout << \"Speed: \" << speed << \"\\n\";\n}",
+      "output": [
+        "Speed: 100"
+      ],
+      "parts": [
+        {
+          "code": "80 + 20",
+          "name": "Expression",
+          "meaning": "Produces the value 100."
+        }
+      ],
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "17 · Random",
+      "title": "Choose a random word",
+      "explanation": "The loop copies map keys into a vector. mt19937 is a random-number generator seeded by random_device. uniform_int_distribution chooses an index from 0 through size - 1, inclusive. keys[index] retrieves the chosen key. Either word may be printed.",
+      "note": "// Create the word dictionary and randomly select one of its keys.",
+      "prompt": "Create the word dictionary and randomly select one of its keys.",
+      "answer": "#include <iostream>\n#include <string>\n#include <map>\n#include <vector>\n#include <random>\n\nint main() {\n  std::map<std::string, std::string> words = {\n    {\"bonjour\", \"hello\"},\n    {\"hola\", \"hello\"}\n  };\n\n  std::vector<std::string> keys;\n  for (const auto& entry : words) {\n    keys.push_back(entry.first);\n  }\n  std::mt19937 generator(std::random_device{}());\n  std::uniform_int_distribution<int> choose(0, static_cast<int>(keys.size()) - 1);\n  std::string random = keys[choose(generator)];\n\n  std::cout << random << \"\\n\";\n}",
+      "output": [
+        "bonjour"
+      ],
+      "parts": [
+        {
+          "code": "std::mt19937",
+          "name": "Generator",
+          "meaning": "Produces pseudo-random numbers."
+        },
+        {
+          "code": "uniform_int_distribution",
+          "name": "Choose an index",
+          "meaning": "Chooses within the inclusive bounds."
+        }
+      ],
+      "outputNote": "Example output; either bonjour or hola can be chosen.",
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "18 · Arrays and lists",
+      "title": "Make and search a names array",
+      "explanation": "A built-in array has a fixed size. std::vector is a growing collection that matches JavaScript’s array here. push_back adds the entered name. std::find searches between begin and end; returning end means no match. Matching is case-sensitive.",
+      "note": "// Create an empty collection, add a name, ask what to search for, and print whether it was found.",
+      "prompt": "Create an empty collection, add a name, ask what to search for, and print whether it was found.",
+      "answer": "#include <iostream>\n#include <string>\n#include <vector>\n#include <algorithm>\n\nint main() {\n  std::vector<std::string> names;\n\n  std::cout << \"add a name\";\n  std::string name;\n  std::getline(std::cin, name);\n  names.push_back(name);\n\n  std::cout << \"search for a name\";\n  std::string search;\n  std::getline(std::cin, search);\n\n  if (std::find(names.begin(), names.end(), search) != names.end()) {\n    std::cout << \"name found\\n\";\n  } else {\n    std::cout << \"name not found\\n\";\n  }\n}",
+      "output": [
+        "add a name  →  Jaden",
+        "search for a name  →  Jaden",
+        "name found"
+      ],
+      "parts": [
+        {
+          "code": "std::vector",
+          "name": "Growing collection",
+          "meaning": "Stores a list of values that can grow."
+        },
+        {
+          "code": "push_back",
+          "name": "Add",
+          "meaning": "Adds a value to the end."
+        },
+        {
+          "code": "std::find",
+          "name": "Search",
+          "meaning": "Returns the found position or end when absent."
+        }
+      ],
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "19 · Sets",
+      "title": "Remove duplicate names",
+      "explanation": "std::set stores unique values in sorted order. The loop prints a comma between items and square brackets around them. firstItem prevents a comma before the first item. Alex, Sam, Alex becomes [Alex, Sam].",
+      "note": "// Ask for three names, then remove any duplicates",
+      "prompt": "Collect three names, create a std::set, and print its unique values.",
+      "answer": "#include <iostream>\n#include <string>\n#include <set>\n\nint main() {\n  std::cout << \"Enter the first name:\";\n  std::string first;\n  std::getline(std::cin, first);\n  std::cout << \"Enter the second name:\";\n  std::string second;\n  std::getline(std::cin, second);\n  std::cout << \"Enter the third name:\";\n  std::string third;\n  std::getline(std::cin, third);\n\n  std::set<std::string> uniqueNames = {first, second, third};\n\n  std::cout << \"[\";\n  bool firstItem = true;\n  for (const auto& name : uniqueNames) {\n    if (!firstItem) std::cout << \", \";\n    std::cout << name;\n    firstItem = false;\n  }\n  std::cout << \"]\\n\";\n}",
+      "output": [
+        "Enter the first name:  →  Alex",
+        "Enter the second name:  →  Sam",
+        "Enter the third name:  →  Alex",
+        "[Alex, Sam]"
+      ],
+      "parts": [
+        {
+          "code": "std::set",
+          "name": "Unique values",
+          "meaning": "Keeps one copy of each value in sorted order."
+        }
+      ],
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "20 · Null",
+      "title": "Mark a value as not ready yet",
+      "explanation": "C++ does not use null for an ordinary string. std::optional<std::string> may hold a string or no value. std::nullopt makes it empty, has_value checks whether a value exists, and ! reverses that result. nullptr is for pointers.",
+      "note": "// null means there is deliberately no result yet",
+      "prompt": "Set result to null, then print the message for its current state.",
+      "answer": "#include <iostream>\n#include <string>\n#include <optional>\n\nint main() {\n  std::optional<std::string> result = std::nullopt;\n\n  if (!result.has_value()) {\n    std::cout << \"No result yet\\n\";\n  } else {\n    std::cout << \"Result is ready\\n\";\n  }\n}",
+      "output": [
+        "No result yet"
+      ],
+      "parts": [
+        {
+          "code": "std::optional<std::string>",
+          "name": "Optional value",
+          "meaning": "Can hold text or have no value."
+        },
+        {
+          "code": "std::nullopt",
+          "name": "Empty",
+          "meaning": "Creates an optional with no value."
+        }
+      ],
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "21 · Regular expressions",
+      "title": "Let names beginning with J enter",
+      "explanation": "std::regex holds the pattern. ^ requires J at the beginning; std::regex::icase ignores case. regex_search returns true for a matching name. This accepts any text starting with J or j, not only names.",
+      "note": "// Let people into the club when their name begins with J",
+      "prompt": "Check the five names and print who may enter the club.",
+      "answer": "#include <iostream>\n#include <string>\n#include <vector>\n#include <regex>\n\nint main() {\n  std::vector<std::string> names = {\"Jaden\", \"James\", \"Jessica\", \"Sarah\", \"Ben\"};\n  std::regex pattern(\"^J\", std::regex::icase);\n\n  for (const auto& name : names) {\n    if (std::regex_search(name, pattern)) {\n      std::cout << name << \" can enter the club.\\n\";\n    } else {\n      std::cout << name << \" cannot enter the club.\\n\";\n    }\n  }\n}",
+      "output": [
+        "Jaden can enter the club.",
+        "James can enter the club.",
+        "Jessica can enter the club.",
+        "Sarah cannot enter the club.",
+        "Ben cannot enter the club."
+      ],
+      "parts": [
+        {
+          "code": "std::regex",
+          "name": "Pattern",
+          "meaning": "Stores the text pattern."
+        },
+        {
+          "code": "std::regex::icase",
+          "name": "Ignore case",
+          "meaning": "Matches J or j."
+        }
+      ],
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "22 · Application practice",
+      "title": "Build a random word quiz",
+      "explanation": "Combine the map, random choice, terminal input, and if/else. std::getline reads the answer. words[random] retrieves the chosen key’s translation. == checks the answer and prints Correct or Wrong.",
+      "note": "// Combine the word dictionary and random key code to make a translation quiz.",
+      "prompt": "Combine the word dictionary and random key code to make a translation quiz.",
+      "answer": "#include <iostream>\n#include <string>\n#include <map>\n#include <vector>\n#include <random>\n\nint main() {\n  std::map<std::string, std::string> words = {\n    {\"bonjour\", \"hello\"},\n    {\"hola\", \"hello\"}\n  };\n\n  std::vector<std::string> keys;\n  for (const auto& entry : words) {\n    keys.push_back(entry.first);\n  }\n  std::mt19937 generator(std::random_device{}());\n  std::uniform_int_distribution<int> choose(0, static_cast<int>(keys.size()) - 1);\n  std::string random = keys[choose(generator)];\n\n  std::cout << random;\n  std::string answer;\n  std::getline(std::cin, answer);\n\n  if (answer == words[random]) {\n    std::cout << \"Correct\\n\";\n  } else {\n    std::cout << \"Wrong\\n\";\n  }\n}",
+      "output": [
+        "bonjour  →  hello",
+        "Correct"
+      ],
+      "parts": [
+        {
+          "code": "words[random]",
+          "name": "Expected answer",
+          "meaning": "Looks up the chosen word’s translation."
+        },
+        {
+          "code": "==",
+          "name": "Check",
+          "meaning": "Compares the entered answer with the translation."
+        }
+      ],
+      "outputNote": "Example run: bonjour is chosen and the user enters hello.",
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    }
   ]
 };
 
 type CodePart = { code: string; name: string; meaning: string };
 
 const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
+  cpp: {},
+  python: {},
   javascript: {
     0: [{ code: "\\x1b[31m", name: "Red text", meaning: "An ANSI escape code that switches terminal text to red." }, { code: "${red}", name: "Insert the colour", meaning: "Inside backticks, inserts the value stored in red before the message." }, { code: "\\n", name: "New line", meaning: "Write \\n inside the quoted text in console.log. It starts a new line: Hello, Welcome, and Goodbye each print on their own line." }],
     1: [{ code: "function", name: "Create", meaning: "Starts a reusable block of code." }, { code: "correct()", name: "Name", meaning: "Names the function so you can call it later." }, { code: "{ ... }", name: "Instructions", meaning: "Holds the code the function will run." }, { code: "correct();", name: "Call it", meaning: "Runs the function you created." }, { code: ";", name: "End instruction", meaning: "Marks where an instruction ends. JavaScript can sometimes work without it, but using it consistently makes the ending clear." }],
@@ -1509,6 +2672,17 @@ const normalize = (value: string) =>
     .replace(/'/g, '"')
     .trim();
 
+
+function normalizeForLanguage(value: string, language: Language | null) {
+  if (language !== "python") return normalize(value);
+  return value.replace(/\r/g, "").split("\n").filter(line => line.trim() && !line.trimStart().startsWith("#")).map(line => {
+    const indent = line.match(/^[ \t]*/)?.[0].replace(/\t/g, "    ").length ?? 0;
+    // Preserve indentation and quoted text; ignore spacing between tokens.
+    const tokens = line.trim().match(/f?"(?:\\.|[^"\\])*"|f?'(?:\\.|[^'\\])*'|[A-Za-z_]\w*|\d+|\S/g) ?? [];
+    return indent + ":" + tokens.map(token => token.replace(/^f?'(.*)'$/, (_, text) => (token.startsWith("f") ? "f" : "") + JSON.stringify(text))).join("|");
+  }).join("\n");
+}
+
 const lessonTone = (lesson: Lesson) => {
   const label = `${lesson.eyebrow} ${lesson.title}`.toLowerCase();
   if (/function|method|class|heading|text element/.test(label)) return "rose";
@@ -1526,6 +2700,7 @@ const withoutGuideComments = (value: string, language: Language) => {
     ? value.replace(/<!--[\s\S]*?-->/g, "")
     : language === "css"
       ? value.replace(/\/\*[\s\S]*?\*\//g, "")
+      : language === "python" ? value.split("\n").filter(line => !line.trimStart().startsWith("#")).join("\n")
       : value.split("\n").map((line) => {
         const commentIndex = line.indexOf("//");
         return commentIndex < 0 ? line : line.slice(0, commentIndex);
@@ -1534,9 +2709,9 @@ const withoutGuideComments = (value: string, language: Language) => {
   return uncommented.split("\n").filter((line) => line.trim()).join("\n");
 };
 
-const languageName = (language: Language) => language === "javascript" ? "JavaScript" : language === "csharp" ? "C Sharp" : language === "html" ? "HTML" : "CSS";
-const languageBadge = (language: Language) => language === "javascript" ? "JS" : language === "csharp" ? "C#" : language === "html" ? "HTML" : "CSS";
-const challengeFile = (language: Language) => language === "javascript" ? "challenge.js" : language === "csharp" ? "Program.cs" : language === "html" ? "index.html" : "styles.css";
+const languageName = (language: Language) => language === "cpp" ? "C++" : language === "python" ? "Python" : language === "javascript" ? "JavaScript" : language === "csharp" ? "C Sharp" : language === "html" ? "HTML" : "CSS";
+const languageBadge = (language: Language) => language === "cpp" ? "C++" : language === "python" ? "PY" : language === "javascript" ? "JS" : language === "csharp" ? "C#" : language === "html" ? "HTML" : "CSS";
+const challengeFile = (language: Language) => language === "cpp" ? "challenge.cpp" : language === "python" ? "challenge.py" : language === "javascript" ? "challenge.js" : language === "csharp" ? "Program.cs" : language === "html" ? "index.html" : "styles.css";
 
 type DiagnosticPart = { text: string; help: string; kind: "type" | "message" | "token" | "location" };
 
@@ -1568,7 +2743,17 @@ function alignedGuide(code: string, expected: string) {
   return code.replace(/[^\n]/g, " ") + remainingGuide;
 }
 
-function syntaxDiagnostic(code: string, expected: string): DiagnosticPart[] {
+function syntaxDiagnostic(code: string, expected: string, language?: Language | null): DiagnosticPart[] {
+  if (language === "python") {
+    const actualLines = code.split("\n").filter(line => line.trim());
+    const expectedLines = expected.split("\n").filter(line => line.trim());
+    const badLine = actualLines.findIndex((line, i) => line.trim() === expectedLines[i]?.trim() && (line.match(/^\s*/)?.[0].length ?? 0) !== (expectedLines[i]?.match(/^\s*/)?.[0].length ?? 0));
+    if (badLine >= 0) return [
+      {text: "IndentationError: ", help: "Python uses indentation to decide which statements belong to a block.", kind: "type"},
+      {text: "Check the indentation", help: "Use four spaces for each block level, as shown in the guide.", kind: "message"},
+      {text: " on line " + (badLine + 1), help: "This line needs the same indentation as the example.", kind: "location"}
+    ];
+  }
   const actual = significantCharacters(code);
   const target = significantCharacters(expected);
   let difference = 0;
@@ -1613,15 +2798,17 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
     ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|div|section|script|img|video|audio|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|src|alt|controls|id|lang|charset)\b|\b(?:background-color)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:#])/g
     : language === "css"
     ? /(\/\*[\s\S]*?\*\/|#[0-9a-fA-F]{3,8}\b|#[A-Za-z_]\w*|\b(?:body|p|background-color|color|text-align|font-family|border|border-radius|solid|dotted|center|lightblue|red|blue|tomato)\b|\d+(?:px)?|[{}();:.,])/g
-    : /(\/\/[^\n]*|\/\^[A-Za-z]+\/[gimsuy]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:function|class|constructor|this|let|const|double|bool|out|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime|List|Set|HashSet|Dictionary|Random|Regex|RegexOptions)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|&&|>=|<=|\+\+|--|[{}()[\];=.:<>?^/])/g;
+    : language === "python"
+    ? /(#.*|f?"[^"\n]*"|f?'[^'\n]*'|\b(?:def|class|self|return|import|from|if|else|for|in|while|True|False|None|break|and|or|not|is)\b|\b(?:print|input|datetime|random|re|time|set|list|sorted)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|[{}()[\];=.:<>+*%/-])/g
+    : /(\/\/[^\n]*|\/\^[A-Za-z]+\/[gimsuy]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:def|self|import|from|True|False|None|and|or|not|is|function|class|constructor|this|let|const|double|bool|out|auto|include|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime|List|Set|HashSet|Dictionary|Random|std|cout|cin|vector|map|optional|print|input|datetime|random|re|time|Regex|RegexOptions)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|&&|>=|<=|\+\+|--|[{}()[\];=.:<>?^/])/g;
   const parts: { text: string; kind: string }[] = [];
   let lastIndex = 0;
   for (const match of code.matchAll(pattern)) {
     if (match.index! > lastIndex) parts.push({ text: code.slice(lastIndex, match.index), kind: "plain" });
     const text = match[0];
     let kind = "punctuation";
-    if (/^(\/\/|\/\*|<!--)/.test(text)) kind = "comment";
-    else if (/^["'`]/.test(text) || /^\/\^/.test(text)) kind = "string";
+    if (/^(\/\/|\/\*|<!--)/.test(text) || (language === "python" && text.startsWith("#"))) kind = "comment";
+    else if (/^f?["'`]/.test(text) || /^\/\^/.test(text)) kind = "string";
     else if (/^(function|class|constructor|this|let|const|double|bool|out|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|div|section|script|img|video|audio|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
     else if (/^(console|Console|Task|Date|DateTime|List|Set|HashSet|Dictionary|Random|Regex|RegexOptions|log)$/.test(text)) kind = "api";
     else if (/^(style|href|src|alt|controls|id|lang|charset)$/.test(text)) kind = "attribute";
@@ -1721,7 +2908,7 @@ export default function Home() {
     setStatus("idle");
   }
 
-  const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0, html: 0, css: 0 });
+  const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0, cpp: 0, python: 0, html: 0, css: 0 });
 
   const current = language ? lessons[language][index] : null;
   const ghostSource = current ? withoutGuideComments(current.answer, language ?? "javascript") : "";
@@ -1739,7 +2926,7 @@ export default function Home() {
       || breakdowns[language][breakdownIndex]
     : undefined;
   const progress = language ? Math.round((index / lessons[language].length) * 100) : 0;
-  const diagnostic = useMemo(() => current ? syntaxDiagnostic(code, current.answer) : [], [code, current]);
+  const diagnostic = useMemo(() => current ? syntaxDiagnostic(code, current.answer, language) : [], [code, current, language]);
 
   useEffect(() => {
     if (current) {
@@ -1841,7 +3028,7 @@ export default function Home() {
 
   function checkCode() {
     if (!current) return;
-    if (normalize(code) === normalize(current.answer)) {
+    if (normalizeForLanguage(code, language) === normalizeForLanguage(current.answer, language)) {
       setStatus("correct");
       if (language) setCompleted((old) => ({ ...old, [language]: Math.max(old[language], index + 1) }));
     } else {
@@ -1868,7 +3055,9 @@ export default function Home() {
     const end = editor.selectionEnd;
     const lineStart = code.lastIndexOf("\n", start - 1) + 1;
     const indentation = code.slice(lineStart, start).match(/^\s*/)?.[0] ?? "";
-    const insert = event.key === "Tab" ? "  " : `\n${indentation}${code.slice(0, start).trimEnd().endsWith("{") ? "  " : ""}`;
+    const indentStep = language === "python" ? "    " : "  ";
+    const opensBlock = code.slice(0, start).trimEnd().endsWith(language === "python" ? ":" : "{");
+    const insert = event.key === "Tab" ? indentStep : `\n${indentation}${opensBlock ? indentStep : ""}`;
     const nextCode = code.slice(0, start) + insert + code.slice(end);
     const nextCaret = start + insert.length;
     setCode(nextCode);
@@ -1917,6 +3106,16 @@ export default function Home() {
               <h3>C Sharp</h3><p>Create powerful console apps and learn the foundations of strongly typed code.</p>
               <div className="course-bottom"><span>Start learning <b>→</b></span><div className="mini-progress"><i style={{width: `${completed.csharp / lessons.csharp.length * 100}%`}} /></div></div>
             </button>
+            <button className="course-card cpp-card" onClick={() => openCourse("cpp")}>
+              <div className="course-icon">C++</div><div className="course-count">{lessons.cpp.length} LESSONS</div>
+              <h3>C++</h3><p>Practice console programs, functions, classes, and collections.</p>
+              <div className="course-bottom"><span>Start learning <b>→</b></span><div className="mini-progress"><i style={{width: (completed.cpp / lessons.cpp.length * 100) + "%"}} /></div></div>
+            </button>
+            <button className="course-card python-card" onClick={() => openCourse("python")}>
+              <div className="course-icon">PY</div><div className="course-count">{lessons.python.length} LESSONS</div>
+              <h3>Python</h3><p>Practice input, functions, classes, and collections with clear examples.</p>
+              <div className="course-bottom"><span>Start learning <b>→</b></span><div className="mini-progress"><i style={{width: (completed.python / lessons.python.length * 100) + "%"}} /></div></div>
+            </button>
             <button className="course-card py-card" onClick={() => openCourse("html")}>
               <div className="course-icon">HTML</div><div className="course-count">{lessons.html.length} LESSONS</div>
               <h3>HTML</h3><p>Build web pages with structure, headings, text, links, images, and scripts.</p>
@@ -1962,6 +3161,22 @@ export default function Home() {
           <div className="lesson-number">{String(index + 1).padStart(2, "0")} · {current!.eyebrow.split("·")[1]}</div>
           <h1>{current!.title}</h1>
           <p>{current!.explanation}</p>
+          {current!.compareNode && <section className="runtime-guide" aria-label="Browser and Node input">
+            <h2>The same name question in two places</h2>
+            <h3>Browser · prompt()</h3><pre><code><HighlightedCode language="javascript" code={"let name = prompt(\"What is your name?\");\nconsole.log(`Hello ${name}`);"} /></code></pre>
+            <h3>VS Code terminal · name.mjs</h3><pre><code><HighlightedCode language="javascript" code={"import { createInterface } from \"node:readline/promises\";\n\nconst input = createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\nlet name = await input.question(\"What is your name?\");\nconsole.log(`Hello ${name}`);\n\ninput.close();"} /></code></pre>
+            <p>Node needs a little setup before it can read terminal input. <code>await input.question()</code> waits for the answer. <code>input.close()</code> tells Node <b>“I’m done taking input.”</b> Call it when you finish asking questions.</p>
+            <p>Save as <code>name.mjs</code>, open <b>Terminal → New Terminal</b> in VS Code, then enter <code>node name.mjs</code>. Type a name and press Enter. Use the terminal so you can type a reply.</p>
+            <a href="/examples/name.mjs" download>Download name.mjs</a>
+          </section>}
+          {current!.runHint && <p className="run-hint">{current!.runHint}</p>}
+          {(language === "cpp" || language === "python") && <details className="symbol-guide" open={index === 0}>
+            <summary>Brackets and symbols</summary>
+            <p><code>[]</code>   {language === "python" ? 'makes a list, such as ["Jaden", "Alex"], or retrieves an item, such as names[0].' : 'accesses an item, such as names[0]. A vector initializer uses braces: std::vector<std::string> names = {"Jaden", "Alex"};.'}</p>
+            <p><code>{"{}"}</code>   {language === "python" ? 'creates a dictionary or a non-empty set. Python uses a colon and indentation for code blocks.' : 'groups a code block, class body, or initializer. Map entries are key/value pairs; C++ has no JavaScript-style object literal.'}</p>
+            <p><code>()</code> holds function arguments {language === "cpp" ? 'and conditions.' : 'and can group expressions. Parentheses around an if condition are optional.'} Each nested function call has its own pair.</p>
+            <p><code>{language === "python" ? "#" : "//"}</code> starts a comment.  {language === "python" ? 'Use four spaces for each block level; indentation is part of the program.' : '#include is a preprocessor directive that makes library declarations available.'}</p>
+          </details>}
           {(language === "javascript" || language === "csharp") && <details className="symbol-guide" open={index === 0}>
             <summary>Brackets and symbols</summary>
             <table><thead><tr><th>Symbol</th><th>Called</th><th>Example</th></tr></thead><tbody>
@@ -2023,7 +3238,7 @@ export default function Home() {
             <div><code>&lt;a href=&quot;...&quot;&gt;</code><p><b>Link</b><span>Creates clickable text and stores its destination in href.</span></p></div>
           </div> : <>
             <div className="comment-card"><div className="comment-label">READ THE COMMENT</div><code>{current!.note}</code></div>
-            <div className="tip">{blockMode ? "Tap or drag lesson blocks into your code, then choose Check code." : "Type over the guide in the editor, then press Enter to check it. Spaces and indentation are accepted."}</div>
+            <div className="tip">{blockMode ? "Tap or drag lesson blocks into your code, then choose Check code." : language === "python" ? "Type over the guide, then press Enter to check it. Python block indentation must match; Tab inserts four spaces." : "Type over the guide in the editor, then press Enter to check it. Spaces and indentation are accepted."}</div>
           </>}
         </aside>
         <section className={`workspace ${blockMode ? "blocks-workspace" : ""}`}>
@@ -2100,7 +3315,7 @@ export default function Home() {
             <button className="reference-next" onClick={nextLesson}>Continue to the next lesson →</button>
           </div> : <>
           <div className="editor-panel">
-            <div className="panel-bar"><div className="file-tab"><span>◆</span> {challengeFile(language)}</div><div className="panel-actions"><button className="editor-mode-button" onClick={() => changeBlockMode(!blockMode)}>{blockMode ? "Use keyboard" : "Use blocks"}</button><button onClick={() => changeBlockCode(current!.starter || "")} title="Reset code">↻ Reset</button></div></div>
+            <div className="panel-bar"><div className="file-tab"><span>◆</span> {current!.fileName || challengeFile(language)}</div><div className="panel-actions"><button className="editor-mode-button" onClick={() => changeBlockMode(!blockMode)}>{blockMode ? "Use keyboard" : "Use blocks"}</button><button onClick={() => changeBlockCode(current!.starter || "")} title="Reset code">↻ Reset</button></div></div>
             {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className="code-guide" aria-hidden="true"><span>CODE GUIDE</span><code><HighlightedCode code={guideCode} language={language} /></code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : "// Type your code here..."} /></div>}
           </div>
           <div className="console-panel">
