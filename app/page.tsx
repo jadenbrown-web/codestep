@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 
 import CodeBlocks from "./CodeBlocks";
+import { checkPythonColours } from "./python-colours";
 
 type Language = "javascript" | "csharp" | "cpp" | "python" | "html" | "css";
 type ThemeMode = "light" | "dark" | "system";
@@ -1796,7 +1797,7 @@ const lessons: Record<Language, Lesson[]> = {
       "title": "Choose a text colour",
       "explanation": "ANSI escape codes choose terminal text colours: 31 is red, 32 green, 33 yellow, 34 blue, 35 magenta, and 36 cyan. Code 0 resets the colour so later output returns to normal. These codes work in terminals that support ANSI colours. The lesson console previews the colours.",
       "note": "# Print Red text and Green text, then reset the colour.",
-      "prompt": "Print Red text and Green text, then reset the colour.",
+      "prompt": "Print Red text in red and Green text in green, in either order, then reset the colour. You can rename variables and use f-strings or + concatenation.",
       "answer": "red = \"\\033[31m\"\ngreen = \"\\033[32m\"\nreset = \"\\033[0m\"\n\nprint(f\"{red}Red text{reset}\")\nprint(f\"{green}Green text{reset}\")",
       "output": [
         "Red text",
@@ -3423,52 +3424,6 @@ function alignedGuide(code: string, expected: string) {
   return code.replace(/[^\n]/g, " ") + remainingGuide;
 }
 
-function syntaxDiagnostic(code: string, expected: string, language?: Language | null): DiagnosticPart[] {
-  if (language === "python") {
-    const actualLines = code.split("\n").filter(line => line.trim());
-    const expectedLines = expected.split("\n").filter(line => line.trim());
-    const badLine = actualLines.findIndex((line, i) => line.trim() === expectedLines[i]?.trim() && (line.match(/^\s*/)?.[0].length ?? 0) !== (expectedLines[i]?.match(/^\s*/)?.[0].length ?? 0));
-    if (badLine >= 0) return [
-      {text: "IndentationError: ", help: "Python uses indentation to decide which statements belong to a block.", kind: "type"},
-      {text: "Check the indentation", help: "Use four spaces for each block level, as shown in the guide.", kind: "message"},
-      {text: " on line " + (badLine + 1), help: "This line needs the same indentation as the example.", kind: "location"}
-    ];
-  }
-  const actual = significantCharacters(code);
-  const target = significantCharacters(expected);
-  let difference = 0;
-  while (difference < actual.length && difference < target.length && actual[difference].character === target[difference].character) difference += 1;
-  const rawIndex = actual[difference]?.index ?? code.length;
-  const before = code.slice(0, rawIndex);
-  const line = before.split("\n").length;
-  const column = rawIndex - before.lastIndexOf("\n");
-  const actualToken = actual[difference]?.character;
-  const expectedToken = target[difference]?.character;
-  const expectedIndex = target[difference]?.index ?? expected.length;
-  let wordStart = expectedIndex;
-  let wordEnd = expectedIndex;
-  while (wordStart > 0 && /[A-Za-z0-9_]/.test(expected[wordStart - 1])) wordStart -= 1;
-  while (wordEnd < expected.length && /[A-Za-z0-9_]/.test(expected[wordEnd])) wordEnd += 1;
-  const expectedWord = expected.slice(wordStart, wordEnd);
-  const currentWord = code.match(/[A-Za-z_]\w*$/)?.[0] ?? "";
-  const incompleteWord = !actualToken && currentWord.length > 0 && expectedWord.startsWith(currentWord) && expectedWord !== currentWord;
-  const message = incompleteWord
-    ? `Incomplete keyword '${currentWord}'`
-    : actualToken ? `Unexpected token '${actualToken}'` : "Unexpected end of input";
-  const tokenHelp = incompleteWord
-    ? `You started '${expectedWord}' but stopped after '${currentWord}'. Type the remaining '${expectedWord.slice(currentWord.length)}'.`
-    : actualToken
-      ? `The compiler found ${actualToken}, but expected ${expectedToken ? `'${expectedToken}'` : "the instruction to end"} here.`
-      : `The compiler reached the end while it was still expecting ${expectedToken ? `'${expectedToken}'` : "more code"}.`;
-  return [
-    { text: "SyntaxError:", help: "The code cannot be read because its grammar or punctuation is incomplete or in the wrong order.", kind: "type" },
-    { text: message, help: tokenHelp, kind: "message" },
-    ...(actualToken ? [{ text: actualToken, help: `This is the token the compiler could not use at this position.`, kind: "token" as const }] : []),
-    { text: `line ${line}`, help: `Line ${line} is the row where the compiler first noticed the problem.`, kind: "location" },
-    { text: `column ${column}`, help: `Column ${column} is the character position on that line.`, kind: "location" },
-  ];
-}
-
 function SyntaxDiagnostic({ parts }: { parts: DiagnosticPart[] }) {
   return <div className="syntax-diagnostic" role="alert">{parts.map((part, index) => <span key={`${part.text}-${index}`} className={`diagnostic-${part.kind}`} tabIndex={0} data-help={part.help} aria-label={`${part.text}: ${part.help}`}>{part.text}</span>)}</div>;
 }
@@ -3705,7 +3660,11 @@ export default function Home() {
       || breakdowns[language][breakdownIndex]
     : undefined;
   const progress = language ? Math.round((index / lessons[language].length) * 100) : 0;
-  const diagnostic = useMemo(() => current ? syntaxDiagnostic(code, current.answer, language) : [], [code, current, language]);
+  const colourCheck = useMemo(() => language === "python" && current?.title === "Choose a text colour" ? checkPythonColours(code) : null, [code, current, language]);
+  const acceptedCode = colourCheck ? colourCheck.accepted : !!current && normalizeForLanguage(code, language) === normalizeForLanguage(current.answer, language);
+  const diagnostic: DiagnosticPart[] = colourCheck ? [{ text: colourCheck.message, help: "This lesson checks the messages, their colours and the final reset. It accepts either order, renamed variables, f-strings and string concatenation.", kind: "message" }] : current ? [{ text: "Example mismatch: ", help: "This exercise compares your code with its guide; a different solution may still be valid code.", kind: "type" }, { text: "Compare your code with the guide. A difference is not necessarily a syntax error.", help: "Use the lesson example for this exercise. The checker does not run a compiler.", kind: "message" }] : [];
+  const previewOutput = colourCheck?.accepted ? colourCheck.output : current?.output;
+  const previewColours = colourCheck?.accepted ? colourCheck.colours : current?.outputColors;
 
   useEffect(() => {
     if (current) {
@@ -3735,7 +3694,7 @@ export default function Home() {
 
   useEffect(() => {
     if (status !== "correct" || !current) { setTypedOutput(""); return; }
-    const completeOutput = current.output.join("\n");
+    const completeOutput = (previewOutput ?? current.output).join("\n");
     let position = 0;
     let typingTimer: ReturnType<typeof setTimeout> | undefined;
     const typeNextCharacter = () => {
@@ -3750,7 +3709,7 @@ export default function Home() {
       typeNextCharacter();
     }, 350);
     return () => { clearTimeout(delay); if (typingTimer) clearTimeout(typingTimer); };
-  }, [status, current]);
+  }, [status, current, previewOutput]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("codestep-theme") as ThemeMode | null;
@@ -3807,7 +3766,7 @@ export default function Home() {
 
   function checkCode() {
     if (!current) return;
-    if (normalizeForLanguage(code, language) === normalizeForLanguage(current.answer, language)) {
+    if (acceptedCode) {
       setStatus("correct");
       if (language) setCompleted((old) => ({ ...old, [language]: Math.max(old[language], index + 1) }));
     } else {
@@ -3822,7 +3781,7 @@ export default function Home() {
       nextLesson();
       return;
     }
-    if (event.key === "Enter" && current && normalize(code) === normalize(current.answer)) {
+    if (event.key === "Enter" && current && acceptedCode) {
       event.preventDefault();
       checkCode();
       return;
@@ -4129,7 +4088,7 @@ export default function Home() {
             <div className="console-body">
               {status === "idle" && <span className="console-muted">Your program output will appear here...</span>}
               {status === "wrong" && <><SyntaxDiagnostic parts={diagnostic} /><div className="console-muted diagnostic-hint">Hover over or focus each underlined part to see what it means.</div></>}
-              {status === "correct" && <><div className="run-line"><span>✓</span> Code accepted — example output</div><div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={current?.outputColors?.[i] ? { color: current.outputColors[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}</div>)}</div></>}
+              {status === "correct" && <><div className="run-line"><span>✓</span> Code accepted — {colourCheck ? "your output" : "example output"}</div><div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}</div>)}</div></>}
             </div>
           </div>
           <div className={`feedback ${status}`}>
