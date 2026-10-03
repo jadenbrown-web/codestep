@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 
 import CodeBlocks from "./CodeBlocks";
-import { checkPythonColours } from "./python-colours";
+import { checkLesson, checkPreparedLesson, prepareChecker } from "./lesson-checker";
 
 type Language = "javascript" | "csharp" | "cpp" | "python" | "html" | "css";
 type ThemeMode = "light" | "dark" | "system";
@@ -3344,25 +3344,6 @@ const regexBreakdowns: Partial<Record<Language, CodePart[]>> = {
   ],
 };
 
-const normalize = (value: string) =>
-  value
-    .replace(/\/\/.*$/gm, "")
-    .replace(/[\s\u00a0\u200b-\u200d\ufeff]+/g, "")
-    .replace(/[‘’]/g, "'")
-    .replace(/[“”]/g, '"')
-    .replace(/'/g, '"')
-    .trim();
-
-
-function normalizeForLanguage(value: string, language: Language | null) {
-  if (language !== "python") return normalize(value);
-  return value.replace(/\r/g, "").split("\n").filter(line => line.trim() && !line.trimStart().startsWith("#")).map(line => {
-    const indent = line.match(/^[ \t]*/)?.[0].replace(/\t/g, "    ").length ?? 0;
-    // Preserve indentation and quoted text; ignore spacing between tokens.
-    const tokens = line.trim().match(/f?"(?:\\.|[^"\\])*"|f?'(?:\\.|[^'\\])*'|[A-Za-z_]\w*|\d+|\S/g) ?? [];
-    return indent + ":" + tokens.map(token => token.replace(/^f?'(.*)'$/, (_, text) => (token.startsWith("f") ? "f" : "") + JSON.stringify(text))).join("|");
-  }).join("\n");
-}
 
 const lessonTone = (lesson: Lesson) => {
   const label = `${lesson.eyebrow} ${lesson.title}`.toLowerCase();
@@ -3605,6 +3586,18 @@ export default function Home() {
   const [showGuide, setShowGuide] = useState(true);
   const [colourTyping, setColourTyping] = useState(true);
   const [blockMode, setBlockMode] = useState(false);
+  const [checkerVersion, setCheckerVersion] = useState(0);
+  const [checking, setChecking] = useState(false);
+  const [checkerError, setCheckerError] = useState("");
+  const checkContext = useRef({ code, language, index });
+  checkContext.current = { code, language, index };
+
+  useEffect(() => {
+    if (!language) return;
+    let active = true;
+    prepareChecker(language).then(() => { if (active) setCheckerVersion(version => version + 1); }).catch(() => {});
+    return () => { active = false; };
+  }, [language]);
 
   useEffect(() => {
     const mobile = window.matchMedia("(max-width: 850px), (pointer: coarse)");
@@ -3660,11 +3653,15 @@ export default function Home() {
       || breakdowns[language][breakdownIndex]
     : undefined;
   const progress = language ? Math.round((index / lessons[language].length) * 100) : 0;
-  const colourCheck = useMemo(() => language === "python" && current?.title === "Choose a text colour" ? checkPythonColours(code) : null, [code, current, language]);
-  const acceptedCode = colourCheck ? colourCheck.accepted : !!current && normalizeForLanguage(code, language) === normalizeForLanguage(current.answer, language);
-  const diagnostic: DiagnosticPart[] = colourCheck ? [{ text: colourCheck.message, help: "This lesson checks the messages, their colours and the final reset. It accepts either order, renamed variables, f-strings and string concatenation.", kind: "message" }] : current ? [{ text: "Example mismatch: ", help: "This exercise compares your code with its guide; a different solution may still be valid code.", kind: "type" }, { text: "Compare your code with the guide. A difference is not necessarily a syntax error.", help: "Use the lesson example for this exercise. The checker does not run a compiler.", kind: "message" }] : [];
-  const previewOutput = colourCheck?.accepted ? colourCheck.output : current?.output;
-  const previewColours = colourCheck?.accepted ? colourCheck.colours : current?.outputColors;
+  const lessonCheck = useMemo(() => {
+    // Loading a grammar triggers one new comparison for this course.
+    void checkerVersion;
+    return current && language ? checkPreparedLesson(code, current, language) : null;
+  }, [code, current, language, checkerVersion]);
+  const acceptedCode = lessonCheck?.accepted ?? false;
+  const diagnostic: DiagnosticPart[] = [{ text: checkerError || lessonCheck?.message || "The checker is loading. Try Check code again.", help: "Equivalent supported syntax is accepted. An unverified answer may still be valid; a syntax warning means the parser found incomplete or malformed code.", kind: "message" }];
+  const previewOutput = lessonCheck?.accepted && lessonCheck.output ? lessonCheck.output : current?.output;
+  const previewColours = lessonCheck?.accepted && lessonCheck.colours ? lessonCheck.colours : current?.outputColors;
 
   useEffect(() => {
     if (current) {
@@ -3764,14 +3761,23 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: "auto" });
   }
 
-  function checkCode() {
-    if (!current) return;
-    if (acceptedCode) {
-      setStatus("correct");
-      if (language) setCompleted((old) => ({ ...old, [language]: Math.max(old[language], index + 1) }));
-    } else {
-      setStatus("wrong");
-    }
+  async function checkCode() {
+    if (!current || !language || checking) return;
+    const context = checkContext.current;
+    setChecking(true);
+    setCheckerError("");
+    try {
+      const result = lessonCheck ?? await checkLesson(code, current, language);
+      if (checkContext.current.code !== context.code || checkContext.current.language !== context.language || checkContext.current.index !== context.index) return;
+      setCheckerVersion(version => version + 1);
+      setStatus(result.accepted ? "correct" : "wrong");
+      if (result.accepted) setCompleted(old => ({ ...old, [language]: Math.max(old[language], index + 1) }));
+    } catch {
+      if (checkContext.current.code === context.code && checkContext.current.language === context.language && checkContext.current.index === context.index) {
+        setCheckerError("The checker couldn’t load. Please try Check code again.");
+        setStatus("wrong");
+      }
+    } finally { setChecking(false); }
   }
 
   function handleEditorKeyDown(event: ReactKeyboardEvent<HTMLTextAreaElement>) {
@@ -4003,7 +4009,7 @@ export default function Home() {
             <div><code>&lt;a href=&quot;...&quot;&gt;</code><p><b>Link</b><span>Creates clickable text and stores its destination in href.</span></p></div>
           </div> : <>
             <div className="comment-card"><div className="comment-label">READ THE COMMENT</div><code>{current!.note}</code></div>
-            <div className="tip">{blockMode ? "Tap or drag lesson blocks into your code, then choose Check code." : language === "python" ? "Type over the guide, then press Enter to check it. Python block indentation must match; Tab inserts four spaces." : "Type over the guide in the editor, then press Enter to check it. Spaces and indentation are accepted."}</div>
+            <div className="tip">{blockMode ? "Tap or drag lesson blocks into your code, then choose Check code." : language === "python" ? "Type over the guide, then press Enter to check it. Python uses indentation for blocks; Tab inserts four spaces. Equivalent supported code is accepted." : "Type over the guide in the editor, then press Enter to check it. Equivalent supported code is accepted."}</div>
           </>}
         </aside>
         <section className={`workspace ${blockMode ? "blocks-workspace" : ""}`}>
@@ -4088,12 +4094,12 @@ export default function Home() {
             <div className="console-body">
               {status === "idle" && <span className="console-muted">Your program output will appear here...</span>}
               {status === "wrong" && <><SyntaxDiagnostic parts={diagnostic} /><div className="console-muted diagnostic-hint">Hover over or focus each underlined part to see what it means.</div></>}
-              {status === "correct" && <><div className="run-line"><span>✓</span> Code accepted — {colourCheck ? "your output" : "example output"}</div><div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}</div>)}</div></>}
+              {status === "correct" && <><div className="run-line"><span>✓</span> Code accepted — {lessonCheck?.output ? "your output" : "example output"}</div><div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}</div>)}</div></>}
             </div>
           </div>
           <div className={`feedback ${status}`}>
-            <div>{status === "correct" ? <><span className="feedback-icon">✓</span><p><b>That’s correct!</b><small>{blockMode ? "Choose the next lesson when you’re ready." : "Press Enter again or choose the next lesson."}</small></p></> : status === "wrong" ? <><span className="feedback-icon">!</span><p><b>Keep going</b><small>You’re close. Compare each symbol with the explanation.</small></p></> : <p><b>Ready to run?</b><small>{blockMode ? "Arrange your blocks, then choose Check code." : "When your code matches the example, press Enter."}</small></p>}</div>
-            {status === "correct" ? <button onClick={nextLesson}>{index === lessons[language].length - 1 ? "Finish path" : "Next lesson"} →</button> : <button onClick={checkCode} disabled={!code.trim()}>▶ Check code</button>}
+            <div>{status === "correct" ? <><span className="feedback-icon">✓</span><p><b>That’s correct!</b><small>{blockMode ? "Choose the next lesson when you’re ready." : "Press Enter again or choose the next lesson."}</small></p></> : status === "wrong" ? <><span className="feedback-icon">!</span><p><b>{lessonCheck?.kind === "syntax" ? "Check the syntax" : "Not verified yet"}</b><small>{lessonCheck?.kind === "syntax" ? "Review the parser’s message above." : "Check the lesson requirements. This checker may not recognise every valid approach."}</small></p></> : <p><b>Ready to run?</b><small>{blockMode ? "Arrange your blocks, then choose Check code." : "Use your own approach, then choose Check code."}</small></p>}</div>
+            {status === "correct" ? <button onClick={nextLesson}>{index === lessons[language].length - 1 ? "Finish path" : "Next lesson"} →</button> : <button onClick={checkCode} disabled={!code.trim() || checking}>{checking ? "Checking…" : "▶ Check code"}</button>}
           </div>
           </>}
         </section>
