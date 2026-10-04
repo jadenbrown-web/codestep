@@ -476,7 +476,7 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "16 · Random",
       "title": "Choose a random word",
-      "explanation": "Object.keys(words) makes an array containing the object's keys: bonjour and hola. Math.random() creates a random decimal from 0 up to, but not including, 1. Multiplying by 2 gives a number from 0 up to 2, and Math.floor removes the decimal to produce position 0 or 1. The square brackets then select the key at that position.",
+      "explanation": "Object.keys(words) makes an array containing the object's keys: bonjour and hola. Math.random() creates a random decimal from 0 up to, but not including, 1. Multiplying by 2 gives a number from 0 up to, but not including, 2, and Math.floor rounds down to the nearest whole number to produce position 0 or 1. The square brackets then select the key at that position.",
       "note": "// Create the word dictionary and randomly select one of its keys.",
       "prompt": "Create the word dictionary and randomly select one of its keys.",
       "answer": "const words = {\n  bonjour: \"hello\",\n  hola: \"hello\"\n};\n\nlet random = Object.keys(words)[Math.floor(Math.random() * 2)];\n\nconsole.log(random);",
@@ -485,14 +485,34 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "parts": [
         {
-          "code": "Math.random()",
-          "name": "Random fraction",
-          "meaning": "Produces a number from 0 up to, but not including, 1."
+          "code": "const words = { ... };",
+          "name": "Word dictionary",
+          "meaning": "Creates an object of word-and-translation pairs. bonjour and hola are keys; hello is the value stored under each key."
         },
         {
-          "code": "Math.floor",
-          "name": "Whole position",
-          "meaning": "Rounds down to an array position."
+          "code": "Object.keys(words)",
+          "name": "List the keys",
+          "meaning": "Object is a built-in JavaScript tool. Its keys() method returns [\"bonjour\", \"hola\"], an array of the dictionary keys."
+        },
+        {
+          "code": "Math.random()",
+          "name": "Random decimal",
+          "meaning": "Math contains built-in maths tools. random() returns a number from 0 up to, but not including, 1."
+        },
+        {
+          "code": "* 2",
+          "name": "Two possible positions",
+          "meaning": "The star means multiply. There are two keys, so multiplying by 2 gives a number from 0 up to, but not including, 2."
+        },
+        {
+          "code": "Math.floor(...)",
+          "name": "Round down",
+          "meaning": "floor() rounds down to the nearest whole number: 0.8 becomes 0 and 1.8 becomes 1. Here it gives position 0 or 1, not position 2."
+        },
+        {
+          "code": "[...]",
+          "name": "Choose the key",
+          "meaning": "Square brackets retrieve the key at the chosen array position. Array positions start at 0."
         }
       ],
       "outputNote": "Example output; either bonjour or hola can be chosen."
@@ -500,13 +520,13 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "17 · Arrays and lists",
       "title": "Make and search a names array",
-      "explanation": "The square brackets [] create an empty array: a list that can hold several values. prompt asks the user for a name, and push() adds that answer to names. A second prompt saves what to look for in search. includes() checks whether that value is in the array and returns true or false; it does not add anything. if/else prints name found or name not found. Matching is case-sensitive: Jaden and jaden are different.",
+      "explanation": "The square brackets [] create an empty array: a list that can hold several values. prompt asks the user for a name, and push() adds that answer to names. A second prompt saves what to look for in search. includes() checks whether that value is in the array and returns true or false; it does not add anything. if/else prints name found or name not found. Matching is case-sensitive: Jordan and jordan are different.",
       "note": "// Create an empty collection, add a name, ask what to search for, and print whether it was found.",
       "prompt": "Create an empty collection, add a name, ask what to search for, and print whether it was found.",
       "answer": "const names = [];\n\nnames.push(prompt(\"add a name\"));\n\nconst search = prompt(\"search for a name\");\n\nif (names.includes(search)) {\n  console.log(\"name found\");\n} else {\n  console.log(\"name not found\");\n}",
       "output": [
-        "add a name  →  Jaden",
-        "search for a name  →  Jaden",
+        "add a name  →  Jordan",
+        "search for a name  →  Jordan",
         "name found"
       ],
       "parts": [
@@ -560,9 +580,9 @@ const lessons: Record<Language, Lesson[]> = {
       "explanation": "A regular expression checks text against a pattern. /^J/i means: the slashes hold the pattern, ^ anchors the check to the beginning, J is the required first letter, and i ignores uppercase or lowercase. It accepts any word beginning with J—not only names—and rejects J when it appears later in the text.",
       "note": "// Let people into the club when their name begins with J",
       "prompt": "Check the five names and print who may enter the club.",
-      "answer": "const names = [\"Jaden\", \"James\", \"Jessica\", \"Sarah\", \"Ben\"];\n\nfor (const name of names) {\n  if (/^J/i.test(name)) {\n    console.log(name + \" can enter the club.\");\n  } else {\n    console.log(name + \" cannot enter the club.\");\n  }\n}",
+      "answer": "const names = [\"Jordan\", \"James\", \"Jessica\", \"Sarah\", \"Ben\"];\n\nfor (const name of names) {\n  if (/^J/i.test(name)) {\n    console.log(name + \" can enter the club.\");\n  } else {\n    console.log(name + \" cannot enter the club.\");\n  }\n}",
       "output": [
-        "Jaden can enter the club.",
+        "Jordan can enter the club.",
         "James can enter the club.",
         "Jessica can enter the club.",
         "Sarah cannot enter the club.",
@@ -593,7 +613,8 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "runHint": "Use Node.js, not a browser console. Save as file-finder.mjs and run node file-finder.mjs.",
-      "outputNote": "Example preview. Extracting a filename does not access your computer or prove that the file exists."
+      "outputNote": "Example preview. Extracting a filename does not access your computer or prove that the file exists.",
+      "fileName": "file-finder.mjs"
     },
     {
       "title": "List files in a folder",
@@ -624,7 +645,8 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "runHint": "Use Node.js, not a browser console. Save as file-finder.mjs and run node file-finder.mjs. Run from the folder containing sheet-music. Create sheet-music there and put a real image inside named chopin-nocturne.png. Add practice-notes.txt to try listing more than one file.",
-      "outputNote": "Example preview for a folder containing these two files. Order may vary. CodeStep checks your code and shows sample output; run it locally to list your own files."
+      "outputNote": "Example preview for a folder containing these two files. Order may vary. CodeStep checks your code and shows sample output; run it locally to list your own files.",
+      "fileName": "file-finder.mjs"
     },
     {
       "title": "Find a sheet-music file",
@@ -654,12 +676,13 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "runHint": "Use Node.js, not a browser console. Save as file-finder.mjs and run node file-finder.mjs. Run from the folder containing sheet-music. Create sheet-music there and put a real image inside named chopin-nocturne.png. Add practice-notes.txt to try listing more than one file.",
-      "outputNote": "Example preview with the score present. Remove or rename it locally to try the File not found branch. CodeStep does not inspect your device."
+      "outputNote": "Example preview with the score present. Remove or rename it locally to try the File not found branch. CodeStep does not inspect your device.",
+      "fileName": "file-finder.mjs"
     },
     {
       "eyebrow": "24 · Application practice",
       "title": "Build a random word quiz",
-      "explanation": "Combine the dictionary, random choice, input, and if/else. Choose a word, ask for its translation, then compare the answer with the stored value.",
+      "explanation": "Create a word dictionary, choose one of its keys, ask for the translation, then check the answer. Math.random() gives a decimal from 0 up to, but not including, 1. Multiplying by 2 covers the two key positions. Math.floor() rounds down to position 0 or 1. Object.keys(words)[...] retrieves that key; words[random] retrieves its translation. The dot selects a tool such as floor from Math, and () calls it. This example has exactly two dictionary entries; if you add entries, update the position limit too.",
       "note": "// Combine the word dictionary and random key code to make a translation quiz.",
       "prompt": "Combine the word dictionary and random key code to make a translation quiz.",
       "answer": "const words = {\n  bonjour: \"hello\",\n  hola: \"hello\"\n};\n\nlet random = Object.keys(words)[Math.floor(Math.random() * 2)];\n\nlet answer = prompt(random);\n\nif (answer == words[random]) {\n  console.log(\"Correct\");\n} else {\n  console.log(\"Wrong\");\n}",
@@ -667,8 +690,60 @@ const lessons: Record<Language, Lesson[]> = {
         "bonjour  →  hello",
         "Correct"
       ],
-      "parts": [],
-      "outputNote": "Example run: bonjour is chosen and the user enters hello."
+      "parts": [
+        {
+          "code": "const words = { ... };",
+          "name": "Word dictionary",
+          "meaning": "Creates an object of word-and-translation pairs. bonjour and hola are keys; hello is the value stored under each key."
+        },
+        {
+          "code": "Object.keys(words)",
+          "name": "List the keys",
+          "meaning": "Object is a built-in JavaScript tool. Its keys() method returns [\"bonjour\", \"hola\"], an array of the dictionary keys."
+        },
+        {
+          "code": "Math.random()",
+          "name": "Random decimal",
+          "meaning": "Math contains built-in maths tools. random() returns a number from 0 up to, but not including, 1."
+        },
+        {
+          "code": "* 2",
+          "name": "Two possible positions",
+          "meaning": "The star means multiply. There are two keys, so multiplying by 2 gives a number from 0 up to, but not including, 2."
+        },
+        {
+          "code": "Math.floor(...)",
+          "name": "Round down",
+          "meaning": "floor() rounds down to the nearest whole number: 0.8 becomes 0 and 1.8 becomes 1. Here it gives position 0 or 1, not position 2."
+        },
+        {
+          "code": "[...]",
+          "name": "Choose the key",
+          "meaning": "Square brackets retrieve the key at the chosen array position. Array positions start at 0."
+        },
+        {
+          "code": "prompt(random)",
+          "name": "Ask for a translation",
+          "meaning": "Shows the selected key in a browser dialog and saves the typed text in answer."
+        },
+        {
+          "code": "words[random]",
+          "name": "Expected translation",
+          "meaning": "Uses the chosen key to retrieve hello from the dictionary."
+        },
+        {
+          "code": "answer == words[random]",
+          "name": "Check the answer",
+          "meaning": "Compares the typed answer with the expected translation. Both are text here. Matching is case-sensitive."
+        },
+        {
+          "code": "if / else",
+          "name": "One result",
+          "meaning": "Prints Correct when the answer matches; otherwise prints Wrong. console.log prints the message."
+        }
+      ],
+      "outputNote": "Example run: bonjour is chosen and the user enters hello.",
+      "runHint": "This example uses browser prompt(). Run it in a browser developer console; prompt() is not available in the Node terminal. CodeStep checks your code and shows a sample result."
     }
   ],
   "csharp": [
@@ -1105,8 +1180,8 @@ const lessons: Record<Language, Lesson[]> = {
       "prompt": "Create an empty collection, add a name, ask what to search for, and print whether it was found.",
       "answer": "var names = new System.Collections.Generic.List<string>();\n\nConsole.WriteLine(\"add a name\");\nnames.Add(Console.ReadLine() ?? \"\");\n\nConsole.WriteLine(\"search for a name\");\nstring search = Console.ReadLine() ?? \"\";\n\nif (names.Contains(search)) {\n  Console.WriteLine(\"name found\");\n} else {\n  Console.WriteLine(\"name not found\");\n}",
       "output": [
-        "add a name  →  Jaden",
-        "search for a name  →  Jaden",
+        "add a name  →  Jordan",
+        "search for a name  →  Jordan",
         "name found"
       ],
       "parts": [
@@ -1163,9 +1238,9 @@ const lessons: Record<Language, Lesson[]> = {
       "explanation": "A regular expression checks text against a pattern. Regex comes from System.Text.RegularExpressions. ^J means the text must begin with J, while RegexOptions.IgnoreCase accepts uppercase or lowercase. It accepts any word beginning with J—not only names—and rejects J when it appears later in the text.",
       "note": "// Let people into the club when their name begins with J",
       "prompt": "Check the five names and print who may enter the club.",
-      "answer": "using System.Text.RegularExpressions;\n\nstring[] names = { \"Jaden\", \"James\", \"Jessica\", \"Sarah\", \"Ben\" };\n\nforeach (string name in names) {\n  if (Regex.IsMatch(name, \"^J\", RegexOptions.IgnoreCase)) {\n    Console.WriteLine($\"{name} can enter the club.\");\n  } else {\n    Console.WriteLine($\"{name} cannot enter the club.\");\n  }\n}",
+      "answer": "using System.Text.RegularExpressions;\n\nstring[] names = { \"Jordan\", \"James\", \"Jessica\", \"Sarah\", \"Ben\" };\n\nforeach (string name in names) {\n  if (Regex.IsMatch(name, \"^J\", RegexOptions.IgnoreCase)) {\n    Console.WriteLine($\"{name} can enter the club.\");\n  } else {\n    Console.WriteLine($\"{name} cannot enter the club.\");\n  }\n}",
       "output": [
-        "Jaden can enter the club.",
+        "Jordan can enter the club.",
         "James can enter the club.",
         "Jessica can enter the club.",
         "Sarah cannot enter the club.",
@@ -1302,7 +1377,48 @@ const lessons: Record<Language, Lesson[]> = {
         "bonjour  →  hello",
         "Correct"
       ],
-      "parts": [],
+      "parts": [
+        {
+          "code": "Dictionary<string, string>",
+          "name": "Word dictionary",
+          "meaning": "Stores text keys and text translations. bonjour and hola each map to hello."
+        },
+        {
+          "code": "new string[words.Count]",
+          "name": "Space for the keys",
+          "meaning": "Creates an array with one slot per dictionary entry. Count is the number of entries."
+        },
+        {
+          "code": "words.Keys.CopyTo(keys, 0)",
+          "name": "Copy the keys",
+          "meaning": "Copies the dictionary keys into the array, starting at position 0."
+        },
+        {
+          "code": "Random.Shared.Next(keys.Length)",
+          "name": "Random position",
+          "meaning": "Random.Shared is a built-in generator. Next chooses a whole number from 0 up to, but not including, the array length. Two keys give position 0 or 1."
+        },
+        {
+          "code": "keys[...]",
+          "name": "Choose a word",
+          "meaning": "Square brackets retrieve the key at the randomly selected position."
+        },
+        {
+          "code": "Console.ReadLine() ?? \"\"",
+          "name": "Read the answer",
+          "meaning": "Reads terminal text. ?? uses an empty string if input returns null."
+        },
+        {
+          "code": "words[random]",
+          "name": "Expected translation",
+          "meaning": "Retrieves the translation stored under the selected key."
+        },
+        {
+          "code": "answer == words[random]",
+          "name": "Check the answer",
+          "meaning": "Compares the text. if prints Correct when it matches; else prints Wrong. Matching is case-sensitive."
+        }
+      ],
       "outputNote": "Example run: bonjour is chosen and the user enters hello.",
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     }
@@ -1605,7 +1721,7 @@ const lessons: Record<Language, Lesson[]> = {
       "outputColors": [
         "#ef4444"
       ],
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
       "eyebrow": "02 · Functions",
@@ -1629,7 +1745,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Runs the function body."
         }
       ],
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
       "eyebrow": "03 · ANSI colours",
@@ -1653,7 +1769,7 @@ const lessons: Record<Language, Lesson[]> = {
         "#ef4444",
         "#4ade80"
       ],
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
       "eyebrow": "04 · Time",
@@ -1678,7 +1794,7 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "outputNote": "Example output after the 2-second delay.",
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
       "eyebrow": "05 · Date and time",
@@ -1703,7 +1819,7 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "outputNote": "Example output when the clock is 17:20. At other times, this snippet prints nothing.",
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
       "eyebrow": "06 · Date and time",
@@ -1728,7 +1844,7 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "outputNote": "Example output at 17:20. The lesson preview does not wait for the clock.",
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
       "eyebrow": "07 · Functions",
@@ -1752,7 +1868,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "The inner call runs first."
         }
       ],
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
       "eyebrow": "08 · Classes",
@@ -1777,7 +1893,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Stores the name on this object."
         }
       ],
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
       "eyebrow": "09 · Loops",
@@ -1804,7 +1920,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Leaves the repeating loop."
         }
       ],
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
       "eyebrow": "10 · Variables",
@@ -1828,7 +1944,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Capital letters suggest a fixed value but do not enforce it."
         }
       ],
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
       "eyebrow": "11 · Variables",
@@ -1897,7 +2013,7 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "outputNote": "Example output when the user enters 1. The entered choice is input, not printed output.",
-      "runHint": "Save as challenge.py and run python challenge.py (or python3 challenge.py). Type 1, then 2, then 3 to end."
+      "runHint": "Save as main.py and run python main.py (or python3 main.py). Type 1, then 2, then 3 to end."
     },
     {
       "eyebrow": "13 · Dictionary",
@@ -1923,7 +2039,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Returns a fallback when no key is found."
         }
       ],
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
       "eyebrow": "14 · Expressions",
@@ -1942,7 +2058,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Produces the value 100."
         }
       ],
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
       "eyebrow": "15 · Random",
@@ -1967,7 +2083,7 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "outputNote": "Example output; either bonjour or hola can be chosen.",
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
       "eyebrow": "16 · Arrays and lists",
@@ -1977,8 +2093,8 @@ const lessons: Record<Language, Lesson[]> = {
       "prompt": "Create an empty collection, add a name, ask what to search for, and print whether it was found.",
       "answer": "names = []\n\nnames.append(input(\"add a name\"))\n\nsearch = input(\"search for a name\")\n\nif search in names:\n    print(\"name found\")\nelse:\n    print(\"name not found\")",
       "output": [
-        "add a name  →  Jaden",
-        "search for a name  →  Jaden",
+        "add a name  →  Jordan",
+        "search for a name  →  Jordan",
         "name found"
       ],
       "parts": [
@@ -1998,7 +2114,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Tests membership without changing the list."
         }
       ],
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
       "eyebrow": "17 · Sets",
@@ -2025,7 +2141,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Sorts the unique values before printing."
         }
       ],
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
       "eyebrow": "18 · Null",
@@ -2049,7 +2165,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Checks for the None singleton."
         }
       ],
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
       "eyebrow": "19 · Regular expressions",
@@ -2057,9 +2173,9 @@ const lessons: Record<Language, Lesson[]> = {
       "explanation": "re searches text with a pattern. ^ means the start, J is the required letter, and re.IGNORECASE accepts J or j. re.search returns a match object when found, which if treats as true.",
       "note": "# Let people into the club when their name begins with J",
       "prompt": "Check the five names and print who may enter the club.",
-      "answer": "import re\n\nnames = [\"Jaden\", \"James\", \"Jessica\", \"Sarah\", \"Ben\"]\n\nfor name in names:\n    if re.search(\"^J\", name, re.IGNORECASE):\n        print(name + \" can enter the club.\")\n    else:\n        print(name + \" cannot enter the club.\")",
+      "answer": "import re\n\nnames = [\"Jordan\", \"James\", \"Jessica\", \"Sarah\", \"Ben\"]\n\nfor name in names:\n    if re.search(\"^J\", name, re.IGNORECASE):\n        print(name + \" can enter the club.\")\n    else:\n        print(name + \" cannot enter the club.\")",
       "output": [
-        "Jaden can enter the club.",
+        "Jordan can enter the club.",
         "James can enter the club.",
         "Jessica can enter the club.",
         "Sarah cannot enter the club.",
@@ -2077,7 +2193,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Matches J or j."
         }
       ],
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
       "title": "Get a filename from a path",
@@ -2106,6 +2222,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Returns chopin-nocturne.png, including its extension."
         }
       ],
+      "fileName": "file-finder.py",
       "runHint": "Save as file-finder.py and run python file-finder.py (or python3 file-finder.py).",
       "outputNote": "Example preview. Extracting a filename does not access your computer or prove that the file exists."
     },
@@ -2137,6 +2254,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Checks each entry, rather than printing only the first."
         }
       ],
+      "fileName": "file-finder.py",
       "runHint": "Save as file-finder.py and run python file-finder.py (or python3 file-finder.py). Run from the folder containing sheet-music. Create sheet-music there and put a real image inside named chopin-nocturne.png. Add practice-notes.txt to try listing more than one file.",
       "outputNote": "Example preview for a folder containing these two files. Order may vary. CodeStep checks your code and shows sample output; run it locally to list your own files."
     },
@@ -2162,6 +2280,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Prints the filename when found, or File not found otherwise."
         }
       ],
+      "fileName": "file-finder.py",
       "runHint": "Save as file-finder.py and run python file-finder.py (or python3 file-finder.py). Run from the folder containing sheet-music. Create sheet-music there and put a real image inside named chopin-nocturne.png. Add practice-notes.txt to try listing more than one file.",
       "outputNote": "Example preview with the score present. Remove or rename it locally to try the File not found branch. CodeStep does not inspect your device."
     },
@@ -2177,7 +2296,7 @@ const lessons: Record<Language, Lesson[]> = {
         "Thread 2 is running at the same time!"
       ],
       "outputNote": "Sample output only: the messages can appear in either order. CodeStep checks the code and previews one possible run; it does not start threads in the lesson console.",
-      "runHint": "Save as challenge.py and run python challenge.py (or python3 challenge.py). Run it several times; either message can appear first.",
+      "runHint": "Save as main.py and run python main.py (or python3 main.py). Run it several times; either message can appear first.",
       "parts": [
         {
           "code": "import threading",
@@ -2219,18 +2338,43 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "parts": [
         {
-          "code": "words[word]",
-          "name": "Expected answer",
-          "meaning": "Looks up the chosen word’s translation."
+          "code": "import random",
+          "name": "Random tools",
+          "meaning": "Loads Python’s built-in random module; no extra installation is needed."
         },
         {
-          "code": "==",
-          "name": "Check",
-          "meaning": "Compares the entered answer with the translation."
+          "code": "words = { ... }",
+          "name": "Word dictionary",
+          "meaning": "Stores key-and-value pairs. bonjour and hola are keys; hello is their translation."
+        },
+        {
+          "code": "list(words)",
+          "name": "List the keys",
+          "meaning": "Makes a list of dictionary keys, such as [\"bonjour\", \"hola\"]."
+        },
+        {
+          "code": "random.choice(...)",
+          "name": "Choose one key",
+          "meaning": "The dot selects choice from the random module. choice() selects one item from the supplied non-empty list."
+        },
+        {
+          "code": "input(word)",
+          "name": "Ask for a translation",
+          "meaning": "Displays the chosen word and returns the typed answer as text."
+        },
+        {
+          "code": "words[word]",
+          "name": "Expected translation",
+          "meaning": "Square brackets look up the translation stored under the chosen key."
+        },
+        {
+          "code": "answer == words[word]",
+          "name": "Check the answer",
+          "meaning": "Compares the text. if prints Correct when it matches; else prints Wrong. Matching is case-sensitive."
         }
       ],
       "outputNote": "Example run: bonjour is chosen and the user enters hello.",
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     }
   ],
   "cpp": [
@@ -2262,7 +2406,7 @@ const lessons: Record<Language, Lesson[]> = {
       "outputColors": [
         "#ef4444"
       ],
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
       "eyebrow": "02 · Functions",
@@ -2286,7 +2430,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Runs its body."
         }
       ],
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
       "eyebrow": "03 · ANSI colours",
@@ -2310,7 +2454,7 @@ const lessons: Record<Language, Lesson[]> = {
         "#ef4444",
         "#4ade80"
       ],
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
       "eyebrow": "04 · Time",
@@ -2335,7 +2479,7 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "outputNote": "Example output after the 2-second delay.",
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
       "eyebrow": "05 · Date and time",
@@ -2360,7 +2504,7 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "outputNote": "Example output when the clock is 17:20. At other times, this snippet prints nothing.",
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
       "eyebrow": "06 · Date and time",
@@ -2385,7 +2529,7 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "outputNote": "Example output at 17:20. The lesson preview does not wait for the clock.",
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
       "eyebrow": "07 · Functions",
@@ -2409,7 +2553,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Returns the value to the caller."
         }
       ],
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
       "eyebrow": "08 · Classes",
@@ -2434,7 +2578,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Refers to the name stored in the current object."
         }
       ],
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
       "eyebrow": "09 · Loops",
@@ -2461,7 +2605,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Leaves the loop."
         }
       ],
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
       "eyebrow": "10 · Variables",
@@ -2485,7 +2629,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Prevents reassigning the number."
         }
       ],
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
       "eyebrow": "11 · Variables",
@@ -2511,7 +2655,7 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "fileName": "name.cpp",
-      "runHint": "Save as name.cpp. In the VS Code terminal compile with g++ -std=c++17 name.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+      "runHint": "Save as name.cpp. In the VS Code terminal compile with g++ -std=c++17 name.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
       "eyebrow": "12 · If statements and symbols",
@@ -2554,7 +2698,7 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "outputNote": "Example output when the user enters 1. The entered choice is input, not printed output.",
-      "runHint": "Save as challenge.cpp; compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge (Windows: .\\challenge.exe). Type 1, then 2, then 3 to end."
+      "runHint": "Save as main.cpp; compile with g++ -std=c++17 main.cpp -o main, then run ./main (Windows: .\\main.exe). Type 1, then 2, then 3 to end."
     },
     {
       "eyebrow": "13 · Dictionary",
@@ -2585,7 +2729,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Reads the matching entry’s value."
         }
       ],
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
       "eyebrow": "14 · Expressions",
@@ -2604,7 +2748,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Produces the value 100."
         }
       ],
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
       "eyebrow": "15 · Random",
@@ -2629,7 +2773,7 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "outputNote": "Example output; either bonjour or hola can be chosen.",
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
       "eyebrow": "16 · Arrays and lists",
@@ -2639,8 +2783,8 @@ const lessons: Record<Language, Lesson[]> = {
       "prompt": "Create an empty collection, add a name, ask what to search for, and print whether it was found.",
       "answer": "#include <iostream>\n#include <string>\n#include <vector>\n#include <algorithm>\n\nint main() {\n  std::vector<std::string> names;\n\n  std::cout << \"add a name\";\n  std::string name;\n  std::getline(std::cin, name);\n  names.push_back(name);\n\n  std::cout << \"search for a name\";\n  std::string search;\n  std::getline(std::cin, search);\n\n  if (std::find(names.begin(), names.end(), search) != names.end()) {\n    std::cout << \"name found\\n\";\n  } else {\n    std::cout << \"name not found\\n\";\n  }\n}",
       "output": [
-        "add a name  →  Jaden",
-        "search for a name  →  Jaden",
+        "add a name  →  Jordan",
+        "search for a name  →  Jordan",
         "name found"
       ],
       "parts": [
@@ -2660,7 +2804,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Returns the found position or end when absent."
         }
       ],
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
       "eyebrow": "17 · Sets",
@@ -2682,7 +2826,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Keeps one copy of each value in sorted order."
         }
       ],
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
       "eyebrow": "18 · Null",
@@ -2706,7 +2850,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Creates an optional with no value."
         }
       ],
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
       "eyebrow": "19 · Regular expressions",
@@ -2714,9 +2858,9 @@ const lessons: Record<Language, Lesson[]> = {
       "explanation": "std::regex holds the pattern. ^ requires J at the beginning; std::regex::icase ignores case. regex_search returns true for a matching name. This accepts any text starting with J or j, not only names.",
       "note": "// Let people into the club when their name begins with J",
       "prompt": "Check the five names and print who may enter the club.",
-      "answer": "#include <iostream>\n#include <string>\n#include <vector>\n#include <regex>\n\nint main() {\n  std::vector<std::string> names = {\"Jaden\", \"James\", \"Jessica\", \"Sarah\", \"Ben\"};\n  std::regex pattern(\"^J\", std::regex::icase);\n\n  for (const auto& name : names) {\n    if (std::regex_search(name, pattern)) {\n      std::cout << name << \" can enter the club.\\n\";\n    } else {\n      std::cout << name << \" cannot enter the club.\\n\";\n    }\n  }\n}",
+      "answer": "#include <iostream>\n#include <string>\n#include <vector>\n#include <regex>\n\nint main() {\n  std::vector<std::string> names = {\"Jordan\", \"James\", \"Jessica\", \"Sarah\", \"Ben\"};\n  std::regex pattern(\"^J\", std::regex::icase);\n\n  for (const auto& name : names) {\n    if (std::regex_search(name, pattern)) {\n      std::cout << name << \" can enter the club.\\n\";\n    } else {\n      std::cout << name << \" cannot enter the club.\\n\";\n    }\n  }\n}",
       "output": [
-        "Jaden can enter the club.",
+        "Jordan can enter the club.",
         "James can enter the club.",
         "Jessica can enter the club.",
         "Sarah cannot enter the club.",
@@ -2734,7 +2878,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Matches J or j."
         }
       ],
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
       "title": "Get a filename from a path",
@@ -2763,6 +2907,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "filename extracts the last component; string converts the path to text for cout."
         }
       ],
+      "fileName": "file-finder.cpp",
       "runHint": "Save as file-finder.cpp, compile with g++ -std=c++17 file-finder.cpp -o file-finder, then run ./file-finder (Windows: .\\file-finder.exe). A C++17 compiler is required.",
       "outputNote": "Example preview. Extracting a filename does not access your computer or prove that the file exists."
     },
@@ -2794,6 +2939,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Skips folders; path().filename().string() gets printable filename text."
         }
       ],
+      "fileName": "file-finder.cpp",
       "runHint": "Save as file-finder.cpp, compile with g++ -std=c++17 file-finder.cpp -o file-finder, then run ./file-finder (Windows: .\\file-finder.exe). A C++17 compiler is required. Run from the folder containing sheet-music. Create sheet-music there and put a real image inside named chopin-nocturne.png. Add practice-notes.txt to try listing more than one file.",
       "outputNote": "Example preview for a folder containing these two files. Order may vary. CodeStep checks your code and shows sample output; run it locally to list your own files."
     },
@@ -2819,6 +2965,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Prints the filename if found, or File not found otherwise."
         }
       ],
+      "fileName": "file-finder.cpp",
       "runHint": "Save as file-finder.cpp, compile with g++ -std=c++17 file-finder.cpp -o file-finder, then run ./file-finder (Windows: .\\file-finder.exe). A C++17 compiler is required. Run from the folder containing sheet-music. Create sheet-music there and put a real image inside named chopin-nocturne.png. Add practice-notes.txt to try listing more than one file.",
       "outputNote": "Example preview with the score present. Remove or rename it locally to try the File not found branch. CodeStep does not inspect your device."
     },
@@ -2834,7 +2981,7 @@ const lessons: Record<Language, Lesson[]> = {
         "Thread 2 is running at the same time!"
       ],
       "outputNote": "Sample output only: the messages can appear in either order. CodeStep checks the code and previews one possible run; it does not start threads in the lesson console.",
-      "runHint": "Save as challenge.cpp. Compile with g++ -std=c++17 -pthread challenge.cpp -o challenge and run ./challenge (Windows with an appropriate C++ compiler: challenge.exe). Either line can appear first.",
+      "runHint": "Save as main.cpp. Compile with g++ -std=c++17 -pthread main.cpp -o main and run ./main (Windows with an appropriate C++ compiler: main.exe). Either line can appear first.",
       "parts": [
         {
           "code": "#include <thread>",
@@ -2871,18 +3018,68 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "parts": [
         {
-          "code": "words[random]",
-          "name": "Expected answer",
-          "meaning": "Looks up the chosen word’s translation."
+          "code": "std::map<std::string, std::string>",
+          "name": "Word dictionary",
+          "meaning": "Stores text keys and translations. bonjour and hola each map to hello."
         },
         {
-          "code": "==",
-          "name": "Check",
-          "meaning": "Compares the entered answer with the translation."
+          "code": "std::vector<std::string> keys",
+          "name": "List of keys",
+          "meaning": "Creates a list that can grow as keys are added."
+        },
+        {
+          "code": "for (const auto& entry : words)",
+          "name": "Read each pair",
+          "meaning": "Visits every dictionary entry. const auto& refers to the existing pair without copying or changing it."
+        },
+        {
+          "code": "keys.push_back(entry.first)",
+          "name": "Add a key",
+          "meaning": "first is the key in the pair. push_back adds it to the end of the list."
+        },
+        {
+          "code": "std::random_device{}()",
+          "name": "Seed the generator",
+          "meaning": "Creates a seed source and asks it for a value used to initialise the generator."
+        },
+        {
+          "code": "std::mt19937 generator(...)",
+          "name": "Random generator",
+          "meaning": "Creates a pseudo-random number generator from that seed."
+        },
+        {
+          "code": "std::uniform_int_distribution<int> choose(...)",
+          "name": "Choose an index",
+          "meaning": "Sets the inclusive range used when choose(generator) selects a whole number."
+        },
+        {
+          "code": "static_cast<int>(keys.size()) - 1",
+          "name": "Last position",
+          "meaning": "Converts the number of keys to int and subtracts 1. Two keys have positions 0 and 1."
+        },
+        {
+          "code": "keys[choose(generator)]",
+          "name": "Choose a word",
+          "meaning": "Uses the generator to choose a position, then retrieves the key at that position."
+        },
+        {
+          "code": "std::getline(std::cin, answer)",
+          "name": "Read the answer",
+          "meaning": "Reads a full line of terminal input into answer."
+        },
+        {
+          "code": "words[random]",
+          "name": "Expected translation",
+          "meaning": "Looks up the translation stored under the selected key."
+        },
+        {
+          "code": "answer == words[random]",
+          "name": "Check the answer",
+          "meaning": "Compares the text. if prints Correct when it matches; else prints Wrong. Matching is case-sensitive."
         }
       ],
       "outputNote": "Example run: bonjour is chosen and the user enters hello.",
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     }
   ]
 };
@@ -2986,13 +3183,13 @@ const namesArrayBreakdown: CodePart[] = [
   { code: 'names.push(prompt("add a name"))', name: "Add a name", meaning: "prompt runs first and asks for a name. push() adds the entered name to the end of the names array." },
   { code: 'const search = prompt("search for a name")', name: "Ask what to find", meaning: "Stores the second answer in search. This does not add another name to the array." },
   { code: "names.includes(search)", name: "Search the array", meaning: "Returns true when names contains an exact match for search, or false when it does not. includes() checks the array without changing it." },
-  { code: "if / else", name: "Show the result", meaning: "if prints name found when includes() returns true. else prints name not found when it returns false. Add Jaden and search for Ben or jaden to get name not found." },
+  { code: "if / else", name: "Show the result", meaning: "if prints name found when includes() returns true. else prints name not found when it returns false. Add Jordan and search for Ben or jordan to get name not found." },
 ];
 
 const randomWordBreakdown: CodePart[] = [
   { code: "Object.keys(words)", name: "Get the keys", meaning: "Creates an array containing bonjour and hola, the two keys from words." },
-  { code: "Math.random() * 2", name: "Make a random position", meaning: "Creates a random number from 0 up to 2 because there are two keys." },
-  { code: "Math.floor(...)", name: "Remove the decimal", meaning: "Turns the random number into position 0 or position 1." },
+  { code: "Math.random() * 2", name: "Make a random position", meaning: "Creates a random number from 0 up to, but not including, 2 because there are two keys." },
+  { code: "Math.floor(...)", name: "Round down", meaning: "Rounds down to a whole number: 0.8 becomes 0 and 1.8 becomes 1." },
   { code: "[ ... ]", name: "Choose that key", meaning: "Uses the random position to select either bonjour or hola from the keys array." },
 ];
 
@@ -3029,6 +3226,10 @@ const regexBreakdowns: Partial<Record<Language, CodePart[]>> = {
 
 const lessonTone = (lesson: Lesson) => {
   const label = `${lesson.eyebrow} ${lesson.title}`.toLowerCase();
+  if (/application practice|random/.test(label)) return "violet";
+  if (/files and paths|terminal input/.test(label)) return "cyan";
+  if (/dictionary/.test(label)) return "blue";
+  if (/expressions/.test(label)) return "orange";
   if (/function|method|class|heading|text element/.test(label)) return "rose";
   if (/loop|timer|page structure|doctype|body|div|multiple pages/.test(label)) return "blue";
   if (/variable|null|date|time|font/.test(label)) return "gold";
@@ -3055,7 +3256,7 @@ const withoutGuideComments = (value: string, language: Language) => {
 
 const languageName = (language: Language) => language === "cpp" ? "C++" : language === "python" ? "Python" : language === "javascript" ? "JavaScript" : language === "csharp" ? "C Sharp" : language === "html" ? "HTML" : "CSS";
 const languageBadge = (language: Language) => language === "cpp" ? "C++" : language === "python" ? "PY" : language === "javascript" ? "JS" : language === "csharp" ? "C#" : language === "html" ? "HTML" : "CSS";
-const challengeFile = (language: Language) => language === "cpp" ? "challenge.cpp" : language === "python" ? "challenge.py" : language === "javascript" ? "challenge.js" : language === "csharp" ? "Program.cs" : language === "html" ? "index.html" : "styles.css";
+const challengeFile = (language: Language) => language === "cpp" ? "main.cpp" : language === "python" ? "main.py" : language === "javascript" ? "main.js" : language === "csharp" ? "Program.cs" : language === "html" ? "index.html" : "styles.css";
 
 type DiagnosticPart = { text: string; help: string; kind: "type" | "message" | "token" | "location" };
 
@@ -3092,13 +3293,21 @@ function SyntaxDiagnostic({ parts }: { parts: DiagnosticPart[] }) {
 }
 
 function HighlightedCode({ code, language, caretIndex }: { code: string; language: Language; caretIndex?: number }) {
+  const languageApis: Record<Language, RegExp> = {
+    javascript: /^(Math|Object|process|fs|path|console|Date|Set)$/,
+    csharp: /^(Console|Task|DateTime|List|HashSet|Dictionary|Random|Regex|RegexOptions)$/,
+    cpp: /^(std|cout|cin|vector|map|optional|mt19937|uniform_int_distribution|random_device)$/,
+    python: /^(print|input|datetime|random|re|time|set|list|sorted)$/,
+    html: /^(Date|console)$/,
+    css: /^(background-color|color|text-align|font-family|border|border-radius)$/,
+  };
   let pattern = language === "html"
     ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|div|section|script|img|video|audio|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|src|alt|controls|id|lang|charset)\b|\b(?:background-color)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:#])/g
     : language === "css"
     ? /(\/\*[\s\S]*?\*\/|#[0-9a-fA-F]{3,8}\b|#[A-Za-z_]\w*|\b(?:body|p|background-color|color|text-align|font-family|border|border-radius|solid|dotted|center|lightblue|red|blue|tomato)\b|\d+(?:px)?|[{}();:.,])/g
     : language === "python"
-    ? /(#.*|f?"[^"\n]*"|f?'[^'\n]*'|\b(?:def|class|self|return|import|from|if|else|for|in|while|True|False|None|break|and|or|not|is)\b|\b(?:print|input|datetime|random|re|time|set|list|sorted)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|[{}()[\];=.:<>+*%/-])/g
-    : /(\/\/[^\n]*|\/\^[A-Za-z]+\/[gimsuy]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:def|self|import|from|True|False|None|and|or|not|is|function|class|constructor|this|let|const|double|bool|out|auto|include|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime|List|Set|HashSet|Dictionary|Random|std|cout|cin|vector|map|optional|print|input|datetime|random|re|time|Regex|RegexOptions)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|===|!==|==|!=|&&|\|\||!|>=|<=|\+\+|--|[{}()[\];=.:<>?^/])/g;
+    ? /(#.*|f?"[^"\n]*"|f?'[^'\n]*'|\b(?:def|class|self|return|import|from|if|elif|else|for|in|while|True|False|None|break|and|or|not|is)\b|\b(?:print|input|datetime|random|re|time|set|list|sorted)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|[{}()[\];=.:<>+*%/-])/g
+    : /(\/\/[^\n]*|\/\^[A-Za-z]+\/[gimsuy]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:def|self|import|from|True|False|None|and|or|not|is|using|static_cast|function|class|constructor|this|let|const|double|bool|out|auto|include|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:Math|Object|process|fs|path|console|Console|Task|Date|DateTime|List|Set|HashSet|Dictionary|Random|std|cout|cin|vector|map|optional|print|input|datetime|random|re|time|Regex|RegexOptions|mt19937|uniform_int_distribution|random_device)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|===|!==|==|!=|&&|\|\||!|>=|<=|\+\+|--|[{}()[\];=.:<>?^/])/g;
   if (language === "cpp") pattern = new RegExp(String.raw`#[ \t]*include[ \t]+(?:<[^>\n]+>|"[^"\n]+")|` + pattern.source, "g");
   const parts: { text: string; kind: string }[] = [];
   let lastIndex = 0;
@@ -3109,15 +3318,15 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
     if (language === "cpp" && /^#[ \t]*include/.test(text)) kind = "header";
     else if (/^(\/\/|\/\*|<!--)/.test(text) || (language === "python" && text.startsWith("#"))) kind = "comment";
     else if (/^f?["'`]/.test(text) || /^\/\^/.test(text)) kind = "string";
-    else if (/^(and|or|not|import|from|function|class|constructor|this|let|const|double|bool|out|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|div|section|script|img|video|audio|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
-    else if (/^(console|Console|Task|Date|DateTime|List|Set|HashSet|Dictionary|Random|Regex|RegexOptions|log)$/.test(text)) kind = "api";
+    else if (/^(def|self|True|False|None|elif|and|or|not|is|import|from|using|auto|static_cast|function|class|constructor|this|let|const|double|bool|out|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|div|section|script|img|video|audio|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
+    else if (languageApis[language].test(text)) kind = "api";
     else if (/^(style|href|src|alt|controls|id|lang|charset)$/.test(text)) kind = "attribute";
     else if (/^(background-color|color|text-align|font-family|border|border-radius)$/.test(text)) kind = "api";
     else if (/^(body|p)$/.test(text)) kind = "keyword";
     else if (/^(solid|dotted|center|lightblue|red|blue|tomato|#[0-9a-fA-F]+)$/.test(text)) kind = "string";
     else if (/^#[A-Za-z_]/.test(text)) kind = "function-name";
     else if (/^\d+$/.test(text)) kind = "number";
-    else if (/^[A-Za-z_]/.test(text)) kind = "function-name";
+    else if (/^[A-Za-z_]/.test(text)) kind = /^\s*\(/.test(code.slice(match.index! + text.length)) ? "function-name" : "plain";
     parts.push({ text, kind });
     lastIndex = match.index! + text.length;
   }
@@ -3209,7 +3418,7 @@ function CppSetupGuide({ lesson, initiallyOpen = false }: { lesson: Lesson; init
       <div><dt><code>{"{ ... }"}</code></dt><dd>The braces mark the start and end of the function body. Indentation makes it easier to read; the braces determine which instructions belong to it.</dd></div>
       <div><dt><code>std::cout &lt;&lt; "Hello\\n";</code></dt><dd><code>std</code> is the standard-library namespace, a group of names. <code>::</code> selects a name inside it. <code>cout</code> is the standard output stream; <code>&lt;&lt;</code> sends the text into it. <code>\n</code> starts a new line and <code>;</code> ends the statement. Removing <code>std::</code> makes cout unknown unless you have brought that name into scope.</dd></div>
       <div><dt><code>return 0;</code></dt><dd>Ends main and sends a success status to the operating system. A nonzero status usually signals a problem. You can leave this line out at the end of main: C++ automatically returns 0 there. That special rule does not apply to ordinary functions that must return a value.</dd></div>
-      <div><dt><code>int</code>, <code>void</code>, and <code>std::string</code></dt><dd>Types describe values. <code>int score = 5;</code> stores a whole number; <code>double speed = 5.5;</code> stores a decimal; <code>bool ready = true;</code> stores true or false; <code>std::string name = "Jaden";</code> stores text. Before a function name, its type describes what it returns: <code>void correct()</code> returns no value. main must return int, so do not replace it with void main.</dd></div>
+      <div><dt><code>int</code>, <code>void</code>, and <code>std::string</code></dt><dd>Types describe values. <code>int score = 5;</code> stores a whole number; <code>double speed = 5.5;</code> stores a decimal; <code>bool ready = true;</code> stores true or false; <code>std::string name = "Jordan";</code> stores text. Before a function name, its type describes what it returns: <code>void correct()</code> returns no value. main must return int, so do not replace it with void main.</dd></div>
       <div><dt>Defining and calling a function</dt><dd><code>void correct() {"{ ... }"}</code> defines instructions; <code>correct();</code> runs them. In these examples, define your function before main, then call it inside main. Otherwise, you need a declaration before its first use. Do not call correct from inside its own body just to start it: that repeatedly calls itself.</dd></div>
       <div><dt>Can it be simpler?</dt><dd>For a program that only prints, you need just <code>&lt;iostream&gt;</code>, <code>int main()</code>, its braces, and the print statement. Add other headers only when you use their tools. <code>using std::cout;</code> lets you write cout without std::, but keeping std:: makes its source clear.</dd></div>
     </dl>
@@ -3221,10 +3430,10 @@ function CppSetupGuide({ lesson, initiallyOpen = false }: { lesson: Lesson; init
 }
 
 const homeDemos: Record<Language, { code: string; file: string }> = {
-  javascript: { file: "hello.js", code: 'function sayHello() {\n  console.log("Hello, coder!");\n}\n\nsayHello();' },
+  javascript: { file: "main.js", code: 'function sayHello() {\n  console.log("Hello, coder!");\n}\n\nsayHello();' },
   csharp: { file: "Program.cs", code: 'void SayHello() {\n  Console.WriteLine("Hello, coder!");\n}\n\nSayHello();' },
-  python: { file: "hello.py", code: 'def sayHello():\n    print("Hello, coder!")\n\nsayHello()' },
-  cpp: { file: "hello.cpp", code: '#include <iostream>\n\nvoid sayHello() {\n  std::cout << "Hello, coder!\\n";\n}\n\nint main() {\n  sayHello();\n}' },
+  python: { file: "main.py", code: 'def sayHello():\n    print("Hello, coder!")\n\nsayHello()' },
+  cpp: { file: "main.cpp", code: '#include <iostream>\n\nvoid sayHello() {\n  std::cout << "Hello, coder!\\n";\n}\n\nint main() {\n  sayHello();\n}' },
   html: { file: "index.html", code: '<!DOCTYPE html>\n<html lang="en">\n<body>\n  <p>Hello, coder!</p>\n</body>\n</html>' },
   css: { file: "styles.css + HTML", code: '/* HTML: <p class="hello">Hello, coder!</p> */\n.hello {\n  color: green;\n  font-family: monospace;\n}' },
 };
@@ -3453,7 +3662,7 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, [language, homeDemoLanguage]);
 
-  const lineNumbers = useMemo(() => Array.from({ length: Math.max(8, code.split("\n").length) }, (_, i) => i + 1), [code]);
+  const lineNumbers = useMemo(() => Array.from({ length: Math.max(8, code.split("\n").length, showGuide ? ghostSource.split("\n").length : 0) }, (_, i) => i + 1), [code, ghostSource, showGuide]);
 
   function openCourse(next: Language) {
     setLanguage(next);
@@ -3640,7 +3849,7 @@ export default function Home() {
           {current!.runHint && <p className="run-hint">{current!.runHint}</p>}
           {(language === "cpp" || language === "python") && <details className="symbol-guide" open={index === 0}>
             <summary>Brackets and symbols</summary>
-            <p><code>[]</code>   {language === "python" ? 'makes a list, such as ["Jaden", "Alex"], or retrieves an item, such as names[0].' : 'accesses an item, such as names[0]. A vector initializer uses braces: std::vector<std::string> names = {"Jaden", "Alex"};.'}</p>
+            <p><code>[]</code>   {language === "python" ? 'makes a list, such as ["Jordan", "Alex"], or retrieves an item, such as names[0].' : 'accesses an item, such as names[0]. A vector initializer uses braces: std::vector<std::string> names = {"Jordan", "Alex"};.'}</p>
             <p><code>{"{}"}</code>   {language === "python" ? 'creates a dictionary or a non-empty set. Python uses a colon and indentation for code blocks.' : 'groups a code block, class body, or initializer. Map entries are key/value pairs; C++ has no JavaScript-style object literal.'}</p>
             <p><code>()</code> holds function arguments {language === "cpp" ? 'and conditions.' : 'and can group expressions. Parentheses around an if condition are optional.'} Each nested function call has its own pair.</p>
             <p><code>{language === "python" ? "#" : "//"}</code> starts a comment.  {language === "python" ? 'Use four spaces for each block level; indentation is part of the program.' : '#include is a preprocessor directive that makes library declarations available.'}</p>
@@ -3648,8 +3857,8 @@ export default function Home() {
           {(language === "javascript" || language === "csharp") && <details className="symbol-guide" open={index === 0}>
             <summary>Brackets and symbols</summary>
             <table><thead><tr><th>Symbol</th><th>Called</th><th>Example</th></tr></thead><tbody>
-              <tr><td><code>[]</code></td><td>Square brackets · array / lookup</td><td><code className="symbol-example"><HighlightedCode language={language} code={language === "javascript" ? '["Jaden", "Alex"]' : 'string[] names = { "Jaden", "Alex" };'} /></code></td></tr>
-              <tr><td><code>{"{}"}</code></td><td>Curly braces · object / block</td><td><code className="symbol-example"><HighlightedCode language={language} code={language === "javascript" ? '{ name: "Jaden", age: 20 }' : 'new { Name = "Jaden", Age = 20 }'} /></code></td></tr>
+              <tr><td><code>[]</code></td><td>Square brackets · array / lookup</td><td><code className="symbol-example"><HighlightedCode language={language} code={language === "javascript" ? '["Jordan", "Alex"]' : 'string[] names = { "Jordan", "Alex" };'} /></code></td></tr>
+              <tr><td><code>{"{}"}</code></td><td>Curly braces · object / block</td><td><code className="symbol-example"><HighlightedCode language={language} code={language === "javascript" ? '{ name: "Jordan", age: 20 }' : 'new { Name = "Jordan", Age = 20 }'} /></code></td></tr>
               <tr><td><code>()</code></td><td>Parentheses · calls / conditions</td><td><code className="symbol-example"><HighlightedCode language={language} code={language === "javascript" ? 'console.log("Hello")' : 'Console.WriteLine("Hello")'} /></code></td></tr>
             </tbody></table>
             <p><code>[]</code> creates JavaScript arrays or accesses an item by position or key. In C#, <code>string[]</code> declares an array type; <code>names[0]</code> accesses its first item. A List can grow; an array has a fixed length.</p>
@@ -3795,8 +4004,8 @@ export default function Home() {
             <button className="reference-next" onClick={nextLesson}>Continue to the next lesson →</button>
           </div> : <>
           <div className="editor-panel">
-            <div className="panel-bar"><div className="file-tab"><span>◆</span> {current!.fileName || challengeFile(language)}</div><div className="panel-actions"><button className="editor-mode-button" onClick={() => changeBlockMode(!blockMode)}>{blockMode ? "Use keyboard" : "Use blocks"}</button><button onClick={() => changeBlockCode(current!.starter || "")} title="Reset code">↻ Reset</button></div></div>
-            {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className={`code-guide ${current!.title === "Choose from a simple menu" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code>{current!.title === "Choose from a simple menu" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Choose from a simple menu"} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : "// Type your code here..."} /></div>}
+            <div className="panel-bar"><div className="file-tab"><span>◆</span> {current!.fileName || challengeFile(language)}<small className="file-language">{languageName(language)}</small></div><div className="panel-actions"><button className="editor-mode-button" onClick={() => changeBlockMode(!blockMode)}>{blockMode ? "Use keyboard" : "Use blocks"}</button><button onClick={() => changeBlockCode(current!.starter || "")} title="Reset code">↻ Reset</button></div></div>
+            {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div style={{ minHeight: Math.max(300, lineNumbers.length * 24.5 + 44) }} className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className={`code-guide ${current!.title === "Choose from a simple menu" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code>{current!.title === "Choose from a simple menu" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Choose from a simple menu"} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : "// Type your code here..."} /></div>}
           </div>
           <div className="console-panel">
             <div className="console-bar"><span><i /> CONSOLE</span><button onClick={() => setStatus("idle")}>Clear</button></div>
