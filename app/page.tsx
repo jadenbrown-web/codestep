@@ -17,6 +17,7 @@ type Lesson = {
   answer: string;
   output: string[];
   parts?: CodePart[];
+  explanationTerms?: string[];
   outputColors?: string[];
   outputNote?: string;
   outputAnnotations?: string[];
@@ -32,12 +33,11 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "01 · Console output",
       "title": "Print several lines at once",
-      "explanation": "console.log prints the text inside quotation marks. Write \\n inside the string wherever you want a new line. In console.log(\" Hello \\n Welcome \\n Goodbye\"), the first \\n puts Welcome on the next line and the second puts Goodbye on another line. const red stores the red terminal colour code, and ${red} inserts it before the red-text message. The red colour stays active until it is reset, so the later lines are red too. The next colour lesson shows the reset code.",
-      "note": "// Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
-      "prompt": "Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
-      "answer": "const red = \"\\x1b[31m\";\nconsole.log(`${red} This is red text`);\n\nconsole.log(\" Hello \\n Welcome \\n Goodbye\");",
+      "explanation": "console.log displays text in the console. Write \\n inside a quoted string to start a new line. The first \\n puts Welcome on the next line, and the second puts Goodbye on another line.",
+      "note": "// Print Hello, Welcome, and Goodbye on separate lines.",
+      "prompt": "Print Hello, Welcome, and Goodbye on separate lines.",
+      "answer": "console.log(\" Hello \\n Welcome \\n Goodbye\");",
       "output": [
-        " This is red text",
         " Hello ",
         " Welcome ",
         " Goodbye"
@@ -46,29 +46,13 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "console.log",
           "name": "Print",
-          "meaning": "Prints the value inside its parentheses."
+          "meaning": "Displays the text in the console."
         },
         {
           "code": "\\n",
           "name": "New line",
-          "meaning": "Write this inside the quoted string to start the next line."
-        },
-        {
-          "code": "\\x1b[31m",
-          "name": "ANSI red",
-          "meaning": "The escape character followed by [31m selects red terminal text."
-        },
-        {
-          "code": "${red}",
-          "name": "Insert a value",
-          "meaning": "Inside backticks, inserts the value stored in red."
+          "meaning": "Write this inside the quoted string to start a new line."
         }
-      ],
-      "outputColors": [
-        "#ef7777",
-        "#ef7777",
-        "#ef7777",
-        "#ef7777"
       ]
     },
     {
@@ -107,6 +91,11 @@ const lessons: Record<Language, Lesson[]> = {
           "name": "End instruction",
           "meaning": "Marks where an instruction ends. JavaScript can sometimes work without it, but using it consistently makes the ending clear."
         }
+      ],
+      "explanationTerms": [
+        "function",
+        "named block of code",
+        "{ }"
       ]
     },
     {
@@ -122,9 +111,29 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "parts": [
         {
+          "code": "\\x1b",
+          "name": "Escape character",
+          "meaning": "Starts an ANSI instruction in a supporting terminal."
+        },
+        {
+          "code": "[31m / [32m",
+          "name": "Red or green",
+          "meaning": "After the escape character, [31m selects red text and [32m selects green text."
+        },
+        {
+          "code": "const red / green / reset",
+          "name": "Save the colour codes",
+          "meaning": "Keeps each colour code under a name so it can be used when printing."
+        },
+        {
+          "code": "${red}",
+          "name": "Apply a colour",
+          "meaning": "Backticks and ${red} insert the saved red code before the text. ${reset} restores normal colour after it."
+        },
+        {
           "code": "\\x1b[0m",
           "name": "Reset",
-          "meaning": "Returns terminal text to its normal colour."
+          "meaning": "Returns terminal text to its normal colour so later output is not left red or green."
         }
       ],
       "outputColors": [
@@ -917,12 +926,11 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "01 · Console output",
       "title": "Print several lines at once",
-      "explanation": "Console.WriteLine prints the text inside quotation marks. Write \\n inside the string wherever you want a new line. The first \\n puts Welcome on the next line and the second puts Goodbye on another line. const string red stores the red terminal colour code. $ before the string lets {red} insert it before the message. ANSI colours work in supporting terminals; this lesson previews red in its console. The red colour stays active until it is reset, so the later lines are red too. The next colour lesson shows the reset code.",
-      "note": "// Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
-      "prompt": "Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
-      "answer": "const string red = \"\\u001b[31m\";\nConsole.WriteLine($\"{red} This is red text\");\n\nConsole.WriteLine(\" Hello \\n Welcome \\n Goodbye\");",
+      "explanation": "Console.WriteLine displays text in the console. Write \\n inside a quoted string to start a new line. The first \\n puts Welcome on the next line, and the second puts Goodbye on another line.",
+      "note": "// Print Hello, Welcome, and Goodbye on separate lines.",
+      "prompt": "Print Hello, Welcome, and Goodbye on separate lines.",
+      "answer": "Console.WriteLine(\" Hello \\n Welcome \\n Goodbye\");",
       "output": [
-        " This is red text",
         " Hello ",
         " Welcome ",
         " Goodbye"
@@ -931,29 +939,13 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "Console.WriteLine",
           "name": "Print",
-          "meaning": "Prints the value inside its parentheses."
+          "meaning": "Displays the text in the console."
         },
         {
           "code": "\\n",
           "name": "New line",
-          "meaning": "Write this inside the quoted string to start the next line."
-        },
-        {
-          "code": "\\u001b[31m",
-          "name": "ANSI red",
-          "meaning": "C# writes the escape character as \\u001b; [31m selects red terminal text."
-        },
-        {
-          "code": "$\"{red}\"",
-          "name": "Insert a value",
-          "meaning": "The $ enables interpolation; {red} inserts the stored value."
+          "meaning": "Write this inside the quoted string to start a new line."
         }
-      ],
-      "outputColors": [
-        "#ef7777",
-        "#ef7777",
-        "#ef7777",
-        "#ef7777"
       ],
       "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
@@ -994,7 +986,16 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Marks where a statement ends. C# requires it after statements such as calling a function or printing text."
         }
       ],
-      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first.",
+      "explanationTerms": [
+        "function",
+        "void correct()",
+        "void",
+        "()",
+        "{ }",
+        "correct();",
+        "method"
+      ]
     },
     {
       "eyebrow": "03 · ANSI colours",
@@ -1009,9 +1010,29 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "parts": [
         {
+          "code": "\\u001b",
+          "name": "Escape character",
+          "meaning": "Starts an ANSI instruction in a supporting terminal."
+        },
+        {
+          "code": "[31m / [32m",
+          "name": "Red or green",
+          "meaning": "After the escape character, [31m selects red text and [32m selects green text."
+        },
+        {
+          "code": "const string red / green / reset",
+          "name": "Save the colour codes",
+          "meaning": "Keeps each colour code under a name so it can be used when printing."
+        },
+        {
+          "code": "$\"{red}\"",
+          "name": "Apply a colour",
+          "meaning": "The $ enables interpolation: {red} inserts the saved red code before the text, and {reset} restores normal colour after it."
+        },
+        {
           "code": "\\u001b[0m",
           "name": "Reset",
-          "meaning": "Returns terminal text to its normal colour."
+          "meaning": "Returns terminal text to its normal colour so later output is not left red or green."
         }
       ],
       "outputColors": [
@@ -2340,38 +2361,26 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "01 · Console output",
       "title": "Print several lines at once",
-      "explanation": "print displays text. Write \\n inside a quoted string to start a new line. \\033 is the ANSI escape character and [31m selects red in supporting terminals. f before the string lets {red} insert a variable. Python uses assignment without let or const. The red colour stays active until it is reset, so the later lines are red too. The next colour lesson shows the reset code.",
-      "note": "# Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
-      "prompt": "Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
-      "answer": "red = \"\\033[31m\"\nprint(f\"{red} This is red text\")\n\nprint(\" Hello \\n Welcome \\n Goodbye\")",
+      "explanation": "print displays text in the console. Write \\n inside a quoted string to start a new line. The first \\n puts Welcome on the next line, and the second puts Goodbye on another line.",
+      "note": "# Print Hello, Welcome, and Goodbye on separate lines.",
+      "prompt": "Print Hello, Welcome, and Goodbye on separate lines.",
+      "answer": "print(\" Hello \\n Welcome \\n Goodbye\")",
       "output": [
-        " This is red text",
         " Hello ",
         " Welcome ",
         " Goodbye"
       ],
       "parts": [
         {
-          "code": "print(...)",
+          "code": "print",
           "name": "Print",
-          "meaning": "Displays the value inside its parentheses."
+          "meaning": "Displays the text in the console."
         },
         {
           "code": "\\n",
           "name": "New line",
-          "meaning": "Starts a new line inside the string."
-        },
-        {
-          "code": "f\"{red}\"",
-          "name": "Insert a value",
-          "meaning": "The f enables variable insertion with curly braces."
+          "meaning": "Write this inside the quoted string to start a new line."
         }
-      ],
-      "outputColors": [
-        "#ef7777",
-        "#ef7777",
-        "#ef7777",
-        "#ef7777"
       ],
       "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
@@ -2397,7 +2406,15 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Runs the function body."
         }
       ],
-      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal.",
+      "explanationTerms": [
+        "def",
+        "correct",
+        "()",
+        "colon",
+        "indented body",
+        "correct()"
+      ]
     },
     {
       "eyebrow": "03 · ANSI colours",
@@ -2412,9 +2429,29 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "parts": [
         {
+          "code": "\\033",
+          "name": "Escape character",
+          "meaning": "Starts an ANSI instruction in a supporting terminal."
+        },
+        {
+          "code": "[31m / [32m",
+          "name": "Red or green",
+          "meaning": "After the escape character, [31m selects red text and [32m selects green text."
+        },
+        {
+          "code": "red / green / reset",
+          "name": "Save the colour codes",
+          "meaning": "Keeps each colour code under a name so it can be used when printing."
+        },
+        {
+          "code": "f\"{red}\"",
+          "name": "Apply a colour",
+          "meaning": "The f enables insertion: {red} puts the saved red code before the text, and {reset} restores normal colour after it."
+        },
+        {
           "code": "\\033[0m",
           "name": "Reset",
-          "meaning": "Returns terminal text to its normal colour."
+          "meaning": "Returns terminal text to its normal colour so later output is not left red or green."
         }
       ],
       "outputColors": [
@@ -3118,12 +3155,11 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "01 · Console output",
       "title": "Print several lines at once",
-      "explanation": "std::cout prints to the terminal. << sends each value to it. Write \\n inside a string to start a new line. \\033[31m selects red in supporting terminals. #include loads declarations, std:: identifies standard-library names, and main is where execution begins. const std::string red stores the colour code. The red colour stays active until it is reset, so the later lines are red too. The next colour lesson shows the reset code.",
-      "note": "// Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
-      "prompt": "Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
-      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  const std::string red = \"\\033[31m\";\n  std::cout << red << \" This is red text\\n\";\n\n  std::cout << \" Hello \\n Welcome \\n Goodbye\\n\";\n}",
+      "explanation": "std::cout displays text in the console. Write \\n inside a quoted string to start a new line. The first \\n puts Welcome on the next line, and the second puts Goodbye on another line. << sends the text to std::cout. main is where the program begins; #include <iostream> makes console output available.",
+      "note": "// Print Hello, Welcome, and Goodbye on separate lines.",
+      "prompt": "Print Hello, Welcome, and Goodbye on separate lines.",
+      "answer": "#include <iostream>\n\nint main() {\n  std::cout << \" Hello \\n Welcome \\n Goodbye\\n\";\n}",
       "output": [
-        " This is red text",
         " Hello ",
         " Welcome ",
         " Goodbye"
@@ -3132,19 +3168,13 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "std::cout <<",
           "name": "Print",
-          "meaning": "Sends a value to standard output."
+          "meaning": "Displays the text in the console."
         },
         {
           "code": "\\n",
           "name": "New line",
-          "meaning": "Starts a new line inside the string."
+          "meaning": "Write this inside the quoted string to start a new line."
         }
-      ],
-      "outputColors": [
-        "#ef7777",
-        "#ef7777",
-        "#ef7777",
-        "#ef7777"
       ],
       "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
@@ -3170,7 +3200,15 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Runs its body."
         }
       ],
-      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed.",
+      "explanationTerms": [
+        "void",
+        "()",
+        "{}",
+        "correct",
+        "main",
+        "correct()"
+      ]
     },
     {
       "eyebrow": "03 · ANSI colours",
@@ -3185,9 +3223,29 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "parts": [
         {
+          "code": "\\033",
+          "name": "Escape character",
+          "meaning": "Starts an ANSI instruction in a supporting terminal."
+        },
+        {
+          "code": "[31m / [32m",
+          "name": "Red or green",
+          "meaning": "After the escape character, [31m selects red text and [32m selects green text."
+        },
+        {
+          "code": "const std::string red / green / reset",
+          "name": "Save the colour codes",
+          "meaning": "Keeps each colour code under a name so it can be used when printing."
+        },
+        {
+          "code": "std::cout << red",
+          "name": "Apply a colour",
+          "meaning": "Sends the saved red code before the text. Sending reset afterwards restores normal colour."
+        },
+        {
           "code": "\\033[0m",
           "name": "Reset",
-          "meaning": "Returns terminal text to its normal colour."
+          "meaning": "Returns terminal text to its normal colour so later output is not left red or green."
         }
       ],
       "outputColors": [
@@ -4214,6 +4272,28 @@ function matchingLesson(source: Lesson, target: Language) {
     ?? lessons[target].find(item => aliases[source.title]?.includes(item.title));
 }
 
+function LessonExplanation({ lesson, language }: { lesson: Lesson; language: Language }) {
+  const terms = [...new Set([
+    ...(lesson.explanationTerms ?? []),
+    ...(lesson.parts ?? []).map(part => part.code),
+  ])].filter(term => term && lesson.explanation.includes(term)).sort((a, b) => b.length - a.length);
+  if (!terms.length) return <>{lesson.explanation}</>;
+  const pattern = new RegExp(terms.map(term => term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|"), "g");
+  const result = [];
+  let offset = 0;
+  for (const match of lesson.explanation.matchAll(pattern)) {
+    const start = match.index;
+    const end = start + match[0].length;
+    if (/^\w/.test(match[0]) && /[\w]/.test(lesson.explanation[start - 1] ?? "")) continue;
+    if (/\w$/.test(match[0]) && /[\w]/.test(lesson.explanation[end] ?? "")) continue;
+    result.push(lesson.explanation.slice(offset, start));
+    result.push(<code className="explanation-code" key={start}><HighlightedCode code={match[0]} language={language} /></code>);
+    offset = end;
+  }
+  result.push(lesson.explanation.slice(offset));
+  return <>{result}</>;
+}
+
 function LanguageComparison({ language, lesson, editorCode, onClose }: { language: Language; lesson: Lesson; editorCode: string; onClose: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [target, setTarget] = useState<Language>(language === "javascript" ? "cpp" : "javascript");
@@ -4232,8 +4312,8 @@ function LanguageComparison({ language, lesson, editorCode, onClose }: { languag
       {other && other !== equivalent && <p>These examples cover different topics.</p>}
     </div>
     <div className="language-comparison-columns">
-      <section><h3>{languageName(language)} · {hasEditorCode ? "Your code" : "Lesson example"}</h3><b>{lesson.title}</b><pre aria-label="Current code for comparison"><code><HighlightedCode code={sourceCode} language={language} /></code></pre><p>{hasEditorCode ? "This is the code currently in your editor." : lesson.explanation}</p></section>
-      <section><h3>{languageName(target)} · Lesson example</h3>{other ? <><b>{other.title}</b><pre><code><HighlightedCode code={other.answer} language={target} /></code></pre><p>{other.explanation}</p>{target === "cpp" && <CppSetupGuide key={other.title} lesson={other} />}{other.runHint && <p>{other.runHint}</p>}</> : <p>Select an example to show its code here.</p>}</section>
+      <section><h3>{languageName(language)} · {hasEditorCode ? "Your code" : "Lesson example"}</h3><b>{lesson.title}</b><pre aria-label="Current code for comparison"><code><HighlightedCode code={sourceCode} language={language} /></code></pre><p>{hasEditorCode ? "This is the code currently in your editor." : <LessonExplanation lesson={lesson} language={language} />}</p></section>
+      <section><h3>{languageName(target)} · Lesson example</h3>{other ? <><b>{other.title}</b><pre><code><HighlightedCode code={other.answer} language={target} /></code></pre><p><LessonExplanation lesson={other} language={target} /></p>{target === "cpp" && <CppSetupGuide key={other.title} lesson={other} />}{other.runHint && <p>{other.runHint}</p>}</> : <p>Select an example to show its code here.</p>}</section>
     </div>
   </dialog>;
 }
@@ -4501,32 +4581,32 @@ export default function Home() {
           <div className="section-heading"><div><span>CHOOSE YOUR PATH</span><h2>What do you want to learn?</h2></div><p>Pick a language. You can switch at any time.</p></div>
           <div className="course-grid">
             <button className="course-card js-card" onClick={() => openCourse("javascript")}>
-              <div className="course-icon">JS</div><div className="course-count">{lessons.javascript.length} LESSONS</div>
+              <div className="course-icon language-logo" aria-hidden="true"><img src="/language-logos/javascript.svg" alt="" width="52" height="52" /></div><div className="course-count">{lessons.javascript.length} LESSONS</div>
               <h3>JavaScript</h3><p>Build interactive programs for the web, starting with functions and variables.</p>
               <div className="course-bottom"><span>Start learning <b>→</b></span><div className="mini-progress"><i style={{width: `${completed.javascript / lessons.javascript.length * 100}%`}} /></div></div>
             </button>
             <button className="course-card cs-card" onClick={() => openCourse("csharp")}>
-              <div className="course-icon">C#</div><div className="course-count">{lessons.csharp.length} LESSONS</div>
+              <div className="course-icon language-logo" aria-hidden="true"><img src="/language-logos/csharp.svg" alt="" width="52" height="52" /></div><div className="course-count">{lessons.csharp.length} LESSONS</div>
               <h3>C#</h3><p>Create powerful console apps and learn the foundations of strongly typed code.</p>
               <div className="course-bottom"><span>Start learning <b>→</b></span><div className="mini-progress"><i style={{width: `${completed.csharp / lessons.csharp.length * 100}%`}} /></div></div>
             </button>
             <button className="course-card cpp-card" onClick={() => openCourse("cpp")}>
-              <div className="course-icon">C++</div><div className="course-count">{lessons.cpp.length} LESSONS</div>
+              <div className="course-icon language-logo" aria-hidden="true"><img src="/language-logos/cpp.svg" alt="" width="52" height="52" /></div><div className="course-count">{lessons.cpp.length} LESSONS</div>
               <h3>C++</h3><p>Practice console programs, functions, classes, and collections.</p>
               <div className="course-bottom"><span>Start learning <b>→</b></span><div className="mini-progress"><i style={{width: (completed.cpp / lessons.cpp.length * 100) + "%"}} /></div></div>
             </button>
             <button className="course-card python-card" onClick={() => openCourse("python")}>
-              <div className="course-icon">PY</div><div className="course-count">{lessons.python.length} LESSONS</div>
+              <div className="course-icon language-logo" aria-hidden="true"><img src="/language-logos/python.svg" alt="" width="52" height="52" /></div><div className="course-count">{lessons.python.length} LESSONS</div>
               <h3>Python</h3><p>Practice input, functions, classes, and collections with clear examples.</p>
               <div className="course-bottom"><span>Start learning <b>→</b></span><div className="mini-progress"><i style={{width: (completed.python / lessons.python.length * 100) + "%"}} /></div></div>
             </button>
             <button className="course-card py-card" onClick={() => openCourse("html")}>
-              <div className="course-icon">HTML</div><div className="course-count">{lessons.html.length} LESSONS</div>
+              <div className="course-icon language-logo" aria-hidden="true"><img src="/language-logos/html.svg" alt="" width="52" height="52" /></div><div className="course-count">{lessons.html.length} LESSONS</div>
               <h3>HTML</h3><p>Build web pages with structure, headings, text, links, images, and scripts.</p>
               <div className="course-bottom"><span>Start learning <b>→</b></span><div className="mini-progress"><i style={{width: `${completed.html / lessons.html.length * 100}%`}} /></div></div>
             </button>
             <button className="course-card css-card" onClick={() => openCourse("css")}>
-              <div className="course-icon">CSS</div><div className="course-count">{lessons.css.length} LESSONS</div>
+              <div className="course-icon language-logo" aria-hidden="true"><img src="/language-logos/css.svg" alt="" width="52" height="52" /></div><div className="course-count">{lessons.css.length} LESSONS</div>
               <h3>CSS</h3><p>Style web pages with colours, alignment, fonts, borders, and rounded corners.</p>
               <div className="course-bottom"><span>Start learning <b>→</b></span><div className="mini-progress"><i style={{width: `${completed.css / lessons.css.length * 100}%`}} /></div></div>
             </button>
@@ -4565,7 +4645,7 @@ export default function Home() {
           <button className="back-link" onClick={() => index ? setIndex(index - 1) : setLanguage(null)}>← Back</button>
           <div className="lesson-number">{String(index + 1).padStart(2, "0")} · {current!.eyebrow.split("·")[1]}</div>
           <h1>{current!.title}</h1>
-          <p>{current!.explanation}</p>
+          <p><LessonExplanation lesson={current!} language={language} /></p>
           <button className="compare-language-button" onClick={() => setComparisonOpen(true)}>Compare with another language</button>
           {current!.eyebrow.includes("Files and paths") && <details className="symbol-guide" open>
             <summary>Filename, file contents, and image text</summary>

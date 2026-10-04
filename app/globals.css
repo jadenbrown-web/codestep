@@ -193,3 +193,9 @@ html[data-theme="dark"] .drawer-lessons button[class*="tone-"].active{background
 /* Let wrapped code determine its height so every line stays visible. */
 .editor-body{height:auto;min-height:300px}.editor-body textarea{position:absolute;top:0;right:0;width:calc(100% - 46px);height:100%}.editor-body .code-guide,.editor-body .typed-code-layer{position:relative;grid-area:1 / 2;inset:auto;width:100%;height:auto;min-width:0;align-self:stretch;overflow:visible}.editor-body .code-guide code,.editor-body .typed-code-layer code{font:inherit;letter-spacing:inherit}
 @media(max-width:600px){.breakdown-grid{grid-template-columns:1fr}.breakdown-part{grid-template-columns:minmax(0,1fr);gap:10px}.breakdown-part>code{width:fit-content;max-width:100%;overflow-wrap:anywhere}}
+
+.course-card .course-icon.language-logo{background:transparent;border-radius:0;box-shadow:none}
+.language-logo img{display:block;width:100%;height:100%;object-fit:contain}
+.explanation-code{display:inline;padding:.08em .3em;border-radius:4px;background:#788f8214;font-family:var(--mono);font-size:.9em;font-weight:700;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.explanation-code .syntax-keyword{color:#973956}.explanation-code .syntax-api,.explanation-code .syntax-function-name{color:#166887}.explanation-code .syntax-string{color:#41662e}.explanation-code .syntax-number{color:#886409}.explanation-code .syntax-plain,.explanation-code .syntax-punctuation{color:var(--ink)}
+html[data-theme="dark"] .explanation-code .syntax-keyword{color:#ee7a92}html[data-theme="dark"] .explanation-code .syntax-api,html[data-theme="dark"] .explanation-code .syntax-function-name{color:#71cbea}html[data-theme="dark"] .explanation-code .syntax-string{color:#a7d48b}html[data-theme="dark"] .explanation-code .syntax-number{color:#f2c75a}
