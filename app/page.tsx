@@ -4287,7 +4287,8 @@ function LessonExplanation({ lesson, language }: { lesson: Lesson; language: Lan
     if (/^\w/.test(match[0]) && /[\w]/.test(lesson.explanation[start - 1] ?? "")) continue;
     if (/\w$/.test(match[0]) && /[\w]/.test(lesson.explanation[end] ?? "")) continue;
     result.push(lesson.explanation.slice(offset, start));
-    result.push(<code className="explanation-code" key={start}><HighlightedCode code={match[0]} language={language} /></code>);
+    const concept = ["named block of code", "colon", "indented body", "method"].includes(match[0]);
+    result.push(concept ? <strong key={start}>{match[0]}</strong> : <code className="explanation-code" key={start}><HighlightedCode code={match[0]} language={language} /></code>);
     offset = end;
   }
   result.push(lesson.explanation.slice(offset));
