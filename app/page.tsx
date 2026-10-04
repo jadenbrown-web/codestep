@@ -316,59 +316,40 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "11 · Variables",
-      "title": "Use changeable and fixed values",
-      "explanation": "let creates a variable you can reassign. const creates a binding you cannot reassign. Here speed changes from 80 to 100; maxSpeed stays 100. const does not freeze an array or object: you can still change its contents.",
-      "note": "// Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
-      "prompt": "Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
-      "answer": "let speed = 80;\nconst maxSpeed = 100;\n\nspeed = 100;\nconsole.log(`Speed: ${speed}`);",
+      "title": "Choose let or const",
+      "explanation": "A variable stores a value under a name. let allows you to assign a different value to that name later. const prevents assigning a different value to the same name. Both can store the answer returned by prompt(). These are separate examples: run one at a time, because you cannot declare name twice in the same scope.",
+      "note": "// let: this variable can be reassigned.\n// const: this variable cannot be reassigned.",
+      "prompt": "Use let to ask for a name, then print hello followed by the name.",
+      "answer": "let name = prompt (\"Enter your name: \");\nconsole.log(`hello ${name}`);\n// this variable is changeable",
       "output": [
-        "Speed: 100"
+        "hello Alex"
       ],
       "parts": [
         {
           "code": "let",
           "name": "Changeable",
-          "meaning": "Allows a later assignment to the same variable."
+          "meaning": "Creates a variable that can receive a different value later: name = \"Sam\"; is allowed."
         },
         {
           "code": "const",
-          "name": "Fixed binding",
-          "meaning": "Prevents reassigning the variable."
-        }
-      ]
-    },
-    {
-      "eyebrow": "12 · Variables",
-      "title": "Remember a value",
-      "explanation": "let creates a variable—a labelled place to keep a value. prompt asks the user a question and saves their answer.",
-      "note": "// Ask for a name and greet the user",
-      "prompt": "Create a name variable, then print Hello with a template string.",
-      "answer": "let name = prompt(\"What is your name?\");\nconsole.log(`Hello ${name}`);",
-      "output": [
-        "What is your name?  →  Alex",
-        "Hello Alex"
-      ],
-      "parts": [
-        {
-          "code": "let",
-          "name": "Create",
-          "meaning": "Makes a variable that can remember something."
-        },
-        {
-          "code": "name",
-          "name": "Label",
-          "meaning": "Shows that you choose a useful name for the saved value."
+          "name": "Cannot be reassigned",
+          "meaning": "Creates a variable that cannot receive a different value later. After declaring it with const, name = \"Sam\"; causes an error."
         },
         {
           "code": "=",
-          "name": "Save",
-          "meaning": "Puts the value on the right into the variable on the left."
+          "name": "Assign a value",
+          "meaning": "Stores the value on the right in the variable on the left. Declare a variable once; use its name without let to change it."
+        },
+        {
+          "code": "${name}",
+          "name": "Use the saved name",
+          "meaning": "Inserts the value of name into the text between backticks."
         }
       ],
-      "compareNode": true
+      "outputNote": "Example output when the user enters Alex in the prompt dialog."
     },
     {
-      "eyebrow": "13 · Variables",
+      "eyebrow": "12 · Terminal input",
       "title": "Ask for a name in VS Code",
       "explanation": "Browser prompt() opens a dialog. Node runs JavaScript in the terminal and does not provide browser prompt(), so it needs a little setup. createInterface connects process.stdin (what you type) and process.stdout (what you see). await input.question waits for your answer, then returns the text to name. input.close() tells Node “I’m done taking input.” It closes this interface so it no longer keeps waiting for terminal input.",
       "note": "// Ask in the terminal, greet the user, then close input",
@@ -405,7 +386,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "14 · If and else",
+      "eyebrow": "13 · If and else",
       "title": "Choose between several messages",
       "explanation": "if starts the decision. Add else if between the first if and the final else when you need another condition in the same decision. Conditions are checked from top to bottom and only the first matching block runs. At 120, both comparisons would be true, but only Too fast! prints. At 60, the else if block prints Speed is OK. At 0, else prints Stopped. You can add more else if blocks before the final else. Each condition uses parentheses and each body uses braces.",
       "note": "// Print Too fast! above 100, Speed is OK. above 0, or Stopped. otherwise.",
@@ -438,7 +419,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "Menu · Repeated choices",
+      "eyebrow": "14 · Repeated choices",
       "title": "Build a start, options, exit menu",
       "explanation": "This menu combines the loop you learned earlier with separate if checks from the previous lesson. Each time round, it asks for one choice. Type 1 to print Starting..., 2 to print Options..., or 3 to reach break and finish the loop. The choices cannot equal 1 and 2 at the same time, so these separate if statements do not cause two messages for one answer. An if / else if chain could also handle these mutually exclusive choices. Other input matches none of them, so the menu simply appears again. break exits only this loop; return would leave the current function. This exact prompt() example runs in a browser, not a Node.js terminal. Closing the prompt returns null, which matches no choice and opens it again; enter 3 to exit. A real browser interface would use buttons or a cancel check instead of a long prompt loop.",
       "note": "// Keep asking for 1, 2, or 3. Exit on 3.",
@@ -664,7 +645,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "Get a filename from a path",
-      "eyebrow": "Files and paths · Files and paths",
+      "eyebrow": "23 · Files and paths",
       "explanation": "Build the first piece of a sheet-music finder. A path is a location: sheet-music is the folder and chopin-nocturne.png is the filename. Extracting the name only handles the path; it does not check whether the file exists or read its contents. The .png extension identifies the intended file format, not the words or notes in the picture.",
       "note": "// Extract the filename without opening the image.",
       "prompt": "Print the filename from the score path.",
@@ -689,7 +670,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "List files in a folder",
-      "eyebrow": "Files and paths · Files and paths",
+      "eyebrow": "24 · Files and paths",
       "explanation": "Now let the program discover files rather than typing every filename into a list. Scan the sheet-music folder, skip folders, and print each filename. This reads the folder listing, not the image contents. Only this folder is searched; files inside subfolders are not included. The folder must exist and be readable, or listing it can raise an error.",
       "note": "// List each file in your sheet-music folder.",
       "prompt": "Print filenames from the sheet-music folder, skipping folders.",
@@ -720,7 +701,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "Find a sheet-music file",
-      "eyebrow": "Files and paths · Files and paths",
+      "eyebrow": "25 · Files and paths",
       "explanation": "Finish this small file-finding program by checking for the score at its expected location and showing a useful result. When you already know the folder and filename, checking that path is simpler than looping through the entire folder. This checks for a file; it does not open the image or recognise its printed title. Use the exact spelling and capitalisation so the example works across systems.",
       "note": "// Check whether the score exists before using it.",
       "prompt": "Print Found: and the filename, or File not found.",
@@ -749,7 +730,7 @@ const lessons: Record<Language, Lesson[]> = {
       "outputNote": "Example preview with the score present. Remove or rename it locally to try the File not found branch. CodeStep does not inspect your device."
     },
     {
-      "eyebrow": "23 · Application practice",
+      "eyebrow": "26 · Application practice",
       "title": "Build a random word quiz",
       "explanation": "Combine the dictionary, random choice, input, and if/else. Choose a word, ask for its translation, then compare the answer with the stored value.",
       "note": "// Combine the word dictionary and random key code to make a translation quiz.",
@@ -3232,7 +3213,7 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
   },
 };
 
-const breakdownLessonTitles: Record<Language, string[]> = {"javascript": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Repeat code every second", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Ask for a name in VS Code", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "csharp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "html": ["Tell the browser it is HTML", "Start the HTML page", "Name the browser tab", "Add visible page content", "Separate content into boxes", "Create a heading hierarchy", "Open another page", "Explore HTML text elements", "Show the current date and time", "Link two HTML pages", "Place an image on the page", "Place a video on the page", "Place audio on the page", "Give one element a unique name", "Use a button instead of while (true)", "Send a value back with return"], "css": ["Colour the page background", "Colour and centre text", "Style one unique element", "Compare website fonts", "Explore borders and colour formats", "Create a rounded dotted border"], "python": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "cpp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"]};
+const breakdownLessonTitles: Record<Language, string[]> = {"javascript": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Repeat code every second", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Choose let or const", "Ask for a name in VS Code", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "csharp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "html": ["Tell the browser it is HTML", "Start the HTML page", "Name the browser tab", "Add visible page content", "Separate content into boxes", "Create a heading hierarchy", "Open another page", "Explore HTML text elements", "Show the current date and time", "Link two HTML pages", "Place an image on the page", "Place a video on the page", "Place audio on the page", "Give one element a unique name", "Use a button instead of while (true)", "Send a value back with return"], "css": ["Colour the page background", "Colour and centre text", "Style one unique element", "Compare website fonts", "Explore borders and colour formats", "Create a rounded dotted border"], "python": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "cpp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"]};
 
 const nullBreakdowns: Partial<Record<Language, CodePart[]>> = {
   javascript: [
@@ -3385,7 +3366,7 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
     if (language === "cpp" && /^#[ \t]*include/.test(text)) kind = "header";
     else if (/^(\/\/|\/\*|<!--)/.test(text) || (language === "python" && text.startsWith("#"))) kind = "comment";
     else if (/^f?["'`]/.test(text) || /^\/\^/.test(text)) kind = "string";
-    else if (/^(function|class|constructor|this|let|const|double|bool|out|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|div|section|script|img|video|audio|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
+    else if (/^(import|from|function|class|constructor|this|let|const|double|bool|out|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|div|section|script|img|video|audio|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
     else if (/^(console|Console|Task|Date|DateTime|List|Set|HashSet|Dictionary|Random|Regex|RegexOptions|log)$/.test(text)) kind = "api";
     else if (/^(style|href|src|alt|controls|id|lang|charset)$/.test(text)) kind = "attribute";
     else if (/^(background-color|color|text-align|font-family|border|border-radius)$/.test(text)) kind = "api";
@@ -3491,6 +3472,8 @@ const homeDemos: Record<Language, { code: string; file: string }> = {
 
 function matchingLesson(source: Lesson, target: Language) {
   const aliases: Record<string, string[]> = {
+    "Choose let or const": ["Use changeable and fixed values"],
+    "Use changeable and fixed values": ["Choose let or const"],
     "Print the current date and time": ["Show the current date and time"],
     "Show the current date and time": ["Print the current date and time"],
     "Use one function inside another": ["Send a value back with return"],
@@ -3890,6 +3873,11 @@ export default function Home() {
             <p>Names are case-sensitive: <code>Console.WriteLine</code> prints and <code>Console.ReadLine()</code> reads text, possibly null. End statements with <code>;</code>. Use <code>==</code> to compare and <code>=</code> to assign. C# has no JavaScript <code>===</code>.</p>
             <p>Use <code>using System;</code> to bring library names into scope when needed. Modern console projects include common imports automatically. Top-level examples go in Program.cs; class examples include their own Main entry point, so replace the file rather than combining both styles.</p>
           </details>}
+          {language === "javascript" && current!.title === "Choose let or const" && <section className="variable-examples" aria-label="Changeable and fixed variables">
+            <article className="reference-card"><div className="reference-head"><b>let · can be reassigned</b></div><pre><code><HighlightedCode language="javascript" code={'let name = prompt ("Enter your name: ");\nconsole.log(`hello ${name}`);\n// this variable is changeable'} /></code></pre><p>Later, <code>name = "Sam";</code> is allowed. Printing name again would use Sam.</p></article>
+            <article className="reference-card"><div className="reference-head"><b>const · cannot be reassigned</b></div><pre><code><HighlightedCode language="javascript" code={'const name = prompt ("Enter your name: ");\nconsole.log(`hello ${name}`);\n// this variable is not changeable'} /></code></pre><p>Later, <code>name = "Sam";</code> causes an error. const prevents reassignment; arrays and objects can still have their contents changed.</p></article>
+            <p>Run these examples separately. For this exercise, type the let example.</p>
+          </section>}
           {current!.compareNode && <section className="runtime-guide" aria-label="Browser and Node input">
             <h2>The same name question in two places</h2>
             <h3>Browser · prompt()</h3><pre><code><HighlightedCode language="javascript" code={"let name = prompt(\"What is your name?\");\nconsole.log(`Hello ${name}`);"} /></code></pre>
