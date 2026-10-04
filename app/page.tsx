@@ -386,7 +386,40 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "13 · Repeated choices",
+      "eyebrow": "13 · Combined conditions and comparisons",
+      "title": "Choose between several messages",
+      "explanation": "Use one speed value to choose one message. > means greater than; <= means less than or equal to. && means AND: both comparisons must be true. if / else if / else checks the branches in order and runs only the first matching branch. With speed set to 120, the first condition is true, so only Too fast! prints. The saved value and printing are familiar; the highlighted checks are the new parts.",
+      "note": "// Check speed and print one matching message.",
+      "prompt": "Use the speed example to choose between Too fast!, Speed is OK., and Stopped.",
+      "answer": "let speed = 120;\n\nif (speed > 100) {\n  console.log(\"Too fast!\");\n} else if (speed > 0 && speed <= 100) {\n  console.log(\"Speed is OK.\");\n} else {\n  console.log(\"Stopped.\");\n}",
+      "output": [
+        "Too fast!"
+      ],
+      "parts": [
+        {
+          "code": "if",
+          "name": "First check",
+          "meaning": "Starts the first condition. If it is true, its body runs and the remaining branches are skipped."
+        },
+        {
+          "code": "else if",
+          "name": "Next check",
+          "meaning": "Checks another condition only if the earlier condition was false."
+        },
+        {
+          "code": "else",
+          "name": "Otherwise",
+          "meaning": "Runs when none of the earlier conditions was true. It has no condition of its own."
+        },
+        {
+          "code": "(...) / {...}",
+          "name": "Condition and body",
+          "meaning": "Parentheses hold the condition. Curly braces hold the instructions that run when it matches."
+        }
+      ]
+    },
+    {
+      "eyebrow": "14 · Repeated choices",
       "title": "Build a start, options, exit menu",
       "explanation": "This menu combines the loop you learned earlier with separate if checks from the previous lesson. Each time round, it asks for one choice. Type 1 to print Starting..., 2 to print Options..., or 3 to reach break and finish the loop. The choices cannot equal 1 and 2 at the same time, so these separate if statements do not cause two messages for one answer. An if / else if chain could also handle these mutually exclusive choices. Other input matches none of them, so the menu simply appears again. break exits only this loop; return would leave the current function. This exact prompt() example runs in a browser, not a Node.js terminal. Closing the prompt returns null, which matches no choice and opens it again; enter 3 to exit. A real browser interface would use buttons or a cancel check instead of a long prompt loop.",
       "note": "// Keep asking for 1, 2, or 3. Exit on 3.",
@@ -425,45 +458,6 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "outputNote": "Example: the user enters 1, then 2, then 3. The menu prompts are input, and choosing 3 exits without printing another line. CodeStep previews this sequence; run it locally to try other choices.",
       "runHint": "Run in a browser console or script. Enter 1, then 2, then 3; this lesson previews the output instead of opening real prompts. In Node.js, prompt is not built in; use the readline approach from the name-input lesson."
-    },
-    {
-      "eyebrow": "14 · Combined conditions and comparisons",
-      "title": "Check whether a value is in a range",
-      "explanation": "A range needs two comparisons. >= checks the lower limit, <= checks the upper limit, and && means both conditions must be true at the same time. == means equal value; === checks value and type, and !== means not equal value or type. > means greater than, < less than, >= greater than or equal, and <= less than or equal. && means AND, || means OR, and ! means NOT.",
-      "note": "// && means AND. Both conditions must be true.",
-      "prompt": "Use && to check both ends of the age range.",
-      "starter": "let age = 16;\n\n",
-      "answer": "let age = 16;\n\n// && means AND. Both conditions must be true.\nif (age >= 0 && age <= 18) {\n  console.log(\"Your age is between 0 and 18.\");\n} else {\n  console.log(\"Your age is above 18.\");\n}",
-      "output": [
-        "Your age is between 0 and 18."
-      ],
-      "parts": [
-        {
-          "code": ">= 0",
-          "name": "Lower limit",
-          "meaning": "Checks that age is zero or greater."
-        },
-        {
-          "code": "&&",
-          "name": "Two ampersands",
-          "meaning": "Read this as AND: the condition on each side must be true."
-        },
-        {
-          "code": "<= 18",
-          "name": "Upper limit",
-          "meaning": "Checks that age is eighteen or less."
-        },
-        {
-          "code": "||",
-          "name": "Either",
-          "meaning": "At least one condition must be true."
-        },
-        {
-          "code": "!",
-          "name": "Not",
-          "meaning": "Reverses true and false."
-        }
-      ]
     },
     {
       "eyebrow": "15 · Dictionary",
@@ -1020,7 +1014,41 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "12 · Repeated choices",
+      "eyebrow": "12 · Combined conditions and comparisons",
+      "title": "Choose between several messages",
+      "explanation": "Use one speed value to choose one message. > means greater than; <= means less than or equal to. && means AND: both comparisons must be true. if / else if / else checks the branches in order and runs only the first matching branch. With speed set to 120, the first condition is true, so only Too fast! prints. The saved value and printing are familiar; the highlighted checks are the new parts.",
+      "note": "// Check speed and print one matching message.",
+      "prompt": "Use the speed example to choose between Too fast!, Speed is OK., and Stopped.",
+      "answer": "int speed = 120;\n\nif (speed > 100) {\n  Console.WriteLine(\"Too fast!\");\n} else if (speed > 0 && speed <= 100) {\n  Console.WriteLine(\"Speed is OK.\");\n} else {\n  Console.WriteLine(\"Stopped.\");\n}",
+      "output": [
+        "Too fast!"
+      ],
+      "parts": [
+        {
+          "code": "if",
+          "name": "First check",
+          "meaning": "Starts the first condition. If it is true, its body runs and the remaining branches are skipped."
+        },
+        {
+          "code": "else if",
+          "name": "Next check",
+          "meaning": "Checks another condition only if the earlier condition was false."
+        },
+        {
+          "code": "else",
+          "name": "Otherwise",
+          "meaning": "Runs when none of the earlier conditions was true. It has no condition of its own."
+        },
+        {
+          "code": "(...) / {...}",
+          "name": "Condition and body",
+          "meaning": "Parentheses hold the condition. Curly braces hold the instructions that run when it matches."
+        }
+      ],
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+    },
+    {
+      "eyebrow": "13 · Repeated choices",
       "title": "Build a start, options, exit menu",
       "explanation": "This menu combines the loop you learned earlier with separate if checks from the previous lesson. Each time round, it asks for one choice. Type 1 to print Starting..., 2 to print Options..., or 3 to reach break and finish the loop. The choices cannot equal 1 and 2 at the same time, so these separate if statements do not cause two messages for one answer. An if / else if chain could also handle these mutually exclusive choices. Other input matches none of them, so the menu simply appears again. break exits only this loop; return would leave the current function. The displayed choices are text, so compare with \"1\", \"2\", and \"3\".",
       "note": "// Keep asking for 1, 2, or 3. Exit on 3.",
@@ -1059,46 +1087,6 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "outputNote": "Example: the user enters 1, then 2, then 3. The menu prompts are input, and choosing 3 exits without printing another line. CodeStep previews this sequence; run it locally to try other choices.",
       "runHint": "Put this top-level code in Program.cs in a .NET console project and run dotnet run. Type 1, then 2, then 3 to end."
-    },
-    {
-      "eyebrow": "13 · Combined conditions and comparisons",
-      "title": "Check whether a value is in a range",
-      "explanation": "A range needs two comparisons. >= checks the lower limit, <= checks the upper limit, and && means both conditions must be true at the same time. == means equal value; != means not equal. > means greater than, < less than, >= greater than or equal, and <= less than or equal. && means AND, || means OR, and ! means NOT.",
-      "note": "// && means AND. Both conditions must be true.",
-      "prompt": "Use && to check both ends of the age range.",
-      "starter": "int age = 16;\n\n",
-      "answer": "int age = 16;\n\n// && means AND. Both conditions must be true.\nif (age >= 0 && age <= 18) {\n  Console.WriteLine(\"Your age is between 0 and 18.\");\n} else {\n  Console.WriteLine(\"Your age is above 18.\");\n}",
-      "output": [
-        "Your age is between 0 and 18."
-      ],
-      "parts": [
-        {
-          "code": ">= 0",
-          "name": "Lower limit",
-          "meaning": "Checks that age is zero or greater."
-        },
-        {
-          "code": "&&",
-          "name": "Two ampersands",
-          "meaning": "Read this as AND: the condition on each side must be true."
-        },
-        {
-          "code": "<= 18",
-          "name": "Upper limit",
-          "meaning": "Checks that age is eighteen or less."
-        },
-        {
-          "code": "||",
-          "name": "Either",
-          "meaning": "At least one condition must be true."
-        },
-        {
-          "code": "!",
-          "name": "Not",
-          "meaning": "Reverses true and false."
-        }
-      ],
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "14 · Dictionary",
@@ -1935,7 +1923,41 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as name.py and run python3 name.py in the VS Code terminal."
     },
     {
-      "eyebrow": "12 · Repeated choices",
+      "eyebrow": "12 · Combined conditions and comparisons",
+      "title": "Choose between several messages",
+      "explanation": "Use one speed value to choose one message. > means greater than; <= means less than or equal to. and means AND: both comparisons must be true. if / elif / else checks the branches in order and runs only the first matching branch. With speed set to 120, the first condition is true, so only Too fast! prints. The saved value and printing are familiar; the highlighted checks are the new parts.",
+      "note": "# Check speed and print one matching message.",
+      "prompt": "Use the speed example to choose between Too fast!, Speed is OK., and Stopped.",
+      "answer": "speed = 120\n\nif speed > 100:\n    print(\"Too fast!\")\nelif speed > 0 and speed <= 100:\n    print(\"Speed is OK.\")\nelse:\n    print(\"Stopped.\")",
+      "output": [
+        "Too fast!"
+      ],
+      "parts": [
+        {
+          "code": "if",
+          "name": "First check",
+          "meaning": "Starts the first condition. If it is true, its body runs and the remaining branches are skipped."
+        },
+        {
+          "code": "elif",
+          "name": "Next check",
+          "meaning": "Checks another condition only if the earlier condition was false."
+        },
+        {
+          "code": "else",
+          "name": "Otherwise",
+          "meaning": "Runs when none of the earlier conditions was true. It has no condition of its own."
+        },
+        {
+          "code": ":",
+          "name": "Condition and body",
+          "meaning": "A colon starts the body; indentation identifies which instructions belong to that branch."
+        }
+      ],
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "13 · Repeated choices",
       "title": "Build a start, options, exit menu",
       "explanation": "This menu combines the loop you learned earlier with separate if checks from the previous lesson. Each time round, it asks for one choice. Type 1 to print Starting..., 2 to print Options..., or 3 to reach break and finish the loop. The choices cannot equal 1 and 2 at the same time, so these separate if statements do not cause two messages for one answer. An if / else if chain could also handle these mutually exclusive choices. Other input matches none of them, so the menu simply appears again. break exits only this loop; return would leave the current function. The displayed choices are text, so compare with \"1\", \"2\", and \"3\".",
       "note": "# Keep asking for 1, 2, or 3. Exit on 3.",
@@ -1974,30 +1996,6 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "outputNote": "Example: the user enters 1, then 2, then 3. The menu prompts are input, and choosing 3 exits without printing another line. CodeStep previews this sequence; run it locally to try other choices.",
       "runHint": "Save as challenge.py and run python challenge.py (or python3 challenge.py). Type 1, then 2, then 3 to end."
-    },
-    {
-      "eyebrow": "13 · Combined conditions and comparisons",
-      "title": "Check whether a value is in a range",
-      "explanation": ">= and <= include the boundary values. and requires both comparisons; or requires at least one; not reverses a condition. == means equal, != not equal, > greater than, and < less than. Python does not use && or ||.",
-      "note": "# && means AND. Both conditions must be true.",
-      "prompt": "Use && to check both ends of the age range.",
-      "answer": "age = 16\n\nif age >= 0 and age <= 18:\n    print(\"Your age is between 0 and 18.\")\nelse:\n    print(\"Your age is above 18.\")",
-      "output": [
-        "Your age is between 0 and 18."
-      ],
-      "parts": [
-        {
-          "code": ">= / <=",
-          "name": "Include the limit",
-          "meaning": "Compare including the boundary."
-        },
-        {
-          "code": "and / or / not",
-          "name": "Combine checks",
-          "meaning": "Both, either, or reverse a condition."
-        }
-      ],
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
     },
     {
       "eyebrow": "14 · Dictionary",
@@ -2614,7 +2612,41 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as name.cpp. In the VS Code terminal compile with g++ -std=c++17 name.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "12 · Repeated choices",
+      "eyebrow": "12 · Combined conditions and comparisons",
+      "title": "Choose between several messages",
+      "explanation": "Use one speed value to choose one message. > means greater than; <= means less than or equal to. && means AND: both comparisons must be true. if / else if / else checks the branches in order and runs only the first matching branch. With speed set to 120, the first condition is true, so only Too fast! prints. The saved value and printing are familiar; the highlighted checks are the new parts.",
+      "note": "// Check speed and print one matching message.",
+      "prompt": "Use the speed example to choose between Too fast!, Speed is OK., and Stopped.",
+      "answer": "#include <iostream>\n\nint main() {\n  int speed = 120;\n\n  if (speed > 100) {\n    std::cout << \"Too fast!\\n\";\n  } else if (speed > 0 && speed <= 100) {\n    std::cout << \"Speed is OK.\\n\";\n  } else {\n    std::cout << \"Stopped.\\n\";\n  }\n}",
+      "output": [
+        "Too fast!"
+      ],
+      "parts": [
+        {
+          "code": "if",
+          "name": "First check",
+          "meaning": "Starts the first condition. If it is true, its body runs and the remaining branches are skipped."
+        },
+        {
+          "code": "else if",
+          "name": "Next check",
+          "meaning": "Checks another condition only if the earlier condition was false."
+        },
+        {
+          "code": "else",
+          "name": "Otherwise",
+          "meaning": "Runs when none of the earlier conditions was true. It has no condition of its own."
+        },
+        {
+          "code": "(...) / {...}",
+          "name": "Condition and body",
+          "meaning": "Parentheses hold the condition. Curly braces hold the instructions that run when it matches."
+        }
+      ],
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "13 · Repeated choices",
       "title": "Build a start, options, exit menu",
       "explanation": "This menu combines the loop you learned earlier with separate if checks from the previous lesson. Each time round, it asks for one choice. Type 1 to print Starting..., 2 to print Options..., or 3 to reach break and finish the loop. The choices cannot equal 1 and 2 at the same time, so these separate if statements do not cause two messages for one answer. An if / else if chain could also handle these mutually exclusive choices. Other input matches none of them, so the menu simply appears again. break exits only this loop; return would leave the current function. The displayed choices are text, so compare with \"1\", \"2\", and \"3\".",
       "note": "// Keep asking for 1, 2, or 3. Exit on 3.",
@@ -2653,30 +2685,6 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "outputNote": "Example: the user enters 1, then 2, then 3. The menu prompts are input, and choosing 3 exits without printing another line. CodeStep previews this sequence; run it locally to try other choices.",
       "runHint": "Save as challenge.cpp; compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge (Windows: .\\challenge.exe). Type 1, then 2, then 3 to end."
-    },
-    {
-      "eyebrow": "13 · Combined conditions and comparisons",
-      "title": "Check whether a value is in a range",
-      "explanation": ">= and <= include the boundary values. && requires both comparisons; || requires at least one; ! reverses a condition. == means equal, != not equal, > greater than, and < less than.",
-      "note": "// && means AND. Both conditions must be true.",
-      "prompt": "Use && to check both ends of the age range.",
-      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  int age = 16;\n\n  if (age >= 0 && age <= 18) {\n    std::cout << \"Your age is between 0 and 18.\\n\";\n  } else {\n    std::cout << \"Your age is above 18.\\n\";\n  }\n}",
-      "output": [
-        "Your age is between 0 and 18."
-      ],
-      "parts": [
-        {
-          "code": ">= / <=",
-          "name": "Include the limit",
-          "meaning": "Compare including the boundary."
-        },
-        {
-          "code": "&& / || / !",
-          "name": "Combine checks",
-          "meaning": "Both, either, or reverse a condition."
-        }
-      ],
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
       "eyebrow": "14 · Dictionary",
@@ -3078,7 +3086,7 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
   },
 };
 
-const breakdownLessonTitles: Record<Language, string[]> = {"javascript": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Repeat code every second", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Choose let or const", "Ask for a name in VS Code", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "csharp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "html": ["Tell the browser it is HTML", "Start the HTML page", "Name the browser tab", "Add visible page content", "Separate content into boxes", "Create a heading hierarchy", "Open another page", "Explore HTML text elements", "Show the current date and time", "Link two HTML pages", "Place an image on the page", "Place a video on the page", "Place audio on the page", "Give one element a unique name", "Use a button instead of while (true)", "Send a value back with return"], "css": ["Colour the page background", "Colour and centre text", "Style one unique element", "Compare website fonts", "Explore borders and colour formats", "Create a rounded dotted border"], "python": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "cpp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"]};
+const breakdownLessonTitles: Record<Language, string[]> = {"javascript": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Repeat code every second", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Choose let or const", "Ask for a name in VS Code", "Choose between several messages", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "csharp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "html": ["Tell the browser it is HTML", "Start the HTML page", "Name the browser tab", "Add visible page content", "Separate content into boxes", "Create a heading hierarchy", "Open another page", "Explore HTML text elements", "Show the current date and time", "Link two HTML pages", "Place an image on the page", "Place a video on the page", "Place audio on the page", "Give one element a unique name", "Use a button instead of while (true)", "Send a value back with return"], "css": ["Colour the page background", "Colour and centre text", "Style one unique element", "Compare website fonts", "Explore borders and colour formats", "Create a rounded dotted border"], "python": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "cpp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"]};
 
 const nullBreakdowns: Partial<Record<Language, CodePart[]>> = {
   javascript: [
@@ -3220,7 +3228,7 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
     ? /(\/\*[\s\S]*?\*\/|#[0-9a-fA-F]{3,8}\b|#[A-Za-z_]\w*|\b(?:body|p|background-color|color|text-align|font-family|border|border-radius|solid|dotted|center|lightblue|red|blue|tomato)\b|\d+(?:px)?|[{}();:.,])/g
     : language === "python"
     ? /(#.*|f?"[^"\n]*"|f?'[^'\n]*'|\b(?:def|class|self|return|import|from|if|else|for|in|while|True|False|None|break|and|or|not|is)\b|\b(?:print|input|datetime|random|re|time|set|list|sorted)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|[{}()[\];=.:<>+*%/-])/g
-    : /(\/\/[^\n]*|\/\^[A-Za-z]+\/[gimsuy]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:def|self|import|from|True|False|None|and|or|not|is|function|class|constructor|this|let|const|double|bool|out|auto|include|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime|List|Set|HashSet|Dictionary|Random|std|cout|cin|vector|map|optional|print|input|datetime|random|re|time|Regex|RegexOptions)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|&&|>=|<=|\+\+|--|[{}()[\];=.:<>?^/])/g;
+    : /(\/\/[^\n]*|\/\^[A-Za-z]+\/[gimsuy]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:def|self|import|from|True|False|None|and|or|not|is|function|class|constructor|this|let|const|double|bool|out|auto|include|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:console|Console|Task|Date|DateTime|List|Set|HashSet|Dictionary|Random|std|cout|cin|vector|map|optional|print|input|datetime|random|re|time|Regex|RegexOptions)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|===|!==|==|!=|&&|\|\||!|>=|<=|\+\+|--|[{}()[\];=.:<>?^/])/g;
   if (language === "cpp") pattern = new RegExp(String.raw`#[ \t]*include[ \t]+(?:<[^>\n]+>|"[^"\n]+")|` + pattern.source, "g");
   const parts: { text: string; kind: string }[] = [];
   let lastIndex = 0;
@@ -3231,7 +3239,7 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
     if (language === "cpp" && /^#[ \t]*include/.test(text)) kind = "header";
     else if (/^(\/\/|\/\*|<!--)/.test(text) || (language === "python" && text.startsWith("#"))) kind = "comment";
     else if (/^f?["'`]/.test(text) || /^\/\^/.test(text)) kind = "string";
-    else if (/^(import|from|function|class|constructor|this|let|const|double|bool|out|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|div|section|script|img|video|audio|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
+    else if (/^(and|or|not|import|from|function|class|constructor|this|let|const|double|bool|out|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|div|section|script|img|video|audio|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
     else if (/^(console|Console|Task|Date|DateTime|List|Set|HashSet|Dictionary|Random|Regex|RegexOptions|log)$/.test(text)) kind = "api";
     else if (/^(style|href|src|alt|controls|id|lang|charset)$/.test(text)) kind = "attribute";
     else if (/^(background-color|color|text-align|font-family|border|border-radius)$/.test(text)) kind = "api";
@@ -3257,7 +3265,23 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
   })}{caretIndex !== undefined && !caretPlaced && <i className="editor-caret" />}</>;
 }
 
-function LearningCode({ code, starter, language, caretIndex }: { code: string; starter?: string; language: Language; caretIndex: number }) {
+function LearningCode({ code, starter, language, caretIndex, focusConditions }: { code: string; starter?: string; language: Language; caretIndex: number; focusConditions?: boolean }) {
+  if (focusConditions) {
+    const segments: { start: number; end: number; fresh: boolean }[] = [];
+    let offset = 0;
+    for (const line of code.split(/(?<=\n)/)) {
+      const conditionLine = /^\s*(?:}\s*)?(?:if|elif|else)\b/.test(line);
+      let last = 0;
+      if (conditionLine) for (const match of line.matchAll(/"[^"\n]*"|'[^'\n]*'|\b(?:if|elif|else|and|or|not)\b|===|!==|==|!=|>=|<=|&&|\|\||[<>!]/g)) {
+        if (match.index > last) segments.push({start: offset + last, end: offset + match.index, fresh: false});
+        segments.push({start: offset + match.index, end: offset + match.index + match[0].length, fresh: !/^["']/.test(match[0])});
+        last = match.index + match[0].length;
+      }
+      if (last < line.length) segments.push({start: offset + last, end: offset + line.length, fresh: false});
+      offset += line.length;
+    }
+    return <>{segments.map((segment, i) => <span key={i} className={segment.fresh ? "new-code" : "learned-code"}><HighlightedCode code={code.slice(segment.start, segment.end)} language={language} caretIndex={caretIndex >= segment.start && (caretIndex < segment.end || i === segments.length - 1) ? caretIndex - segment.start : undefined} /></span>)}{!code && <i className="editor-caret" />}</>;
+  }
   const learnedLength = starter && code.startsWith(starter) ? starter.length : 0;
   if (!learnedLength) return <span className="new-code"><HighlightedCode code={code} language={language} caretIndex={caretIndex} /></span>;
 
@@ -3772,12 +3796,24 @@ export default function Home() {
               <code><HighlightedCode code={part.code} language={language} /></code><div><b>{part.name}</b><span>{part.meaning}</span></div>
             </div>)}</div>
           </section>}
-          {current!.eyebrow.includes("Combined conditions") && <div className="comparison-guide" aria-label="Comparisons and combined conditions">
-            <div><code>{language === "javascript" ? "=== / !==" : "== / !="}</code><p><b>Equal / not equal</b><span>{language === "javascript" ? "Compare values and types. == converts types before comparing; prefer === here." : "Compare the two values."}</span></p></div>
-            <div><code>{"> / <"}</code><p><b>Greater / less than</b><span>The open side faces the larger value.</span></p></div>
-            <div><code>{">= / <="}</code><p><b>Include the boundary</b><span>Greater than or equal / less than or equal.</span></p></div>
-            <div><code>{"&& / || / !"}</code><p><b>AND / OR / NOT</b><span>Both conditions / at least one condition / reverse a condition.</span></p></div>
-          </div>}
+          {current!.eyebrow.includes("Combined conditions") && <section className="comparison-guide speed-symbols" aria-label="Comparison and logical symbols">
+            <h2>Symbols in this language</h2>
+            {[
+              [">", "Greater than", "True when the value on the left is larger."],
+              ["<", "Less than", "True when the value on the left is smaller."],
+              [">=", "Greater than or equal", "Includes the boundary value."],
+              ["<=", "Less than or equal", "Includes the boundary value."],
+              ["==", "Equal", language === "javascript" ? "Compares values after type conversion; usually use === in JavaScript." : "Checks whether the values are equal."],
+              ["!=", "Not equal", language === "javascript" ? "Compares after type conversion; usually use !== in JavaScript." : "Checks whether the values differ."],
+              ...(language === "javascript" ? [["===", "Strictly equal", "Checks equality without converting types."], ["!==", "Strictly not equal", "Checks inequality without converting types."]] : []),
+              [language === "python" ? "and" : "&&", "AND", "Both conditions must be true. && is two ampersands."],
+              [language === "python" ? "or" : "||", "OR", "At least one condition must be true. || is two vertical bars."],
+              [language === "python" ? "not" : "!", "NOT", "Reverses true and false."],
+              ["=", "Assignment", "Saves a value; it does not compare two values."],
+            ].map(([symbol, name, meaning]) => <div key={symbol}><code>{symbol}</code><p><b>{name}</b><span>{meaning}</span></p></div>)}
+            <p>{language === "python" ? "Python spells the logical operators and, or, and not. It does not use &&, ||, ===, or !==." : "&& combines conditions inside one check. To perform several actions, put each instruction on its own line inside the same body."}</p>
+            <p>Change speed in this same program to 60 or 0 to explore the other branches. There is no second program to learn.</p>
+          </section>}
           {current!.referenceOnly ? current!.referenceKind === "comparisons" ? <div className="comparison-guide">
             <div><code>{language === "javascript" ? "==" : "=="}</code><p><b>Equal value</b><span>{language === "javascript" ? "Converts types before comparing; usually prefer ===." : "Checks whether the two values are equal."}</span></p></div>
             {language === "javascript" && <div><code>===</code><p><b>Equal value and type</b><span>Strict equality checks the value and its data type.</span></p></div>}
@@ -3890,7 +3926,7 @@ export default function Home() {
           </div> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className="file-tab"><span>◆</span> {current!.fileName || challengeFile(language)}</div><div className="panel-actions"><button className="editor-mode-button" onClick={() => changeBlockMode(!blockMode)}>{blockMode ? "Use keyboard" : "Use blocks"}</button><button onClick={() => changeBlockCode(current!.starter || "")} title="Reset code">↻ Reset</button></div></div>
-            {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className="code-guide" aria-hidden="true"><span>CODE GUIDE</span><code><HighlightedCode code={guideCode} language={language} /></code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : "// Type your code here..."} /></div>}
+            {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className={`code-guide ${current!.title === "Choose between several messages" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code>{current!.title === "Choose between several messages" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Choose between several messages"} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : "// Type your code here..."} /></div>}
           </div>
           <div className="console-panel">
             <div className="console-bar"><span><i /> CONSOLE</span><button onClick={() => setStatus("idle")}>Clear</button></div>
