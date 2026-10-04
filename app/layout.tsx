@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "CodeStep — Learn by typing",
-  description: "Hands-on JavaScript and C# lessons with instant console feedback.",
+  description: "Learn JavaScript, C#, Python, C++, HTML, and CSS by typing examples and checking the results.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

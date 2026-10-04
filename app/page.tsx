@@ -32,7 +32,7 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "01 · Console output",
       "title": "Print several lines at once",
-      "explanation": "console.log prints the text inside quotation marks. Write \\n inside the string wherever you want a new line. In console.log(\" Hello \\n Welcome \\n Goodbye\"), the first \\n puts Welcome on the next line and the second puts Goodbye on another line. const red stores the red terminal colour code, and ${red} inserts it before the red-text message.",
+      "explanation": "console.log prints the text inside quotation marks. Write \\n inside the string wherever you want a new line. In console.log(\" Hello \\n Welcome \\n Goodbye\"), the first \\n puts Welcome on the next line and the second puts Goodbye on another line. const red stores the red terminal colour code, and ${red} inserts it before the red-text message. The red colour stays active until it is reset, so the later lines are red too. The next colour lesson shows the reset code.",
       "note": "// Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
       "prompt": "Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
       "answer": "const red = \"\\x1b[31m\";\nconsole.log(`${red} This is red text`);\n\nconsole.log(\" Hello \\n Welcome \\n Goodbye\");",
@@ -65,7 +65,10 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "outputColors": [
-        "#ef4444"
+        "#ef7777",
+        "#ef7777",
+        "#ef7777",
+        "#ef7777"
       ]
     },
     {
@@ -141,14 +144,34 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "parts": [
         {
-          "code": "() => {}",
+          "code": "setTimeout",
+          "name": "Run once later",
+          "meaning": "Schedules a function to run once after the delay. The following instructions outside it can continue immediately."
+        },
+        {
+          "code": "()",
+          "name": "No function inputs",
+          "meaning": "The empty parentheses before the arrow mean this function has no named inputs."
+        },
+        {
+          "code": "=>",
           "name": "Arrow function",
-          "meaning": "An unnamed function: empty () means no parameters and {} holds the body."
+          "meaning": "Connects those inputs to the function body on its right."
+        },
+        {
+          "code": "{ ... }",
+          "name": "Function body",
+          "meaning": "Contains the instructions that run when the timer fires."
+        },
+        {
+          "code": ",",
+          "name": "Separate the arguments",
+          "meaning": "Separates the function to run from the delay value passed to setTimeout."
         },
         {
           "code": "2000",
-          "name": "Milliseconds",
-          "meaning": "1000 milliseconds = 1 second."
+          "name": "Two seconds",
+          "meaning": "The delay is in milliseconds. 2000 milliseconds means 2 seconds."
         }
       ],
       "outputNote": "Example output after the 2-second delay."
@@ -206,6 +229,21 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "parts": [
         {
+          "code": "new Date()",
+          "name": "Capture the clock",
+          "meaning": "Captures the current local date and time. This saved Date object does not keep updating itself."
+        },
+        {
+          "code": "let time =",
+          "name": "Save a value",
+          "meaning": "let gives a value a name that can be reassigned later. = saves the value on the right under the name on the left."
+        },
+        {
+          "code": "if (...) { ... }",
+          "name": "Run a matching check",
+          "meaning": "Runs the instructions inside the braces only when the condition is true."
+        },
+        {
           "code": "time.getHours()",
           "name": "Hour",
           "meaning": "Reads the hour from 0 to 23."
@@ -243,6 +281,11 @@ const lessons: Record<Language, Lesson[]> = {
           "code": "clearInterval(timer)",
           "name": "Stop",
           "meaning": "Cancels the repeating timer after the matching time."
+        },
+        {
+          "code": "const timer = setInterval(...)",
+          "name": "Keep the timer identifier",
+          "meaning": "Saves this interval's identifier so clearInterval(timer) can stop that particular interval."
         }
       ],
       "outputNote": "Example output at 17:20. The lesson preview does not wait for the clock."
@@ -281,38 +324,73 @@ const lessons: Record<Language, Lesson[]> = {
         "Ford, 2014",
         "Audi, 2019"
       ],
-      "parts": []
+      "parts": [
+        {
+          "code": "class Car",
+          "name": "Create the class",
+          "meaning": "Defines the blueprint before any Car objects are created."
+        },
+        {
+          "code": "constructor(name, year)",
+          "name": "Receive values",
+          "meaning": "Runs when new Car(...) creates an object. name and year receive Ford and 2014 from new Car(\"Ford\", 2014)."
+        },
+        {
+          "code": "this.name = name",
+          "name": "Store a property",
+          "meaning": "this means this particular car object. This assignment saves the received name on that object's name property."
+        },
+        {
+          "code": "new Car(\"Ford\", 2014)",
+          "name": "Create an instance",
+          "meaning": "Calls the constructor and creates one Car object."
+        }
+      ]
     },
     {
       "eyebrow": "10 · Loops",
       "title": "Repeat input until the answer is correct",
-      "explanation": "while (true) { } repeats forever because true never changes. On its own, it never reaches an ending. If you put that endless loop inside an HTML page, the page can freeze. This version works because break leaves the loop as soon as the answer is correct.",
+      "explanation": "The loop asks the question, saves the entered text, and prints that answer. If it is \"2\", it prints Correct! and break immediately leaves the nearest loop, skipping Try again. A wrong answer prints the retry message, then the next repetition asks again. The braces show which instructions belong to while and if.",
       "note": "// Create the loop with input, output, and break inside if.",
       "prompt": "Create the loop with input, output, and break inside if.",
       "answer": "while (true) {\n  let answer = prompt(\"What is 1 + 1?\");\n  console.log(answer);\n\n  if (answer == \"2\") {\n    console.log(\"Correct!\");\n    break;\n  }\n\n  console.log(\"Try again.\");\n}",
       "output": [
-        "INPUT  →  2",
-        "OUTPUT  →  2",
-        "Correct!",
-        "break leaves the loop."
+        "2",
+        "Correct!"
       ],
       "parts": [
         {
           "code": "while (true)",
-          "name": "Repeat",
-          "meaning": "Keeps asking for input until code inside stops the loop."
+          "name": "Keep repeating",
+          "meaning": "The condition stays true, so this loop keeps repeating until break is reached. The instructions inside its braces form its body."
         },
         {
-          "code": "prompt",
-          "name": "Input",
-          "meaning": "Asks the user for an answer."
+          "code": "prompt(...)",
+          "name": "Read an answer",
+          "meaning": "Waits for text in a browser dialog and saves it in answer."
         },
         {
-          "code": "break",
-          "name": "Stop",
-          "meaning": "Leaves the loop when the if condition is true."
+          "code": "answer == \"2\"",
+          "name": "Check the answer",
+          "meaning": "Compares the entered text with \"2\". if runs its body only when this comparison is true."
+        },
+        {
+          "code": "break;",
+          "name": "Leave the loop",
+          "meaning": "Immediately leaves the nearest loop and skips the rest of that repetition. Execution continues after the loop; break does not end the whole program. Here it skips the Try again. message below."
+        },
+        {
+          "code": "console.log(\"Try again.\");",
+          "name": "Repeat after a wrong answer",
+          "meaning": "A wrong answer reaches this message. The next repetition then asks the question again."
         }
-      ]
+      ],
+      "outputAnnotations": [
+        "entered answer echoed",
+        "break leaves the loop"
+      ],
+      "outputNote": "Example run: the first answer is 2. The labels beside the lines explain the run; the program does not print them.",
+      "runHint": "Run this example in a browser developer console or inside an HTML script. prompt() opens a browser dialog; it is not available in the Node terminal. CodeStep checks the code and shows a sample result."
     },
     {
       "eyebrow": "11 · Variables",
@@ -346,7 +424,8 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Inserts the value of name into the text between backticks."
         }
       ],
-      "outputNote": "Example output when the user enters Alex in the prompt dialog."
+      "outputNote": "Example output when the user enters Alex in the prompt dialog.",
+      "runHint": "Run this example in a browser developer console or inside an HTML script. prompt() opens a browser dialog; it is not available in the Node terminal. CodeStep checks the code and shows a sample result."
     },
     {
       "eyebrow": "12 · Terminal input",
@@ -356,7 +435,7 @@ const lessons: Record<Language, Lesson[]> = {
       "prompt": "Set up terminal input, ask for a name, print Hello, then close input.",
       "answer": "import { createInterface } from \"node:readline/promises\";\n\nconst input = createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\nlet name = await input.question(\"What is your name?\");\nconsole.log(`Hello ${name}`);\n\ninput.close();",
       "output": [
-        "What is your name?  →  Alex",
+        "What is your name? ",
         "Hello Alex"
       ],
       "fileName": "name.mjs",
@@ -383,7 +462,12 @@ const lessons: Record<Language, Lesson[]> = {
           "name": "Finish taking input",
           "meaning": "Closes the readline interface when the questions are finished."
         }
-      ]
+      ],
+      "outputAnnotations": [
+        "you enter Alex",
+        "the entered name is used"
+      ],
+      "outputNote": "Example input: Alex. The input label is an annotation."
     },
     {
       "eyebrow": "13 · If statements and symbols",
@@ -423,7 +507,7 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "outputNote": "Example output when the user enters 1. The entered choice is input, not printed output.",
-      "runHint": "Run in a browser console or script. Enter 1, then 2, then 3; this lesson previews the output instead of opening real prompts. In Node.js, prompt is not built in; use the readline approach from the name-input lesson."
+      "runHint": "Run this example in a browser developer console or inside an HTML script. prompt() opens a browser dialog; it is not available in the Node terminal. CodeStep checks the code and shows a sample result. Enter one choice; run the example again to try another option."
     },
     {
       "eyebrow": "14 · Dictionary",
@@ -434,7 +518,6 @@ const lessons: Record<Language, Lesson[]> = {
       "answer": "const words = {\n  bonjour: \"hello\",\n  hola: \"hello\"\n};\n\nconsole.log(Object.values(words).join(\", \"));\nlet search = prompt(\"Search:\");\nconsole.log(words[search]);",
       "output": [
         "hello, hello",
-        "Search:  →  bonjour",
         "hello"
       ],
       "parts": [
@@ -447,13 +530,29 @@ const lessons: Record<Language, Lesson[]> = {
           "code": "words[search]",
           "name": "Look up",
           "meaning": "Square brackets retrieve the value for the saved key."
+        },
+        {
+          "code": "Object.values(words)",
+          "name": "Get the values",
+          "meaning": "Returns an array containing the stored translations."
+        },
+        {
+          "code": ".join(\", \")",
+          "name": "Join the text",
+          "meaning": "Turns the array into one text string, placing a comma and space between values."
         }
-      ]
+      ],
+      "outputAnnotations": [
+        "stored translations",
+        "value for bonjour"
+      ],
+      "outputNote": "Example input: bonjour. Input labels are annotations, not text printed by the program.",
+      "runHint": "Run this example in a browser developer console or inside an HTML script. prompt() opens a browser dialog; it is not available in the Node terminal. CodeStep checks the code and shows a sample result."
     },
     {
       "eyebrow": "15 · Expressions",
       "title": "Calculate a value",
-      "explanation": "An expression produces a value. 80 + 20 produces 100. speed > 100 produces false when speed is 100. A statement performs an instruction, such as saving that result or printing it. + adds, - subtracts, * multiplies, / divides, and % gives the remainder. C# integer division discards the fractional part; use a double such as 5.0 when you need a decimal result.",
+      "explanation": "An expression produces a value. 80 + 20 produces 100. speed > 100 produces false when speed is 100. A statement performs an instruction, such as saving that result or printing it. + adds, - subtracts, * multiplies, / divides, and % gives the remainder. JavaScript division can produce a decimal result.",
       "note": "// Calculate speed with 80 + 20, then print Speed: 100.",
       "prompt": "Calculate speed with 80 + 20, then print Speed: 100.",
       "answer": "let speed = 80 + 20;\nconsole.log(`Speed: ${speed}`);",
@@ -525,8 +624,6 @@ const lessons: Record<Language, Lesson[]> = {
       "prompt": "Create an empty collection, add a name, ask what to search for, and print whether it was found.",
       "answer": "const names = [];\n\nnames.push(prompt(\"add a name\"));\n\nconst search = prompt(\"search for a name\");\n\nif (names.includes(search)) {\n  console.log(\"name found\");\n} else {\n  console.log(\"name not found\");\n}",
       "output": [
-        "add a name  →  Jordan",
-        "search for a name  →  Jordan",
         "name found"
       ],
       "parts": [
@@ -545,7 +642,12 @@ const lessons: Record<Language, Lesson[]> = {
           "name": "Search",
           "meaning": "Checks for the exact value without changing the array."
         }
-      ]
+      ],
+      "outputAnnotations": [
+        "Jordan matches Jordan"
+      ],
+      "outputNote": "Example input: add Jordan, then search for Jordan. Input labels are annotations, not printed text.",
+      "runHint": "Run this example in a browser developer console or inside an HTML script. prompt() opens a browser dialog; it is not available in the Node terminal. CodeStep checks the code and shows a sample result."
     },
     {
       "eyebrow": "18 · Sets",
@@ -555,12 +657,25 @@ const lessons: Record<Language, Lesson[]> = {
       "prompt": "Collect three names, create a Set, and print its unique values.",
       "answer": "const names = [];\n\nnames.push(prompt(\"Enter the first name:\"));\nnames.push(prompt(\"Enter the second name:\"));\nnames.push(prompt(\"Enter the third name:\"));\n\nconst uniqueNames = new Set(names);\n\nconsole.log(`[${[...uniqueNames].join(\", \")}]`);",
       "output": [
-        "Enter the first name:  →  Alex",
-        "Enter the second name:  →  Sam",
-        "Enter the third name:  →  Alex",
         "[Alex, Sam]"
       ],
-      "parts": []
+      "parts": [
+        {
+          "code": "new Set(names)",
+          "name": "Remove duplicates",
+          "meaning": "Creates a Set from names. A Set keeps only one copy of each value."
+        },
+        {
+          "code": "[...uniqueNames]",
+          "name": "Spread into an array",
+          "meaning": "The three dots copy every Set value into a new array for familiar array-style output."
+        }
+      ],
+      "outputAnnotations": [
+        "Alex appears once"
+      ],
+      "outputNote": "Example input: Alex, Sam, Alex. The repeated name is kept once. The labels are annotations, not printed text.",
+      "runHint": "Run this example in a browser developer console or inside an HTML script. prompt() opens a browser dialog; it is not available in the Node terminal. CodeStep checks the code and shows a sample result."
     },
     {
       "eyebrow": "19 · Null",
@@ -572,7 +687,18 @@ const lessons: Record<Language, Lesson[]> = {
       "output": [
         "No result yet"
       ],
-      "parts": []
+      "parts": [
+        {
+          "code": "null",
+          "name": "No value yet",
+          "meaning": "Deliberately stores no value for now; result can receive one later."
+        },
+        {
+          "code": "=== null",
+          "name": "Exact check",
+          "meaning": "Checks whether result is specifically the null value."
+        }
+      ]
     },
     {
       "eyebrow": "20 · Regular expressions",
@@ -588,7 +714,43 @@ const lessons: Record<Language, Lesson[]> = {
         "Sarah cannot enter the club.",
         "Ben cannot enter the club."
       ],
-      "parts": []
+      "parts": [
+        {
+          "code": "for (const name of names)",
+          "name": "Visit each name",
+          "meaning": "Takes each name from the array in order, runs the body once per name, and stops when the array ends."
+        },
+        {
+          "code": "name + \"...\"",
+          "name": "Join text",
+          "meaning": "When used with text, + joins the name and message into one string."
+        },
+        {
+          "code": "/ ... /",
+          "name": "Pattern",
+          "meaning": "The forward slashes mark the beginning and end of a regular expression."
+        },
+        {
+          "code": "^",
+          "name": "Beginning",
+          "meaning": "The caret says the match must start at the very beginning of the text."
+        },
+        {
+          "code": "J",
+          "name": "Required letter",
+          "meaning": "This is the letter that must appear first."
+        },
+        {
+          "code": "i",
+          "name": "Ignore case",
+          "meaning": "Accepts either uppercase J or lowercase j."
+        },
+        {
+          "code": ".test(name)",
+          "name": "Check a name",
+          "meaning": "Returns true when name begins with J and false when it does not."
+        }
+      ]
     },
     {
       "title": "Get a filename from a path",
@@ -687,7 +849,6 @@ const lessons: Record<Language, Lesson[]> = {
       "prompt": "Combine the word dictionary and random key code to make a translation quiz.",
       "answer": "const words = {\n  bonjour: \"hello\",\n  hola: \"hello\"\n};\n\nlet random = Object.keys(words)[Math.floor(Math.random() * 2)];\n\nlet answer = prompt(random);\n\nif (answer == words[random]) {\n  console.log(\"Correct\");\n} else {\n  console.log(\"Wrong\");\n}",
       "output": [
-        "bonjour  →  hello",
         "Correct"
       ],
       "parts": [
@@ -742,15 +903,18 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Prints Correct when the answer matches; otherwise prints Wrong. console.log prints the message."
         }
       ],
-      "outputNote": "Example run: bonjour is chosen and the user enters hello.",
-      "runHint": "This example uses browser prompt(). Run it in a browser developer console; prompt() is not available in the Node terminal. CodeStep checks your code and shows a sample result."
+      "outputNote": "Example run: bonjour is chosen and the user enters hello. The entered answer is input; the labels are annotations.",
+      "runHint": "Run this example in a browser developer console or inside an HTML script. prompt() opens a browser dialog; it is not available in the Node terminal. CodeStep checks the code and shows a sample result.",
+      "outputAnnotations": [
+        "hello matches the translation"
+      ]
     }
   ],
   "csharp": [
     {
       "eyebrow": "01 · Console output",
       "title": "Print several lines at once",
-      "explanation": "Console.WriteLine prints the text inside quotation marks. Write \\n inside the string wherever you want a new line. The first \\n puts Welcome on the next line and the second puts Goodbye on another line. const string red stores the red terminal colour code. $ before the string lets {red} insert it before the message. ANSI colours work in supporting terminals; this lesson previews red in its console.",
+      "explanation": "Console.WriteLine prints the text inside quotation marks. Write \\n inside the string wherever you want a new line. The first \\n puts Welcome on the next line and the second puts Goodbye on another line. const string red stores the red terminal colour code. $ before the string lets {red} insert it before the message. ANSI colours work in supporting terminals; this lesson previews red in its console. The red colour stays active until it is reset, so the later lines are red too. The next colour lesson shows the reset code.",
       "note": "// Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
       "prompt": "Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
       "answer": "const string red = \"\\u001b[31m\";\nConsole.WriteLine($\"{red} This is red text\");\n\nConsole.WriteLine(\" Hello \\n Welcome \\n Goodbye\");",
@@ -783,9 +947,12 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "outputColors": [
-        "#ef4444"
+        "#ef7777",
+        "#ef7777",
+        "#ef7777",
+        "#ef7777"
       ],
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "02 · Functions",
@@ -801,30 +968,30 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "void",
           "name": "Result type",
-          "meaning": "Says this method does not send a value back."
+          "meaning": "Says this function does not send a value back."
         },
         {
           "code": "correct()",
           "name": "Name",
-          "meaning": "Names the method so you can call it later."
+          "meaning": "Names the function so you can call it later."
         },
         {
           "code": "{ ... }",
           "name": "Instructions",
-          "meaning": "Holds the code the method will run."
+          "meaning": "Holds the code the function will run."
         },
         {
           "code": "correct();",
           "name": "Call it",
-          "meaning": "Runs the method you created."
+          "meaning": "Runs the function you created."
         },
         {
           "code": ";",
           "name": "End statement",
-          "meaning": "Marks where a statement ends. C# requires it after statements such as calling a method or printing text."
+          "meaning": "Marks where a statement ends. C# requires it after statements such as calling a function or printing text."
         }
       ],
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "03 · ANSI colours",
@@ -848,7 +1015,7 @@ const lessons: Record<Language, Lesson[]> = {
         "#ef4444",
         "#4ade80"
       ],
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "04 · Time",
@@ -873,7 +1040,7 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "outputNote": "Example output after the 2-second delay.",
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "05 · Date and time",
@@ -886,6 +1053,11 @@ const lessons: Record<Language, Lesson[]> = {
         "Time reached!"
       ],
       "parts": [
+        {
+          "code": "DateTime.Now",
+          "name": "Capture the clock",
+          "meaning": "Reads a snapshot of the computer's current local date and time. This saved value does not keep updating itself."
+        },
         {
           "code": "time.Hour",
           "name": "Hour",
@@ -900,10 +1072,15 @@ const lessons: Record<Language, Lesson[]> = {
           "code": "&&",
           "name": "Both",
           "meaning": "The hour and minute must both match."
+        },
+        {
+          "code": "if (hour == 17 && minute == 20)",
+          "name": "Check both values",
+          "meaning": "if runs its body only when both comparisons are true. && (two ampersands) means both the hour and minute must match."
         }
       ],
       "outputNote": "Example output when the clock is 17:20. At other times, this snippet prints nothing.",
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "06 · Date and time",
@@ -919,16 +1096,16 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "while (true)",
           "name": "Repeat checks",
-          "meaning": "Keeps repeating until break ends the loop."
+          "meaning": "The condition stays true, so the loop repeats its body inside the braces until break is reached."
         },
         {
           "code": "break",
-          "name": "Stop",
-          "meaning": "Leaves the loop after the matching time."
+          "name": "Leave the loop",
+          "meaning": "Immediately leaves the nearest loop and skips the rest of that repetition. Execution continues after the loop; break does not end the whole program."
         }
       ],
       "outputNote": "Example output at 17:20. The lesson preview does not wait for the clock.",
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "07 · Functions",
@@ -952,58 +1129,114 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "getMessage runs first; Console.WriteLine receives Hello."
         }
       ],
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "08 · Classes",
       "title": "Create and use a class",
-      "explanation": "A method is called with its name, such as Correct(). A class is used in a similar way, but you put new before its name: new Car(\"Ford\", 2014). The Car class is defined before Program, and Main then creates objects, or instances, from that class.",
-      "note": "// Define Car first, then create Car objects inside Main",
+      "explanation": "A method is called with its name, such as correct(). A class is used in a similar way, but you put new before its name: new Car(\"Ford\", 2014). The Car class is defined before Program, and Main then creates objects, or instances, from that class.",
+      "note": "// Define Car, create car objects, then print their properties.",
       "prompt": "Create the Car class, then call its constructor with new to make Ford and Audi objects.",
       "answer": "class Car\n{\n  public string Name { get; set; }\n  public int Year { get; set; }\n\n  public Car(string name, int year)\n  {\n    // this.Name is the property stored in the car object.\n    // name is the value passed into the constructor.\n    this.Name = name;\n\n    // this.Year is the property stored in the car object.\n    // year is the value passed into the constructor.\n    this.Year = year;\n  }\n}\n\nclass Program\n{\n  static void Main()\n  {\n    Car myCar1 = new Car(\"Ford\", 2014);\n    Car myCar2 = new Car(\"Audi\", 2019);\n\n    Console.WriteLine($\"{myCar1.Name}, {myCar1.Year}\");\n    Console.WriteLine($\"{myCar2.Name}, {myCar2.Year}\");\n  }\n}",
       "output": [
         "Ford, 2014",
         "Audi, 2019"
       ],
-      "parts": [],
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "parts": [
+        {
+          "code": "class Car",
+          "name": "Define the class",
+          "meaning": "Defines a blueprint for Car objects. Each object keeps its own property values."
+        },
+        {
+          "code": "public string Name",
+          "name": "Property",
+          "meaning": "Stores a text name that other code can read or change."
+        },
+        {
+          "code": "Car(string name, int year)",
+          "name": "Constructor",
+          "meaning": "Receives the starting values when new Car(...) creates an object."
+        },
+        {
+          "code": "new Car(\"Ford\", 2014)",
+          "name": "Create an instance",
+          "meaning": "Creates one Car object inside Main."
+        },
+        {
+          "code": "public",
+          "name": "Allow outside access",
+          "meaning": "Lets code outside Car use this constructor or property."
+        },
+        {
+          "code": "{ get; set; }",
+          "name": "Read or change a property",
+          "meaning": "get allows reading the property; set allows assigning a new value."
+        },
+        {
+          "code": "this.Name = name",
+          "name": "Store the starting value",
+          "meaning": "this.Name is this car object's property; name is the input received by its constructor."
+        },
+        {
+          "code": "static void Main()",
+          "name": "Start the program",
+          "meaning": "Main is the program's entry method here. static means no Program object is needed to call it; void means it sends no value back."
+        }
+      ],
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "09 · Loops",
       "title": "Repeat input until the answer is correct",
-      "explanation": "while (true) { } repeats forever because true never changes. On its own, it never reaches an ending. This version works because break immediately leaves the loop as soon as the answer is correct.",
+      "explanation": "The loop asks the question, saves the entered text, and prints that answer. If it is \"2\", it prints Correct! and break immediately leaves the nearest loop, skipping Try again. A wrong answer prints the retry message, then the next repetition asks again. The braces show which instructions belong to while and if.",
       "note": "// Create the loop with input, output, and break inside if.",
       "prompt": "Create the loop with input, output, and break inside if.",
       "answer": "while (true)\n{\n  Console.WriteLine(\"What is 1 + 1?\");\n  string answer = Console.ReadLine();\n  Console.WriteLine(answer);\n\n  if (answer == \"2\")\n  {\n    Console.WriteLine(\"Correct!\");\n    break;\n  }\n\n  Console.WriteLine(\"Try again.\");\n}",
       "output": [
-        "INPUT  →  2",
-        "OUTPUT  →  2",
-        "Correct!",
-        "break leaves the loop."
+        "What is 1 + 1?",
+        "2",
+        "Correct!"
       ],
       "parts": [
         {
           "code": "while (true)",
-          "name": "Repeat",
-          "meaning": "Keeps asking for input until code inside stops the loop."
+          "name": "Keep repeating",
+          "meaning": "The condition stays true, so this loop keeps repeating until break is reached. The instructions inside its braces form its body."
         },
         {
-          "code": "Console.ReadLine",
-          "name": "Input",
-          "meaning": "Reads the user's answer."
+          "code": "Console.ReadLine()",
+          "name": "Read an answer",
+          "meaning": "Waits for a line of terminal text and saves it in answer."
         },
         {
-          "code": "break",
-          "name": "Stop",
-          "meaning": "Leaves the loop when the if condition is true."
+          "code": "answer == \"2\"",
+          "name": "Check the answer",
+          "meaning": "Compares the entered text with \"2\". if runs its body only when this comparison is true."
+        },
+        {
+          "code": "break;",
+          "name": "Leave the loop",
+          "meaning": "Immediately leaves the nearest loop and skips the rest of that repetition. Execution continues after the loop; break does not end the whole program. Here it skips the Try again. message below."
+        },
+        {
+          "code": "Console.WriteLine(\"Try again.\");",
+          "name": "Repeat after a wrong answer",
+          "meaning": "A wrong answer reaches this message. The next repetition then asks the question again."
         }
       ],
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first.",
+      "outputAnnotations": [
+        "you enter 2",
+        "entered answer echoed",
+        "break leaves the loop"
+      ],
+      "outputNote": "Example run: the first answer is 2. The labels beside the lines explain the run; the program does not print them."
     },
     {
       "eyebrow": "10 · Variables",
       "title": "Use changeable and fixed values",
-      "explanation": "int creates a variable holding a whole number, which you can reassign. const int creates a compile-time constant you cannot reassign. Here speed changes from 80 to 100; maxSpeed stays 100. C# has no let keyword for normal variable declarations; string stores text and var lets the compiler infer a local variable’s type.",
+      "explanation": "speed starts at 80 and can be reassigned. speed = 100 replaces its earlier value. const keeps maxSpeed fixed at 100, so assigning a different value to maxSpeed is not allowed. The last instruction prints the updated speed.",
       "note": "// Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
       "prompt": "Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
       "answer": "int speed = 80;\nconst int maxSpeed = 100;\n\nspeed = 100;\nConsole.WriteLine($\"Speed: {speed}\");",
@@ -1012,27 +1245,32 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "parts": [
         {
-          "code": "int",
-          "name": "Whole number",
-          "meaning": "Declares the type of value speed stores."
+          "code": "int speed = 80;",
+          "name": "Changeable value",
+          "meaning": "Creates speed with the starting value 80. It can receive a different value later."
         },
         {
-          "code": "const int",
-          "name": "Constant",
-          "meaning": "Stores a compile-time value that cannot be reassigned."
+          "code": "const int maxSpeed = 100;",
+          "name": "Fixed value",
+          "meaning": "Creates maxSpeed as a constant. It cannot be reassigned."
+        },
+        {
+          "code": "speed = 100;",
+          "name": "Reassign",
+          "meaning": "Replaces the earlier value 80 with 100; it does not create a second speed variable."
         }
       ],
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "11 · Variables",
-      "title": "Remember a value",
-      "explanation": "string tells C# that a variable holds text. Console.ReadLine asks for input, and the answer can be stored in that variable for later.",
+      "eyebrow": "11 · Terminal input",
+      "title": "Ask for a name in VS Code",
+      "explanation": "Console.WriteLine displays the question. Console.ReadLine() reads a line of terminal text, and name stores it. The last Console.WriteLine prints the greeting using that saved answer.",
       "note": "// Ask for a name and greet the user",
       "prompt": "Create a name variable, then print Hello with a template string.",
       "answer": "Console.WriteLine(\"What is your name?\");\nstring name = Console.ReadLine();\nConsole.WriteLine($\"Hello {name}\");",
       "output": [
-        "What is your name?  →  Alex",
+        "What is your name?",
         "Hello Alex"
       ],
       "parts": [
@@ -1052,7 +1290,12 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Puts the value on the right into the variable on the left."
         }
       ],
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first.",
+      "outputAnnotations": [
+        "you enter Alex",
+        "the entered name is used"
+      ],
+      "outputNote": "Example input: Alex. The input label is an annotation."
     },
     {
       "eyebrow": "12 · If statements and symbols",
@@ -1092,21 +1335,26 @@ const lessons: Record<Language, Lesson[]> = {
           "code": "(...) / {...}",
           "name": "Condition and body",
           "meaning": "Parentheses hold the condition. Curly braces group the instructions to run."
+        },
+        {
+          "code": "string? choice",
+          "name": "Allow missing input",
+          "meaning": "The question mark allows choice to hold text or null when no line of input is available."
         }
       ],
       "outputNote": "Example output when the user enters 1. The entered choice is input, not printed output.",
-      "runHint": "Put this top-level code in Program.cs in a .NET console project and run dotnet run. Type 1, then 2, then 3 to end."
+      "runHint": "Put this top-level code in Program.cs in a .NET console project and run dotnet run. Enter one choice and press Enter. Run the program again to try another option."
     },
     {
       "eyebrow": "13 · Dictionary",
       "title": "Search a word dictionary",
-      "explanation": "A Dictionary connects keys to values. Dictionary<string, string> means text keys and text values. Its initializer uses {} to add bonjour and hola, with hello under each key. string.Join prints its values. TryGetValue checks whether the entered key exists and safely returns the value; words[search] is a direct lookup but throws if the key is missing.",
+      "explanation": "A Dictionary connects keys to values. Dictionary<string, string> means text keys and text values. Its initializer uses {} to add bonjour and hola, with hello under each key. string.Join combines its values into one text string; Console.WriteLine prints that text. TryGetValue checks whether the entered key exists and safely returns the value; words[search] is a direct lookup but throws if the key is missing.",
       "note": "// Create the word dictionary, show its values, then search for a word.",
       "prompt": "Create the word dictionary, show its values, then search for a word.",
       "answer": "var words = new System.Collections.Generic.Dictionary<string, string> {\n  { \"bonjour\", \"hello\" },\n  { \"hola\", \"hello\" }\n};\n\nConsole.WriteLine(string.Join(\", \", words.Values));\nConsole.WriteLine(\"Search:\");\nstring search = Console.ReadLine() ?? \"\";\nif (words.TryGetValue(search, out string? translation)) {\n  Console.WriteLine(translation);\n} else {\n  Console.WriteLine(\"word not found\");\n}",
       "output": [
         "hello, hello",
-        "Search:  →  bonjour",
+        "Search:",
         "hello"
       ],
       "parts": [
@@ -1119,9 +1367,25 @@ const lessons: Record<Language, Lesson[]> = {
           "code": "TryGetValue",
           "name": "Safe lookup",
           "meaning": "Returns true and sets translation when the key is found."
+        },
+        {
+          "code": "?? \"\"",
+          "name": "Fallback for missing input",
+          "meaning": "Uses an empty string if Console.ReadLine() returns null."
+        },
+        {
+          "code": "out string? translation",
+          "name": "Receive the found value",
+          "meaning": "Lets TryGetValue place the found translation in this variable. Its true/false result tells if the key was found."
         }
       ],
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first.",
+      "outputAnnotations": [
+        "stored translations",
+        "you enter bonjour",
+        "value for bonjour"
+      ],
+      "outputNote": "Example input: bonjour. Input labels are annotations, not text printed by the program."
     },
     {
       "eyebrow": "14 · Expressions",
@@ -1145,7 +1409,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Produces true or false."
         }
       ],
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "15 · Random",
@@ -1159,18 +1423,38 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "parts": [
         {
-          "code": "Random.Shared.Next(keys.Length)",
-          "name": "Random position",
-          "meaning": "Chooses a whole number from 0 up to, but not including, the number of keys."
+          "code": "Dictionary<string, string>",
+          "name": "Word dictionary",
+          "meaning": "Stores text keys and text translations. bonjour and hola each map to hello."
         },
         {
-          "code": "keys[position]",
-          "name": "Retrieve the key",
-          "meaning": "Looks up the key at that position."
+          "code": "new string[words.Count]",
+          "name": "Space for the keys",
+          "meaning": "Creates an array with one slot per dictionary entry. Count is the number of entries."
+        },
+        {
+          "code": "words.Keys.CopyTo(keys, 0)",
+          "name": "Copy the keys",
+          "meaning": "Copies the dictionary keys into the array, starting at position 0."
+        },
+        {
+          "code": "Random.Shared.Next(keys.Length)",
+          "name": "Random position",
+          "meaning": "Random.Shared is a built-in generator. Next chooses a whole number from 0 up to, but not including, the array length. Two keys give position 0 or 1."
+        },
+        {
+          "code": "keys[...]",
+          "name": "Choose a word",
+          "meaning": "Square brackets retrieve the key at the randomly selected position."
+        },
+        {
+          "code": "keys.Length",
+          "name": "Collection sizes",
+          "meaning": "The number of positions in the array. Random.Shared.Next uses it as the upper limit, which is not included."
         }
       ],
       "outputNote": "Example output; either bonjour or hola can be chosen.",
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "16 · Arrays and lists",
@@ -1180,8 +1464,8 @@ const lessons: Record<Language, Lesson[]> = {
       "prompt": "Create an empty collection, add a name, ask what to search for, and print whether it was found.",
       "answer": "var names = new System.Collections.Generic.List<string>();\n\nConsole.WriteLine(\"add a name\");\nnames.Add(Console.ReadLine() ?? \"\");\n\nConsole.WriteLine(\"search for a name\");\nstring search = Console.ReadLine() ?? \"\";\n\nif (names.Contains(search)) {\n  Console.WriteLine(\"name found\");\n} else {\n  Console.WriteLine(\"name not found\");\n}",
       "output": [
-        "add a name  →  Jordan",
-        "search for a name  →  Jordan",
+        "add a name",
+        "search for a name",
         "name found"
       ],
       "parts": [
@@ -1201,7 +1485,13 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Checks for the exact value without changing the list."
         }
       ],
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first.",
+      "outputAnnotations": [
+        "you enter Jordan",
+        "you enter Jordan",
+        "a matching name was found"
+      ],
+      "outputNote": "Example input: add Jordan, then search for Jordan. Input labels are annotations, not printed text."
     },
     {
       "eyebrow": "17 · Sets",
@@ -1211,13 +1501,31 @@ const lessons: Record<Language, Lesson[]> = {
       "prompt": "Collect three names, create a Set, and print its unique values.",
       "answer": "List<string> names = new List<string>();\n\nConsole.WriteLine(\"Enter the first name:\");\nnames.Add(Console.ReadLine());\nConsole.WriteLine(\"Enter the second name:\");\nnames.Add(Console.ReadLine());\nConsole.WriteLine(\"Enter the third name:\");\nnames.Add(Console.ReadLine());\n\nHashSet<string> uniqueNames = new HashSet<string>(names);\n\nConsole.WriteLine($\"[{string.Join(\", \", uniqueNames)}]\");",
       "output": [
-        "Enter the first name:  →  Alex",
-        "Enter the second name:  →  Sam",
-        "Enter the third name:  →  Alex",
+        "Enter the first name:",
+        "Enter the second name:",
+        "Enter the third name:",
         "[Alex, Sam]"
       ],
-      "parts": [],
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "parts": [
+        {
+          "code": "HashSet<string>",
+          "name": "Unique text collection",
+          "meaning": "Defines a collection that stores no duplicate text values."
+        },
+        {
+          "code": "new HashSet<string>(names)",
+          "name": "Remove duplicates",
+          "meaning": "Creates the HashSet from names and keeps only one copy of each value."
+        }
+      ],
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first.",
+      "outputAnnotations": [
+        "you enter Alex",
+        "you enter Sam",
+        "you enter Alex",
+        "Alex appears once"
+      ],
+      "outputNote": "Example input: Alex, Sam, Alex. The repeated name is kept once. A HashSet does not promise a display order."
     },
     {
       "eyebrow": "18 · Null",
@@ -1229,8 +1537,24 @@ const lessons: Record<Language, Lesson[]> = {
       "output": [
         "No result yet"
       ],
-      "parts": [],
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "parts": [
+        {
+          "code": "string?",
+          "name": "Nullable text",
+          "meaning": "The question mark allows a string variable to hold text or null."
+        },
+        {
+          "code": "null",
+          "name": "No value yet",
+          "meaning": "Deliberately stores no value for now; result can receive one later."
+        },
+        {
+          "code": "== null",
+          "name": "Null check",
+          "meaning": "Checks whether result still contains no value."
+        }
+      ],
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "19 · Regular expressions",
@@ -1246,8 +1570,24 @@ const lessons: Record<Language, Lesson[]> = {
         "Sarah cannot enter the club.",
         "Ben cannot enter the club."
       ],
-      "parts": [],
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "parts": [
+        {
+          "code": "\"^J\"",
+          "name": "Pattern",
+          "meaning": "The caret requires J to be at the beginning of the text."
+        },
+        {
+          "code": "Regex.IsMatch",
+          "name": "Check a name",
+          "meaning": "Returns true when the supplied name matches the pattern."
+        },
+        {
+          "code": "RegexOptions.IgnoreCase",
+          "name": "Ignore case",
+          "meaning": "Accepts either uppercase J or lowercase j."
+        }
+      ],
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "title": "Get a filename from a path",
@@ -1374,7 +1714,7 @@ const lessons: Record<Language, Lesson[]> = {
       "prompt": "Combine the word dictionary and random key code to make a translation quiz.",
       "answer": "var words = new System.Collections.Generic.Dictionary<string, string> {\n  { \"bonjour\", \"hello\" },\n  { \"hola\", \"hello\" }\n};\n\nstring[] keys = new string[words.Count];\nwords.Keys.CopyTo(keys, 0);\nstring random = keys[Random.Shared.Next(keys.Length)];\n\nConsole.WriteLine(random);\nstring answer = Console.ReadLine() ?? \"\";\n\nif (answer == words[random]) {\n  Console.WriteLine(\"Correct\");\n} else {\n  Console.WriteLine(\"Wrong\");\n}",
       "output": [
-        "bonjour  →  hello",
+        "bonjour",
         "Correct"
       ],
       "parts": [
@@ -1419,8 +1759,12 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Compares the text. if prints Correct when it matches; else prints Wrong. Matching is case-sensitive."
         }
       ],
-      "outputNote": "Example run: bonjour is chosen and the user enters hello.",
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "outputNote": "Example run: bonjour is chosen and the user enters hello. The entered answer is input; the labels are annotations.",
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first.",
+      "outputAnnotations": [
+        "you enter hello",
+        "the translation matches"
+      ]
     }
   ],
   "html": [
@@ -1433,6 +1777,18 @@ const lessons: Record<Language, Lesson[]> = {
       "answer": "<!DOCTYPE html>",
       "output": [
         "HTML document type recognised."
+      ],
+      "parts": [
+        {
+          "code": "<!DOCTYPE",
+          "name": "Declaration",
+          "meaning": "Tells the browser what kind of document follows."
+        },
+        {
+          "code": "html",
+          "name": "Modern HTML",
+          "meaning": "Selects the current HTML standard."
+        }
       ]
     },
     {
@@ -1444,6 +1800,23 @@ const lessons: Record<Language, Lesson[]> = {
       "answer": "<html lang=\"en\">\n</html>",
       "output": [
         "Page wrapper created."
+      ],
+      "parts": [
+        {
+          "code": "<html>",
+          "name": "Opening tag",
+          "meaning": "Marks where the HTML page begins."
+        },
+        {
+          "code": "lang=\"en\"",
+          "name": "Page language",
+          "meaning": "Identifies the document as English."
+        },
+        {
+          "code": "</html>",
+          "name": "Closing tag",
+          "meaning": "The slash marks where that element ends."
+        }
       ]
     },
     {
@@ -1455,6 +1828,23 @@ const lessons: Record<Language, Lesson[]> = {
       "answer": "<head>\n  <meta charset=\"UTF-8\">\n  <title>My page</title>\n</head>",
       "output": [
         "Browser-tab title: My page"
+      ],
+      "parts": [
+        {
+          "code": "<head>",
+          "name": "Page information",
+          "meaning": "Contains information used by the browser."
+        },
+        {
+          "code": "<meta charset=\"UTF-8\">",
+          "name": "Character encoding",
+          "meaning": "Supports letters, symbols, and characters from many languages."
+        },
+        {
+          "code": "<title>",
+          "name": "Tab title",
+          "meaning": "Sets the words shown on the browser tab."
+        }
       ]
     },
     {
@@ -1466,6 +1856,13 @@ const lessons: Record<Language, Lesson[]> = {
       "answer": "<body>\n</body>",
       "output": [
         "Visible page area created."
+      ],
+      "parts": [
+        {
+          "code": "<body>",
+          "name": "Visible content",
+          "meaning": "Starts the part visitors can see."
+        }
       ]
     },
     {
@@ -1478,6 +1875,23 @@ const lessons: Record<Language, Lesson[]> = {
       "output": [
         "Red section: This text is inside the first div.",
         "Blue section: This text is inside the second div."
+      ],
+      "parts": [
+        {
+          "code": "<div>",
+          "name": "Section box",
+          "meaning": "Starts a separate block used to group content inside the body."
+        },
+        {
+          "code": "style",
+          "name": "Inline styling",
+          "meaning": "Adds a visual rule directly to this particular div."
+        },
+        {
+          "code": "background-color",
+          "name": "Box colour",
+          "meaning": "Changes the colour behind the content inside the div."
+        }
       ]
     },
     {
@@ -1490,6 +1904,18 @@ const lessons: Record<Language, Lesson[]> = {
       "output": [
         "Main heading",
         "Main section"
+      ],
+      "parts": [
+        {
+          "code": "h1",
+          "name": "Main heading",
+          "meaning": "The page's most important heading."
+        },
+        {
+          "code": "h2",
+          "name": "Section heading",
+          "meaning": "Introduces a major section beneath the h1."
+        }
       ]
     },
     {
@@ -1501,6 +1927,18 @@ const lessons: Record<Language, Lesson[]> = {
       "answer": "<a href=\"page.html\">Open page</a>",
       "output": [
         "Open page  →  page.html"
+      ],
+      "parts": [
+        {
+          "code": "<a>",
+          "name": "Anchor",
+          "meaning": "Creates a clickable link."
+        },
+        {
+          "code": "href",
+          "name": "Destination",
+          "meaning": "Stores the page or address to open."
+        }
       ]
     },
     {
@@ -1525,6 +1963,28 @@ const lessons: Record<Language, Lesson[]> = {
       "answer": "<script>\n  const currentDateTime = new Date();\n  console.log(currentDateTime);\n</script>",
       "output": [
         "Current date and time printed in the browser console."
+      ],
+      "parts": [
+        {
+          "code": "<script>",
+          "name": "JavaScript area",
+          "meaning": "Tells the browser that the code inside is JavaScript."
+        },
+        {
+          "code": "const",
+          "name": "Fixed variable",
+          "meaning": "Creates a variable that will not be reassigned."
+        },
+        {
+          "code": "new Date()",
+          "name": "Current moment",
+          "meaning": "Creates a Date using the device's current date and time."
+        },
+        {
+          "code": "console.log",
+          "name": "Developer console",
+          "meaning": "Displays the value in the browser's developer tools."
+        }
       ]
     },
     {
@@ -1550,6 +2010,23 @@ const lessons: Record<Language, Lesson[]> = {
       "output": [
         "Image loaded: car.png",
         "Alternative text: A car"
+      ],
+      "parts": [
+        {
+          "code": "<img>",
+          "name": "Image element",
+          "meaning": "Places an image in the HTML page; it does not need a closing tag."
+        },
+        {
+          "code": "src=\"car.png\"",
+          "name": "Image source",
+          "meaning": "Loads car.png from the same folder as the HTML file."
+        },
+        {
+          "code": "alt=\"A car\"",
+          "name": "Alternative text",
+          "meaning": "Describes the image for accessibility and when it cannot load."
+        }
       ]
     },
     {
@@ -1562,6 +2039,18 @@ const lessons: Record<Language, Lesson[]> = {
       "output": [
         "Video loaded: my-video.mp4",
         "Playback controls enabled."
+      ],
+      "parts": [
+        {
+          "code": "<video>",
+          "name": "Video element",
+          "meaning": "Creates a video player inside the webpage."
+        },
+        {
+          "code": "controls",
+          "name": "Playback controls",
+          "meaning": "Shows the browser's play, pause, volume, and timeline controls."
+        }
       ]
     },
     {
@@ -1574,6 +2063,13 @@ const lessons: Record<Language, Lesson[]> = {
       "output": [
         "Audio loaded: my-audio.mp3",
         "Playback controls enabled."
+      ],
+      "parts": [
+        {
+          "code": "<audio>",
+          "name": "Audio element",
+          "meaning": "Creates an audio player without a video picture area."
+        }
       ]
     },
     {
@@ -1586,6 +2082,18 @@ const lessons: Record<Language, Lesson[]> = {
       "output": [
         "Paragraph identified as p1.",
         "CSS can select it with #p1."
+      ],
+      "parts": [
+        {
+          "code": "id=\"p1\"",
+          "name": "Unique ID",
+          "meaning": "Gives this element the unique name p1."
+        },
+        {
+          "code": "#p1",
+          "name": "Matching CSS",
+          "meaning": "CSS uses a hash before the ID name to select this exact element."
+        }
       ]
     },
     {
@@ -1596,11 +2104,54 @@ const lessons: Record<Language, Lesson[]> = {
       "prompt": "Create the button and function that check one answer per click.",
       "answer": "<button onclick=\"checkAnswer()\">Check answer</button>\n<p id=\"result\"></p>\n\n<script>\n  function checkAnswer() {\n    let answer = prompt(\"What is 1 + 1?\");\n\n    if (answer == \"2\") {\n      document.getElementById(\"result\").textContent = \"Correct!\";\n    } else {\n      document.getElementById(\"result\").textContent = \"Incorrect! The answer is 2.\";\n    }\n  }\n</script>",
       "output": [
-        "Button clicked.",
-        "What is 1 + 1?  →  2",
-        "Correct!",
-        "The page waits for another click."
-      ]
+        "Correct!"
+      ],
+      "parts": [
+        {
+          "code": "function checkAnswer()",
+          "name": "Define the instructions",
+          "meaning": "Names instructions that wait until the button calls them."
+        },
+        {
+          "code": "prompt(...)",
+          "name": "Ask for text",
+          "meaning": "Opens a browser dialog and returns the entered text."
+        },
+        {
+          "code": "let answer =",
+          "name": "Store the reply",
+          "meaning": "Stores the dialog reply in a variable named answer. let allows the variable to be reassigned."
+        },
+        {
+          "code": "answer == \"2\"",
+          "name": "Check the answer",
+          "meaning": "Compares the entered text with \"2\". Both values are text here."
+        },
+        {
+          "code": "if / else",
+          "name": "Choose one result",
+          "meaning": "Runs one body for a matching answer and the other body otherwise."
+        },
+        {
+          "code": "document.getElementById(\"result\")",
+          "name": "Find the paragraph",
+          "meaning": "Finds the element whose id is result."
+        },
+        {
+          "code": ".textContent =",
+          "name": "Assign the result text",
+          "meaning": "Places the new message in that element. = assigns a value."
+        },
+        {
+          "code": "onclick",
+          "name": "Wait for a click",
+          "meaning": "Runs checkAnswer once when the visitor presses the button."
+        }
+      ],
+      "outputAnnotations": [
+        "shown in the result paragraph"
+      ],
+      "outputNote": "Example page result after clicking the button and entering 2. The dialog input and click are actions, not printed output. The page then waits for another click."
     },
     {
       "eyebrow": "16 · Return values",
@@ -1610,9 +2161,24 @@ const lessons: Record<Language, Lesson[]> = {
       "prompt": "Create the function that returns Hello, then show its returned value.",
       "answer": "<p id=\"message\"></p>\n\n<script>\n  function getMessage() {\n    return \"Hello\";\n  }\n\n  document.getElementById(\"message\").textContent = getMessage();\n</script>",
       "output": [
-        "Hello",
-        "return sends Hello back to getMessage()."
-      ]
+        "Hello"
+      ],
+      "parts": [
+        {
+          "code": "return \"Hello\"",
+          "name": "Send a value back",
+          "meaning": "Ends getMessage and sends Hello back to the code that called it."
+        },
+        {
+          "code": "getMessage()",
+          "name": "Use the returned value",
+          "meaning": "Calls the function and receives the text that return sent back."
+        }
+      ],
+      "outputAnnotations": [
+        "returned by getMessage(), then placed in the paragraph"
+      ],
+      "outputNote": "Example visible paragraph text. return itself does not print anything."
     }
   ],
   "css": [
@@ -1625,6 +2191,38 @@ const lessons: Record<Language, Lesson[]> = {
       "answer": "body {\n  background-color: lightblue;\n}",
       "output": [
         "The page background is light blue."
+      ],
+      "parts": [
+        {
+          "code": "body",
+          "name": "Selector",
+          "meaning": "Chooses the HTML body element to style."
+        },
+        {
+          "code": "background-color",
+          "name": "Property",
+          "meaning": "Chooses the colour behind the element."
+        },
+        {
+          "code": ":",
+          "name": "Property separator",
+          "meaning": "Separates the property name from its value."
+        },
+        {
+          "code": "lightblue",
+          "name": "Value",
+          "meaning": "The background colour to apply."
+        },
+        {
+          "code": ";",
+          "name": "Rule ending",
+          "meaning": "Ends this CSS declaration so another can follow."
+        },
+        {
+          "code": "{ ... }",
+          "name": "Group the declarations",
+          "meaning": "Groups the declarations applied to this selector."
+        }
       ]
     },
     {
@@ -1636,6 +2234,23 @@ const lessons: Record<Language, Lesson[]> = {
       "answer": "p {\n  color: red;\n  text-align: center;\n}",
       "output": [
         "Red paragraph text centred."
+      ],
+      "parts": [
+        {
+          "code": "p",
+          "name": "Selector",
+          "meaning": "Chooses every paragraph on the page."
+        },
+        {
+          "code": "color: red",
+          "name": "Text colour",
+          "meaning": "Makes the selected text red."
+        },
+        {
+          "code": "text-align: center",
+          "name": "Alignment",
+          "meaning": "Centres inline content inside each paragraph."
+        }
       ]
     },
     {
@@ -1647,6 +2262,13 @@ const lessons: Record<Language, Lesson[]> = {
       "answer": "#p1 {\n  color: tomato;\n}",
       "output": [
         "Only the element with id=\"p1\" turns tomato."
+      ],
+      "parts": [
+        {
+          "code": "#p1",
+          "name": "ID selector",
+          "meaning": "The hash selects the element whose ID is p1."
+        }
       ]
     },
     {
@@ -1684,6 +2306,28 @@ const lessons: Record<Language, Lesson[]> = {
       "answer": "p.notice {\n  border: 5px dotted blue;\n  border-radius: 5px;\n}",
       "output": [
         "Notice paragraphs have a dotted blue border with rounded corners."
+      ],
+      "parts": [
+        {
+          "code": "p.notice",
+          "name": "Choose notice paragraphs",
+          "meaning": "Selects paragraphs with class=\"notice\" in the HTML. The dot introduces a class name."
+        },
+        {
+          "code": "border: 5px dotted blue",
+          "name": "Set the border",
+          "meaning": "Sets its width, dotted line style, and colour in one declaration."
+        },
+        {
+          "code": "px",
+          "name": "CSS pixels",
+          "meaning": "A CSS pixel is the unit used for this border's width and corner radius."
+        },
+        {
+          "code": "border-radius: 5px",
+          "name": "Round the corners",
+          "meaning": "Rounds the corners of the element's border."
+        }
       ]
     }
   ],
@@ -1691,7 +2335,7 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "01 · Console output",
       "title": "Print several lines at once",
-      "explanation": "print displays text. Write \\n inside a quoted string to start a new line. \\033 is the ANSI escape character and [31m selects red in supporting terminals. f before the string lets {red} insert a variable. Python uses assignment without let or const.",
+      "explanation": "print displays text. Write \\n inside a quoted string to start a new line. \\033 is the ANSI escape character and [31m selects red in supporting terminals. f before the string lets {red} insert a variable. Python uses assignment without let or const. The red colour stays active until it is reset, so the later lines are red too. The next colour lesson shows the reset code.",
       "note": "# Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
       "prompt": "Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
       "answer": "red = \"\\033[31m\"\nprint(f\"{red} This is red text\")\n\nprint(\" Hello \\n Welcome \\n Goodbye\")",
@@ -1719,7 +2363,10 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "outputColors": [
-        "#ef4444"
+        "#ef7777",
+        "#ef7777",
+        "#ef7777",
+        "#ef7777"
       ],
       "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
@@ -1808,6 +2455,16 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "parts": [
         {
+          "code": "from datetime import datetime",
+          "name": "Load the clock tool",
+          "meaning": "Loads the datetime class from Python's datetime module."
+        },
+        {
+          "code": "datetime.now()",
+          "name": "Capture the clock",
+          "meaning": "Captures the current local date and time for this one check."
+        },
+        {
           "code": "time.hour / time.minute",
           "name": "Clock parts",
           "meaning": "Read the hour and minute from the saved time."
@@ -1816,6 +2473,11 @@ const lessons: Record<Language, Lesson[]> = {
           "code": "and",
           "name": "Both",
           "meaning": "Both conditions must be true."
+        },
+        {
+          "code": "if hour == 17 and minute == 20",
+          "name": "Check both values",
+          "meaning": "if runs its body only when both comparisons are true. and means both the hour and minute must match."
         }
       ],
       "outputNote": "Example output when the clock is 17:20. At other times, this snippet prints nothing.",
@@ -1835,12 +2497,12 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "while True:",
           "name": "Repeat",
-          "meaning": "Repeats the indented body until break."
+          "meaning": "The condition stays true, so the loop repeats its indented body until break is reached."
         },
         {
           "code": "break",
-          "name": "Stop",
-          "meaning": "Leaves the loop after the matching time."
+          "name": "Leave the loop",
+          "meaning": "Immediately leaves the nearest loop and skips the rest of that repetition. Execution continues after the loop; break does not end the whole program."
         }
       ],
       "outputNote": "Example output at 17:20. The lesson preview does not wait for the clock.",
@@ -1860,7 +2522,7 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "return",
           "name": "Send back",
-          "meaning": "Returns the value to the caller."
+          "meaning": "Immediately ends this function and sends its value back to the caller. It does not print the value or merely leave a loop."
         },
         {
           "code": "print(getMessage())",
@@ -1874,7 +2536,7 @@ const lessons: Record<Language, Lesson[]> = {
       "eyebrow": "08 · Classes",
       "title": "Create and use a class",
       "explanation": "class defines a type. Calling Car(\"Ford\", 2014) creates an object and __init__ sets it up. self refers to that object; self.name stores the supplied name. A colon and indentation group each body. The f-string prints its properties.",
-      "note": "# Define the class first, then use new Car(...) to create objects",
+      "note": "# Define the class first, then call Car(...) to create objects.",
       "prompt": "Create the Car class, then create Ford and Audi objects.",
       "answer": "class Car:\n    def __init__(self, name, year):\n        self.name = name\n        self.year = year\n\nmyCar1 = Car(\"Ford\", 2014)\nmyCar2 = Car(\"Audi\", 2019)\n\nprint(f\"{myCar1.name}, {myCar1.year}\")\nprint(f\"{myCar2.name}, {myCar2.year}\")",
       "output": [
@@ -1898,35 +2560,55 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "09 · Loops",
       "title": "Repeat input until the answer is correct",
-      "explanation": "while True repeats until break stops the loop. input asks the question and returns the entered text. Indentation puts the answer check inside the loop and break inside if. Only \"2\" ends this loop.",
+      "explanation": "The loop asks the question, saves the entered text, and prints that answer. If it is \"2\", it prints Correct! and break immediately leaves the nearest loop, skipping Try again. A wrong answer prints the retry message, then the next repetition asks again. Python uses a colon and indentation to show which instructions belong to while and if.",
       "note": "# Create the loop with input, output, and break inside if.",
       "prompt": "Create the loop with input, output, and break inside if.",
       "answer": "while True:\n    answer = input(\"What is 1 + 1?\")\n    print(answer)\n\n    if answer == \"2\":\n        print(\"Correct!\")\n        break\n\n    print(\"Try again.\")",
       "output": [
-        "INPUT  →  2",
-        "OUTPUT  →  2",
-        "Correct!",
-        "break leaves the loop."
+        "What is 1 + 1?",
+        "2",
+        "Correct!"
       ],
       "parts": [
         {
+          "code": "while True:",
+          "name": "Keep repeating",
+          "meaning": "The condition stays true, so this loop keeps repeating until break is reached. The indented instructions form its body."
+        },
+        {
           "code": "input(...)",
-          "name": "Ask",
-          "meaning": "Waits for a typed line of terminal text."
+          "name": "Read an answer",
+          "meaning": "Waits for a line of terminal text and saves it in answer."
+        },
+        {
+          "code": "answer == \"2\"",
+          "name": "Check the answer",
+          "meaning": "Compares the entered text with \"2\". if runs its body only when this comparison is true."
         },
         {
           "code": "break",
-          "name": "Stop",
-          "meaning": "Leaves the repeating loop."
+          "name": "Leave the loop",
+          "meaning": "Immediately leaves the nearest loop and skips the rest of that repetition. Execution continues after the loop; break does not end the whole program. Here it skips the Try again. message below."
+        },
+        {
+          "code": "print(\"Try again.\")",
+          "name": "Repeat after a wrong answer",
+          "meaning": "A wrong answer reaches this message. The next repetition then asks the question again."
         }
       ],
-      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal.",
+      "outputAnnotations": [
+        "you enter 2",
+        "entered answer echoed",
+        "break leaves the loop"
+      ],
+      "outputNote": "Example run: the first answer is 2. The labels beside the lines explain the run; the program does not print them."
     },
     {
       "eyebrow": "10 · Variables",
       "title": "Use changeable and fixed values",
       "explanation": "Assignment creates a name such as speed and can change its value later. Python has no let or const keyword. MAX_SPEED uses capital letters to signal a constant by convention, but Python still allows reassignment. The f-string inserts speed in the text.",
-      "note": "# Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
+      "note": "# Create speed and MAX_SPEED, change speed to 100, then print Speed: 100.",
       "prompt": "Create speed and MAX_SPEED, change speed to 100, then print Speed: 100.",
       "answer": "speed = 80\nMAX_SPEED = 100\n\nspeed = 100\nprint(f\"Speed: {speed}\")",
       "output": [
@@ -1947,14 +2629,14 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
-      "eyebrow": "11 · Variables",
-      "title": "Remember a value",
+      "eyebrow": "11 · Terminal input",
+      "title": "Ask for a name in VS Code",
       "explanation": "input displays the question, waits for a line of terminal text, and returns it. name stores that text. The f before the string lets {name} insert the answer. Python needs no readline interface for this example.",
       "note": "# Ask for a name and greet the user",
-      "prompt": "Create a name variable, then print Hello with a template string.",
+      "prompt": "Create a name variable, then print Hello with a f-string.",
       "answer": "name = input(\"What is your name?\")\nprint(f\"Hello {name}\")",
       "output": [
-        "What is your name?  →  Alex",
+        "What is your name?",
         "Hello Alex"
       ],
       "parts": [
@@ -1970,7 +2652,12 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "fileName": "name.py",
-      "runHint": "Save as name.py and run python3 name.py in the VS Code terminal."
+      "runHint": "Save as name.py and run python3 name.py in the VS Code terminal.",
+      "outputAnnotations": [
+        "you enter Alex",
+        "the entered name is used"
+      ],
+      "outputNote": "Example input: Alex. The input label is an annotation."
     },
     {
       "eyebrow": "12 · If statements and symbols",
@@ -2013,18 +2700,18 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "outputNote": "Example output when the user enters 1. The entered choice is input, not printed output.",
-      "runHint": "Save as main.py and run python main.py (or python3 main.py). Type 1, then 2, then 3 to end."
+      "runHint": "Save as main.py and run python main.py (or python3 main.py). Enter one choice and press Enter. Run the program again to try another option."
     },
     {
       "eyebrow": "13 · Dictionary",
       "title": "Search a word dictionary",
-      "explanation": "{} creates a dictionary of keys and values. \"bonjour\" is a key and \"hello\" its value. values() gets the stored values; join prints them as readable text. get searches safely and returns word not found if the key is absent. words[search] is direct lookup but raises KeyError for a missing key.",
+      "explanation": "{} creates a dictionary of keys and values. \"bonjour\" is a key and \"hello\" its value. values() gets the stored values; join combines them into readable text, which print displays. get searches safely and returns word not found if the key is absent. words[search] is direct lookup but raises KeyError for a missing key.",
       "note": "# Create the word dictionary, show its values, then search for a word.",
       "prompt": "Create the word dictionary, show its values, then search for a word.",
       "answer": "words = {\n    \"bonjour\": \"hello\",\n    \"hola\": \"hello\"\n}\n\nprint(\", \".join(words.values()))\nsearch = input(\"Search:\")\nprint(words.get(search, \"word not found\"))",
       "output": [
         "hello, hello",
-        "Search:  →  bonjour",
+        "Search:",
         "hello"
       ],
       "parts": [
@@ -2037,9 +2724,25 @@ const lessons: Record<Language, Lesson[]> = {
           "code": "words.get(...)",
           "name": "Safe lookup",
           "meaning": "Returns a fallback when no key is found."
+        },
+        {
+          "code": "words.values()",
+          "name": "Get the values",
+          "meaning": "Gets the stored translations from the dictionary."
+        },
+        {
+          "code": "\", \".join(...)",
+          "name": "Join the text",
+          "meaning": "Combines those text values, placing a comma and space between them."
         }
       ],
-      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal.",
+      "outputAnnotations": [
+        "stored translations",
+        "you enter bonjour",
+        "value for bonjour"
+      ],
+      "outputNote": "Example input: bonjour. Input labels are annotations, not text printed by the program."
     },
     {
       "eyebrow": "14 · Expressions",
@@ -2072,6 +2775,11 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "parts": [
         {
+          "code": "import random",
+          "name": "Load random tools",
+          "meaning": "Loads Python's built-in random module."
+        },
+        {
           "code": "random.choice(...)",
           "name": "Choose",
           "meaning": "Selects an item from a non-empty sequence."
@@ -2093,8 +2801,8 @@ const lessons: Record<Language, Lesson[]> = {
       "prompt": "Create an empty collection, add a name, ask what to search for, and print whether it was found.",
       "answer": "names = []\n\nnames.append(input(\"add a name\"))\n\nsearch = input(\"search for a name\")\n\nif search in names:\n    print(\"name found\")\nelse:\n    print(\"name not found\")",
       "output": [
-        "add a name  →  Jordan",
-        "search for a name  →  Jordan",
+        "add a name",
+        "search for a name",
         "name found"
       ],
       "parts": [
@@ -2114,19 +2822,25 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Tests membership without changing the list."
         }
       ],
-      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal.",
+      "outputAnnotations": [
+        "you enter Jordan",
+        "you enter Jordan",
+        "a matching name was found"
+      ],
+      "outputNote": "Example input: add Jordan, then search for Jordan. Input labels are annotations, not printed text."
     },
     {
       "eyebrow": "17 · Sets",
       "title": "Remove duplicate names",
-      "explanation": "set(names) removes duplicates. Python sets do not promise a display order, so sorted makes an alphabetical list before join prints it. A set literal uses {\"Alex\", \"Sam\"}; empty {} creates a dictionary, so use set() for an empty set.",
+      "explanation": "set(names) removes duplicates. Python sets do not promise a display order, so sorted makes an alphabetical list before join combines its names into text and print displays it. A set literal uses {\"Alex\", \"Sam\"}; empty {} creates a dictionary, so use set() for an empty set.",
       "note": "# Ask for three names, then remove any duplicates",
       "prompt": "Collect three names, create a set, and print its unique values.",
       "answer": "names = []\n\nnames.append(input(\"Enter the first name:\"))\nnames.append(input(\"Enter the second name:\"))\nnames.append(input(\"Enter the third name:\"))\n\nuniqueNames = set(names)\n\nprint(\"[\" + \", \".join(sorted(uniqueNames)) + \"]\")",
       "output": [
-        "Enter the first name:  →  Alex",
-        "Enter the second name:  →  Sam",
-        "Enter the third name:  →  Alex",
+        "Enter the first name:",
+        "Enter the second name:",
+        "Enter the third name:",
         "[Alex, Sam]"
       ],
       "parts": [
@@ -2139,16 +2853,28 @@ const lessons: Record<Language, Lesson[]> = {
           "code": "sorted",
           "name": "Stable display",
           "meaning": "Sorts the unique values before printing."
+        },
+        {
+          "code": "\"[\" + ... + \"]\"",
+          "name": "Add display brackets",
+          "meaning": "+ joins the printed brackets with the combined names. These brackets are text for display, not a new list."
         }
       ],
-      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal.",
+      "outputAnnotations": [
+        "you enter Alex",
+        "you enter Sam",
+        "you enter Alex",
+        "Alex appears once"
+      ],
+      "outputNote": "Example input: Alex, Sam, Alex. The repeated name is kept once. The labels are annotations, not printed text."
     },
     {
       "eyebrow": "18 · Null",
       "title": "Mark a value as not ready yet",
       "explanation": "None means there is deliberately no value yet. is None checks for that specific singleton. It is different from zero or an empty string. Assign a real value to result later.",
-      "note": "# null means there is deliberately no result yet",
-      "prompt": "Set result to null, then print the message for its current state.",
+      "note": "# None means there is deliberately no result yet",
+      "prompt": "Set result to None, then print the message for its current state.",
       "answer": "result = None\n\nif result is None:\n    print(\"No result yet\")\nelse:\n    print(\"Result is ready\")",
       "output": [
         "No result yet"
@@ -2182,6 +2908,11 @@ const lessons: Record<Language, Lesson[]> = {
         "Ben cannot enter the club."
       ],
       "parts": [
+        {
+          "code": "for name in names:",
+          "name": "Visit each name",
+          "meaning": "Visits each name once. name holds the current item, and the indented body runs for that item."
+        },
         {
           "code": "\"^J\"",
           "name": "Starts with J",
@@ -2333,7 +3064,7 @@ const lessons: Record<Language, Lesson[]> = {
       "prompt": "Combine the word dictionary and random key code to make a translation quiz.",
       "answer": "import random\n\nwords = {\n    \"bonjour\": \"hello\",\n    \"hola\": \"hello\"\n}\n\nword = random.choice(list(words))\nanswer = input(word)\n\nif answer == words[word]:\n    print(\"Correct\")\nelse:\n    print(\"Wrong\")",
       "output": [
-        "bonjour  →  hello",
+        "bonjour",
         "Correct"
       ],
       "parts": [
@@ -2373,15 +3104,19 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Compares the text. if prints Correct when it matches; else prints Wrong. Matching is case-sensitive."
         }
       ],
-      "outputNote": "Example run: bonjour is chosen and the user enters hello.",
-      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
+      "outputNote": "Example run: bonjour is chosen and the user enters hello. The entered answer is input; the labels are annotations.",
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal.",
+      "outputAnnotations": [
+        "you enter hello",
+        "the translation matches"
+      ]
     }
   ],
   "cpp": [
     {
       "eyebrow": "01 · Console output",
       "title": "Print several lines at once",
-      "explanation": "std::cout prints to the terminal. << sends each value to it. Write \\n inside a string to start a new line. \\033[31m selects red in supporting terminals. #include loads declarations, std:: identifies standard-library names, and main is where execution begins. const std::string red stores the colour code.",
+      "explanation": "std::cout prints to the terminal. << sends each value to it. Write \\n inside a string to start a new line. \\033[31m selects red in supporting terminals. #include loads declarations, std:: identifies standard-library names, and main is where execution begins. const std::string red stores the colour code. The red colour stays active until it is reset, so the later lines are red too. The next colour lesson shows the reset code.",
       "note": "// Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
       "prompt": "Print This is red text in red, then print Hello, Welcome, and Goodbye on separate lines.",
       "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  const std::string red = \"\\033[31m\";\n  std::cout << red << \" This is red text\\n\";\n\n  std::cout << \" Hello \\n Welcome \\n Goodbye\\n\";\n}",
@@ -2404,7 +3139,10 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "outputColors": [
-        "#ef4444"
+        "#ef7777",
+        "#ef7777",
+        "#ef7777",
+        "#ef7777"
       ],
       "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
@@ -2493,6 +3231,21 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "parts": [
         {
+          "code": "std::time(nullptr)",
+          "name": "Read the timestamp",
+          "meaning": "Gets the current timestamp. nullptr means no extra pointer is supplied for storing another copy."
+        },
+        {
+          "code": "std::localtime(&now)",
+          "name": "Read local calendar fields",
+          "meaning": "Converts the timestamp into local date and time fields. &now passes the address of now."
+        },
+        {
+          "code": "*std::localtime(&now)",
+          "name": "Copy the fields",
+          "meaning": "The leading * reads the time structure through the returned pointer so its fields can be saved in time."
+        },
+        {
           "code": "tm_hour / tm_min",
           "name": "Clock parts",
           "meaning": "Read the local hour and minute."
@@ -2501,6 +3254,11 @@ const lessons: Record<Language, Lesson[]> = {
           "code": "&&",
           "name": "Both",
           "meaning": "Requires both comparisons to be true."
+        },
+        {
+          "code": "if (hour == 17 && minute == 20)",
+          "name": "Check both values",
+          "meaning": "if runs its body only when both comparisons are true. && (two ampersands) means both the hour and minute must match."
         }
       ],
       "outputNote": "Example output when the clock is 17:20. At other times, this snippet prints nothing.",
@@ -2520,12 +3278,12 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "while (true)",
           "name": "Repeat",
-          "meaning": "Repeats until break leaves the loop."
+          "meaning": "The condition stays true, so the loop repeats its body inside the braces until break is reached."
         },
         {
           "code": "break",
-          "name": "Stop",
-          "meaning": "Ends the loop after the time matches."
+          "name": "Leave the loop",
+          "meaning": "Immediately leaves the nearest loop and skips the rest of that repetition. Execution continues after the loop; break does not end the whole program."
         }
       ],
       "outputNote": "Example output at 17:20. The lesson preview does not wait for the clock.",
@@ -2533,10 +3291,10 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "07 · Functions",
-      "title": "Use one function inside another",
-      "explanation": "getMessage() returns a std::string. std::cout prints its returned value. Nested calls have their own parentheses: getMessage runs first in anotherFunction(getMessage()). Extra parentheses group an expression; (( is not a special sign for multiple functions.",
-      "note": "// Return Hello from getMessage, then print it by calling the function inside the print call.",
-      "prompt": "Return Hello from getMessage, then print it by calling the function inside the print call.",
+      "title": "Use a function's returned value",
+      "explanation": "getMessage() returns Hello as a std::string. return immediately ends that function and sends its value back to the caller. std::cout << getMessage() then prints the returned text. Here << sends a value to the output stream; it is not another function call.",
+      "note": "// Return Hello from getMessage, then print its returned value.",
+      "prompt": "Return Hello from getMessage, then print its returned value.",
       "answer": "#include <iostream>\n#include <string>\n\nstd::string getMessage() {\n  return \"Hello\";\n}\n\nint main() {\n  std::cout << getMessage() << \"\\n\";\n}",
       "output": [
         "Hello"
@@ -2550,7 +3308,7 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "return",
           "name": "Send back",
-          "meaning": "Returns the value to the caller."
+          "meaning": "Immediately ends this function and sends its value back to the caller. It does not print the value or merely leave a loop."
         }
       ],
       "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
@@ -2559,7 +3317,7 @@ const lessons: Record<Language, Lesson[]> = {
       "eyebrow": "08 · Classes",
       "title": "Create and use a class",
       "explanation": "class defines a type. public makes these members accessible from main. Car(...) is its constructor. this->name is the current object’s member; name is the constructor parameter. Car myCar1(\"Ford\", 2014) creates the object without new. A class declaration ends with };.",
-      "note": "// Define the class first, then use new Car(...) to create objects",
+      "note": "// Define Car, create car objects, then print their properties.",
       "prompt": "Create the Car class, then create Ford and Audi objects.",
       "answer": "#include <iostream>\n#include <string>\n\nclass Car {\npublic:\n  std::string name;\n  int year;\n\n  Car(std::string name, int year) {\n    this->name = name;\n    this->year = year;\n  }\n};\n\nint main() {\n  Car myCar1(\"Ford\", 2014);\n  Car myCar2(\"Audi\", 2019);\n\n  std::cout << myCar1.name << \", \" << myCar1.year << \"\\n\";\n  std::cout << myCar2.name << \", \" << myCar2.year << \"\\n\";\n}",
       "output": [
@@ -2576,6 +3334,21 @@ const lessons: Record<Language, Lesson[]> = {
           "code": "this->name",
           "name": "Member",
           "meaning": "Refers to the name stored in the current object."
+        },
+        {
+          "code": "class Car",
+          "name": "Define the class",
+          "meaning": "Defines a blueprint whose objects each keep their own name and year."
+        },
+        {
+          "code": "Car(std::string name, int year)",
+          "name": "Constructor",
+          "meaning": "Runs when a Car object is created and receives its starting values."
+        },
+        {
+          "code": "Car myCar1(\"Ford\", 2014)",
+          "name": "Create an object",
+          "meaning": "Creates myCar1 by calling the Car constructor with Ford and 2014. This form does not need new."
         }
       ],
       "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
@@ -2583,34 +3356,54 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "09 · Loops",
       "title": "Repeat input until the answer is correct",
-      "explanation": "while (true) repeats until break stops the loop. std::getline(std::cin, answer) reads a whole line of terminal input into answer. == checks for \"2\". The braces place the answer check inside the loop and break inside if.",
+      "explanation": "The loop asks the question, saves the entered text, and prints that answer. If it is \"2\", it prints Correct! and break immediately leaves the nearest loop, skipping Try again. A wrong answer prints the retry message, then the next repetition asks again. The braces show which instructions belong to while and if.",
       "note": "// Create the loop with input, output, and break inside if.",
       "prompt": "Create the loop with input, output, and break inside if.",
       "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  while (true) {\n    std::cout << \"What is 1 + 1?\";\n    std::string answer;\n    std::getline(std::cin, answer);\n    std::cout << answer << \"\\n\";\n\n    if (answer == \"2\") {\n      std::cout << \"Correct!\\n\";\n      break;\n    }\n\n    std::cout << \"Try again.\\n\";\n  }\n}",
       "output": [
-        "INPUT  →  2",
-        "OUTPUT  →  2",
-        "Correct!",
-        "break leaves the loop."
+        "What is 1 + 1?",
+        "2",
+        "Correct!"
       ],
       "parts": [
         {
-          "code": "std::getline",
-          "name": "Read a line",
-          "meaning": "Waits for a whole line of input and stores it in answer."
+          "code": "while (true)",
+          "name": "Keep repeating",
+          "meaning": "The condition stays true, so this loop keeps repeating until break is reached. The instructions inside its braces form its body."
         },
         {
-          "code": "break",
-          "name": "Stop",
-          "meaning": "Leaves the loop."
+          "code": "std::getline(std::cin, answer)",
+          "name": "Read an answer",
+          "meaning": "Waits for a line of terminal text and saves it in answer."
+        },
+        {
+          "code": "answer == \"2\"",
+          "name": "Check the answer",
+          "meaning": "Compares the entered text with \"2\". if runs its body only when this comparison is true."
+        },
+        {
+          "code": "break;",
+          "name": "Leave the loop",
+          "meaning": "Immediately leaves the nearest loop and skips the rest of that repetition. Execution continues after the loop; break does not end the whole program. Here it skips the Try again. message below."
+        },
+        {
+          "code": "std::cout << \"Try again.\\n\";",
+          "name": "Repeat after a wrong answer",
+          "meaning": "A wrong answer reaches this message. The next repetition then asks the question again."
         }
       ],
-      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed.",
+      "outputAnnotations": [
+        "you enter 2",
+        "entered answer echoed",
+        "break leaves the loop"
+      ],
+      "outputNote": "Example run: the first answer is 2. The labels beside the lines explain the run; the program does not print them."
     },
     {
       "eyebrow": "10 · Variables",
       "title": "Use changeable and fixed values",
-      "explanation": "int declares a whole-number variable that can be reassigned. const int prevents reassignment. C++ has no let keyword. std::string stores text, and auto can infer a variable’s type from its initial value. << prints the text and number.",
+      "explanation": "speed starts at 80 and can be reassigned. speed = 100 replaces its earlier value. const keeps maxSpeed fixed at 100, so assigning a different value to maxSpeed is not allowed. The last instruction prints the updated speed.",
       "note": "// Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
       "prompt": "Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
       "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  int speed = 80;\n  const int maxSpeed = 100;\n\n  speed = 100;\n  std::cout << \"Speed: \" << speed << \"\\n\";\n}",
@@ -2619,27 +3412,32 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "parts": [
         {
-          "code": "int",
-          "name": "Whole number",
-          "meaning": "Declares a whole-number variable."
+          "code": "int speed = 80;",
+          "name": "Changeable value",
+          "meaning": "Creates speed with the starting value 80. It can receive a different value later."
         },
         {
-          "code": "const int",
+          "code": "const int maxSpeed = 100;",
           "name": "Fixed value",
-          "meaning": "Prevents reassigning the number."
+          "meaning": "Creates maxSpeed as a constant. It cannot be reassigned."
+        },
+        {
+          "code": "speed = 100;",
+          "name": "Reassign",
+          "meaning": "Replaces the earlier value 80 with 100; it does not create a second speed variable."
         }
       ],
       "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "11 · Variables",
-      "title": "Remember a value",
+      "eyebrow": "11 · Terminal input",
+      "title": "Ask for a name in VS Code",
       "explanation": "std::cout displays the question. std::string name declares a text variable. std::getline(std::cin, name) waits for a whole line and saves it in name. std::cout then prints Hello followed by that answer.",
       "note": "// Ask for a name and greet the user",
       "prompt": "Create a name variable, then print Hello with a template string.",
       "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  std::cout << \"What is your name?\";\n  std::string name;\n  std::getline(std::cin, name);\n  std::cout << \"Hello \" << name << \"\\n\";\n}",
       "output": [
-        "What is your name?  →  Alex",
+        "What is your name?",
         "Hello Alex"
       ],
       "parts": [
@@ -2655,7 +3453,12 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "fileName": "name.cpp",
-      "runHint": "Save as name.cpp. In the VS Code terminal compile with g++ -std=c++17 name.cpp -o main, then run ./main. A C++ compiler must be installed."
+      "runHint": "Save as name.cpp. In the VS Code terminal compile with g++ -std=c++17 name.cpp -o main, then run ./main. A C++ compiler must be installed.",
+      "outputAnnotations": [
+        "you enter Alex",
+        "the entered name is used"
+      ],
+      "outputNote": "Example input: Alex. The input label is an annotation."
     },
     {
       "eyebrow": "12 · If statements and symbols",
@@ -2698,7 +3501,7 @@ const lessons: Record<Language, Lesson[]> = {
         }
       ],
       "outputNote": "Example output when the user enters 1. The entered choice is input, not printed output.",
-      "runHint": "Save as main.cpp; compile with g++ -std=c++17 main.cpp -o main, then run ./main (Windows: .\\main.exe). Type 1, then 2, then 3 to end."
+      "runHint": "Save as main.cpp; compile with g++ -std=c++17 main.cpp -o main, then run ./main (Windows: .\\main.exe). Enter one choice and press Enter. Run the program again to try another option."
     },
     {
       "eyebrow": "13 · Dictionary",
@@ -2709,7 +3512,7 @@ const lessons: Record<Language, Lesson[]> = {
       "answer": "#include <iostream>\n#include <string>\n#include <map>\n\nint main() {\n  std::map<std::string, std::string> words = {\n    {\"bonjour\", \"hello\"},\n    {\"hola\", \"hello\"}\n  };\n\n  std::cout << words[\"bonjour\"] << \", \" << words[\"hola\"] << \"\\n\";\n  std::cout << \"Search:\";\n  std::string search;\n  std::getline(std::cin, search);\n  auto found = words.find(search);\n  if (found != words.end()) {\n    std::cout << found->second << \"\\n\";\n  } else {\n    std::cout << \"word not found\\n\";\n  }\n}",
       "output": [
         "hello, hello",
-        "Search:  →  bonjour",
+        "Search:",
         "hello"
       ],
       "parts": [
@@ -2729,7 +3532,13 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Reads the matching entry’s value."
         }
       ],
-      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed.",
+      "outputAnnotations": [
+        "stored translations",
+        "you enter bonjour",
+        "value for bonjour"
+      ],
+      "outputNote": "Example input: bonjour. Input labels are annotations, not text printed by the program."
     },
     {
       "eyebrow": "14 · Expressions",
@@ -2753,7 +3562,7 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "15 · Random",
       "title": "Choose a random word",
-      "explanation": "The loop copies map keys into a vector. mt19937 is a random-number generator seeded by random_device. uniform_int_distribution chooses an index from 0 through size - 1, inclusive. keys[index] retrieves the chosen key. Either word may be printed.",
+      "explanation": "The loop copies map keys into a vector. mt19937 is a random-number generator seeded by random_device. uniform_int_distribution chooses an index from 0 through size - 1, inclusive. keys[choose(generator)] retrieves the chosen key. Either word may be printed.",
       "note": "// Create the word dictionary and randomly select one of its keys.",
       "prompt": "Create the word dictionary and randomly select one of its keys.",
       "answer": "#include <iostream>\n#include <string>\n#include <map>\n#include <vector>\n#include <random>\n\nint main() {\n  std::map<std::string, std::string> words = {\n    {\"bonjour\", \"hello\"},\n    {\"hola\", \"hello\"}\n  };\n\n  std::vector<std::string> keys;\n  for (const auto& entry : words) {\n    keys.push_back(entry.first);\n  }\n  std::mt19937 generator(std::random_device{}());\n  std::uniform_int_distribution<int> choose(0, static_cast<int>(keys.size()) - 1);\n  std::string random = keys[choose(generator)];\n\n  std::cout << random << \"\\n\";\n}",
@@ -2762,14 +3571,49 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "parts": [
         {
-          "code": "std::mt19937",
-          "name": "Generator",
-          "meaning": "Produces pseudo-random numbers."
+          "code": "std::map<std::string, std::string>",
+          "name": "Word dictionary",
+          "meaning": "Stores text keys and translations. bonjour and hola each map to hello."
         },
         {
-          "code": "uniform_int_distribution",
+          "code": "std::vector<std::string> keys",
+          "name": "List of keys",
+          "meaning": "Creates a list that can grow as keys are added."
+        },
+        {
+          "code": "for (const auto& entry : words)",
+          "name": "Read each pair",
+          "meaning": "Visits every dictionary entry. const auto& refers to the existing pair without copying or changing it."
+        },
+        {
+          "code": "keys.push_back(entry.first)",
+          "name": "Add a key",
+          "meaning": "first is the key in the pair. push_back adds it to the end of the list."
+        },
+        {
+          "code": "std::random_device{}()",
+          "name": "Seed the generator",
+          "meaning": "Creates a seed source and asks it for a value used to initialise the generator."
+        },
+        {
+          "code": "std::mt19937 generator(...)",
+          "name": "Random generator",
+          "meaning": "Creates a pseudo-random number generator from that seed."
+        },
+        {
+          "code": "std::uniform_int_distribution<int> choose(...)",
           "name": "Choose an index",
-          "meaning": "Chooses within the inclusive bounds."
+          "meaning": "Sets the inclusive range used when choose(generator) selects a whole number."
+        },
+        {
+          "code": "static_cast<int>(keys.size()) - 1",
+          "name": "Last position",
+          "meaning": "Converts the number of keys to int and subtracts 1. Two keys have positions 0 and 1."
+        },
+        {
+          "code": "keys[choose(generator)]",
+          "name": "Choose a word",
+          "meaning": "Uses the generator to choose a position, then retrieves the key at that position."
         }
       ],
       "outputNote": "Example output; either bonjour or hola can be chosen.",
@@ -2783,8 +3627,8 @@ const lessons: Record<Language, Lesson[]> = {
       "prompt": "Create an empty collection, add a name, ask what to search for, and print whether it was found.",
       "answer": "#include <iostream>\n#include <string>\n#include <vector>\n#include <algorithm>\n\nint main() {\n  std::vector<std::string> names;\n\n  std::cout << \"add a name\";\n  std::string name;\n  std::getline(std::cin, name);\n  names.push_back(name);\n\n  std::cout << \"search for a name\";\n  std::string search;\n  std::getline(std::cin, search);\n\n  if (std::find(names.begin(), names.end(), search) != names.end()) {\n    std::cout << \"name found\\n\";\n  } else {\n    std::cout << \"name not found\\n\";\n  }\n}",
       "output": [
-        "add a name  →  Jordan",
-        "search for a name  →  Jordan",
+        "add a name",
+        "search for a name",
         "name found"
       ],
       "parts": [
@@ -2804,7 +3648,13 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Returns the found position or end when absent."
         }
       ],
-      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed.",
+      "outputAnnotations": [
+        "you enter Jordan",
+        "you enter Jordan",
+        "a matching name was found"
+      ],
+      "outputNote": "Example input: add Jordan, then search for Jordan. Input labels are annotations, not printed text."
     },
     {
       "eyebrow": "17 · Sets",
@@ -2814,9 +3664,9 @@ const lessons: Record<Language, Lesson[]> = {
       "prompt": "Collect three names, create a std::set, and print its unique values.",
       "answer": "#include <iostream>\n#include <string>\n#include <set>\n\nint main() {\n  std::cout << \"Enter the first name:\";\n  std::string first;\n  std::getline(std::cin, first);\n  std::cout << \"Enter the second name:\";\n  std::string second;\n  std::getline(std::cin, second);\n  std::cout << \"Enter the third name:\";\n  std::string third;\n  std::getline(std::cin, third);\n\n  std::set<std::string> uniqueNames = {first, second, third};\n\n  std::cout << \"[\";\n  bool firstItem = true;\n  for (const auto& name : uniqueNames) {\n    if (!firstItem) std::cout << \", \";\n    std::cout << name;\n    firstItem = false;\n  }\n  std::cout << \"]\\n\";\n}",
       "output": [
-        "Enter the first name:  →  Alex",
-        "Enter the second name:  →  Sam",
-        "Enter the third name:  →  Alex",
+        "Enter the first name:",
+        "Enter the second name:",
+        "Enter the third name:",
         "[Alex, Sam]"
       ],
       "parts": [
@@ -2824,9 +3674,31 @@ const lessons: Record<Language, Lesson[]> = {
           "code": "std::set",
           "name": "Unique values",
           "meaning": "Keeps one copy of each value in sorted order."
+        },
+        {
+          "code": "for (const auto& name : uniqueNames)",
+          "name": "Visit each unique name",
+          "meaning": "Runs once for each set value. auto infers its type; & reads the existing value without copying it; const prevents changing it through name."
+        },
+        {
+          "code": "if (!firstItem)",
+          "name": "Add separators after the first item",
+          "meaning": "! reverses true and false. This prints a comma only after the first item has already been printed."
+        },
+        {
+          "code": "firstItem = false",
+          "name": "Remember the first item is done",
+          "meaning": "Makes the next repetition include a comma before its name."
         }
       ],
-      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed.",
+      "outputAnnotations": [
+        "you enter Alex",
+        "you enter Sam",
+        "you enter Alex",
+        "Alex appears once"
+      ],
+      "outputNote": "Example input: Alex, Sam, Alex. The repeated name is kept once. The labels are annotations, not printed text."
     },
     {
       "eyebrow": "18 · Null",
@@ -3013,7 +3885,7 @@ const lessons: Record<Language, Lesson[]> = {
       "prompt": "Combine the word dictionary and random key code to make a translation quiz.",
       "answer": "#include <iostream>\n#include <string>\n#include <map>\n#include <vector>\n#include <random>\n\nint main() {\n  std::map<std::string, std::string> words = {\n    {\"bonjour\", \"hello\"},\n    {\"hola\", \"hello\"}\n  };\n\n  std::vector<std::string> keys;\n  for (const auto& entry : words) {\n    keys.push_back(entry.first);\n  }\n  std::mt19937 generator(std::random_device{}());\n  std::uniform_int_distribution<int> choose(0, static_cast<int>(keys.size()) - 1);\n  std::string random = keys[choose(generator)];\n\n  std::cout << random;\n  std::string answer;\n  std::getline(std::cin, answer);\n\n  if (answer == words[random]) {\n    std::cout << \"Correct\\n\";\n  } else {\n    std::cout << \"Wrong\\n\";\n  }\n}",
       "output": [
-        "bonjour  →  hello",
+        "bonjour",
         "Correct"
       ],
       "parts": [
@@ -3078,151 +3950,17 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Compares the text. if prints Correct when it matches; else prints Wrong. Matching is case-sensitive."
         }
       ],
-      "outputNote": "Example run: bonjour is chosen and the user enters hello.",
-      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
+      "outputNote": "Example run: bonjour is chosen and the user enters hello. The entered answer is input; the labels are annotations.",
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed.",
+      "outputAnnotations": [
+        "you enter hello",
+        "the translation matches"
+      ]
     }
   ]
 };
 
 type CodePart = { code: string; name: string; meaning: string };
-
-const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
-  cpp: {},
-  python: {},
-  javascript: {
-    0: [{ code: "\\x1b[31m", name: "Red text", meaning: "An ANSI escape code that switches terminal text to red." }, { code: "${red}", name: "Insert the colour", meaning: "Inside backticks, inserts the value stored in red before the message." }, { code: "\\n", name: "New line", meaning: "Write \\n inside the quoted text in console.log. It starts a new line: Hello, Welcome, and Goodbye each print on their own line." }],
-    1: [{ code: "function", name: "Create", meaning: "Starts a reusable block of code." }, { code: "correct()", name: "Name", meaning: "Names the function so you can call it later." }, { code: "{ ... }", name: "Instructions", meaning: "Holds the code the function will run." }, { code: "correct();", name: "Call it", meaning: "Runs the function you created." }, { code: ";", name: "End instruction", meaning: "Marks where an instruction ends. JavaScript can sometimes work without it, but using it consistently makes the ending clear." }],
-    2: [{ code: "while (true)", name: "Repeat", meaning: "Keeps asking for input until code inside stops the loop." }, { code: "prompt", name: "Input", meaning: "Asks the user for an answer." }, { code: "break", name: "Stop", meaning: "Leaves the loop when the if condition is true." }],
-    3: [{ code: "let", name: "Create", meaning: "Makes a variable that can remember something." }, { code: "name", name: "Label", meaning: "Shows that you choose a useful name for the saved value." }, { code: "=", name: "Save", meaning: "Puts the value on the right into the variable on the left." }],
-    6: [{ code: "if ( ... )", name: "Check", meaning: "Runs a block only when its condition is true." }, { code: 'answer === "green"', name: "Condition", meaning: "Checks whether the saved answer is exactly green." }, { code: "else", name: "Otherwise", meaning: "Runs when the condition is false." }],
-    8: [{ code: ">= 0", name: "Lower limit", meaning: "Checks that age is zero or greater." }, { code: "&&", name: "Two ampersands", meaning: "Read this as AND: the condition on each side must be true." }, { code: "<= 18", name: "Upper limit", meaning: "Checks that age is eighteen or less." }],
-    13: [{ code: "{ ... }", name: "Object brackets", meaning: "Curly braces hold the object's named values." }, { code: "bonjour: \"hello\"", name: "Key and value", meaning: "bonjour is the key to search for, and hello is the value stored under it." }, { code: "words[search]", name: "Look it up", meaning: "Uses the saved search as a key and retrieves its value from words." }],
-    16: [
-      {"code": "setTimeout", "name": "Schedule for later", "meaning": "Starts a timer and schedules a function to run later. It does not stop the next line from running."},
-      {"code": "() => {}", "name": "Arrow function", "meaning": "Creates the small function passed to the timer. The timer runs it after the delay."},
-      {"code": "()", "name": "No inputs", "meaning": "The empty parentheses before => mean this arrow function has no named inputs (parameters)."},
-      {"code": "=>", "name": "Arrow", "meaning": "Connects the function inputs on the left to its body on the right."},
-      {"code": "{}", "name": "Empty body", "meaning": "Curly braces hold the instructions to run later. Here they contain no instructions, so the timer does nothing when it finishes."},
-      {"code": "2000", "name": "Delay", "meaning": "The delay is in milliseconds. 2000 milliseconds = 2 seconds."},
-      {"code": ",", "name": "Separate the arguments", "meaning": "The comma separates the function to run, () => {}, from the delay, 2000. These two values are called arguments."},
-      {"code": "setTimeout( ... )", "name": "Call parentheses", "meaning": "The outer parentheses call setTimeout and surround its two arguments: the function and the delay."},
-      {"code": "console.log", "name": "Print now", "meaning": "Prints the message immediately here because it is before setTimeout, outside the arrow function body."},
-      {"code": "correct();", "name": "First function call", "meaning": "Runs correct: prints correct immediately, then schedules its empty timer."},
-      {"code": "incorrect();", "name": "Second function call", "meaning": "Runs incorrect next: prints thats is incorrect immediately, then schedules its empty timer. It does not wait for the first timer."},
-    ],
-    17: [{ code: "new Date()", name: "Current moment", meaning: "Creates a Date using the device's current date and time." }],
-  },
-  csharp: {
-    0: [{ code: "void", name: "Result type", meaning: "Says this method does not send a value back." }, { code: "Correct()", name: "Name", meaning: "Names the method so you can call it later." }, { code: "{ ... }", name: "Instructions", meaning: "Holds the code the method will run." }, { code: "Correct();", name: "Call it", meaning: "Runs the method you created." }, { code: ";", name: "End statement", meaning: "Marks where a statement ends. C# requires it after statements such as calling a method or printing text." }],
-    1: [{ code: "\\n", name: "New line", meaning: "Moves the next word onto a new line in the terminal." }],
-    2: [{ code: "while (true)", name: "Repeat", meaning: "Keeps asking for input until code inside stops the loop." }, { code: "Console.ReadLine", name: "Input", meaning: "Reads the user's answer." }, { code: "break", name: "Stop", meaning: "Leaves the loop when the if condition is true." }],
-    3: [{ code: 'return "Hello"', name: "Send a value back", meaning: "Ends GetMessage and sends Hello back to the code that called it." }, { code: "GetMessage()", name: "Use the returned value", meaning: "Calls the method and receives the text that return sent back." }],
-    4: [{ code: "string", name: "Type", meaning: "Says this variable will store text." }, { code: "name", name: "Label", meaning: "Shows that you choose a useful name for the saved value." }, { code: "=", name: "Save", meaning: "Puts the value on the right into the variable on the left." }],
-    7: [{ code: "if ( ... )", name: "Check", meaning: "Runs a block only when its condition is true." }, { code: 'answer == "green"', name: "Condition", meaning: "Checks whether the saved answer is green." }, { code: "else", name: "Otherwise", meaning: "Runs when the condition is false." }],
-    9: [{ code: ">= 0", name: "Lower limit", meaning: "Checks that age is zero or greater." }, { code: "&&", name: "Two ampersands", meaning: "Read this as AND: the condition on each side must be true." }, { code: "<= 18", name: "Upper limit", meaning: "Checks that age is eighteen or less." }],
-    12: [{ code: "string[]", name: "Array type", meaning: "Says fruits is a list of text values." }, { code: "foreach", name: "Loop", meaning: "Visits every item in the array." }, { code: "fruit", name: "Current item", meaning: "Temporarily holds the item being visited." }],
-    13: [{ code: "List<string>", name: "Flexible text list", meaning: "Creates a list that can grow and accepts string values." }, { code: "new List<string>()", name: "Empty list", meaning: "Builds the list with zero items inside it." }],
-    14: [{ code: "cars.Add(newCar)", name: "Add an item", meaning: "Adds the saved car to the end of the cars list." }],
-    15: [{ code: "string.Join", name: "Join items", meaning: "Turns all list items into one readable piece of text." }, { code: '", "', name: "Separator", meaning: "Places a comma and space between multiple cars." }],
-    17: [{ code: "cars[0]", name: "First position", meaning: "Zero retrieves the first item because list counting starts at zero." }],
-    18: [{ code: "var", name: "Inferred type", meaning: "Lets C# work out the variable's type from the value assigned to it." }, { code: "new { ... }", name: "Object", meaning: "Groups related values into one thing." }, { code: "car.Brand", name: "Property", meaning: "Reads the Brand value stored on car." }],
-    19: [{ code: "Task.Delay", name: "Timer", meaning: "Creates a pause for a number of milliseconds." }, { code: "1000", name: "Duration", meaning: "One thousand milliseconds means one second." }, { code: "await", name: "Wait", meaning: "Pauses here before moving to the next line." }],
-    20: [{ code: "DateTime", name: "Type", meaning: "Represents a date and a time in C#." }, { code: "DateTime.Now", name: "Current moment", meaning: "Reads the computer's current local date and time." }],
-  },
-  html: {
-    0: [{ code: "<!DOCTYPE", name: "Declaration", meaning: "Tells the browser what kind of document follows." }, { code: "html", name: "Modern HTML", meaning: "Selects the current HTML standard." }],
-    1: [{ code: "<html>", name: "Opening tag", meaning: "Marks where the HTML page begins." }, { code: 'lang="en"', name: "Page language", meaning: "Identifies the document as English." }, { code: "</html>", name: "Closing tag", meaning: "The slash marks where that element ends." }],
-    2: [{ code: "<head>", name: "Page information", meaning: "Contains information used by the browser." }, { code: '<meta charset="UTF-8">', name: "Character encoding", meaning: "Supports letters, symbols, and characters from many languages." }, { code: "<title>", name: "Tab title", meaning: "Sets the words shown on the browser tab." }],
-    3: [{ code: "<body>", name: "Visible content", meaning: "Starts the part visitors can see." }],
-    4: [{ code: "<div>", name: "Section box", meaning: "Starts a separate block used to group content inside the body." }, { code: "style", name: "Inline styling", meaning: "Adds a visual rule directly to this particular div." }, { code: "background-color", name: "Box colour", meaning: "Changes the colour behind the content inside the div." }],
-    5: [{ code: "h1", name: "Main heading", meaning: "The page's most important heading." }, { code: "h2", name: "Section heading", meaning: "Introduces a major section beneath the h1." }],
-    6: [{ code: "<a>", name: "Anchor", meaning: "Creates a clickable link." }, { code: "href", name: "Destination", meaning: "Stores the page or address to open." }],
-    7: [{ code: "<section>", name: "Content group", meaning: "Keeps a related part of the page together." }, { code: "<strong>", name: "Important text", meaning: "Marks text as important and normally displays it in bold." }, { code: "<del>", name: "Deleted text", meaning: "Shows text that has been removed with a line through it." }],
-    8: [{ code: "<script>", name: "JavaScript area", meaning: "Tells the browser that the code inside is JavaScript." }, { code: "const", name: "Fixed variable", meaning: "Creates a variable that will not be reassigned." }, { code: "new Date()", name: "Current moment", meaning: "Creates a Date using the device's current date and time." }, { code: "console.log", name: "Developer console", meaning: "Displays the value in the browser's developer tools." }],
-    10: [{ code: "<img>", name: "Image element", meaning: "Places an image in the HTML page; it does not need a closing tag." }, { code: 'src="car.png"', name: "Image source", meaning: "Loads car.png from the same folder as the HTML file." }, { code: 'alt="A car"', name: "Alternative text", meaning: "Describes the image for accessibility and when it cannot load." }],
-    11: [{ code: "<video>", name: "Video element", meaning: "Creates a video player inside the webpage." }, { code: "controls", name: "Playback controls", meaning: "Shows the browser's play, pause, volume, and timeline controls." }],
-    12: [{ code: "<audio>", name: "Audio element", meaning: "Creates an audio player without a video picture area." }],
-    13: [{ code: 'id="p1"', name: "Unique ID", meaning: "Gives this element the unique name p1." }, { code: "#p1", name: "Matching CSS", meaning: "CSS uses a hash before the ID name to select this exact element." }],
-    14: [{ code: "onclick", name: "Wait for a click", meaning: "Runs checkAnswer once when the visitor presses the button." }, { code: ".textContent", name: "Change the page text", meaning: "Places the result inside the selected paragraph." }],
-    15: [{ code: 'return "Hello"', name: "Send a value back", meaning: "Ends getMessage and sends Hello back to the code that called it." }, { code: "getMessage()", name: "Use the returned value", meaning: "Calls the function and receives the text that return sent back." }],
-  },
-  css: {
-    0: [{ code: "body", name: "Selector", meaning: "Chooses the HTML body element to style." }, { code: "background-color", name: "Property", meaning: "Chooses the colour behind the element." }, { code: ":", name: "Property separator", meaning: "Separates the property name from its value." }, { code: "lightblue", name: "Value", meaning: "The background colour to apply." }, { code: ";", name: "Rule ending", meaning: "Ends this CSS declaration so another can follow." }],
-    1: [{ code: "p", name: "Selector", meaning: "Chooses every paragraph on the page." }, { code: "color: red", name: "Text colour", meaning: "Makes the selected text red." }, { code: "text-align: center", name: "Alignment", meaning: "Centres inline content inside each paragraph." }],
-    2: [{ code: "#p1", name: "ID selector", meaning: "The hash selects the element whose ID is p1." }],
-  },
-};
-
-const breakdownLessonTitles: Record<Language, string[]> = {"javascript": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Repeat code every second", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Choose let or const", "Ask for a name in VS Code", "Choose from a simple menu", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "csharp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose from a simple menu", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "html": ["Tell the browser it is HTML", "Start the HTML page", "Name the browser tab", "Add visible page content", "Separate content into boxes", "Create a heading hierarchy", "Open another page", "Explore HTML text elements", "Show the current date and time", "Link two HTML pages", "Place an image on the page", "Place a video on the page", "Place audio on the page", "Give one element a unique name", "Use a button instead of while (true)", "Send a value back with return"], "css": ["Colour the page background", "Colour and centre text", "Style one unique element", "Compare website fonts", "Explore borders and colour formats", "Create a rounded dotted border"], "python": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose from a simple menu", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "cpp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose from a simple menu", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"]};
-
-const nullBreakdowns: Partial<Record<Language, CodePart[]>> = {
-  javascript: [
-    { code: "null", name: "No value yet", meaning: "Deliberately stores no value for now; result can receive one later." },
-    { code: "=== null", name: "Exact check", meaning: "Checks whether result is specifically the null value." },
-  ],
-  csharp: [
-    { code: "string?", name: "Nullable text", meaning: "The question mark allows a string variable to hold text or null." },
-    { code: "null", name: "No value yet", meaning: "Deliberately stores no value for now; result can receive one later." },
-    { code: "== null", name: "Null check", meaning: "Checks whether result still contains no value." },
-  ],
-};
-
-const setsBreakdowns: Partial<Record<Language, CodePart[]>> = {
-  javascript: [
-    { code: "new Set(names)", name: "Remove duplicates", meaning: "Creates a Set from names. A Set keeps only one copy of each value." },
-    { code: "[...uniqueNames]", name: "Spread into an array", meaning: "The three dots copy every Set value into a new array for familiar array-style output." },
-  ],
-  csharp: [
-    { code: "HashSet<string>", name: "Unique text collection", meaning: "Defines a collection that stores no duplicate text values." },
-    { code: "new HashSet<string>(names)", name: "Remove duplicates", meaning: "Creates the HashSet from names and keeps only one copy of each value." },
-  ],
-};
-
-const namesArrayBreakdown: CodePart[] = [
-  { code: "[]", name: "Make the array", meaning: "The square brackets create an empty array. An array is JavaScript's name for a list." },
-  { code: 'names.push(prompt("add a name"))', name: "Add a name", meaning: "prompt runs first and asks for a name. push() adds the entered name to the end of the names array." },
-  { code: 'const search = prompt("search for a name")', name: "Ask what to find", meaning: "Stores the second answer in search. This does not add another name to the array." },
-  { code: "names.includes(search)", name: "Search the array", meaning: "Returns true when names contains an exact match for search, or false when it does not. includes() checks the array without changing it." },
-  { code: "if / else", name: "Show the result", meaning: "if prints name found when includes() returns true. else prints name not found when it returns false. Add Jordan and search for Ben or jordan to get name not found." },
-];
-
-const randomWordBreakdown: CodePart[] = [
-  { code: "Object.keys(words)", name: "Get the keys", meaning: "Creates an array containing bonjour and hola, the two keys from words." },
-  { code: "Math.random() * 2", name: "Make a random position", meaning: "Creates a random number from 0 up to, but not including, 2 because there are two keys." },
-  { code: "Math.floor(...)", name: "Round down", meaning: "Rounds down to a whole number: 0.8 becomes 0 and 1.8 becomes 1." },
-  { code: "[ ... ]", name: "Choose that key", meaning: "Uses the random position to select either bonjour or hola from the keys array." },
-];
-
-const classBreakdowns: Partial<Record<Language, CodePart[]>> = {
-  javascript: [
-    { code: "class Car", name: "Create the class", meaning: "Defines the blueprint before any Car objects are created." },
-    { code: "constructor(name, year)", name: "Receive values", meaning: "Runs when new Car(...) creates an object." },
-    { code: "this.name = name", name: "Store a property", meaning: "Saves the received name on this particular car object." },
-    { code: "new Car(\"Ford\", 2014)", name: "Create an instance", meaning: "Calls the constructor and creates one Car object." },
-  ],
-  csharp: [
-    { code: "class Car", name: "Define Car first", meaning: "Places the Car blueprint before the Program class that uses it." },
-    { code: "public string Name", name: "Property", meaning: "Stores a text name that other code can read or change." },
-    { code: "Car(string name, int year)", name: "Constructor", meaning: "Receives the starting values when new Car(...) creates an object." },
-    { code: "new Car(\"Ford\", 2014)", name: "Create an instance", meaning: "Creates one Car object inside Main." },
-  ],
-};
-
-const regexBreakdowns: Partial<Record<Language, CodePart[]>> = {
-  javascript: [
-    { code: "/ ... /", name: "Pattern", meaning: "The forward slashes mark the beginning and end of a regular expression." },
-    { code: "^", name: "Beginning", meaning: "The caret says the match must start at the very beginning of the text." },
-    { code: "J", name: "Required letter", meaning: "This is the letter that must appear first." },
-    { code: "i", name: "Ignore case", meaning: "Accepts either uppercase J or lowercase j." },
-    { code: ".test(name)", name: "Check a name", meaning: "Returns true when name begins with J and false when it does not." },
-  ],
-  csharp: [
-    { code: '"^J"', name: "Pattern", meaning: "The caret requires J to be at the beginning of the text." },
-    { code: "Regex.IsMatch", name: "Check a name", meaning: "Returns true when the supplied name matches the pattern." },
-    { code: "RegexOptions.IgnoreCase", name: "Ignore case", meaning: "Accepts either uppercase J or lowercase j." },
-  ],
-};
-
 
 const lessonTone = (lesson: Lesson) => {
   const label = `${lesson.eyebrow} ${lesson.title}`.toLowerCase();
@@ -3254,7 +3992,7 @@ const withoutGuideComments = (value: string, language: Language) => {
   return uncommented.split("\n").filter((line) => line.trim()).join("\n");
 };
 
-const languageName = (language: Language) => language === "cpp" ? "C++" : language === "python" ? "Python" : language === "javascript" ? "JavaScript" : language === "csharp" ? "C Sharp" : language === "html" ? "HTML" : "CSS";
+const languageName = (language: Language) => language === "cpp" ? "C++" : language === "python" ? "Python" : language === "javascript" ? "JavaScript" : language === "csharp" ? "C#" : language === "html" ? "HTML" : "CSS";
 const languageBadge = (language: Language) => language === "cpp" ? "C++" : language === "python" ? "PY" : language === "javascript" ? "JS" : language === "csharp" ? "C#" : language === "html" ? "HTML" : "CSS";
 const challengeFile = (language: Language) => language === "cpp" ? "main.cpp" : language === "python" ? "main.py" : language === "javascript" ? "main.js" : language === "csharp" ? "Program.cs" : language === "html" ? "index.html" : "styles.css";
 
@@ -3293,10 +4031,25 @@ function SyntaxDiagnostic({ parts }: { parts: DiagnosticPart[] }) {
 }
 
 function HighlightedCode({ code, language, caretIndex }: { code: string; language: Language; caretIndex?: number }) {
+  if (language === "html") {
+    const segments: { code: string; language: Language; start: number }[] = [];
+    let start = 0;
+    for (const match of code.matchAll(/(<(script|style)\b[^>]*>)([\s\S]*?)(<\/\2\s*>)/gi)) {
+      if (match.index > start) segments.push({ code: code.slice(start, match.index), language: "html", start });
+      segments.push({ code: match[1], language: "html", start: match.index });
+      segments.push({ code: match[3], language: match[2].toLowerCase() === "script" ? "javascript" : "css", start: match.index + match[1].length });
+      segments.push({ code: match[4], language: "html", start: match.index + match[1].length + match[3].length });
+      start = match.index + match[0].length;
+    }
+    if (segments.length) {
+      if (start < code.length) segments.push({ code: code.slice(start), language: "html", start });
+      return <>{segments.map((segment, index) => <HighlightedCode key={index} code={segment.code} language={segment.language} caretIndex={caretIndex !== undefined && caretIndex >= segment.start && (caretIndex < segment.start + segment.code.length || index === segments.length - 1) ? caretIndex - segment.start : undefined} />)}</>;
+    }
+  }
   const languageApis: Record<Language, RegExp> = {
     javascript: /^(Math|Object|process|fs|path|console|Date|Set)$/,
     csharp: /^(Console|Task|DateTime|List|HashSet|Dictionary|Random|Regex|RegexOptions)$/,
-    cpp: /^(std|cout|cin|vector|map|optional|mt19937|uniform_int_distribution|random_device)$/,
+    cpp: /^(std|cout|cin|vector|map|set|optional|mt19937|uniform_int_distribution|random_device)$/,
     python: /^(print|input|datetime|random|re|time|set|list|sorted)$/,
     html: /^(Date|console)$/,
     css: /^(background-color|color|text-align|font-family|border|border-radius)$/,
@@ -3318,6 +4071,7 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
     if (language === "cpp" && /^#[ \t]*include/.test(text)) kind = "header";
     else if (/^(\/\/|\/\*|<!--)/.test(text) || (language === "python" && text.startsWith("#"))) kind = "comment";
     else if (/^f?["'`]/.test(text) || /^\/\^/.test(text)) kind = "string";
+    else if ((language === "python" || language === "cpp") && languageApis[language].test(text)) kind = "api";
     else if (/^(def|self|True|False|None|elif|and|or|not|is|import|from|using|auto|static_cast|function|class|constructor|this|let|const|double|bool|out|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|div|section|script|img|video|audio|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
     else if (languageApis[language].test(text)) kind = "api";
     else if (/^(style|href|src|alt|controls|id|lang|charset)$/.test(text)) kind = "attribute";
@@ -3444,8 +4198,9 @@ function matchingLesson(source: Lesson, target: Language) {
     "Use changeable and fixed values": ["Choose let or const"],
     "Print the current date and time": ["Show the current date and time"],
     "Show the current date and time": ["Print the current date and time"],
-    "Use one function inside another": ["Send a value back with return"],
-    "Send a value back with return": ["Use one function inside another"],
+    "Use one function inside another": ["Send a value back with return", "Use a function's returned value"],
+    "Send a value back with return": ["Use one function inside another", "Use a function's returned value"],
+    "Use a function's returned value": ["Use one function inside another", "Send a value back with return"],
     "Repeat input until the answer is correct": ["Use a button instead of while (true)"],
     "Use a button instead of while (true)": ["Repeat input until the answer is correct"],
     "Give one element a unique name": ["Style one unique element"],
@@ -3550,17 +4305,7 @@ export default function Home() {
   const ghostSource = current ? withoutGuideComments(current.answer, language ?? "javascript") : "";
   const visibleGhost = ghostSource.slice(0, ghostLength);
   const guideCode = alignedGuide(code, visibleGhost);
-  const breakdownIndex = language && current ? Object.keys(breakdowns[language]).map(Number).find(key => breakdownLessonTitles[language][key] === current.title) ?? index : index;
-  const breakdown = language
-    ? current?.parts?.length ? current.parts : current?.referenceKind === "comparisons" ? undefined
-      : ((current?.title === "Mark a value as not ready yet") && nullBreakdowns[language])
-      || ((current?.title === "Create and use a class") && classBreakdowns[language])
-      || ((current?.title === "Let names beginning with J enter") && regexBreakdowns[language])
-      || ((current?.title === "Make and search a names array" && language === "javascript") && namesArrayBreakdown)
-      || ((current?.title === "Choose a random word" && language === "javascript") && randomWordBreakdown)
-      || ((current?.title === "Remove duplicate names") && setsBreakdowns[language])
-      || breakdowns[language][breakdownIndex]
-    : undefined;
+  const breakdown = current?.parts;
   const progress = language ? Math.round((index / lessons[language].length) * 100) : 0;
   const lessonCheck = useMemo(() => {
     // Loading a grammar triggers one new comparison for this course.
@@ -3756,7 +4501,7 @@ export default function Home() {
             </button>
             <button className="course-card cs-card" onClick={() => openCourse("csharp")}>
               <div className="course-icon">C#</div><div className="course-count">{lessons.csharp.length} LESSONS</div>
-              <h3>C Sharp</h3><p>Create powerful console apps and learn the foundations of strongly typed code.</p>
+              <h3>C#</h3><p>Create powerful console apps and learn the foundations of strongly typed code.</p>
               <div className="course-bottom"><span>Start learning <b>→</b></span><div className="mini-progress"><i style={{width: `${completed.csharp / lessons.csharp.length * 100}%`}} /></div></div>
             </button>
             <button className="course-card cpp-card" onClick={() => openCourse("cpp")}>
@@ -3846,10 +4591,16 @@ export default function Home() {
             <p>Save as <code>name.mjs</code>, open <b>Terminal → New Terminal</b> in VS Code, then enter <code>node name.mjs</code>. Type a name and press Enter. Use the terminal so you can type a reply.</p>
             <a href="/examples/name.mjs" download>Download name.mjs</a>
           </section>}
+          {(language === "html" || language === "css") && <details className="symbol-guide" open={index === 0}>
+            <summary>Run these examples in a browser</summary>
+            <p>HTML describes page content; CSS styles it. Neither prints terminal messages. The result preview describes the page or shows its visible text.</p>
+            <p>Save a complete HTML page as <code>index.html</code> and open it in a browser. Short HTML examples show one part of that page; the page-structure lessons explain where each part belongs.</p>
+            <p>For CSS, save the rules in <code>styles.css</code> beside your HTML file. Add <code>{'<link rel="stylesheet" href="styles.css">'}</code> inside the HTML head, and include the element named by the selector in the body. Save your changes and refresh the browser.</p>
+          </details>}
           {current!.runHint && <p className="run-hint">{current!.runHint}</p>}
           {(language === "cpp" || language === "python") && <details className="symbol-guide" open={index === 0}>
             <summary>Brackets and symbols</summary>
-            <p><code>[]</code>   {language === "python" ? 'makes a list, such as ["Jordan", "Alex"], or retrieves an item, such as names[0].' : 'accesses an item, such as names[0]. A vector initializer uses braces: std::vector<std::string> names = {"Jordan", "Alex"};.'}</p>
+            <p><code>[]</code>   {language === "python" ? 'makes a list, such as ["Jordan", "Alex"], or retrieves an item, such as names[0].' : 'accesses an item, such as names[0]. A vector initializer uses braces: std::vector<std::string> names = {"Jordan", "Alex"};'}</p>
             <p><code>{"{}"}</code>   {language === "python" ? 'creates a dictionary or a non-empty set. Python uses a colon and indentation for code blocks.' : 'groups a code block, class body, or initializer. Map entries are key/value pairs; C++ has no JavaScript-style object literal.'}</p>
             <p><code>()</code> holds function arguments {language === "cpp" ? 'and conditions.' : 'and can group expressions. Parentheses around an if condition are optional.'} Each nested function call has its own pair.</p>
             <p><code>{language === "python" ? "#" : "//"}</code> starts a comment.  {language === "python" ? 'Use four spaces for each block level; indentation is part of the program.' : '#include is a preprocessor directive that makes library declarations available.'}</p>
@@ -3861,13 +4612,10 @@ export default function Home() {
               <tr><td><code>{"{}"}</code></td><td>Curly braces · object / block</td><td><code className="symbol-example"><HighlightedCode language={language} code={language === "javascript" ? '{ name: "Jordan", age: 20 }' : 'new { Name = "Jordan", Age = 20 }'} /></code></td></tr>
               <tr><td><code>()</code></td><td>Parentheses · calls / conditions</td><td><code className="symbol-example"><HighlightedCode language={language} code={language === "javascript" ? 'console.log("Hello")' : 'Console.WriteLine("Hello")'} /></code></td></tr>
             </tbody></table>
-            <p><code>[]</code> creates JavaScript arrays or accesses an item by position or key. In C#, <code>string[]</code> declares an array type; <code>names[0]</code> accesses its first item. A List can grow; an array has a fixed length.</p>
-            <pre><code className="symbol-example"><HighlightedCode language={language} code={language === "javascript" ? 'let trains = ["Class 390", "Class 801"];' : 'string[] trains = { "Class 390", "Class 801" };'} /></code></pre>
+            <p>{language === "javascript" ? "JavaScript arrays can grow when you add items. Square brackets also retrieve an item by position or an object value by key." : "C# arrays have a fixed length. List collections can grow when you add items. names[0] retrieves the first item."}</p>
             <p><code>()</code> holds function arguments and conditions. Each nested call has its own pair. Extra parentheses can group an expression; <code>((</code> has no special meaning for multiple functions.</p>
-            <pre><code className="symbol-example"><HighlightedCode language={language} code={language === "javascript" ? 'console.log("Hello");\nif (speed > 100) { }' : 'Console.WriteLine("Hello");\nif (speed > 100) { }'} /></code></pre>
-            <p><code>{"{}"}</code> groups a block of instructions. It also creates an object literal in JavaScript. In C#, braces can hold blocks, class bodies, or object and collection initializers.</p>
-            <pre><code className="symbol-example"><HighlightedCode language={language} code={language === "javascript" ? 'if (speed > 100) {\n  console.log("Too fast!");\n}' : 'if (speed > 100) {\n  Console.WriteLine("Too fast!");\n}'} /></code></pre>
-            <p><code>//</code> starts a comment that explains the code and is not executed. These speed examples show the bracket shapes; define speed before running them.</p>
+            <p><code>{"{}"}</code> groups a block of instructions. {language === "javascript" ? "It also creates an object literal." : "It can also hold a class body or an object or collection initializer."}</p>
+            <p><code>//</code> starts a comment. Its text explains the code and is not executed.</p>
           </details>}
           {breakdown && <section className="code-breakdown" aria-label="Code breakdown">
             <div className="breakdown-label">BREAK IT DOWN</div>
@@ -3885,8 +4633,8 @@ export default function Home() {
               ["==", "Equal", language === "javascript" ? "Compares values after type conversion; usually use === in JavaScript." : "Checks whether the values are equal."],
               ["!=", "Not equal", language === "javascript" ? "Compares after type conversion; usually use !== in JavaScript." : "Checks whether the values differ."],
               ...(language === "javascript" ? [["===", "Strictly equal", "Checks equality without converting types."], ["!==", "Strictly not equal", "Checks inequality without converting types."]] : []),
-              [language === "python" ? "and" : "&&", "AND", "Both conditions must be true. && is two ampersands."],
-              [language === "python" ? "or" : "||", "OR", "At least one condition must be true. || is two vertical bars."],
+              [language === "python" ? "and" : "&&", "AND", language === "python" ? "Both conditions must be true. Write and between the two conditions." : "Both conditions must be true. && is two ampersands."],
+              [language === "python" ? "or" : "||", "OR", language === "python" ? "At least one condition must be true. Write or between the two conditions." : "At least one condition must be true. || is two vertical bars."],
               [language === "python" ? "not" : "!", "NOT", "Reverses true and false."],
               ["=", "Assignment", "Saves a value; it does not compare two values."],
             ].map(([symbol, name, meaning]) => <div key={symbol}><code>{symbol}</code><p><b>{name}</b><span>{meaning}</span></p></div>)}
@@ -3912,6 +4660,7 @@ export default function Home() {
             <div><code>5px solid red</code><p><b>Border shorthand</b><span>Sets width, line style, and colour in one instruction.</span></p></div>
             <div><code>border-left</code><p><b>One side only</b><span>Styles only the left edge; border-bottom does the same for the bottom.</span></p></div>
             <div><code>border-radius</code><p><b>Rounded corners</b><span>Rounds the corners of the element's border.</span></p></div>
+            <div><code>rgb(255, 0, 0)</code><p><b>RGB colour</b><span>Sets red, green, and blue amounts from 0 to 255. This example uses red at its maximum.</span></p></div>
             <div><code>#222222</code><p><b>Hex colour</b><span>Uses a hash followed by red, green, and blue hexadecimal values.</span></p></div>
             <div><code>rgba(..., 0.4)</code><p><b>Transparent colour</b><span>The fourth number controls opacity from 0 to 1.</span></p></div>
           </div> : <div className="element-guide">
@@ -4005,14 +4754,14 @@ export default function Home() {
           </div> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className="file-tab"><span>◆</span> {current!.fileName || challengeFile(language)}<small className="file-language">{languageName(language)}</small></div><div className="panel-actions"><button className="editor-mode-button" onClick={() => changeBlockMode(!blockMode)}>{blockMode ? "Use keyboard" : "Use blocks"}</button><button onClick={() => changeBlockCode(current!.starter || "")} title="Reset code">↻ Reset</button></div></div>
-            {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div style={{ minHeight: Math.max(300, lineNumbers.length * 24.5 + 44) }} className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className={`code-guide ${current!.title === "Choose from a simple menu" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code>{current!.title === "Choose from a simple menu" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Choose from a simple menu"} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : "// Type your code here..."} /></div>}
+            {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div style={{ minHeight: Math.max(300, lineNumbers.length * 24.5 + 44) }} className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className={`code-guide ${current!.title === "Choose from a simple menu" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code>{current!.title === "Choose from a simple menu" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Choose from a simple menu"} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div>}
           </div>
           <div className="console-panel">
-            <div className="console-bar"><span><i /> CONSOLE</span><button onClick={() => setStatus("idle")}>Clear</button></div>
+            <div className="console-bar"><span><i /> {language === "html" || language === "css" ? "RESULT PREVIEW" : "CONSOLE"}</span><button onClick={() => setStatus("idle")}>Clear</button></div>
             <div className="console-body">
-              {status === "idle" && <span className="console-muted">Your program output will appear here...</span>}
+              {status === "idle" && <span className="console-muted">{language === "html" || language === "css" ? "Your page result preview will appear here..." : "Your program output will appear here..."}</span>}
               {status === "wrong" && <><SyntaxDiagnostic parts={diagnostic} /><div className="console-muted diagnostic-hint">Hover over or focus each underlined part to see what it means.</div></>}
-              {status === "correct" && <><div className="run-line"><span>✓</span> Code accepted — {lessonCheck?.output ? "your output" : "example output"}</div><div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div></>}
+              {status === "correct" && <><div className="run-line"><span>✓</span> Code accepted — {language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div><div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div></>}
             </div>
           </div>
           <div className={`feedback ${status}`}>
