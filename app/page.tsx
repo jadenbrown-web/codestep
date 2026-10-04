@@ -893,24 +893,41 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "05 · Date and time",
-      "title": "Print the current date and time",
-      "explanation": "DateTime.Now captures the current local date and time from the device. Console.WriteLine(time) prints it. The display depends on the device, time zone, and when you run it. Hour reads the hour from 0 to 23; Minute reads the minute from 0 to 59.",
-      "note": "// Store the current date and time in time, then print it.",
-      "prompt": "Store the current date and time in time, then print it.",
-      "answer": "DateTime time = DateTime.Now;\nConsole.WriteLine(time);",
+      "eyebrow": "05 · Time",
+      "title": "Repeat code every second",
+      "explanation": "while (true) keeps repeating the code. await Task.Delay(1000) waits before each message; 1000 milliseconds means one second. The first Hello World appears after approximately one second, then another appears approximately every second. Unlike JavaScript setTimeout, which runs once, this loop keeps repeating until stopped. await lets other asynchronous work continue while it waits.",
+      "note": "// Print Hello World approximately every second.",
+      "prompt": "Print Hello World every second, waiting before the first message.",
+      "answer": "while (true) {\n    await Task.Delay(1000);\n    Console.WriteLine(\"Hello World\");\n}",
       "output": [
-        "02/10/2026 17:20:00"
+        "Hello World",
+        "Hello World",
+        "Hello World"
       ],
       "parts": [
         {
-          "code": "DateTime.Now",
-          "name": "Current moment",
-          "meaning": "Gets the current local date and time."
+          "code": "while (true)",
+          "name": "Repeat",
+          "meaning": "Keeps the loop running until it is stopped."
+        },
+        {
+          "code": "await Task.Delay(1000);",
+          "name": "Wait one second",
+          "meaning": "Waits for 1000 milliseconds before printing each message."
+        },
+        {
+          "code": "Console.WriteLine(\"Hello World\");",
+          "name": "Print",
+          "meaning": "Prints Hello World on a new line each time."
         }
       ],
-      "outputNote": "Example date and time; running the code uses your device’s current moment.",
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "outputNote": "Example output from the first three repetitions. Time labels are annotations, not printed text. Actual timing can vary; the loop keeps repeating until stopped. Press Ctrl+C in the terminal to stop it.",
+      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first.",
+      "outputAnnotations": [
+        "after 1 second",
+        "after 2 seconds",
+        "after 3 seconds"
+      ]
     },
     {
       "eyebrow": "06 · Date and time",
@@ -1865,24 +1882,46 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
     },
     {
-      "eyebrow": "05 · Date and time",
-      "title": "Print the current date and time",
-      "explanation": "datetime.now() captures the device’s current local date and time. print(time) displays that moment. time.hour and time.minute read its hour and minute. The output changes with the clock.",
-      "note": "# Store the current date and time in time, then print it.",
-      "prompt": "Store the current date and time in time, then print it.",
-      "answer": "from datetime import datetime\n\ntime = datetime.now()\nprint(time)",
+      "eyebrow": "05 · Time",
+      "title": "Repeat code every second",
+      "explanation": "while True keeps repeating the indented code. time.sleep(1) pauses this flow for one second before each message. Python sleep uses seconds: 1 second equals 1000 milliseconds. The first Hello World appears after approximately one second, then another appears approximately every second. Unlike JavaScript setTimeout, which runs once, this loop keeps repeating until stopped.",
+      "note": "# Print Hello World approximately every second.",
+      "prompt": "Print Hello World every second, waiting before the first message.",
+      "answer": "import time\n\nwhile True:\n    time.sleep(1)\n    print(\"Hello World\")",
       "output": [
-        "02/10/2026 17:20:00"
+        "Hello World",
+        "Hello World",
+        "Hello World"
       ],
       "parts": [
         {
-          "code": "datetime.now()",
-          "name": "Current moment",
-          "meaning": "Captures the local date and time."
+          "code": "import time",
+          "name": "Time tools",
+          "meaning": "Makes time.sleep available."
+        },
+        {
+          "code": "while True:",
+          "name": "Repeat",
+          "meaning": "Keeps repeating the indented code until stopped."
+        },
+        {
+          "code": "time.sleep(1)",
+          "name": "Wait one second",
+          "meaning": "Pauses the current flow for one second before printing."
+        },
+        {
+          "code": "print(\"Hello World\")",
+          "name": "Print",
+          "meaning": "Prints Hello World on a new line each time."
         }
       ],
-      "outputNote": "Example date and time; running the code uses your device’s current moment.",
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
+      "outputNote": "Example output from the first three repetitions. Time labels are annotations, not printed text. Actual timing can vary; the loop keeps repeating until stopped. Press Ctrl+C in the terminal to stop it.",
+      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal.",
+      "outputAnnotations": [
+        "after 1 second",
+        "after 2 seconds",
+        "after 3 seconds"
+      ]
     },
     {
       "eyebrow": "06 · Date and time",
@@ -2598,29 +2637,46 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "05 · Date and time",
-      "title": "Print the current date and time",
-      "explanation": "std::time gets the current moment. std::localtime converts it to local calendar parts. Copying the result into time keeps that snapshot. std::put_time formats it for printing. tm_hour and tm_min read the hour and minute.",
-      "note": "// Store the current date and time in time, then print it.",
-      "prompt": "Store the current date and time in time, then print it.",
-      "answer": "#include <iostream>\n#include <string>\n#include <ctime>\n#include <iomanip>\n\nint main() {\n  std::time_t now = std::time(nullptr);\n  std::tm time = *std::localtime(&now);\n  std::cout << std::put_time(&time, \"%d/%m/%Y %H:%M:%S\") << \"\\n\";\n}",
+      "eyebrow": "05 · Time",
+      "title": "Repeat code every second",
+      "explanation": "while (true) keeps repeating the code. std::this_thread::sleep_for pauses the current thread before each message. std::chrono::milliseconds(1000) means one second. The first Hello World appears after approximately one second, then another appears approximately every second. Unlike JavaScript setTimeout, which runs once, this loop keeps repeating until stopped.",
+      "note": "// Print Hello World approximately every second.",
+      "prompt": "Print Hello World every second, waiting before the first message.",
+      "answer": "#include <iostream>\n#include <thread>\n#include <chrono>\n\nint main() {\n    while (true) {\n        std::this_thread::sleep_for(std::chrono::milliseconds(1000));\n        std::cout << \"Hello World\\n\";\n    }\n}",
       "output": [
-        "02/10/2026 17:20:00"
+        "Hello World",
+        "Hello World",
+        "Hello World"
       ],
       "parts": [
         {
-          "code": "std::localtime",
-          "name": "Local time",
-          "meaning": "Converts the current moment into local calendar parts."
+          "code": "while (true)",
+          "name": "Repeat",
+          "meaning": "Keeps the loop running until stopped."
         },
         {
-          "code": "std::put_time",
-          "name": "Format",
-          "meaning": "Formats the date and time for output."
+          "code": "std::this_thread::sleep_for",
+          "name": "Wait",
+          "meaning": "Pauses the current thread for the supplied duration."
+        },
+        {
+          "code": "std::chrono::milliseconds(1000)",
+          "name": "One second",
+          "meaning": "Creates a duration of 1000 milliseconds, which is one second."
+        },
+        {
+          "code": "std::cout << \"Hello World\\n\";",
+          "name": "Print",
+          "meaning": "Prints Hello World, then starts a new line."
         }
       ],
-      "outputNote": "Example date and time; running the code uses your device’s current moment.",
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
+      "outputNote": "Example output from the first three repetitions. Time labels are annotations, not printed text. Actual timing can vary; the loop keeps repeating until stopped. Press Ctrl+C in the terminal to stop it.",
+      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed.",
+      "outputAnnotations": [
+        "after 1 second",
+        "after 2 seconds",
+        "after 3 seconds"
+      ]
     },
     {
       "eyebrow": "06 · Date and time",
@@ -3297,7 +3353,7 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
   },
 };
 
-const breakdownLessonTitles: Record<Language, string[]> = {"javascript": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Repeat code every second", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Ask for a name in VS Code", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "csharp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Print the current date and time", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "html": ["Tell the browser it is HTML", "Start the HTML page", "Name the browser tab", "Add visible page content", "Separate content into boxes", "Create a heading hierarchy", "Open another page", "Explore HTML text elements", "Show the current date and time", "Link two HTML pages", "Place an image on the page", "Place a video on the page", "Place audio on the page", "Give one element a unique name", "Use a button instead of while (true)", "Send a value back with return"], "css": ["Colour the page background", "Colour and centre text", "Style one unique element", "Compare website fonts", "Explore borders and colour formats", "Create a rounded dotted border"], "python": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Print the current date and time", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "cpp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Print the current date and time", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"]};
+const breakdownLessonTitles: Record<Language, string[]> = {"javascript": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Repeat code every second", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Ask for a name in VS Code", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "csharp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Repeat code every second", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "html": ["Tell the browser it is HTML", "Start the HTML page", "Name the browser tab", "Add visible page content", "Separate content into boxes", "Create a heading hierarchy", "Open another page", "Explore HTML text elements", "Show the current date and time", "Link two HTML pages", "Place an image on the page", "Place a video on the page", "Place audio on the page", "Give one element a unique name", "Use a button instead of while (true)", "Send a value back with return"], "css": ["Colour the page background", "Colour and centre text", "Style one unique element", "Compare website fonts", "Explore borders and colour formats", "Create a rounded dotted border"], "python": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Repeat code every second", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "cpp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Repeat code every second", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"]};
 
 const nullBreakdowns: Partial<Record<Language, CodePart[]>> = {
   javascript: [
