@@ -893,44 +893,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "05 · Time",
-      "title": "Repeat code every second",
-      "explanation": "while (true) keeps repeating the code. await Task.Delay(1000) waits before each message; 1000 milliseconds means one second. The first Hello World appears after approximately one second, then another appears approximately every second. Unlike JavaScript setTimeout, which runs once, this loop keeps repeating until stopped. await lets other asynchronous work continue while it waits.",
-      "note": "// Print Hello World approximately every second.",
-      "prompt": "Print Hello World every second, waiting before the first message.",
-      "answer": "while (true) {\n    await Task.Delay(1000);\n    Console.WriteLine(\"Hello World\");\n}",
-      "output": [
-        "Hello World",
-        "Hello World",
-        "Hello World"
-      ],
-      "parts": [
-        {
-          "code": "while (true)",
-          "name": "Repeat",
-          "meaning": "Keeps the loop running until it is stopped."
-        },
-        {
-          "code": "await Task.Delay(1000);",
-          "name": "Wait one second",
-          "meaning": "Waits for 1000 milliseconds before printing each message."
-        },
-        {
-          "code": "Console.WriteLine(\"Hello World\");",
-          "name": "Print",
-          "meaning": "Prints Hello World on a new line each time."
-        }
-      ],
-      "outputNote": "Example output from the first three repetitions. Time labels are annotations, not printed text. Actual timing can vary; the loop keeps repeating until stopped. Press Ctrl+C in the terminal to stop it.",
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first.",
-      "outputAnnotations": [
-        "after 1 second",
-        "after 2 seconds",
-        "after 3 seconds"
-      ]
-    },
-    {
-      "eyebrow": "06 · Date and time",
+      "eyebrow": "05 · Date and time",
       "title": "Check for a particular time",
       "explanation": "This checks the local time once. Hour and Minute read parts of time. == compares values; && requires both comparisons to be true. The message prints only if this code runs during 17:20. An if statement alone does not keep watching the clock.",
       "note": "// Print Time reached! if the local hour is 17 and the minute is 20.",
@@ -960,7 +923,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "07 · Date and time",
+      "eyebrow": "06 · Date and time",
       "title": "Keep checking until the time is reached",
       "explanation": "This loop checks a fresh DateTime.Now every second while the program stays open. At 17:20 it prints once and break stops the loop. Task.Delay gives the loop a 1-second wait between checks. If 17:20 has passed, it waits for the next day. Checks can run late, so this is a learning example rather than an exact alarm.",
       "note": "// Keep checking the local clock and print Time reached! once at 17:20.",
@@ -985,7 +948,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "08 · Functions",
+      "eyebrow": "07 · Functions",
       "title": "Use one function inside another",
       "explanation": "getMessage() returns Hello. In Console.WriteLine(getMessage()), the inner function runs first, then Console.WriteLine prints its returned value. Each call has its own pair of parentheses. In Console.WriteLine((getMessage())), the extra parentheses only group the result; (( is not a special sign for multiple functions.",
       "note": "// Return Hello from getMessage, then print it by calling the function inside the print call.",
@@ -1009,7 +972,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "09 · Classes",
+      "eyebrow": "08 · Classes",
       "title": "Create and use a class",
       "explanation": "A method is called with its name, such as Correct(). A class is used in a similar way, but you put new before its name: new Car(\"Ford\", 2014). The Car class is defined before Program, and Main then creates objects, or instances, from that class.",
       "note": "// Define Car first, then create Car objects inside Main",
@@ -1023,7 +986,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "10 · Loops",
+      "eyebrow": "09 · Loops",
       "title": "Repeat input until the answer is correct",
       "explanation": "while (true) { } repeats forever because true never changes. On its own, it never reaches an ending. This version works because break immediately leaves the loop as soon as the answer is correct.",
       "note": "// Create the loop with input, output, and break inside if.",
@@ -1055,7 +1018,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "11 · Variables",
+      "eyebrow": "10 · Variables",
       "title": "Use changeable and fixed values",
       "explanation": "int creates a variable holding a whole number, which you can reassign. const int creates a compile-time constant you cannot reassign. Here speed changes from 80 to 100; maxSpeed stays 100. C# has no let keyword for normal variable declarations; string stores text and var lets the compiler infer a local variable’s type.",
       "note": "// Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
@@ -1079,7 +1042,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "12 · Variables",
+      "eyebrow": "11 · Variables",
       "title": "Remember a value",
       "explanation": "string tells C# that a variable holds text. Console.ReadLine asks for input, and the answer can be stored in that variable for later.",
       "note": "// Ask for a name and greet the user",
@@ -1109,7 +1072,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "13 · If and else",
+      "eyebrow": "12 · If and else",
       "title": "Choose between several messages",
       "explanation": "if starts the decision. Add else if between the first if and the final else when you need another condition in the same decision. Conditions are checked from top to bottom and only the first matching block runs. At 120, both comparisons would be true, but only Too fast! prints. At 60, the else if block prints Speed is OK. At 0, else prints Stopped. You can add more else if blocks before the final else. Each condition uses parentheses and each body uses braces.",
       "note": "// Print Too fast! above 100, Speed is OK. above 0, or Stopped. otherwise.",
@@ -1143,7 +1106,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "Menu · Repeated choices",
+      "eyebrow": "13 · Repeated choices",
       "title": "Build a start, options, exit menu",
       "explanation": "This menu combines the loop you learned earlier with separate if checks from the previous lesson. Each time round, it asks for one choice. Type 1 to print Starting..., 2 to print Options..., or 3 to reach break and finish the loop. The choices cannot equal 1 and 2 at the same time, so these separate if statements do not cause two messages for one answer. An if / else if chain could also handle these mutually exclusive choices. Other input matches none of them, so the menu simply appears again. break exits only this loop; return would leave the current function. The displayed choices are text, so compare with \"1\", \"2\", and \"3\".",
       "note": "// Keep asking for 1, 2, or 3. Exit on 3.",
@@ -1377,7 +1340,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "Get a filename from a path",
-      "eyebrow": "Files and paths · Files and paths",
+      "eyebrow": "22 · Files and paths",
       "explanation": "Build the first piece of a sheet-music finder. A path is a location: sheet-music is the folder and chopin-nocturne.png is the filename. Extracting the name only handles the path; it does not check whether the file exists or read its contents. The .png extension identifies the intended file format, not the words or notes in the picture.",
       "note": "// Extract the filename without opening the image.",
       "prompt": "Print the filename from the score path.",
@@ -1402,7 +1365,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "List files in a folder",
-      "eyebrow": "Files and paths · Files and paths",
+      "eyebrow": "23 · Files and paths",
       "explanation": "Now let the program discover files rather than typing every filename into a list. Scan the sheet-music folder, skip folders, and print each filename. This reads the folder listing, not the image contents. Only this folder is searched; files inside subfolders are not included. The folder must exist and be readable, or listing it can raise an error.",
       "note": "// List each file in your sheet-music folder.",
       "prompt": "Print filenames from the sheet-music folder, skipping folders.",
@@ -1433,7 +1396,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "Find a sheet-music file",
-      "eyebrow": "Files and paths · Files and paths",
+      "eyebrow": "24 · Files and paths",
       "explanation": "Finish this small file-finding program by checking for the score at its expected location and showing a useful result. When you already know the folder and filename, checking that path is simpler than looping through the entire folder. This checks for a file; it does not open the image or recognise its printed title. Use the exact spelling and capitalisation so the example works across systems.",
       "note": "// Check whether the score exists before using it.",
       "prompt": "Print Found: and the filename, or File not found.",
@@ -1457,7 +1420,7 @@ const lessons: Record<Language, Lesson[]> = {
       "outputNote": "Example preview with the score present. Remove or rename it locally to try the File not found branch. CodeStep does not inspect your device."
     },
     {
-      "eyebrow": "Threads · Concurrent work",
+      "eyebrow": "25 · Concurrent work",
       "title": "Start two threads and wait for them",
       "explanation": "Thread starts another path of execution in a .NET console program. The short () => expression is an inline action telling each thread what to print; writing a separate named method is unnecessary here. Start both threads before Join waits for each to finish. The two lines can appear in either order, and quick printing alone does not prove they ran at precisely the same instant. Use threads when work needs its own execution path; a delay does not create a thread.",
       "note": "// Start both print jobs, then wait for both to finish.",
@@ -1493,7 +1456,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "22 · Application practice",
+      "eyebrow": "26 · Application practice",
       "title": "Build a random word quiz",
       "explanation": "Combine the dictionary, random choice, input, and if/else. Choose a word, ask for its translation, then compare the answer with the stored value.",
       "note": "// Combine the word dictionary and random key code to make a translation quiz.",
@@ -2595,49 +2558,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "05 · Time",
-      "title": "Repeat code every second",
-      "explanation": "while (true) keeps repeating the code. std::this_thread::sleep_for pauses the current thread before each message. std::chrono::milliseconds(1000) means one second. The first Hello World appears after approximately one second, then another appears approximately every second. Unlike JavaScript setTimeout, which runs once, this loop keeps repeating until stopped.",
-      "note": "// Print Hello World approximately every second.",
-      "prompt": "Print Hello World every second, waiting before the first message.",
-      "answer": "#include <iostream>\n#include <thread>\n#include <chrono>\n\nint main() {\n    while (true) {\n        std::this_thread::sleep_for(std::chrono::milliseconds(1000));\n        std::cout << \"Hello World\\n\";\n    }\n}",
-      "output": [
-        "Hello World",
-        "Hello World",
-        "Hello World"
-      ],
-      "parts": [
-        {
-          "code": "while (true)",
-          "name": "Repeat",
-          "meaning": "Keeps the loop running until stopped."
-        },
-        {
-          "code": "std::this_thread::sleep_for",
-          "name": "Wait",
-          "meaning": "Pauses the current thread for the supplied duration."
-        },
-        {
-          "code": "std::chrono::milliseconds(1000)",
-          "name": "One second",
-          "meaning": "Creates a duration of 1000 milliseconds, which is one second."
-        },
-        {
-          "code": "std::cout << \"Hello World\\n\";",
-          "name": "Print",
-          "meaning": "Prints Hello World, then starts a new line."
-        }
-      ],
-      "outputNote": "Example output from the first three repetitions. Time labels are annotations, not printed text. Actual timing can vary; the loop keeps repeating until stopped. Press Ctrl+C in the terminal to stop it.",
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed.",
-      "outputAnnotations": [
-        "after 1 second",
-        "after 2 seconds",
-        "after 3 seconds"
-      ]
-    },
-    {
-      "eyebrow": "06 · Date and time",
+      "eyebrow": "05 · Date and time",
       "title": "Check for a particular time",
       "explanation": "This checks the local clock once. tm_hour is the hour from 0 to 23; tm_min is the minute from 0 to 59. == compares values and && requires both checks to be true. This prints only if run during 17:20; it does not keep watching the clock.",
       "note": "// Print Time reached! if the local hour is 17 and the minute is 20.",
@@ -2662,7 +2583,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "07 · Date and time",
+      "eyebrow": "06 · Date and time",
       "title": "Keep checking until the time is reached",
       "explanation": "The loop gets a fresh local time each second. At 17:20 it prints once and break leaves the loop. sleep_for waits between checks. Keep the program open; if 17:20 has passed, it waits until the next day. Checks can run late.",
       "note": "// Keep checking the local clock and print Time reached! once at 17:20.",
@@ -2687,7 +2608,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "08 · Functions",
+      "eyebrow": "07 · Functions",
       "title": "Use one function inside another",
       "explanation": "getMessage() returns a std::string. std::cout prints its returned value. Nested calls have their own parentheses: getMessage runs first in anotherFunction(getMessage()). Extra parentheses group an expression; (( is not a special sign for multiple functions.",
       "note": "// Return Hello from getMessage, then print it by calling the function inside the print call.",
@@ -2711,7 +2632,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "09 · Classes",
+      "eyebrow": "08 · Classes",
       "title": "Create and use a class",
       "explanation": "class defines a type. public makes these members accessible from main. Car(...) is its constructor. this->name is the current object’s member; name is the constructor parameter. Car myCar1(\"Ford\", 2014) creates the object without new. A class declaration ends with };.",
       "note": "// Define the class first, then use new Car(...) to create objects",
@@ -2736,7 +2657,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "10 · Loops",
+      "eyebrow": "09 · Loops",
       "title": "Repeat input until the answer is correct",
       "explanation": "while (true) repeats until break stops the loop. std::getline(std::cin, answer) reads a whole line of terminal input into answer. == checks for \"2\". The braces place the answer check inside the loop and break inside if.",
       "note": "// Create the loop with input, output, and break inside if.",
@@ -2763,7 +2684,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "11 · Variables",
+      "eyebrow": "10 · Variables",
       "title": "Use changeable and fixed values",
       "explanation": "int declares a whole-number variable that can be reassigned. const int prevents reassignment. C++ has no let keyword. std::string stores text, and auto can infer a variable’s type from its initial value. << prints the text and number.",
       "note": "// Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
@@ -2787,7 +2708,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "12 · Variables",
+      "eyebrow": "11 · Variables",
       "title": "Remember a value",
       "explanation": "std::cout displays the question. std::string name declares a text variable. std::getline(std::cin, name) waits for a whole line and saves it in name. std::cout then prints Hello followed by that answer.",
       "note": "// Ask for a name and greet the user",
@@ -2813,7 +2734,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as name.cpp. In the VS Code terminal compile with g++ -std=c++17 name.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "13 · If and else",
+      "eyebrow": "12 · If and else",
       "title": "Choose between several messages",
       "explanation": "if starts the decision. Add else if between the first if and the final else when you need another condition in the same decision. Conditions are checked from top to bottom and only the first matching block runs. At 120, both comparisons would be true, but only Too fast! prints. At 60, the else if block prints Speed is OK. At 0, else prints Stopped. You can add more else if blocks before the final else. Each condition uses parentheses and each body uses braces.",
       "note": "// Print Too fast! above 100, Speed is OK. above 0, or Stopped. otherwise.",
@@ -2847,7 +2768,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "Menu · Repeated choices",
+      "eyebrow": "13 · Repeated choices",
       "title": "Build a start, options, exit menu",
       "explanation": "This menu combines the loop you learned earlier with separate if checks from the previous lesson. Each time round, it asks for one choice. Type 1 to print Starting..., 2 to print Options..., or 3 to reach break and finish the loop. The choices cannot equal 1 and 2 at the same time, so these separate if statements do not cause two messages for one answer. An if / else if chain could also handle these mutually exclusive choices. Other input matches none of them, so the menu simply appears again. break exits only this loop; return would leave the current function. The displayed choices are text, so compare with \"1\", \"2\", and \"3\".",
       "note": "// Keep asking for 1, 2, or 3. Exit on 3.",
@@ -3093,7 +3014,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "Get a filename from a path",
-      "eyebrow": "Files and paths · Files and paths",
+      "eyebrow": "22 · Files and paths",
       "explanation": "Build the first piece of a sheet-music finder. A path is a location: sheet-music is the folder and chopin-nocturne.png is the filename. Extracting the name only handles the path; it does not check whether the file exists or read its contents. The .png extension identifies the intended file format, not the words or notes in the picture.",
       "note": "// Extract the filename without opening the image.",
       "prompt": "Print the filename from the score path.",
@@ -3123,7 +3044,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "List files in a folder",
-      "eyebrow": "Files and paths · Files and paths",
+      "eyebrow": "23 · Files and paths",
       "explanation": "Now let the program discover files rather than typing every filename into a list. Scan the sheet-music folder, skip folders, and print each filename. This reads the folder listing, not the image contents. Only this folder is searched; files inside subfolders are not included. The folder must exist and be readable, or listing it can raise an error.",
       "note": "// List each file in your sheet-music folder.",
       "prompt": "Print filenames from the sheet-music folder, skipping folders.",
@@ -3154,7 +3075,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "Find a sheet-music file",
-      "eyebrow": "Files and paths · Files and paths",
+      "eyebrow": "24 · Files and paths",
       "explanation": "Finish this small file-finding program by checking for the score at its expected location and showing a useful result. When you already know the folder and filename, checking that path is simpler than looping through the entire folder. This checks for a file; it does not open the image or recognise its printed title. Use the exact spelling and capitalisation so the example works across systems.",
       "note": "// Check whether the score exists before using it.",
       "prompt": "Print Found: and the filename, or File not found.",
@@ -3178,7 +3099,7 @@ const lessons: Record<Language, Lesson[]> = {
       "outputNote": "Example preview with the score present. Remove or rename it locally to try the File not found branch. CodeStep does not inspect your device."
     },
     {
-      "eyebrow": "Threads · Concurrent work",
+      "eyebrow": "25 · Concurrent work",
       "title": "Start two threads and wait for them",
       "explanation": "std::thread starts a separate path of execution when constructed with work. The [] { ... } expression is an inline lambda containing the print instruction, so this example needs no named function. Construct both threads, then join each one before main ends. Their print order can change; console output may even mix if two threads write at once. Include <thread> for std::thread. A delay or an ordinary sequential pair of print statements would not create extra threads.",
       "note": "// Start both print jobs, then wait for both to finish.",
@@ -3214,7 +3135,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "22 · Application practice",
+      "eyebrow": "26 · Application practice",
       "title": "Build a random word quiz",
       "explanation": "Combine the map, random choice, terminal input, and if/else. std::getline reads the answer. words[random] retrieves the chosen key’s translation. == checks the answer and prints Correct or Wrong.",
       "note": "// Combine the word dictionary and random key code to make a translation quiz.",
@@ -3311,7 +3232,7 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
   },
 };
 
-const breakdownLessonTitles: Record<Language, string[]> = {"javascript": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Repeat code every second", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Ask for a name in VS Code", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "csharp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Repeat code every second", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "html": ["Tell the browser it is HTML", "Start the HTML page", "Name the browser tab", "Add visible page content", "Separate content into boxes", "Create a heading hierarchy", "Open another page", "Explore HTML text elements", "Show the current date and time", "Link two HTML pages", "Place an image on the page", "Place a video on the page", "Place audio on the page", "Give one element a unique name", "Use a button instead of while (true)", "Send a value back with return"], "css": ["Colour the page background", "Colour and centre text", "Style one unique element", "Compare website fonts", "Explore borders and colour formats", "Create a rounded dotted border"], "python": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "cpp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Repeat code every second", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"]};
+const breakdownLessonTitles: Record<Language, string[]> = {"javascript": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Repeat code every second", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Ask for a name in VS Code", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "csharp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "html": ["Tell the browser it is HTML", "Start the HTML page", "Name the browser tab", "Add visible page content", "Separate content into boxes", "Create a heading hierarchy", "Open another page", "Explore HTML text elements", "Show the current date and time", "Link two HTML pages", "Place an image on the page", "Place a video on the page", "Place audio on the page", "Give one element a unique name", "Use a button instead of while (true)", "Send a value back with return"], "css": ["Colour the page background", "Colour and centre text", "Style one unique element", "Compare website fonts", "Explore borders and colour formats", "Create a rounded dotted border"], "python": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "cpp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Check whether a value is in a range", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"]};
 
 const nullBreakdowns: Partial<Record<Language, CodePart[]>> = {
   javascript: [
