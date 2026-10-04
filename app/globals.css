@@ -165,3 +165,5 @@ html[data-theme="dark"] .drawer-lessons button[class*="tone-"] .lesson-state,htm
 .symbol-guide pre .symbol-example .syntax-number,html[data-theme="dark"] .symbol-guide .symbol-example .syntax-number{color:#f2c75a}
 .symbol-guide pre .symbol-example .syntax-function-name,html[data-theme="dark"] .symbol-guide .symbol-example .syntax-function-name{color:#d7b5f5}
 .symbol-guide pre .symbol-example .syntax-punctuation,.symbol-guide pre .symbol-example .syntax-plain{color:#dce9e1}
+
+.output-time-annotation{display:inline-block;margin-left:1rem;color:#a7b9ad;font:14px/1.5 var(--sans);border-left:1px solid #52655a;padding-left:.75rem}
