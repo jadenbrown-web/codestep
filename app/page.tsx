@@ -386,81 +386,47 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "13 · Combined conditions and comparisons",
-      "title": "Choose between several messages",
-      "explanation": "Use one speed value to choose one message. > means greater than; <= means less than or equal to. && means AND: both comparisons must be true. if / else if / else checks the branches in order and runs only the first matching branch. With speed set to 120, the first condition is true, so only Too fast! prints. The saved value and printing are familiar; the highlighted checks are the new parts.",
-      "note": "// Check speed and print one matching message.",
-      "prompt": "Use the speed example to choose between Too fast!, Speed is OK., and Stopped.",
-      "answer": "let speed = 120;\n\nif (speed > 100) {\n  console.log(\"Too fast!\");\n} else if (speed > 0 && speed <= 100) {\n  console.log(\"Speed is OK.\");\n} else {\n  console.log(\"Stopped.\");\n}",
+      "eyebrow": "13 · If statements and symbols",
+      "title": "Choose from a simple menu",
+      "explanation": "Ask for one choice: 1 for Start, 2 for Options, or 3 for Exit. if checks the first choice. else if checks the next choice only if the earlier check was false. else handles an unrecognised choice. === compares the answer with the quoted text. Only one branch runs and prints one message. This example asks once; choosing 3 prints Exiting... and the program finishes.",
+      "note": "// Ask once, then print the message for the chosen option.",
+      "prompt": "Ask for a menu choice and use one if statement with branches to print the matching message.",
+      "answer": "let choice = prompt(\"1. Start\\n2. Options\\n3. Exit\");\n\nif (choice === \"1\") {\n    console.log(\"Starting...\");\n} else if (choice === \"2\") {\n    console.log(\"Options...\");\n} else if (choice === \"3\") {\n    console.log(\"Exiting...\");\n} else {\n    console.log(\"Invalid choice.\");\n}",
       "output": [
-        "Too fast!"
+        "Starting..."
       ],
       "parts": [
         {
           "code": "if",
-          "name": "First check",
-          "meaning": "Starts the first condition. If it is true, its body runs and the remaining branches are skipped."
+          "name": "First choice",
+          "meaning": "Checks whether the user entered 1."
         },
         {
           "code": "else if",
-          "name": "Next check",
-          "meaning": "Checks another condition only if the earlier condition was false."
+          "name": "Another choice",
+          "meaning": "Checks the next option only if the earlier condition was false."
         },
         {
           "code": "else",
-          "name": "Otherwise",
-          "meaning": "Runs when none of the earlier conditions was true. It has no condition of its own."
+          "name": "No match",
+          "meaning": "Prints Invalid choice. when none of the three options matched."
+        },
+        {
+          "code": "===",
+          "name": "Compare",
+          "meaning": "Checks whether the entered text equals the quoted option."
         },
         {
           "code": "(...) / {...}",
           "name": "Condition and body",
-          "meaning": "Parentheses hold the condition. Curly braces hold the instructions that run when it matches."
-        }
-      ]
-    },
-    {
-      "eyebrow": "14 · Repeated choices",
-      "title": "Build a start, options, exit menu",
-      "explanation": "This menu combines the loop you learned earlier with separate if checks from the previous lesson. Each time round, it asks for one choice. Type 1 to print Starting..., 2 to print Options..., or 3 to reach break and finish the loop. The choices cannot equal 1 and 2 at the same time, so these separate if statements do not cause two messages for one answer. An if / else if chain could also handle these mutually exclusive choices. Other input matches none of them, so the menu simply appears again. break exits only this loop; return would leave the current function. This exact prompt() example runs in a browser, not a Node.js terminal. Closing the prompt returns null, which matches no choice and opens it again; enter 3 to exit. A real browser interface would use buttons or a cancel check instead of a long prompt loop.",
-      "note": "// Keep asking for 1, 2, or 3. Exit on 3.",
-      "prompt": "Show the menu again after Start or Options, and leave the loop on Exit.",
-      "answer": "while (true) {\n    let choice = prompt(\"1. Start\\n2. Options\\n3. Exit\");\n\n    if (choice === \"1\") {\n        console.log(\"Starting...\");\n    }\n\n    if (choice === \"2\") {\n        console.log(\"Options...\");\n    }\n\n    if (choice === \"3\") {\n        break;\n    }\n}",
-      "output": [
-        "Starting...",
-        "Options..."
-      ],
-      "parts": [
-        {
-          "code": "while (true)",
-          "name": "Repeat the menu",
-          "meaning": "True stays true, so the menu repeats until break leaves the loop."
-        },
-        {
-          "code": "prompt(...)",
-          "name": "Read a choice",
-          "meaning": "Shows a browser prompt and returns text (or null if cancelled)."
-        },
-        {
-          "code": "if (choice === \"1\")",
-          "name": "Start",
-          "meaning": "Only choice 1 prints Starting...; the loop still continues afterward."
-        },
-        {
-          "code": "if (choice === \"2\")",
-          "name": "Options",
-          "meaning": "Only choice 2 prints Options...; the menu then appears again."
-        },
-        {
-          "code": "break",
-          "name": "Exit the loop",
-          "meaning": "Choice 3 stops the while loop. break does not mean an error, and it does not stop code after the loop from running."
+          "meaning": "Parentheses hold the condition. Curly braces group the instructions to run."
         }
       ],
-      "outputNote": "Example: the user enters 1, then 2, then 3. The menu prompts are input, and choosing 3 exits without printing another line. CodeStep previews this sequence; run it locally to try other choices.",
+      "outputNote": "Example output when the user enters 1. The entered choice is input, not printed output.",
       "runHint": "Run in a browser console or script. Enter 1, then 2, then 3; this lesson previews the output instead of opening real prompts. In Node.js, prompt is not built in; use the readline approach from the name-input lesson."
     },
     {
-      "eyebrow": "15 · Dictionary",
+      "eyebrow": "14 · Dictionary",
       "title": "Search a word dictionary",
       "explanation": "A dictionary connects keys to values. JavaScript can use an object for this: {} contains bonjour and hola, with hello stored under each key. words[search] looks up the value for the key entered by the user. Object.values(words) lists the stored values; joining them makes readable console text. An unknown key produces undefined.",
       "note": "// Create the word dictionary, show its values, then search for a word.",
@@ -485,7 +451,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "16 · Expressions",
+      "eyebrow": "15 · Expressions",
       "title": "Calculate a value",
       "explanation": "An expression produces a value. 80 + 20 produces 100. speed > 100 produces false when speed is 100. A statement performs an instruction, such as saving that result or printing it. + adds, - subtracts, * multiplies, / divides, and % gives the remainder. C# integer division discards the fractional part; use a double such as 5.0 when you need a decimal result.",
       "note": "// Calculate speed with 80 + 20, then print Speed: 100.",
@@ -508,7 +474,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "17 · Random",
+      "eyebrow": "16 · Random",
       "title": "Choose a random word",
       "explanation": "Object.keys(words) makes an array containing the object's keys: bonjour and hola. Math.random() creates a random decimal from 0 up to, but not including, 1. Multiplying by 2 gives a number from 0 up to 2, and Math.floor removes the decimal to produce position 0 or 1. The square brackets then select the key at that position.",
       "note": "// Create the word dictionary and randomly select one of its keys.",
@@ -532,7 +498,7 @@ const lessons: Record<Language, Lesson[]> = {
       "outputNote": "Example output; either bonjour or hola can be chosen."
     },
     {
-      "eyebrow": "18 · Arrays and lists",
+      "eyebrow": "17 · Arrays and lists",
       "title": "Make and search a names array",
       "explanation": "The square brackets [] create an empty array: a list that can hold several values. prompt asks the user for a name, and push() adds that answer to names. A second prompt saves what to look for in search. includes() checks whether that value is in the array and returns true or false; it does not add anything. if/else prints name found or name not found. Matching is case-sensitive: Jaden and jaden are different.",
       "note": "// Create an empty collection, add a name, ask what to search for, and print whether it was found.",
@@ -562,7 +528,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "19 · Sets",
+      "eyebrow": "18 · Sets",
       "title": "Remove duplicate names",
       "explanation": "A Set stores only unique values. Passing names into new Set(names) removes repeated names, and [...uniqueNames] spreads the remaining values back into an array for printing.",
       "note": "// Ask for three names, then remove any duplicates",
@@ -577,7 +543,7 @@ const lessons: Record<Language, Lesson[]> = {
       "parts": []
     },
     {
-      "eyebrow": "20 · Null",
+      "eyebrow": "19 · Null",
       "title": "Mark a value as not ready yet",
       "explanation": "null deliberately means that a variable has no value yet. It is different from zero or an empty string, and the variable may receive a real value later. === null checks specifically for that missing value.",
       "note": "// null means there is deliberately no result yet",
@@ -589,7 +555,7 @@ const lessons: Record<Language, Lesson[]> = {
       "parts": []
     },
     {
-      "eyebrow": "21 · Regular expressions",
+      "eyebrow": "20 · Regular expressions",
       "title": "Let names beginning with J enter",
       "explanation": "A regular expression checks text against a pattern. /^J/i means: the slashes hold the pattern, ^ anchors the check to the beginning, J is the required first letter, and i ignores uppercase or lowercase. It accepts any word beginning with J—not only names—and rejects J when it appears later in the text.",
       "note": "// Let people into the club when their name begins with J",
@@ -606,7 +572,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "Get a filename from a path",
-      "eyebrow": "22 · Files and paths",
+      "eyebrow": "21 · Files and paths",
       "explanation": "Build the first piece of a sheet-music finder. A path is a location: sheet-music is the folder and chopin-nocturne.png is the filename. Extracting the name only handles the path; it does not check whether the file exists or read its contents. The .png extension identifies the intended file format, not the words or notes in the picture.",
       "note": "// Extract the filename without opening the image.",
       "prompt": "Print the filename from the score path.",
@@ -631,7 +597,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "List files in a folder",
-      "eyebrow": "23 · Files and paths",
+      "eyebrow": "22 · Files and paths",
       "explanation": "Now let the program discover files rather than typing every filename into a list. Scan the sheet-music folder, skip folders, and print each filename. This reads the folder listing, not the image contents. Only this folder is searched; files inside subfolders are not included. The folder must exist and be readable, or listing it can raise an error.",
       "note": "// List each file in your sheet-music folder.",
       "prompt": "Print filenames from the sheet-music folder, skipping folders.",
@@ -662,7 +628,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "Find a sheet-music file",
-      "eyebrow": "24 · Files and paths",
+      "eyebrow": "23 · Files and paths",
       "explanation": "Finish this small file-finding program by checking for the score at its expected location and showing a useful result. When you already know the folder and filename, checking that path is simpler than looping through the entire folder. This checks for a file; it does not open the image or recognise its printed title. Use the exact spelling and capitalisation so the example works across systems.",
       "note": "// Check whether the score exists before using it.",
       "prompt": "Print Found: and the filename, or File not found.",
@@ -691,7 +657,7 @@ const lessons: Record<Language, Lesson[]> = {
       "outputNote": "Example preview with the score present. Remove or rename it locally to try the File not found branch. CodeStep does not inspect your device."
     },
     {
-      "eyebrow": "25 · Application practice",
+      "eyebrow": "24 · Application practice",
       "title": "Build a random word quiz",
       "explanation": "Combine the dictionary, random choice, input, and if/else. Choose a word, ask for its translation, then compare the answer with the stored value.",
       "note": "// Combine the word dictionary and random key code to make a translation quiz.",
@@ -1014,82 +980,50 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "12 · Combined conditions and comparisons",
-      "title": "Choose between several messages",
-      "explanation": "Use one speed value to choose one message. > means greater than; <= means less than or equal to. && means AND: both comparisons must be true. if / else if / else checks the branches in order and runs only the first matching branch. With speed set to 120, the first condition is true, so only Too fast! prints. The saved value and printing are familiar; the highlighted checks are the new parts.",
-      "note": "// Check speed and print one matching message.",
-      "prompt": "Use the speed example to choose between Too fast!, Speed is OK., and Stopped.",
-      "answer": "int speed = 120;\n\nif (speed > 100) {\n  Console.WriteLine(\"Too fast!\");\n} else if (speed > 0 && speed <= 100) {\n  Console.WriteLine(\"Speed is OK.\");\n} else {\n  Console.WriteLine(\"Stopped.\");\n}",
+      "eyebrow": "12 · If statements and symbols",
+      "title": "Choose from a simple menu",
+      "explanation": "Ask for one choice: 1 for Start, 2 for Options, or 3 for Exit. if checks the first choice. else if checks the next choice only if the earlier check was false. else handles an unrecognised choice. == compares the answer with the quoted text. Only one branch runs and prints one message. This example asks once; choosing 3 prints Exiting... and the program finishes.",
+      "note": "// Ask once, then print the message for the chosen option.",
+      "prompt": "Ask for a menu choice and use one if statement with branches to print the matching message.",
+      "answer": "Console.WriteLine(\"1. Start\\n2. Options\\n3. Exit\");\nstring? choice = Console.ReadLine();\n\nif (choice == \"1\") {\n    Console.WriteLine(\"Starting...\");\n} else if (choice == \"2\") {\n    Console.WriteLine(\"Options...\");\n} else if (choice == \"3\") {\n    Console.WriteLine(\"Exiting...\");\n} else {\n    Console.WriteLine(\"Invalid choice.\");\n}",
       "output": [
-        "Too fast!"
+        "1. Start",
+        "2. Options",
+        "3. Exit",
+        "Starting..."
       ],
       "parts": [
         {
           "code": "if",
-          "name": "First check",
-          "meaning": "Starts the first condition. If it is true, its body runs and the remaining branches are skipped."
+          "name": "First choice",
+          "meaning": "Checks whether the user entered 1."
         },
         {
           "code": "else if",
-          "name": "Next check",
-          "meaning": "Checks another condition only if the earlier condition was false."
+          "name": "Another choice",
+          "meaning": "Checks the next option only if the earlier condition was false."
         },
         {
           "code": "else",
-          "name": "Otherwise",
-          "meaning": "Runs when none of the earlier conditions was true. It has no condition of its own."
+          "name": "No match",
+          "meaning": "Prints Invalid choice. when none of the three options matched."
+        },
+        {
+          "code": "==",
+          "name": "Compare",
+          "meaning": "Checks whether the entered text equals the quoted option."
         },
         {
           "code": "(...) / {...}",
           "name": "Condition and body",
-          "meaning": "Parentheses hold the condition. Curly braces hold the instructions that run when it matches."
+          "meaning": "Parentheses hold the condition. Curly braces group the instructions to run."
         }
       ],
-      "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
-    },
-    {
-      "eyebrow": "13 · Repeated choices",
-      "title": "Build a start, options, exit menu",
-      "explanation": "This menu combines the loop you learned earlier with separate if checks from the previous lesson. Each time round, it asks for one choice. Type 1 to print Starting..., 2 to print Options..., or 3 to reach break and finish the loop. The choices cannot equal 1 and 2 at the same time, so these separate if statements do not cause two messages for one answer. An if / else if chain could also handle these mutually exclusive choices. Other input matches none of them, so the menu simply appears again. break exits only this loop; return would leave the current function. The displayed choices are text, so compare with \"1\", \"2\", and \"3\".",
-      "note": "// Keep asking for 1, 2, or 3. Exit on 3.",
-      "prompt": "Show the menu again after Start or Options, and leave the loop on Exit.",
-      "answer": "using System;\n\nwhile (true) {\n    Console.WriteLine(\"1. Start\\n2. Options\\n3. Exit\");\n    string? choice = Console.ReadLine();\n    if (choice is null) break;\n\n    if (choice == \"1\") {\n        Console.WriteLine(\"Starting...\");\n    }\n\n    if (choice == \"2\") {\n        Console.WriteLine(\"Options...\");\n    }\n\n    if (choice == \"3\") {\n        break;\n    }\n}",
-      "output": [
-        "Starting...",
-        "Options..."
-      ],
-      "parts": [
-        {
-          "code": "while (true)",
-          "name": "Repeat the menu",
-          "meaning": "True stays true, so the menu repeats until break leaves the loop."
-        },
-        {
-          "code": "Console.ReadLine()",
-          "name": "Read a choice",
-          "meaning": "Reads the next response as text. The menu is shown again on the next loop."
-        },
-        {
-          "code": "if (choice == \"1\")",
-          "name": "Start",
-          "meaning": "Only choice 1 prints Starting...; the loop still continues afterward."
-        },
-        {
-          "code": "if (choice == \"2\")",
-          "name": "Options",
-          "meaning": "Only choice 2 prints Options...; the menu then appears again."
-        },
-        {
-          "code": "break",
-          "name": "Exit the loop",
-          "meaning": "Choice 3 stops the while loop. break does not mean an error, and it does not stop code after the loop from running."
-        }
-      ],
-      "outputNote": "Example: the user enters 1, then 2, then 3. The menu prompts are input, and choosing 3 exits without printing another line. CodeStep previews this sequence; run it locally to try other choices.",
+      "outputNote": "Example output when the user enters 1. The entered choice is input, not printed output.",
       "runHint": "Put this top-level code in Program.cs in a .NET console project and run dotnet run. Type 1, then 2, then 3 to end."
     },
     {
-      "eyebrow": "14 · Dictionary",
+      "eyebrow": "13 · Dictionary",
       "title": "Search a word dictionary",
       "explanation": "A Dictionary connects keys to values. Dictionary<string, string> means text keys and text values. Its initializer uses {} to add bonjour and hola, with hello under each key. string.Join prints its values. TryGetValue checks whether the entered key exists and safely returns the value; words[search] is a direct lookup but throws if the key is missing.",
       "note": "// Create the word dictionary, show its values, then search for a word.",
@@ -1115,7 +1049,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "15 · Expressions",
+      "eyebrow": "14 · Expressions",
       "title": "Calculate a value",
       "explanation": "An expression produces a value. 80 + 20 produces 100. speed > 100 produces false when speed is 100. A statement performs an instruction, such as saving that result or printing it. + adds, - subtracts, * multiplies, / divides, and % gives the remainder. C# integer division discards the fractional part; use a double such as 5.0 when you need a decimal result.",
       "note": "// Calculate speed with 80 + 20, then print Speed: 100.",
@@ -1139,7 +1073,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "16 · Random",
+      "eyebrow": "15 · Random",
       "title": "Choose a random word",
       "explanation": "words.Keys contains bonjour and hola. CopyTo puts those keys into an array. Random.Shared.Next(keys.Length) chooses a position from zero up to, but not including, keys.Length. keys[position] retrieves the randomly chosen key.",
       "note": "// Create the word dictionary and randomly select one of its keys.",
@@ -1164,7 +1098,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "17 · Arrays and lists",
+      "eyebrow": "16 · Arrays and lists",
       "title": "Make and search a names array",
       "explanation": "An array has a fixed length; a List can grow when you add values. This example uses List<string> so it matches JavaScript’s growing array. Add saves the entered name, Contains searches for an exact match, and if/else prints name found or name not found. Matching is case-sensitive. names[0] retrieves the first item after it has been added.",
       "note": "// Create an empty collection, add a name, ask what to search for, and print whether it was found.",
@@ -1195,7 +1129,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "18 · Sets",
+      "eyebrow": "17 · Sets",
       "title": "Remove duplicate names",
       "explanation": "A HashSet stores only unique values. Passing names into new HashSet<string>(names) removes repeated names, and string.Join makes the remaining values readable for printing.",
       "note": "// Ask for three names, then remove any duplicates",
@@ -1211,7 +1145,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "19 · Null",
+      "eyebrow": "18 · Null",
       "title": "Mark a value as not ready yet",
       "explanation": "null deliberately means that a variable has no value yet. string? allows this text variable to hold either text or null, and == null checks whether the value is still missing.",
       "note": "// null means there is deliberately no result yet",
@@ -1224,7 +1158,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": " Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "20 · Regular expressions",
+      "eyebrow": "19 · Regular expressions",
       "title": "Let names beginning with J enter",
       "explanation": "A regular expression checks text against a pattern. Regex comes from System.Text.RegularExpressions. ^J means the text must begin with J, while RegexOptions.IgnoreCase accepts uppercase or lowercase. It accepts any word beginning with J—not only names—and rejects J when it appears later in the text.",
       "note": "// Let people into the club when their name begins with J",
@@ -1242,7 +1176,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "Get a filename from a path",
-      "eyebrow": "21 · Files and paths",
+      "eyebrow": "20 · Files and paths",
       "explanation": "Build the first piece of a sheet-music finder. A path is a location: sheet-music is the folder and chopin-nocturne.png is the filename. Extracting the name only handles the path; it does not check whether the file exists or read its contents. The .png extension identifies the intended file format, not the words or notes in the picture.",
       "note": "// Extract the filename without opening the image.",
       "prompt": "Print the filename from the score path.",
@@ -1267,7 +1201,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "List files in a folder",
-      "eyebrow": "22 · Files and paths",
+      "eyebrow": "21 · Files and paths",
       "explanation": "Now let the program discover files rather than typing every filename into a list. Scan the sheet-music folder, skip folders, and print each filename. This reads the folder listing, not the image contents. Only this folder is searched; files inside subfolders are not included. The folder must exist and be readable, or listing it can raise an error.",
       "note": "// List each file in your sheet-music folder.",
       "prompt": "Print filenames from the sheet-music folder, skipping folders.",
@@ -1298,7 +1232,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "Find a sheet-music file",
-      "eyebrow": "23 · Files and paths",
+      "eyebrow": "22 · Files and paths",
       "explanation": "Finish this small file-finding program by checking for the score at its expected location and showing a useful result. When you already know the folder and filename, checking that path is simpler than looping through the entire folder. This checks for a file; it does not open the image or recognise its printed title. Use the exact spelling and capitalisation so the example works across systems.",
       "note": "// Check whether the score exists before using it.",
       "prompt": "Print Found: and the filename, or File not found.",
@@ -1322,7 +1256,7 @@ const lessons: Record<Language, Lesson[]> = {
       "outputNote": "Example preview with the score present. Remove or rename it locally to try the File not found branch. CodeStep does not inspect your device."
     },
     {
-      "eyebrow": "24 · Concurrent work",
+      "eyebrow": "23 · Concurrent work",
       "title": "Start two threads and wait for them",
       "explanation": "Thread starts another path of execution in a .NET console program. The short () => expression is an inline action telling each thread what to print; writing a separate named method is unnecessary here. Start both threads before Join waits for each to finish. The two lines can appear in either order, and quick printing alone does not prove they ran at precisely the same instant. Use threads when work needs its own execution path; a delay does not create a thread.",
       "note": "// Start both print jobs, then wait for both to finish.",
@@ -1358,7 +1292,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "25 · Application practice",
+      "eyebrow": "24 · Application practice",
       "title": "Build a random word quiz",
       "explanation": "Combine the dictionary, random choice, input, and if/else. Choose a word, ask for its translation, then compare the answer with the stored value.",
       "note": "// Combine the word dictionary and random key code to make a translation quiz.",
@@ -1923,82 +1857,50 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as name.py and run python3 name.py in the VS Code terminal."
     },
     {
-      "eyebrow": "12 · Combined conditions and comparisons",
-      "title": "Choose between several messages",
-      "explanation": "Use one speed value to choose one message. > means greater than; <= means less than or equal to. and means AND: both comparisons must be true. if / elif / else checks the branches in order and runs only the first matching branch. With speed set to 120, the first condition is true, so only Too fast! prints. The saved value and printing are familiar; the highlighted checks are the new parts.",
-      "note": "# Check speed and print one matching message.",
-      "prompt": "Use the speed example to choose between Too fast!, Speed is OK., and Stopped.",
-      "answer": "speed = 120\n\nif speed > 100:\n    print(\"Too fast!\")\nelif speed > 0 and speed <= 100:\n    print(\"Speed is OK.\")\nelse:\n    print(\"Stopped.\")",
+      "eyebrow": "12 · If statements and symbols",
+      "title": "Choose from a simple menu",
+      "explanation": "Ask for one choice: 1 for Start, 2 for Options, or 3 for Exit. if checks the first choice. elif checks the next choice only if the earlier check was false. else handles an unrecognised choice. == compares the answer with the quoted text. Only one branch runs and prints one message. This example asks once; choosing 3 prints Exiting... and the program finishes.",
+      "note": "# Ask once, then print the message for the chosen option.",
+      "prompt": "Ask for a menu choice and use one if statement with branches to print the matching message.",
+      "answer": "choice = input(\"1. Start\\n2. Options\\n3. Exit\\n\")\n\nif choice == \"1\":\n    print(\"Starting...\")\nelif choice == \"2\":\n    print(\"Options...\")\nelif choice == \"3\":\n    print(\"Exiting...\")\nelse:\n    print(\"Invalid choice.\")",
       "output": [
-        "Too fast!"
+        "1. Start",
+        "2. Options",
+        "3. Exit",
+        "Starting..."
       ],
       "parts": [
         {
           "code": "if",
-          "name": "First check",
-          "meaning": "Starts the first condition. If it is true, its body runs and the remaining branches are skipped."
+          "name": "First choice",
+          "meaning": "Checks whether the user entered 1."
         },
         {
           "code": "elif",
-          "name": "Next check",
-          "meaning": "Checks another condition only if the earlier condition was false."
+          "name": "Another choice",
+          "meaning": "Checks the next option only if the earlier condition was false."
         },
         {
           "code": "else",
-          "name": "Otherwise",
-          "meaning": "Runs when none of the earlier conditions was true. It has no condition of its own."
+          "name": "No match",
+          "meaning": "Prints Invalid choice. when none of the three options matched."
+        },
+        {
+          "code": "==",
+          "name": "Compare",
+          "meaning": "Checks whether the entered text equals the quoted option."
         },
         {
           "code": ":",
           "name": "Condition and body",
-          "meaning": "A colon starts the body; indentation identifies which instructions belong to that branch."
+          "meaning": "A colon starts the body; indentation groups its instructions."
         }
       ],
-      "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
-    },
-    {
-      "eyebrow": "13 · Repeated choices",
-      "title": "Build a start, options, exit menu",
-      "explanation": "This menu combines the loop you learned earlier with separate if checks from the previous lesson. Each time round, it asks for one choice. Type 1 to print Starting..., 2 to print Options..., or 3 to reach break and finish the loop. The choices cannot equal 1 and 2 at the same time, so these separate if statements do not cause two messages for one answer. An if / else if chain could also handle these mutually exclusive choices. Other input matches none of them, so the menu simply appears again. break exits only this loop; return would leave the current function. The displayed choices are text, so compare with \"1\", \"2\", and \"3\".",
-      "note": "# Keep asking for 1, 2, or 3. Exit on 3.",
-      "prompt": "Show the menu again after Start or Options, and leave the loop on Exit.",
-      "answer": "while True:\n    choice = input(\"1. Start\\n2. Options\\n3. Exit\\n\")\n\n    if choice == \"1\":\n        print(\"Starting...\")\n\n    if choice == \"2\":\n        print(\"Options...\")\n\n    if choice == \"3\":\n        break",
-      "output": [
-        "Starting...",
-        "Options..."
-      ],
-      "parts": [
-        {
-          "code": "while True:",
-          "name": "Repeat the menu",
-          "meaning": "True stays true, so the menu repeats until break leaves the loop."
-        },
-        {
-          "code": "input(...)",
-          "name": "Read a choice",
-          "meaning": "Reads the next response as text. The menu is shown again on the next loop."
-        },
-        {
-          "code": "if choice == \"1\":",
-          "name": "Start",
-          "meaning": "Only choice 1 prints Starting...; the loop still continues afterward."
-        },
-        {
-          "code": "if choice == \"2\":",
-          "name": "Options",
-          "meaning": "Only choice 2 prints Options...; the menu then appears again."
-        },
-        {
-          "code": "break",
-          "name": "Exit the loop",
-          "meaning": "Choice 3 stops the while loop. break does not mean an error, and it does not stop code after the loop from running."
-        }
-      ],
-      "outputNote": "Example: the user enters 1, then 2, then 3. The menu prompts are input, and choosing 3 exits without printing another line. CodeStep previews this sequence; run it locally to try other choices.",
+      "outputNote": "Example output when the user enters 1. The entered choice is input, not printed output.",
       "runHint": "Save as challenge.py and run python challenge.py (or python3 challenge.py). Type 1, then 2, then 3 to end."
     },
     {
-      "eyebrow": "14 · Dictionary",
+      "eyebrow": "13 · Dictionary",
       "title": "Search a word dictionary",
       "explanation": "{} creates a dictionary of keys and values. \"bonjour\" is a key and \"hello\" its value. values() gets the stored values; join prints them as readable text. get searches safely and returns word not found if the key is absent. words[search] is direct lookup but raises KeyError for a missing key.",
       "note": "# Create the word dictionary, show its values, then search for a word.",
@@ -2024,7 +1926,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
     },
     {
-      "eyebrow": "15 · Expressions",
+      "eyebrow": "14 · Expressions",
       "title": "Calculate a value",
       "explanation": "An expression produces a value: 80 + 20 produces 100. speed > 100 produces False when speed is 100. + adds, - subtracts, * multiplies, / divides, // divides and rounds down, and % gives a remainder.",
       "note": "# Calculate speed with 80 + 20, then print Speed: 100.",
@@ -2043,7 +1945,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
     },
     {
-      "eyebrow": "16 · Random",
+      "eyebrow": "15 · Random",
       "title": "Choose a random word",
       "explanation": "list(words) makes a list of dictionary keys. random.choice selects one key from that list. The answer changes between runs; either bonjour or hola may be printed.",
       "note": "# Create the word dictionary and randomly select one of its keys.",
@@ -2068,7 +1970,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
     },
     {
-      "eyebrow": "17 · Arrays and lists",
+      "eyebrow": "16 · Arrays and lists",
       "title": "Make and search a names array",
       "explanation": "[] creates an empty list. input runs first inside append and append adds its answer. in checks membership without changing the list. Matching is case-sensitive. names[0] retrieves the first item after it is added.",
       "note": "# Create an empty collection, add a name, ask what to search for, and print whether it was found.",
@@ -2099,7 +2001,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
     },
     {
-      "eyebrow": "18 · Sets",
+      "eyebrow": "17 · Sets",
       "title": "Remove duplicate names",
       "explanation": "set(names) removes duplicates. Python sets do not promise a display order, so sorted makes an alphabetical list before join prints it. A set literal uses {\"Alex\", \"Sam\"}; empty {} creates a dictionary, so use set() for an empty set.",
       "note": "# Ask for three names, then remove any duplicates",
@@ -2126,7 +2028,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
     },
     {
-      "eyebrow": "19 · Null",
+      "eyebrow": "18 · Null",
       "title": "Mark a value as not ready yet",
       "explanation": "None means there is deliberately no value yet. is None checks for that specific singleton. It is different from zero or an empty string. Assign a real value to result later.",
       "note": "# null means there is deliberately no result yet",
@@ -2150,7 +2052,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.py and run python3 challenge.py in the VS Code terminal."
     },
     {
-      "eyebrow": "20 · Regular expressions",
+      "eyebrow": "19 · Regular expressions",
       "title": "Let names beginning with J enter",
       "explanation": "re searches text with a pattern. ^ means the start, J is the required letter, and re.IGNORECASE accepts J or j. re.search returns a match object when found, which if treats as true.",
       "note": "# Let people into the club when their name begins with J",
@@ -2179,7 +2081,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "Get a filename from a path",
-      "eyebrow": "21 · Files and paths",
+      "eyebrow": "20 · Files and paths",
       "explanation": "Build the first piece of a sheet-music finder. A path is a location: sheet-music is the folder and chopin-nocturne.png is the filename. Extracting the name only handles the path; it does not check whether the file exists or read its contents. The .png extension identifies the intended file format, not the words or notes in the picture.",
       "note": "# Extract the filename without opening the image.",
       "prompt": "Print the filename from the score path.",
@@ -2209,7 +2111,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "List files in a folder",
-      "eyebrow": "22 · Files and paths",
+      "eyebrow": "21 · Files and paths",
       "explanation": "Now let the program discover files rather than typing every filename into a list. Scan the sheet-music folder, skip folders, and print each filename. This reads the folder listing, not the image contents. Only this folder is searched; files inside subfolders are not included. The folder must exist and be readable, or listing it can raise an error.",
       "note": "# List each file in your sheet-music folder.",
       "prompt": "Print filenames from the sheet-music folder, skipping folders.",
@@ -2240,7 +2142,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "Find a sheet-music file",
-      "eyebrow": "23 · Files and paths",
+      "eyebrow": "22 · Files and paths",
       "explanation": "Finish this small file-finding program by checking for the score at its expected location and showing a useful result. When you already know the folder and filename, checking that path is simpler than looping through the entire folder. This checks for a file; it does not open the image or recognise its printed title. Use the exact spelling and capitalisation so the example works across systems.",
       "note": "# Check whether the score exists before using it.",
       "prompt": "Print Found: and the filename, or File not found.",
@@ -2264,7 +2166,7 @@ const lessons: Record<Language, Lesson[]> = {
       "outputNote": "Example preview with the score present. Remove or rename it locally to try the File not found branch. CodeStep does not inspect your device."
     },
     {
-      "eyebrow": "24 · Concurrent work",
+      "eyebrow": "23 · Concurrent work",
       "title": "Start two threads and wait for them",
       "explanation": "This uses your two-print example. A thread is another path of execution in the same program. Thread(...) sets up work; target=print hands it the print function without calling it now. args=(\"...\",) supplies one argument, so the comma matters: it makes a one-item tuple. start() starts each thread. Both starts happen before join() waits, so the work can overlap. join() waits for a thread to finish; it does not start the thread or control which message prints first. Printing is so quick that the output alone cannot show how much overlap occurred. Standard Python builds have a GIL, so threads are especially useful for waiting on I/O rather than speeding up pure Python calculations.",
       "note": "# Start both print jobs, then wait for both to finish.",
@@ -2305,7 +2207,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "25 · Application practice",
+      "eyebrow": "24 · Application practice",
       "title": "Build a random word quiz",
       "explanation": "Combine the dictionary, random choice, input, and if/else. input displays the chosen word. words[word] retrieves its expected translation. == checks the entered answer and prints Correct or Wrong.",
       "note": "# Combine the word dictionary and random key code to make a translation quiz.",
@@ -2612,82 +2514,50 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as name.cpp. In the VS Code terminal compile with g++ -std=c++17 name.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "12 · Combined conditions and comparisons",
-      "title": "Choose between several messages",
-      "explanation": "Use one speed value to choose one message. > means greater than; <= means less than or equal to. && means AND: both comparisons must be true. if / else if / else checks the branches in order and runs only the first matching branch. With speed set to 120, the first condition is true, so only Too fast! prints. The saved value and printing are familiar; the highlighted checks are the new parts.",
-      "note": "// Check speed and print one matching message.",
-      "prompt": "Use the speed example to choose between Too fast!, Speed is OK., and Stopped.",
-      "answer": "#include <iostream>\n\nint main() {\n  int speed = 120;\n\n  if (speed > 100) {\n    std::cout << \"Too fast!\\n\";\n  } else if (speed > 0 && speed <= 100) {\n    std::cout << \"Speed is OK.\\n\";\n  } else {\n    std::cout << \"Stopped.\\n\";\n  }\n}",
+      "eyebrow": "12 · If statements and symbols",
+      "title": "Choose from a simple menu",
+      "explanation": "Ask for one choice: 1 for Start, 2 for Options, or 3 for Exit. if checks the first choice. else if checks the next choice only if the earlier check was false. else handles an unrecognised choice. == compares the answer with the quoted text. Only one branch runs and prints one message. This example asks once; choosing 3 prints Exiting... and the program finishes.",
+      "note": "// Ask once, then print the message for the chosen option.",
+      "prompt": "Ask for a menu choice and use one if statement with branches to print the matching message.",
+      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n    std::cout << \"1. Start\\n2. Options\\n3. Exit\\n\";\n    std::string choice;\n    std::getline(std::cin, choice);\n\n    if (choice == \"1\") {\n        std::cout << \"Starting...\\n\";\n    } else if (choice == \"2\") {\n        std::cout << \"Options...\\n\";\n    } else if (choice == \"3\") {\n        std::cout << \"Exiting...\\n\";\n    } else {\n        std::cout << \"Invalid choice.\\n\";\n    }\n}",
       "output": [
-        "Too fast!"
+        "1. Start",
+        "2. Options",
+        "3. Exit",
+        "Starting..."
       ],
       "parts": [
         {
           "code": "if",
-          "name": "First check",
-          "meaning": "Starts the first condition. If it is true, its body runs and the remaining branches are skipped."
+          "name": "First choice",
+          "meaning": "Checks whether the user entered 1."
         },
         {
           "code": "else if",
-          "name": "Next check",
-          "meaning": "Checks another condition only if the earlier condition was false."
+          "name": "Another choice",
+          "meaning": "Checks the next option only if the earlier condition was false."
         },
         {
           "code": "else",
-          "name": "Otherwise",
-          "meaning": "Runs when none of the earlier conditions was true. It has no condition of its own."
+          "name": "No match",
+          "meaning": "Prints Invalid choice. when none of the three options matched."
+        },
+        {
+          "code": "==",
+          "name": "Compare",
+          "meaning": "Checks whether the entered text equals the quoted option."
         },
         {
           "code": "(...) / {...}",
           "name": "Condition and body",
-          "meaning": "Parentheses hold the condition. Curly braces hold the instructions that run when it matches."
+          "meaning": "Parentheses hold the condition. Curly braces group the instructions to run."
         }
       ],
-      "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
-    },
-    {
-      "eyebrow": "13 · Repeated choices",
-      "title": "Build a start, options, exit menu",
-      "explanation": "This menu combines the loop you learned earlier with separate if checks from the previous lesson. Each time round, it asks for one choice. Type 1 to print Starting..., 2 to print Options..., or 3 to reach break and finish the loop. The choices cannot equal 1 and 2 at the same time, so these separate if statements do not cause two messages for one answer. An if / else if chain could also handle these mutually exclusive choices. Other input matches none of them, so the menu simply appears again. break exits only this loop; return would leave the current function. The displayed choices are text, so compare with \"1\", \"2\", and \"3\".",
-      "note": "// Keep asking for 1, 2, or 3. Exit on 3.",
-      "prompt": "Show the menu again after Start or Options, and leave the loop on Exit.",
-      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n    while (true) {\n        std::cout << \"1. Start\\n2. Options\\n3. Exit\\n\";\n        std::string choice;\n        if (!std::getline(std::cin, choice)) break;\n\n        if (choice == \"1\") {\n            std::cout << \"Starting...\\n\";\n        }\n\n        if (choice == \"2\") {\n            std::cout << \"Options...\\n\";\n        }\n\n        if (choice == \"3\") {\n            break;\n        }\n    }\n}",
-      "output": [
-        "Starting...",
-        "Options..."
-      ],
-      "parts": [
-        {
-          "code": "while (true)",
-          "name": "Repeat the menu",
-          "meaning": "True stays true, so the menu repeats until break leaves the loop."
-        },
-        {
-          "code": "std::getline(std::cin, choice)",
-          "name": "Read a choice",
-          "meaning": "Reads the next response as text. The menu is shown again on the next loop."
-        },
-        {
-          "code": "if (choice == \"1\")",
-          "name": "Start",
-          "meaning": "Only choice 1 prints Starting...; the loop still continues afterward."
-        },
-        {
-          "code": "if (choice == \"2\")",
-          "name": "Options",
-          "meaning": "Only choice 2 prints Options...; the menu then appears again."
-        },
-        {
-          "code": "break",
-          "name": "Exit the loop",
-          "meaning": "Choice 3 stops the while loop. break does not mean an error, and it does not stop code after the loop from running."
-        }
-      ],
-      "outputNote": "Example: the user enters 1, then 2, then 3. The menu prompts are input, and choosing 3 exits without printing another line. CodeStep previews this sequence; run it locally to try other choices.",
+      "outputNote": "Example output when the user enters 1. The entered choice is input, not printed output.",
       "runHint": "Save as challenge.cpp; compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge (Windows: .\\challenge.exe). Type 1, then 2, then 3 to end."
     },
     {
-      "eyebrow": "14 · Dictionary",
+      "eyebrow": "13 · Dictionary",
       "title": "Search a word dictionary",
       "explanation": "std::map stores key/value pairs. The two std::string types mean text keys and text values. find searches safely; end means no match. found->second is the matching value. [] retrieves a value, but a missing key would insert a default value, so use find when only searching.",
       "note": "// Create the word dictionary, show its values, then search for a word.",
@@ -2718,7 +2588,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "15 · Expressions",
+      "eyebrow": "14 · Expressions",
       "title": "Calculate a value",
       "explanation": "An expression produces a value: 80 + 20 produces 100. speed > 100 produces false when speed is 100. + adds, - subtracts, * multiplies, / divides, and % gives an integer remainder. Integer division truncates the fraction; use 5.0 for a floating-point result.",
       "note": "// Calculate speed with 80 + 20, then print Speed: 100.",
@@ -2737,7 +2607,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "16 · Random",
+      "eyebrow": "15 · Random",
       "title": "Choose a random word",
       "explanation": "The loop copies map keys into a vector. mt19937 is a random-number generator seeded by random_device. uniform_int_distribution chooses an index from 0 through size - 1, inclusive. keys[index] retrieves the chosen key. Either word may be printed.",
       "note": "// Create the word dictionary and randomly select one of its keys.",
@@ -2762,7 +2632,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "17 · Arrays and lists",
+      "eyebrow": "16 · Arrays and lists",
       "title": "Make and search a names array",
       "explanation": "A built-in array has a fixed size. std::vector is a growing collection that matches JavaScript’s array here. push_back adds the entered name. std::find searches between begin and end; returning end means no match. Matching is case-sensitive.",
       "note": "// Create an empty collection, add a name, ask what to search for, and print whether it was found.",
@@ -2793,7 +2663,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "18 · Sets",
+      "eyebrow": "17 · Sets",
       "title": "Remove duplicate names",
       "explanation": "std::set stores unique values in sorted order. The loop prints a comma between items and square brackets around them. firstItem prevents a comma before the first item. Alex, Sam, Alex becomes [Alex, Sam].",
       "note": "// Ask for three names, then remove any duplicates",
@@ -2815,7 +2685,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "19 · Null",
+      "eyebrow": "18 · Null",
       "title": "Mark a value as not ready yet",
       "explanation": "C++ does not use null for an ordinary string. std::optional<std::string> may hold a string or no value. std::nullopt makes it empty, has_value checks whether a value exists, and ! reverses that result. nullptr is for pointers.",
       "note": "// null means there is deliberately no result yet",
@@ -2839,7 +2709,7 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as challenge.cpp. In the VS Code terminal compile with g++ -std=c++17 challenge.cpp -o challenge, then run ./challenge. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "20 · Regular expressions",
+      "eyebrow": "19 · Regular expressions",
       "title": "Let names beginning with J enter",
       "explanation": "std::regex holds the pattern. ^ requires J at the beginning; std::regex::icase ignores case. regex_search returns true for a matching name. This accepts any text starting with J or j, not only names.",
       "note": "// Let people into the club when their name begins with J",
@@ -2868,7 +2738,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "Get a filename from a path",
-      "eyebrow": "21 · Files and paths",
+      "eyebrow": "20 · Files and paths",
       "explanation": "Build the first piece of a sheet-music finder. A path is a location: sheet-music is the folder and chopin-nocturne.png is the filename. Extracting the name only handles the path; it does not check whether the file exists or read its contents. The .png extension identifies the intended file format, not the words or notes in the picture.",
       "note": "// Extract the filename without opening the image.",
       "prompt": "Print the filename from the score path.",
@@ -2898,7 +2768,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "List files in a folder",
-      "eyebrow": "22 · Files and paths",
+      "eyebrow": "21 · Files and paths",
       "explanation": "Now let the program discover files rather than typing every filename into a list. Scan the sheet-music folder, skip folders, and print each filename. This reads the folder listing, not the image contents. Only this folder is searched; files inside subfolders are not included. The folder must exist and be readable, or listing it can raise an error.",
       "note": "// List each file in your sheet-music folder.",
       "prompt": "Print filenames from the sheet-music folder, skipping folders.",
@@ -2929,7 +2799,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "title": "Find a sheet-music file",
-      "eyebrow": "23 · Files and paths",
+      "eyebrow": "22 · Files and paths",
       "explanation": "Finish this small file-finding program by checking for the score at its expected location and showing a useful result. When you already know the folder and filename, checking that path is simpler than looping through the entire folder. This checks for a file; it does not open the image or recognise its printed title. Use the exact spelling and capitalisation so the example works across systems.",
       "note": "// Check whether the score exists before using it.",
       "prompt": "Print Found: and the filename, or File not found.",
@@ -2953,7 +2823,7 @@ const lessons: Record<Language, Lesson[]> = {
       "outputNote": "Example preview with the score present. Remove or rename it locally to try the File not found branch. CodeStep does not inspect your device."
     },
     {
-      "eyebrow": "24 · Concurrent work",
+      "eyebrow": "23 · Concurrent work",
       "title": "Start two threads and wait for them",
       "explanation": "std::thread starts a separate path of execution when constructed with work. The [] { ... } expression is an inline lambda containing the print instruction, so this example needs no named function. Construct both threads, then join each one before main ends. Their print order can change; console output may even mix if two threads write at once. Include <thread> for std::thread. A delay or an ordinary sequential pair of print statements would not create extra threads.",
       "note": "// Start both print jobs, then wait for both to finish.",
@@ -2989,7 +2859,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "25 · Application practice",
+      "eyebrow": "24 · Application practice",
       "title": "Build a random word quiz",
       "explanation": "Combine the map, random choice, terminal input, and if/else. std::getline reads the answer. words[random] retrieves the chosen key’s translation. == checks the answer and prints Correct or Wrong.",
       "note": "// Combine the word dictionary and random key code to make a translation quiz.",
@@ -3086,7 +2956,7 @@ const breakdowns: Record<Language, Partial<Record<number, CodePart[]>>> = {
   },
 };
 
-const breakdownLessonTitles: Record<Language, string[]> = {"javascript": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Repeat code every second", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Choose let or const", "Ask for a name in VS Code", "Choose between several messages", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "csharp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "html": ["Tell the browser it is HTML", "Start the HTML page", "Name the browser tab", "Add visible page content", "Separate content into boxes", "Create a heading hierarchy", "Open another page", "Explore HTML text elements", "Show the current date and time", "Link two HTML pages", "Place an image on the page", "Place a video on the page", "Place audio on the page", "Give one element a unique name", "Use a button instead of while (true)", "Send a value back with return"], "css": ["Colour the page background", "Colour and centre text", "Style one unique element", "Compare website fonts", "Explore borders and colour formats", "Create a rounded dotted border"], "python": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "cpp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose between several messages", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"]};
+const breakdownLessonTitles: Record<Language, string[]> = {"javascript": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Repeat code every second", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Choose let or const", "Ask for a name in VS Code", "Choose from a simple menu", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "csharp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose from a simple menu", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "html": ["Tell the browser it is HTML", "Start the HTML page", "Name the browser tab", "Add visible page content", "Separate content into boxes", "Create a heading hierarchy", "Open another page", "Explore HTML text elements", "Show the current date and time", "Link two HTML pages", "Place an image on the page", "Place a video on the page", "Place audio on the page", "Give one element a unique name", "Use a button instead of while (true)", "Send a value back with return"], "css": ["Colour the page background", "Colour and centre text", "Style one unique element", "Compare website fonts", "Explore borders and colour formats", "Create a rounded dotted border"], "python": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose from a simple menu", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"], "cpp": ["Print several lines at once", "Choose a text colour", "Run code after a delay", "Check for a particular time", "Keep checking until the time is reached", "Make something happen", "Use one function inside another", "Create and use a class", "Repeat input until the answer is correct", "Use changeable and fixed values", "Remember a value", "Choose from a simple menu", "Search a word dictionary", "Calculate a value", "Choose a random word", "Make and search a names array", "Remove duplicate names", "Mark a value as not ready yet", "Let names beginning with J enter", "Build a random word quiz"]};
 
 const nullBreakdowns: Partial<Record<Language, CodePart[]>> = {
   javascript: [
@@ -3796,7 +3666,7 @@ export default function Home() {
               <code><HighlightedCode code={part.code} language={language} /></code><div><b>{part.name}</b><span>{part.meaning}</span></div>
             </div>)}</div>
           </section>}
-          {current!.eyebrow.includes("Combined conditions") && <section className="comparison-guide speed-symbols" aria-label="Comparison and logical symbols">
+          {current!.title === "Choose from a simple menu" && <section className="comparison-guide speed-symbols" aria-label="Comparison and logical symbols">
             <h2>Symbols in this language</h2>
             {[
               [">", "Greater than", "True when the value on the left is larger."],
@@ -3812,7 +3682,7 @@ export default function Home() {
               ["=", "Assignment", "Saves a value; it does not compare two values."],
             ].map(([symbol, name, meaning]) => <div key={symbol}><code>{symbol}</code><p><b>{name}</b><span>{meaning}</span></p></div>)}
             <p>{language === "python" ? "Python spells the logical operators and, or, and not. It does not use &&, ||, ===, or !==." : "&& combines conditions inside one check. To perform several actions, put each instruction on its own line inside the same body."}</p>
-            <p>Change speed in this same program to 60 or 0 to explore the other branches. There is no second program to learn.</p>
+            <p>The menu uses equality. The other symbols are a reference for later checks; you do not need to add them to this program.</p>
           </section>}
           {current!.referenceOnly ? current!.referenceKind === "comparisons" ? <div className="comparison-guide">
             <div><code>{language === "javascript" ? "==" : "=="}</code><p><b>Equal value</b><span>{language === "javascript" ? "Converts types before comparing; usually prefer ===." : "Checks whether the two values are equal."}</span></p></div>
@@ -3926,7 +3796,7 @@ export default function Home() {
           </div> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className="file-tab"><span>◆</span> {current!.fileName || challengeFile(language)}</div><div className="panel-actions"><button className="editor-mode-button" onClick={() => changeBlockMode(!blockMode)}>{blockMode ? "Use keyboard" : "Use blocks"}</button><button onClick={() => changeBlockCode(current!.starter || "")} title="Reset code">↻ Reset</button></div></div>
-            {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className={`code-guide ${current!.title === "Choose between several messages" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code>{current!.title === "Choose between several messages" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Choose between several messages"} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : "// Type your code here..."} /></div>}
+            {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className={`code-guide ${current!.title === "Choose from a simple menu" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code>{current!.title === "Choose from a simple menu" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Choose from a simple menu"} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : "// Type your code here..."} /></div>}
           </div>
           <div className="console-panel">
             <div className="console-bar"><span><i /> CONSOLE</span><button onClick={() => setStatus("idle")}>Clear</button></div>
