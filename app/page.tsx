@@ -154,7 +154,7 @@ const lessons: Record<Language, Lesson[]> = {
       "outputNote": "Example output after the 2-second delay."
     },
     {
-      "eyebrow": "05 · Date and time",
+      "eyebrow": "05 · Time",
       "title": "Repeat code every second",
       "explanation": "setInterval repeats the code inside its arrow function. 1000 milliseconds means one second. The first Hello World message appears after approximately one second, then another appears approximately every second. Unlike setTimeout, which runs the code once after a delay, setInterval keeps repeating until stopped.",
       "note": "// Print Hello World approximately every second.",
