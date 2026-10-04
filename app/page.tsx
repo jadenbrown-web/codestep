@@ -348,7 +348,127 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "10 · Loops",
+      "eyebrow": "10 · Variables",
+      "title": "Choose let or const",
+      "explanation": "A variable stores a value under a name. let allows you to assign a different value to that name later. const prevents assigning a different value to the same name. Both can store the answer returned by prompt(). These are separate examples: run one at a time, because you cannot declare name twice in the same scope.",
+      "note": "// let: this variable can be reassigned.\n// const: this variable cannot be reassigned.",
+      "prompt": "Use let to ask for a name, then print hello followed by the name.",
+      "answer": "let name = prompt (\"Enter your name: \");\nconsole.log(`hello ${name}`);\n// this variable is changeable",
+      "output": [
+        "hello Alex"
+      ],
+      "parts": [
+        {
+          "code": "let",
+          "name": "Changeable",
+          "meaning": "Creates a variable that can receive a different value later: name = \"Sam\"; is allowed."
+        },
+        {
+          "code": "const",
+          "name": "Cannot be reassigned",
+          "meaning": "Creates a variable that cannot receive a different value later. After declaring it with const, name = \"Sam\"; causes an error."
+        },
+        {
+          "code": "=",
+          "name": "Assign a value",
+          "meaning": "Stores the value on the right in the variable on the left. Declare a variable once; use its name without let to change it."
+        },
+        {
+          "code": "${name}",
+          "name": "Use the saved name",
+          "meaning": "Inserts the value of name into the text between backticks."
+        }
+      ],
+      "outputNote": "Example output when the user enters Alex in the prompt dialog.",
+      "runHint": "Run this example in a browser developer console or inside an HTML script. prompt() opens a browser dialog; it is not available in the Node terminal. CodeStep checks the code and shows a sample result."
+    },
+    {
+      "eyebrow": "11 · Terminal input",
+      "title": "Ask for a name in VS Code",
+      "explanation": "Browser prompt() opens a dialog. Node runs JavaScript in the terminal and does not provide browser prompt(), so it needs a little setup. createInterface connects process.stdin (what you type) and process.stdout (what you see). await input.question waits for your answer, then returns the text to name. input.close() tells Node “I’m done taking input.” It closes this interface so it no longer keeps waiting for terminal input.",
+      "note": "// Ask in the terminal, greet the user, then close input",
+      "prompt": "Set up terminal input, ask for a name, print Hello, then close input.",
+      "answer": "import { createInterface } from \"node:readline/promises\";\n\nconst input = createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\nlet name = await input.question(\"What is your name?\");\nconsole.log(`Hello ${name}`);\n\ninput.close();",
+      "output": [
+        "What is your name? ",
+        "Hello Alex"
+      ],
+      "fileName": "name.mjs",
+      "runHint": "Save as name.mjs. With Node installed, open Terminal → New Terminal in VS Code and enter node name.mjs. Type your name and press Enter. The .mjs extension allows import and await at the top level without adding a package configuration.",
+      "compareNode": true,
+      "parts": [
+        {
+          "code": "import { createInterface }",
+          "name": "Load the input tool",
+          "meaning": "Imports the named createInterface function from Node’s built-in promise-based readline module; no npm install is needed."
+        },
+        {
+          "code": "process.stdin / process.stdout",
+          "name": "Terminal streams",
+          "meaning": "stdin receives what you type; stdout writes what you see."
+        },
+        {
+          "code": "await input.question(...)",
+          "name": "Wait for an answer",
+          "meaning": "The question returns a Promise; await waits for the typed line before the following code continues."
+        },
+        {
+          "code": "input.close()",
+          "name": "Finish taking input",
+          "meaning": "Closes the readline interface when the questions are finished."
+        }
+      ],
+      "outputAnnotations": [
+        "you enter Alex",
+        "the entered name is used"
+      ],
+      "outputNote": "Example input: Alex. The input label is an annotation."
+    },
+    {
+      "eyebrow": "12 · If statements and symbols",
+      "title": "Check an answer with if and else",
+      "explanation": "Ask “What is 1 + 1?” and save the entered text in answer. == checks whether it equals \"2\". if runs its body when the check is true and prints Correct!; else runs its body when the check is false and prints Try again. Only one body runs. This example asks once. In the next lesson, a loop asks the same question again after a wrong answer.",
+      "note": "// Ask once; print Correct! for 2, otherwise print Try again.",
+      "prompt": "Ask What is 1 + 1? and use if and else to print Correct! or Try again.",
+      "answer": "let answer = prompt(\"What is 1 + 1?\");\n\nif (answer == \"2\") {\n    console.log(\"Correct!\");\n} else {\n    console.log(\"Try again.\");\n}",
+      "output": [
+        "Correct!"
+      ],
+      "parts": [
+        {
+          "code": "if",
+          "name": "Check the answer",
+          "meaning": "Runs the first body only when answer equals \"2\"."
+        },
+        {
+          "code": "==",
+          "name": "Equal to",
+          "meaning": "Compares the entered text with \"2\". Both values are text in this example; = saves a value instead."
+        },
+        {
+          "code": "else",
+          "name": "Otherwise",
+          "meaning": "Runs the other body and prints Try again. when the if condition is false. It does not ask another question by itself."
+        },
+        {
+          "code": "()",
+          "name": "Hold the condition",
+          "meaning": "The parentheses after if contain the check: answer == \"2\"."
+        },
+        {
+          "code": "{}",
+          "name": "Group the instructions",
+          "meaning": "The braces after if and else surround each body. Put each action for that body on its own line inside them."
+        }
+      ],
+      "outputNote": "Example input: 2. Entering a different answer prints Try again. The input labels are annotations, not text printed by the program.",
+      "runHint": "Run this example in a browser developer console or inside an HTML script. prompt() opens a browser dialog; it is not available in the Node terminal. CodeStep checks the code and shows a sample result. Answer once; run the example again to try a different answer.",
+      "outputAnnotations": [
+        "answer is 2"
+      ]
+    },
+    {
+      "eyebrow": "13 · Loops",
       "title": "Repeat input until the answer is correct",
       "explanation": "The loop asks the question, saves the entered text, and prints that answer. If it is \"2\", it prints Correct! and break immediately leaves the nearest loop, skipping Try again. A wrong answer prints the retry message, then the next repetition asks again. The braces show which instructions belong to while and if.",
       "note": "// Create the loop with input, output, and break inside if.",
@@ -391,123 +511,6 @@ const lessons: Record<Language, Lesson[]> = {
       ],
       "outputNote": "Example run: the first answer is 2. The labels beside the lines explain the run; the program does not print them.",
       "runHint": "Run this example in a browser developer console or inside an HTML script. prompt() opens a browser dialog; it is not available in the Node terminal. CodeStep checks the code and shows a sample result."
-    },
-    {
-      "eyebrow": "11 · Variables",
-      "title": "Choose let or const",
-      "explanation": "A variable stores a value under a name. let allows you to assign a different value to that name later. const prevents assigning a different value to the same name. Both can store the answer returned by prompt(). These are separate examples: run one at a time, because you cannot declare name twice in the same scope.",
-      "note": "// let: this variable can be reassigned.\n// const: this variable cannot be reassigned.",
-      "prompt": "Use let to ask for a name, then print hello followed by the name.",
-      "answer": "let name = prompt (\"Enter your name: \");\nconsole.log(`hello ${name}`);\n// this variable is changeable",
-      "output": [
-        "hello Alex"
-      ],
-      "parts": [
-        {
-          "code": "let",
-          "name": "Changeable",
-          "meaning": "Creates a variable that can receive a different value later: name = \"Sam\"; is allowed."
-        },
-        {
-          "code": "const",
-          "name": "Cannot be reassigned",
-          "meaning": "Creates a variable that cannot receive a different value later. After declaring it with const, name = \"Sam\"; causes an error."
-        },
-        {
-          "code": "=",
-          "name": "Assign a value",
-          "meaning": "Stores the value on the right in the variable on the left. Declare a variable once; use its name without let to change it."
-        },
-        {
-          "code": "${name}",
-          "name": "Use the saved name",
-          "meaning": "Inserts the value of name into the text between backticks."
-        }
-      ],
-      "outputNote": "Example output when the user enters Alex in the prompt dialog.",
-      "runHint": "Run this example in a browser developer console or inside an HTML script. prompt() opens a browser dialog; it is not available in the Node terminal. CodeStep checks the code and shows a sample result."
-    },
-    {
-      "eyebrow": "12 · Terminal input",
-      "title": "Ask for a name in VS Code",
-      "explanation": "Browser prompt() opens a dialog. Node runs JavaScript in the terminal and does not provide browser prompt(), so it needs a little setup. createInterface connects process.stdin (what you type) and process.stdout (what you see). await input.question waits for your answer, then returns the text to name. input.close() tells Node “I’m done taking input.” It closes this interface so it no longer keeps waiting for terminal input.",
-      "note": "// Ask in the terminal, greet the user, then close input",
-      "prompt": "Set up terminal input, ask for a name, print Hello, then close input.",
-      "answer": "import { createInterface } from \"node:readline/promises\";\n\nconst input = createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\nlet name = await input.question(\"What is your name?\");\nconsole.log(`Hello ${name}`);\n\ninput.close();",
-      "output": [
-        "What is your name? ",
-        "Hello Alex"
-      ],
-      "fileName": "name.mjs",
-      "runHint": "Save as name.mjs. With Node installed, open Terminal → New Terminal in VS Code and enter node name.mjs. Type your name and press Enter. The .mjs extension allows import and await at the top level without adding a package configuration.",
-      "compareNode": true,
-      "parts": [
-        {
-          "code": "import { createInterface }",
-          "name": "Load the input tool",
-          "meaning": "Imports the named createInterface function from Node’s built-in promise-based readline module; no npm install is needed."
-        },
-        {
-          "code": "process.stdin / process.stdout",
-          "name": "Terminal streams",
-          "meaning": "stdin receives what you type; stdout writes what you see."
-        },
-        {
-          "code": "await input.question(...)",
-          "name": "Wait for an answer",
-          "meaning": "The question returns a Promise; await waits for the typed line before the following code continues."
-        },
-        {
-          "code": "input.close()",
-          "name": "Finish taking input",
-          "meaning": "Closes the readline interface when the questions are finished."
-        }
-      ],
-      "outputAnnotations": [
-        "you enter Alex",
-        "the entered name is used"
-      ],
-      "outputNote": "Example input: Alex. The input label is an annotation."
-    },
-    {
-      "eyebrow": "13 · If statements and symbols",
-      "title": "Choose from a simple menu",
-      "explanation": "Ask for one choice: 1 for Start, 2 for Options, or 3 for Exit. if checks the first choice. else if checks the next choice only if the earlier check was false. else handles an unrecognised choice. === compares the answer with the quoted text. Only one branch runs and prints one message. This example asks once; choosing 3 prints Exiting... and the program finishes.",
-      "note": "// Ask once, then print the message for the chosen option.",
-      "prompt": "Ask for a menu choice and use one if statement with branches to print the matching message.",
-      "answer": "let choice = prompt(\"1. Start\\n2. Options\\n3. Exit\");\n\nif (choice === \"1\") {\n    console.log(\"Starting...\");\n} else if (choice === \"2\") {\n    console.log(\"Options...\");\n} else if (choice === \"3\") {\n    console.log(\"Exiting...\");\n} else {\n    console.log(\"Invalid choice.\");\n}",
-      "output": [
-        "Starting..."
-      ],
-      "parts": [
-        {
-          "code": "if",
-          "name": "First choice",
-          "meaning": "Checks whether the user entered 1."
-        },
-        {
-          "code": "else if",
-          "name": "Another choice",
-          "meaning": "Checks the next option only if the earlier condition was false."
-        },
-        {
-          "code": "else",
-          "name": "No match",
-          "meaning": "Prints Invalid choice. when none of the three options matched."
-        },
-        {
-          "code": "===",
-          "name": "Compare",
-          "meaning": "Checks whether the entered text equals the quoted option."
-        },
-        {
-          "code": "(...) / {...}",
-          "name": "Condition and body",
-          "meaning": "Parentheses hold the condition. Curly braces group the instructions to run."
-        }
-      ],
-      "outputNote": "Example output when the user enters 1. The entered choice is input, not printed output.",
-      "runHint": "Run this example in a browser developer console or inside an HTML script. prompt() opens a browser dialog; it is not available in the Node terminal. CodeStep checks the code and shows a sample result. Enter one choice; run the example again to try another option."
     },
     {
       "eyebrow": "14 · Dictionary",
@@ -1187,7 +1190,121 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
-      "eyebrow": "09 · Loops",
+      "eyebrow": "09 · Variables",
+      "title": "Use changeable and fixed values",
+      "explanation": "speed starts at 80 and can be reassigned. speed = 100 replaces its earlier value. const keeps maxSpeed fixed at 100, so assigning a different value to maxSpeed is not allowed. The last instruction prints the updated speed.",
+      "note": "// Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
+      "prompt": "Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
+      "answer": "int speed = 80;\nconst int maxSpeed = 100;\n\nspeed = 100;\nConsole.WriteLine($\"Speed: {speed}\");",
+      "output": [
+        "Speed: 100"
+      ],
+      "parts": [
+        {
+          "code": "int speed = 80;",
+          "name": "Changeable value",
+          "meaning": "Creates speed with the starting value 80. It can receive a different value later."
+        },
+        {
+          "code": "const int maxSpeed = 100;",
+          "name": "Fixed value",
+          "meaning": "Creates maxSpeed as a constant. It cannot be reassigned."
+        },
+        {
+          "code": "speed = 100;",
+          "name": "Reassign",
+          "meaning": "Replaces the earlier value 80 with 100; it does not create a second speed variable."
+        }
+      ],
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+    },
+    {
+      "eyebrow": "10 · Terminal input",
+      "title": "Ask for a name in VS Code",
+      "explanation": "Console.WriteLine displays the question. Console.ReadLine() reads a line of terminal text, and name stores it. The last Console.WriteLine prints the greeting using that saved answer.",
+      "note": "// Ask for a name and greet the user",
+      "prompt": "Create a name variable, then print Hello with a template string.",
+      "answer": "Console.WriteLine(\"What is your name?\");\nstring name = Console.ReadLine();\nConsole.WriteLine($\"Hello {name}\");",
+      "output": [
+        "What is your name?",
+        "Hello Alex"
+      ],
+      "parts": [
+        {
+          "code": "string",
+          "name": "Type",
+          "meaning": "Says this variable will store text."
+        },
+        {
+          "code": "name",
+          "name": "Label",
+          "meaning": "Shows that you choose a useful name for the saved value."
+        },
+        {
+          "code": "=",
+          "name": "Save",
+          "meaning": "Puts the value on the right into the variable on the left."
+        }
+      ],
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first.",
+      "outputAnnotations": [
+        "you enter Alex",
+        "the entered name is used"
+      ],
+      "outputNote": "Example input: Alex. The input label is an annotation."
+    },
+    {
+      "eyebrow": "11 · If statements and symbols",
+      "title": "Check an answer with if and else",
+      "explanation": "Ask “What is 1 + 1?” and save the entered text in answer. == checks whether it equals \"2\". if runs its body when the check is true and prints Correct!; else runs its body when the check is false and prints Try again. Only one body runs. This example asks once. In the next lesson, a loop asks the same question again after a wrong answer.",
+      "note": "// Ask once; print Correct! for 2, otherwise print Try again.",
+      "prompt": "Ask What is 1 + 1? and use if and else to print Correct! or Try again.",
+      "answer": "Console.WriteLine(\"What is 1 + 1?\");\nstring? answer = Console.ReadLine();\n\nif (answer == \"2\") {\n    Console.WriteLine(\"Correct!\");\n} else {\n    Console.WriteLine(\"Try again.\");\n}",
+      "output": [
+        "What is 1 + 1?",
+        "Correct!"
+      ],
+      "parts": [
+        {
+          "code": "if",
+          "name": "Check the answer",
+          "meaning": "Runs the first body only when answer equals \"2\"."
+        },
+        {
+          "code": "==",
+          "name": "Equal to",
+          "meaning": "Compares the entered text with \"2\". Both values are text in this example; = saves a value instead."
+        },
+        {
+          "code": "else",
+          "name": "Otherwise",
+          "meaning": "Runs the other body and prints Try again. when the if condition is false. It does not ask another question by itself."
+        },
+        {
+          "code": "()",
+          "name": "Hold the condition",
+          "meaning": "The parentheses after if contain the check: answer == \"2\"."
+        },
+        {
+          "code": "{}",
+          "name": "Group the instructions",
+          "meaning": "The braces after if and else surround each body. Put each action for that body on its own line inside them."
+        },
+        {
+          "code": "string? answer",
+          "name": "Allow missing input",
+          "meaning": "The question mark allows answer to hold text or null when no line of input is available."
+        }
+      ],
+      "outputNote": "Example input: 2. Entering a different answer prints Try again. The input labels are annotations, not text printed by the program.",
+      "runHint": "Put this top-level code in Program.cs in a .NET console project and run dotnet run. Type your answer and press Enter. Run the program again to try another answer.",
+      "outputAnnotations": [
+        "you enter 2",
+        "answer is correct"
+      ]
+    },
+    {
+      "eyebrow": "12 · Loops",
       "title": "Repeat input until the answer is correct",
       "explanation": "The loop asks the question, saves the entered text, and prints that answer. If it is \"2\", it prints Correct! and break immediately leaves the nearest loop, skipping Try again. A wrong answer prints the retry message, then the next repetition asks again. The braces show which instructions belong to while and if.",
       "note": "// Create the loop with input, output, and break inside if.",
@@ -1232,118 +1349,6 @@ const lessons: Record<Language, Lesson[]> = {
         "break leaves the loop"
       ],
       "outputNote": "Example run: the first answer is 2. The labels beside the lines explain the run; the program does not print them."
-    },
-    {
-      "eyebrow": "10 · Variables",
-      "title": "Use changeable and fixed values",
-      "explanation": "speed starts at 80 and can be reassigned. speed = 100 replaces its earlier value. const keeps maxSpeed fixed at 100, so assigning a different value to maxSpeed is not allowed. The last instruction prints the updated speed.",
-      "note": "// Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
-      "prompt": "Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
-      "answer": "int speed = 80;\nconst int maxSpeed = 100;\n\nspeed = 100;\nConsole.WriteLine($\"Speed: {speed}\");",
-      "output": [
-        "Speed: 100"
-      ],
-      "parts": [
-        {
-          "code": "int speed = 80;",
-          "name": "Changeable value",
-          "meaning": "Creates speed with the starting value 80. It can receive a different value later."
-        },
-        {
-          "code": "const int maxSpeed = 100;",
-          "name": "Fixed value",
-          "meaning": "Creates maxSpeed as a constant. It cannot be reassigned."
-        },
-        {
-          "code": "speed = 100;",
-          "name": "Reassign",
-          "meaning": "Replaces the earlier value 80 with 100; it does not create a second speed variable."
-        }
-      ],
-      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
-    },
-    {
-      "eyebrow": "11 · Terminal input",
-      "title": "Ask for a name in VS Code",
-      "explanation": "Console.WriteLine displays the question. Console.ReadLine() reads a line of terminal text, and name stores it. The last Console.WriteLine prints the greeting using that saved answer.",
-      "note": "// Ask for a name and greet the user",
-      "prompt": "Create a name variable, then print Hello with a template string.",
-      "answer": "Console.WriteLine(\"What is your name?\");\nstring name = Console.ReadLine();\nConsole.WriteLine($\"Hello {name}\");",
-      "output": [
-        "What is your name?",
-        "Hello Alex"
-      ],
-      "parts": [
-        {
-          "code": "string",
-          "name": "Type",
-          "meaning": "Says this variable will store text."
-        },
-        {
-          "code": "name",
-          "name": "Label",
-          "meaning": "Shows that you choose a useful name for the saved value."
-        },
-        {
-          "code": "=",
-          "name": "Save",
-          "meaning": "Puts the value on the right into the variable on the left."
-        }
-      ],
-      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first.",
-      "outputAnnotations": [
-        "you enter Alex",
-        "the entered name is used"
-      ],
-      "outputNote": "Example input: Alex. The input label is an annotation."
-    },
-    {
-      "eyebrow": "12 · If statements and symbols",
-      "title": "Choose from a simple menu",
-      "explanation": "Ask for one choice: 1 for Start, 2 for Options, or 3 for Exit. if checks the first choice. else if checks the next choice only if the earlier check was false. else handles an unrecognised choice. == compares the answer with the quoted text. Only one branch runs and prints one message. This example asks once; choosing 3 prints Exiting... and the program finishes.",
-      "note": "// Ask once, then print the message for the chosen option.",
-      "prompt": "Ask for a menu choice and use one if statement with branches to print the matching message.",
-      "answer": "Console.WriteLine(\"1. Start\\n2. Options\\n3. Exit\");\nstring? choice = Console.ReadLine();\n\nif (choice == \"1\") {\n    Console.WriteLine(\"Starting...\");\n} else if (choice == \"2\") {\n    Console.WriteLine(\"Options...\");\n} else if (choice == \"3\") {\n    Console.WriteLine(\"Exiting...\");\n} else {\n    Console.WriteLine(\"Invalid choice.\");\n}",
-      "output": [
-        "1. Start",
-        "2. Options",
-        "3. Exit",
-        "Starting..."
-      ],
-      "parts": [
-        {
-          "code": "if",
-          "name": "First choice",
-          "meaning": "Checks whether the user entered 1."
-        },
-        {
-          "code": "else if",
-          "name": "Another choice",
-          "meaning": "Checks the next option only if the earlier condition was false."
-        },
-        {
-          "code": "else",
-          "name": "No match",
-          "meaning": "Prints Invalid choice. when none of the three options matched."
-        },
-        {
-          "code": "==",
-          "name": "Compare",
-          "meaning": "Checks whether the entered text equals the quoted option."
-        },
-        {
-          "code": "(...) / {...}",
-          "name": "Condition and body",
-          "meaning": "Parentheses hold the condition. Curly braces group the instructions to run."
-        },
-        {
-          "code": "string? choice",
-          "name": "Allow missing input",
-          "meaning": "The question mark allows choice to hold text or null when no line of input is available."
-        }
-      ],
-      "outputNote": "Example output when the user enters 1. The entered choice is input, not printed output.",
-      "runHint": "Put this top-level code in Program.cs in a .NET console project and run dotnet run. Enter one choice and press Enter. Run the program again to try another option."
     },
     {
       "eyebrow": "13 · Dictionary",
@@ -2558,7 +2563,102 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
-      "eyebrow": "09 · Loops",
+      "eyebrow": "09 · Variables",
+      "title": "Use changeable and fixed values",
+      "explanation": "Assignment creates a name such as speed and can change its value later. Python has no let or const keyword. MAX_SPEED uses capital letters to signal a constant by convention, but Python still allows reassignment. The f-string inserts speed in the text.",
+      "note": "# Create speed and MAX_SPEED, change speed to 100, then print Speed: 100.",
+      "prompt": "Create speed and MAX_SPEED, change speed to 100, then print Speed: 100.",
+      "answer": "speed = 80\nMAX_SPEED = 100\n\nspeed = 100\nprint(f\"Speed: {speed}\")",
+      "output": [
+        "Speed: 100"
+      ],
+      "parts": [
+        {
+          "code": "speed = 100",
+          "name": "Assignment",
+          "meaning": "Creates or changes a variable."
+        },
+        {
+          "code": "MAX_SPEED",
+          "name": "Constant convention",
+          "meaning": "Capital letters suggest a fixed value but do not enforce it."
+        }
+      ],
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
+    },
+    {
+      "eyebrow": "10 · Terminal input",
+      "title": "Ask for a name in VS Code",
+      "explanation": "input displays the question, waits for a line of terminal text, and returns it. name stores that text. The f before the string lets {name} insert the answer. Python needs no readline interface for this example.",
+      "note": "# Ask for a name and greet the user",
+      "prompt": "Create a name variable, then print Hello with a f-string.",
+      "answer": "name = input(\"What is your name?\")\nprint(f\"Hello {name}\")",
+      "output": [
+        "What is your name?",
+        "Hello Alex"
+      ],
+      "parts": [
+        {
+          "code": "input(...)",
+          "name": "Ask",
+          "meaning": "Displays the question and returns the typed line."
+        },
+        {
+          "code": "f\"Hello {name}\"",
+          "name": "Insert a value",
+          "meaning": "Places the saved name inside the greeting."
+        }
+      ],
+      "fileName": "name.py",
+      "runHint": "Save as name.py and run python3 name.py in the VS Code terminal.",
+      "outputAnnotations": [
+        "you enter Alex",
+        "the entered name is used"
+      ],
+      "outputNote": "Example input: Alex. The input label is an annotation."
+    },
+    {
+      "eyebrow": "11 · If statements and symbols",
+      "title": "Check an answer with if and else",
+      "explanation": "Ask “What is 1 + 1?” and save the entered text in answer. == checks whether it equals \"2\". if runs its body when the check is true and prints Correct!; else runs its body when the check is false and prints Try again. Only one body runs. This example asks once. In the next lesson, a loop asks the same question again after a wrong answer.",
+      "note": "# Ask once; print Correct! for 2, otherwise print Try again.",
+      "prompt": "Ask What is 1 + 1? and use if and else to print Correct! or Try again.",
+      "answer": "answer = input(\"What is 1 + 1?\")\n\nif answer == \"2\":\n    print(\"Correct!\")\nelse:\n    print(\"Try again.\")",
+      "output": [
+        "What is 1 + 1?",
+        "Correct!"
+      ],
+      "parts": [
+        {
+          "code": "if",
+          "name": "Check the answer",
+          "meaning": "Runs the first body only when answer equals \"2\"."
+        },
+        {
+          "code": "==",
+          "name": "Equal to",
+          "meaning": "Compares the entered text with \"2\". Both values are text in this example; = saves a value instead."
+        },
+        {
+          "code": "else",
+          "name": "Otherwise",
+          "meaning": "Runs the other body and prints Try again. when the if condition is false. It does not ask another question by itself."
+        },
+        {
+          "code": ": / indentation",
+          "name": "Start and group a body",
+          "meaning": "A colon ends the if or else line. The indented print belongs to that body; keep its four spaces."
+        }
+      ],
+      "outputNote": "Example input: 2. Entering a different answer prints Try again. The input labels are annotations, not text printed by the program.",
+      "runHint": "Save as main.py and run python main.py (or python3 main.py). Type your answer and press Enter. Run the program again to try another answer.",
+      "outputAnnotations": [
+        "you enter 2",
+        "answer is correct"
+      ]
+    },
+    {
+      "eyebrow": "12 · Loops",
       "title": "Repeat input until the answer is correct",
       "explanation": "The loop asks the question, saves the entered text, and prints that answer. If it is \"2\", it prints Correct! and break immediately leaves the nearest loop, skipping Try again. A wrong answer prints the retry message, then the next repetition asks again. Python uses a colon and indentation to show which instructions belong to while and if.",
       "note": "# Create the loop with input, output, and break inside if.",
@@ -2603,104 +2703,6 @@ const lessons: Record<Language, Lesson[]> = {
         "break leaves the loop"
       ],
       "outputNote": "Example run: the first answer is 2. The labels beside the lines explain the run; the program does not print them."
-    },
-    {
-      "eyebrow": "10 · Variables",
-      "title": "Use changeable and fixed values",
-      "explanation": "Assignment creates a name such as speed and can change its value later. Python has no let or const keyword. MAX_SPEED uses capital letters to signal a constant by convention, but Python still allows reassignment. The f-string inserts speed in the text.",
-      "note": "# Create speed and MAX_SPEED, change speed to 100, then print Speed: 100.",
-      "prompt": "Create speed and MAX_SPEED, change speed to 100, then print Speed: 100.",
-      "answer": "speed = 80\nMAX_SPEED = 100\n\nspeed = 100\nprint(f\"Speed: {speed}\")",
-      "output": [
-        "Speed: 100"
-      ],
-      "parts": [
-        {
-          "code": "speed = 100",
-          "name": "Assignment",
-          "meaning": "Creates or changes a variable."
-        },
-        {
-          "code": "MAX_SPEED",
-          "name": "Constant convention",
-          "meaning": "Capital letters suggest a fixed value but do not enforce it."
-        }
-      ],
-      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
-    },
-    {
-      "eyebrow": "11 · Terminal input",
-      "title": "Ask for a name in VS Code",
-      "explanation": "input displays the question, waits for a line of terminal text, and returns it. name stores that text. The f before the string lets {name} insert the answer. Python needs no readline interface for this example.",
-      "note": "# Ask for a name and greet the user",
-      "prompt": "Create a name variable, then print Hello with a f-string.",
-      "answer": "name = input(\"What is your name?\")\nprint(f\"Hello {name}\")",
-      "output": [
-        "What is your name?",
-        "Hello Alex"
-      ],
-      "parts": [
-        {
-          "code": "input(...)",
-          "name": "Ask",
-          "meaning": "Displays the question and returns the typed line."
-        },
-        {
-          "code": "f\"Hello {name}\"",
-          "name": "Insert a value",
-          "meaning": "Places the saved name inside the greeting."
-        }
-      ],
-      "fileName": "name.py",
-      "runHint": "Save as name.py and run python3 name.py in the VS Code terminal.",
-      "outputAnnotations": [
-        "you enter Alex",
-        "the entered name is used"
-      ],
-      "outputNote": "Example input: Alex. The input label is an annotation."
-    },
-    {
-      "eyebrow": "12 · If statements and symbols",
-      "title": "Choose from a simple menu",
-      "explanation": "Ask for one choice: 1 for Start, 2 for Options, or 3 for Exit. if checks the first choice. elif checks the next choice only if the earlier check was false. else handles an unrecognised choice. == compares the answer with the quoted text. Only one branch runs and prints one message. This example asks once; choosing 3 prints Exiting... and the program finishes.",
-      "note": "# Ask once, then print the message for the chosen option.",
-      "prompt": "Ask for a menu choice and use one if statement with branches to print the matching message.",
-      "answer": "choice = input(\"1. Start\\n2. Options\\n3. Exit\\n\")\n\nif choice == \"1\":\n    print(\"Starting...\")\nelif choice == \"2\":\n    print(\"Options...\")\nelif choice == \"3\":\n    print(\"Exiting...\")\nelse:\n    print(\"Invalid choice.\")",
-      "output": [
-        "1. Start",
-        "2. Options",
-        "3. Exit",
-        "Starting..."
-      ],
-      "parts": [
-        {
-          "code": "if",
-          "name": "First choice",
-          "meaning": "Checks whether the user entered 1."
-        },
-        {
-          "code": "elif",
-          "name": "Another choice",
-          "meaning": "Checks the next option only if the earlier condition was false."
-        },
-        {
-          "code": "else",
-          "name": "No match",
-          "meaning": "Prints Invalid choice. when none of the three options matched."
-        },
-        {
-          "code": "==",
-          "name": "Compare",
-          "meaning": "Checks whether the entered text equals the quoted option."
-        },
-        {
-          "code": ":",
-          "name": "Condition and body",
-          "meaning": "A colon starts the body; indentation groups its instructions."
-        }
-      ],
-      "outputNote": "Example output when the user enters 1. The entered choice is input, not printed output.",
-      "runHint": "Save as main.py and run python main.py (or python3 main.py). Enter one choice and press Enter. Run the program again to try another option."
     },
     {
       "eyebrow": "13 · Dictionary",
@@ -3354,7 +3356,112 @@ const lessons: Record<Language, Lesson[]> = {
       "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
-      "eyebrow": "09 · Loops",
+      "eyebrow": "09 · Variables",
+      "title": "Use changeable and fixed values",
+      "explanation": "speed starts at 80 and can be reassigned. speed = 100 replaces its earlier value. const keeps maxSpeed fixed at 100, so assigning a different value to maxSpeed is not allowed. The last instruction prints the updated speed.",
+      "note": "// Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
+      "prompt": "Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
+      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  int speed = 80;\n  const int maxSpeed = 100;\n\n  speed = 100;\n  std::cout << \"Speed: \" << speed << \"\\n\";\n}",
+      "output": [
+        "Speed: 100"
+      ],
+      "parts": [
+        {
+          "code": "int speed = 80;",
+          "name": "Changeable value",
+          "meaning": "Creates speed with the starting value 80. It can receive a different value later."
+        },
+        {
+          "code": "const int maxSpeed = 100;",
+          "name": "Fixed value",
+          "meaning": "Creates maxSpeed as a constant. It cannot be reassigned."
+        },
+        {
+          "code": "speed = 100;",
+          "name": "Reassign",
+          "meaning": "Replaces the earlier value 80 with 100; it does not create a second speed variable."
+        }
+      ],
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
+    },
+    {
+      "eyebrow": "10 · Terminal input",
+      "title": "Ask for a name in VS Code",
+      "explanation": "std::cout displays the question. std::string name declares a text variable. std::getline(std::cin, name) waits for a whole line and saves it in name. std::cout then prints Hello followed by that answer.",
+      "note": "// Ask for a name and greet the user",
+      "prompt": "Create a name variable, then print Hello with a template string.",
+      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  std::cout << \"What is your name?\";\n  std::string name;\n  std::getline(std::cin, name);\n  std::cout << \"Hello \" << name << \"\\n\";\n}",
+      "output": [
+        "What is your name?",
+        "Hello Alex"
+      ],
+      "parts": [
+        {
+          "code": "std::string name",
+          "name": "Text variable",
+          "meaning": "Declares where the entered text is stored."
+        },
+        {
+          "code": "std::getline(std::cin, name)",
+          "name": "Read a line",
+          "meaning": "Receives a whole line from the terminal."
+        }
+      ],
+      "fileName": "name.cpp",
+      "runHint": "Save as name.cpp. In the VS Code terminal compile with g++ -std=c++17 name.cpp -o main, then run ./main. A C++ compiler must be installed.",
+      "outputAnnotations": [
+        "you enter Alex",
+        "the entered name is used"
+      ],
+      "outputNote": "Example input: Alex. The input label is an annotation."
+    },
+    {
+      "eyebrow": "11 · If statements and symbols",
+      "title": "Check an answer with if and else",
+      "explanation": "Ask “What is 1 + 1?” and save the entered text in answer. == checks whether it equals \"2\". if runs its body when the check is true and prints Correct!; else runs its body when the check is false and prints Try again. Only one body runs. This example asks once. In the next lesson, a loop asks the same question again after a wrong answer.",
+      "note": "// Ask once; print Correct! for 2, otherwise print Try again.",
+      "prompt": "Ask What is 1 + 1? and use if and else to print Correct! or Try again.",
+      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n    std::cout << \"What is 1 + 1?\";\n    std::string answer;\n    std::getline(std::cin, answer);\n\n    if (answer == \"2\") {\n        std::cout << \"Correct!\\n\";\n    } else {\n        std::cout << \"Try again.\\n\";\n    }\n}",
+      "output": [
+        "What is 1 + 1?",
+        "Correct!"
+      ],
+      "parts": [
+        {
+          "code": "if",
+          "name": "Check the answer",
+          "meaning": "Runs the first body only when answer equals \"2\"."
+        },
+        {
+          "code": "==",
+          "name": "Equal to",
+          "meaning": "Compares the entered text with \"2\". Both values are text in this example; = saves a value instead."
+        },
+        {
+          "code": "else",
+          "name": "Otherwise",
+          "meaning": "Runs the other body and prints Try again. when the if condition is false. It does not ask another question by itself."
+        },
+        {
+          "code": "()",
+          "name": "Hold the condition",
+          "meaning": "The parentheses after if contain the check: answer == \"2\"."
+        },
+        {
+          "code": "{}",
+          "name": "Group the instructions",
+          "meaning": "The braces after if and else surround each body. Put each action for that body on its own line inside them."
+        }
+      ],
+      "outputNote": "Example input: 2. Entering a different answer prints Try again. The input labels are annotations, not text printed by the program.",
+      "runHint": "Save as main.cpp; compile with g++ -std=c++17 main.cpp -o main, then run ./main (Windows: .\\main.exe). Type your answer and press Enter. Run the program again to try another answer.",
+      "outputAnnotations": [
+        "you enter 2",
+        "answer is correct"
+      ]
+    },
+    {
+      "eyebrow": "12 · Loops",
       "title": "Repeat input until the answer is correct",
       "explanation": "The loop asks the question, saves the entered text, and prints that answer. If it is \"2\", it prints Correct! and break immediately leaves the nearest loop, skipping Try again. A wrong answer prints the retry message, then the next repetition asks again. The braces show which instructions belong to while and if.",
       "note": "// Create the loop with input, output, and break inside if.",
@@ -3399,109 +3506,6 @@ const lessons: Record<Language, Lesson[]> = {
         "break leaves the loop"
       ],
       "outputNote": "Example run: the first answer is 2. The labels beside the lines explain the run; the program does not print them."
-    },
-    {
-      "eyebrow": "10 · Variables",
-      "title": "Use changeable and fixed values",
-      "explanation": "speed starts at 80 and can be reassigned. speed = 100 replaces its earlier value. const keeps maxSpeed fixed at 100, so assigning a different value to maxSpeed is not allowed. The last instruction prints the updated speed.",
-      "note": "// Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
-      "prompt": "Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
-      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  int speed = 80;\n  const int maxSpeed = 100;\n\n  speed = 100;\n  std::cout << \"Speed: \" << speed << \"\\n\";\n}",
-      "output": [
-        "Speed: 100"
-      ],
-      "parts": [
-        {
-          "code": "int speed = 80;",
-          "name": "Changeable value",
-          "meaning": "Creates speed with the starting value 80. It can receive a different value later."
-        },
-        {
-          "code": "const int maxSpeed = 100;",
-          "name": "Fixed value",
-          "meaning": "Creates maxSpeed as a constant. It cannot be reassigned."
-        },
-        {
-          "code": "speed = 100;",
-          "name": "Reassign",
-          "meaning": "Replaces the earlier value 80 with 100; it does not create a second speed variable."
-        }
-      ],
-      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
-    },
-    {
-      "eyebrow": "11 · Terminal input",
-      "title": "Ask for a name in VS Code",
-      "explanation": "std::cout displays the question. std::string name declares a text variable. std::getline(std::cin, name) waits for a whole line and saves it in name. std::cout then prints Hello followed by that answer.",
-      "note": "// Ask for a name and greet the user",
-      "prompt": "Create a name variable, then print Hello with a template string.",
-      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  std::cout << \"What is your name?\";\n  std::string name;\n  std::getline(std::cin, name);\n  std::cout << \"Hello \" << name << \"\\n\";\n}",
-      "output": [
-        "What is your name?",
-        "Hello Alex"
-      ],
-      "parts": [
-        {
-          "code": "std::string name",
-          "name": "Text variable",
-          "meaning": "Declares where the entered text is stored."
-        },
-        {
-          "code": "std::getline(std::cin, name)",
-          "name": "Read a line",
-          "meaning": "Receives a whole line from the terminal."
-        }
-      ],
-      "fileName": "name.cpp",
-      "runHint": "Save as name.cpp. In the VS Code terminal compile with g++ -std=c++17 name.cpp -o main, then run ./main. A C++ compiler must be installed.",
-      "outputAnnotations": [
-        "you enter Alex",
-        "the entered name is used"
-      ],
-      "outputNote": "Example input: Alex. The input label is an annotation."
-    },
-    {
-      "eyebrow": "12 · If statements and symbols",
-      "title": "Choose from a simple menu",
-      "explanation": "Ask for one choice: 1 for Start, 2 for Options, or 3 for Exit. if checks the first choice. else if checks the next choice only if the earlier check was false. else handles an unrecognised choice. == compares the answer with the quoted text. Only one branch runs and prints one message. This example asks once; choosing 3 prints Exiting... and the program finishes.",
-      "note": "// Ask once, then print the message for the chosen option.",
-      "prompt": "Ask for a menu choice and use one if statement with branches to print the matching message.",
-      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n    std::cout << \"1. Start\\n2. Options\\n3. Exit\\n\";\n    std::string choice;\n    std::getline(std::cin, choice);\n\n    if (choice == \"1\") {\n        std::cout << \"Starting...\\n\";\n    } else if (choice == \"2\") {\n        std::cout << \"Options...\\n\";\n    } else if (choice == \"3\") {\n        std::cout << \"Exiting...\\n\";\n    } else {\n        std::cout << \"Invalid choice.\\n\";\n    }\n}",
-      "output": [
-        "1. Start",
-        "2. Options",
-        "3. Exit",
-        "Starting..."
-      ],
-      "parts": [
-        {
-          "code": "if",
-          "name": "First choice",
-          "meaning": "Checks whether the user entered 1."
-        },
-        {
-          "code": "else if",
-          "name": "Another choice",
-          "meaning": "Checks the next option only if the earlier condition was false."
-        },
-        {
-          "code": "else",
-          "name": "No match",
-          "meaning": "Prints Invalid choice. when none of the three options matched."
-        },
-        {
-          "code": "==",
-          "name": "Compare",
-          "meaning": "Checks whether the entered text equals the quoted option."
-        },
-        {
-          "code": "(...) / {...}",
-          "name": "Condition and body",
-          "meaning": "Parentheses hold the condition. Curly braces group the instructions to run."
-        }
-      ],
-      "outputNote": "Example output when the user enters 1. The entered choice is input, not printed output.",
-      "runHint": "Save as main.cpp; compile with g++ -std=c++17 main.cpp -o main, then run ./main (Windows: .\\main.exe). Enter one choice and press Enter. Run the program again to try another option."
     },
     {
       "eyebrow": "13 · Dictionary",
@@ -4210,10 +4214,12 @@ function matchingLesson(source: Lesson, target: Language) {
     ?? lessons[target].find(item => aliases[source.title]?.includes(item.title));
 }
 
-function LanguageComparison({ language, lesson, onClose }: { language: Language; lesson: Lesson; onClose: () => void }) {
+function LanguageComparison({ language, lesson, editorCode, onClose }: { language: Language; lesson: Lesson; editorCode: string; onClose: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [target, setTarget] = useState<Language>(language === "javascript" ? "cpp" : "javascript");
   const [pickedTitle, setPickedTitle] = useState("");
+  const hasEditorCode = !lesson.referenceOnly && !!editorCode.trim();
+  const sourceCode = hasEditorCode ? editorCode : withoutGuideComments(lesson.answer, language);
   const equivalent = matchingLesson(lesson, target);
   const other = lessons[target].find(item => item.title === pickedTitle) ?? equivalent;
   useEffect(() => { dialog.current?.showModal(); }, []);
@@ -4226,8 +4232,8 @@ function LanguageComparison({ language, lesson, onClose }: { language: Language;
       {other && other !== equivalent && <p>These examples cover different topics.</p>}
     </div>
     <div className="language-comparison-columns">
-      <section><h3>{languageName(language)}</h3><b>{lesson.title}</b><pre><code><HighlightedCode code={lesson.answer} language={language} /></code></pre><p>{lesson.explanation}</p></section>
-      <section><h3>{languageName(target)}</h3>{other ? <><b>{other.title}</b><pre><code><HighlightedCode code={other.answer} language={target} /></code></pre><p>{other.explanation}</p>{target === "cpp" && <CppSetupGuide key={other.title} lesson={other} />}{other.runHint && <p>{other.runHint}</p>}</> : <p>Select an example to show its code here.</p>}</section>
+      <section><h3>{languageName(language)} · {hasEditorCode ? "Your code" : "Lesson example"}</h3><b>{lesson.title}</b><pre aria-label="Current code for comparison"><code><HighlightedCode code={sourceCode} language={language} /></code></pre><p>{hasEditorCode ? "This is the code currently in your editor." : lesson.explanation}</p></section>
+      <section><h3>{languageName(target)} · Lesson example</h3>{other ? <><b>{other.title}</b><pre><code><HighlightedCode code={other.answer} language={target} /></code></pre><p>{other.explanation}</p>{target === "cpp" && <CppSetupGuide key={other.title} lesson={other} />}{other.runHint && <p>{other.runHint}</p>}</> : <p>Select an example to show its code here.</p>}</section>
     </div>
   </dialog>;
 }
@@ -4534,7 +4540,7 @@ export default function Home() {
 
   return (
     <>
-    {comparisonOpen && <LanguageComparison language={language} lesson={current!} onClose={() => setComparisonOpen(false)} />}
+    {comparisonOpen && <LanguageComparison language={language} lesson={current!} editorCode={code} onClose={() => setComparisonOpen(false)} />}
     <main className="lesson-shell">
       <header className="lesson-nav">
         <div className="lesson-brand-group"><button className="drawer-toggle" onClick={() => setNavOpen((open) => !open)} aria-label={navOpen ? "Close lesson list" : "Open lesson list"} aria-expanded={navOpen}><span>☰</span></button><button className="brand brand-button" onClick={() => setLanguage(null)}><span className="brand-mark">&gt;_</span> Code<span>Step</span></button></div>
@@ -4598,14 +4604,14 @@ export default function Home() {
             <p>For CSS, save the rules in <code>styles.css</code> beside your HTML file. Add <code>{'<link rel="stylesheet" href="styles.css">'}</code> inside the HTML head, and include the element named by the selector in the body. Save your changes and refresh the browser.</p>
           </details>}
           {current!.runHint && <p className="run-hint">{current!.runHint}</p>}
-          {(language === "cpp" || language === "python") && <details className="symbol-guide" open={index === 0}>
+          {(language === "cpp" || language === "python") && <details className="symbol-guide" open={index === 0 || current!.title === "Check an answer with if and else"}>
             <summary>Brackets and symbols</summary>
             <p><code>[]</code>   {language === "python" ? 'makes a list, such as ["Jordan", "Alex"], or retrieves an item, such as names[0].' : 'accesses an item, such as names[0]. A vector initializer uses braces: std::vector<std::string> names = {"Jordan", "Alex"};'}</p>
             <p><code>{"{}"}</code>   {language === "python" ? 'creates a dictionary or a non-empty set. Python uses a colon and indentation for code blocks.' : 'groups a code block, class body, or initializer. Map entries are key/value pairs; C++ has no JavaScript-style object literal.'}</p>
             <p><code>()</code> holds function arguments {language === "cpp" ? 'and conditions.' : 'and can group expressions. Parentheses around an if condition are optional.'} Each nested function call has its own pair.</p>
             <p><code>{language === "python" ? "#" : "//"}</code> starts a comment.  {language === "python" ? 'Use four spaces for each block level; indentation is part of the program.' : '#include is a preprocessor directive that makes library declarations available.'}</p>
           </details>}
-          {(language === "javascript" || language === "csharp") && <details className="symbol-guide" open={index === 0}>
+          {(language === "javascript" || language === "csharp") && <details className="symbol-guide" open={index === 0 || current!.title === "Check an answer with if and else"}>
             <summary>Brackets and symbols</summary>
             <table><thead><tr><th>Symbol</th><th>Called</th><th>Example</th></tr></thead><tbody>
               <tr><td><code>[]</code></td><td>Square brackets · array / lookup</td><td><code className="symbol-example"><HighlightedCode language={language} code={language === "javascript" ? '["Jordan", "Alex"]' : 'string[] names = { "Jordan", "Alex" };'} /></code></td></tr>
@@ -4623,7 +4629,7 @@ export default function Home() {
               <code><HighlightedCode code={part.code} language={language} /></code><div><b>{part.name}</b><span>{part.meaning}</span></div>
             </div>)}</div>
           </section>}
-          {current!.title === "Choose from a simple menu" && <section className="comparison-guide speed-symbols" aria-label="Comparison and logical symbols">
+          {current!.title === "Check an answer with if and else" && <section className="comparison-guide speed-symbols" aria-label="Comparison and logical symbols">
             <h2>Symbols in this language</h2>
             {[
               [">", "Greater than", "True when the value on the left is larger."],
@@ -4639,7 +4645,7 @@ export default function Home() {
               ["=", "Assignment", "Saves a value; it does not compare two values."],
             ].map(([symbol, name, meaning]) => <div key={symbol}><code>{symbol}</code><p><b>{name}</b><span>{meaning}</span></p></div>)}
             <p>{language === "python" ? "Python spells the logical operators and, or, and not. It does not use &&, ||, ===, or !==." : "&& combines conditions inside one check. To perform several actions, put each instruction on its own line inside the same body."}</p>
-            <p>The menu uses equality. The other symbols are a reference for later checks; you do not need to add them to this program.</p>
+            <p>This answer check uses equality. The other symbols are a reference for later checks; you do not need to add them to this program.</p>
           </section>}
           {current!.referenceOnly ? current!.referenceKind === "comparisons" ? <div className="comparison-guide">
             <div><code>{language === "javascript" ? "==" : "=="}</code><p><b>Equal value</b><span>{language === "javascript" ? "Converts types before comparing; usually prefer ===." : "Checks whether the two values are equal."}</span></p></div>
@@ -4754,7 +4760,7 @@ export default function Home() {
           </div> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className="file-tab"><span>◆</span> {current!.fileName || challengeFile(language)}<small className="file-language">{languageName(language)}</small></div><div className="panel-actions"><button className="editor-mode-button" onClick={() => changeBlockMode(!blockMode)}>{blockMode ? "Use keyboard" : "Use blocks"}</button><button onClick={() => changeBlockCode(current!.starter || "")} title="Reset code">↻ Reset</button></div></div>
-            {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div style={{ minHeight: Math.max(300, lineNumbers.length * 24.5 + 44) }} className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className={`code-guide ${current!.title === "Choose from a simple menu" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code>{current!.title === "Choose from a simple menu" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Choose from a simple menu"} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div>}
+            {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div style={{ minHeight: Math.max(300, lineNumbers.length * 24.5 + 44) }} className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className={`code-guide ${current!.title === "Check an answer with if and else" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code>{current!.title === "Check an answer with if and else" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Check an answer with if and else"} /></code></pre>}<textarea aria-label="Code editor" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div>}
           </div>
           <div className="console-panel">
             <div className="console-bar"><span><i /> {language === "html" || language === "css" ? "RESULT PREVIEW" : "CONSOLE"}</span><button onClick={() => setStatus("idle")}>Clear</button></div>
