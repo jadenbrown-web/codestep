@@ -4779,7 +4779,7 @@ export default function Home() {
             <div className="tip">{blockMode ? "Tap or drag lesson blocks into your code, then choose Check code." : language === "python" ? "Type over the guide, then press Enter to check it. Python uses indentation for blocks; Tab inserts four spaces. Equivalent supported code is accepted." : "Type over the guide in the editor, then press Enter to check it. Equivalent supported code is accepted."}</div>
           </>}
         </aside>
-        <section className={`workspace ${blockMode ? "blocks-workspace" : ""}`}>
+        <section className={`workspace ${current!.referenceOnly ? "reference-workspace" : ""} ${blockMode ? "blocks-workspace" : ""}`}>
           {current!.referenceOnly ? current!.referenceKind === "comparisons" ? <div className="comparison-reference-preview">
             <div className="preview-bar"><span>◆</span> {language === "javascript" ? "JAVASCRIPT" : "C SHARP"} COMPARISON REFERENCE</div>
             <div className="comparison-start"><code>{language === "javascript" ? "let x = 5;" : "int x = 5;"}</code><span>Each row below asks a different question about the same value.</span></div>

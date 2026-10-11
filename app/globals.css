@@ -236,3 +236,5 @@ html[data-theme="dark"] .explanation-code .syntax-keyword{color:#ee7a92}html[dat
   .feedback b{font-size:12px}.feedback small{display:none}.feedback-icon{width:26px;height:26px}.workspace>.feedback{min-height:48px;padding:4px 8px}.feedback button{padding:8px 10px;font-size:12px}
   .home-shell{height:100dvh;min-height:0;overflow:hidden;display:flex;flex-direction:column}.home-nav{height:56px;flex:none}.hero{display:none}.home-shell .courses{min-height:0;overflow:auto;padding:18px;flex:1}.course-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.course-card{min-height:160px;padding:14px}.course-count{position:static;font-size:9px;margin-top:8px}.course-card h3{font-size:19px;margin:12px 0 5px}.course-card>p{font-size:12px}.course-card .course-icon{width:32px;height:32px}.mini-progress{display:none}.section-heading{margin-bottom:16px}.section-heading p{margin-bottom:0}
 }
+
+.lesson-layout .reference-workspace{overflow:auto;overscroll-behavior:contain}.reference-workspace>div{flex-shrink:0}
