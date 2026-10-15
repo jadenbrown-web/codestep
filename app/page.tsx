@@ -4083,9 +4083,11 @@ function alignedGuide(code: string, expected: string) {
   const target = significantCharacters(expected);
   let matched = 0;
   while (matched < actual.length && matched < target.length && actual[matched].character === target[matched].character) matched += 1;
+  // Stop suggesting a suffix when the learner types a different approach.
+  if (matched < actual.length) return "";
   const expectedPosition = matched ? target[matched - 1].index + 1 : 0;
   const remainingGuide = expected.slice(expectedPosition).replace(/^\s+/, "");
-  return code.replace(/[^\n]/g, " ") + remainingGuide;
+  return remainingGuide;
 }
 
 function SyntaxDiagnostic({ parts }: { parts: DiagnosticPart[] }) {
@@ -4191,6 +4193,24 @@ function LearningCode({ code, starter, language, caretIndex, focusConditions }: 
 }
 
 function SettingsPanel({ open, themeMode, showGuide, colourTyping, blockMode, onBlockModeChange, onThemeChange, onGuideChange, onColourTypingChange, onClose }: { open: boolean; themeMode: ThemeMode; showGuide: boolean; colourTyping: boolean; blockMode: boolean; onBlockModeChange: (enabled: boolean) => void; onThemeChange: (mode: ThemeMode) => void; onGuideChange: (show: boolean) => void; onColourTypingChange: (show: boolean) => void; onClose: () => void }) {
+  const close = useRef(onClose);
+  close.current = onClose;
+  useEffect(() => {
+    if (!open) return;
+    const previousFocus = document.activeElement as HTMLElement | null;
+    const panel = document.querySelector<HTMLElement>(".settings-panel");
+    panel?.querySelector<HTMLButtonElement>("button")?.focus();
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { event.preventDefault(); close.current(); }
+      if (event.key !== "Tab" || !panel) return;
+      const controls = [...panel.querySelectorAll<HTMLElement>("button, select, input, [tabindex='0']")];
+      const first = controls[0], last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => { document.removeEventListener("keydown", handleKey); previousFocus?.focus(); };
+  }, [open]);
   if (!open) return null;
   return <div className="settings-backdrop" role="presentation" onMouseDown={onClose}>
     <section className="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settings-title" onMouseDown={(event) => event.stopPropagation()}>
@@ -4199,8 +4219,8 @@ function SettingsPanel({ open, themeMode, showGuide, colourTyping, blockMode, on
         {(["light", "dark", "system"] as ThemeMode[]).map((mode) => <button key={mode} className={themeMode === mode ? "selected" : ""} onClick={() => onThemeChange(mode)}><i>{mode === "light" ? "☀" : mode === "dark" ? "☾" : "◐"}</i><span>{mode[0].toUpperCase() + mode.slice(1)}</span><small>{mode === "system" ? "Use device setting" : `${mode} appearance`}</small></button>)}
       </div></div>
       <div className="settings-group guide-setting"><div><b>Code blocks</b><span>Tap or drag ready-made lines into your code. Turn off to type instead. Your choice is saved on this device.</span></div><button aria-label="Code blocks" className={`switch ${blockMode ? "on" : ""}`} role="switch" aria-checked={blockMode} onClick={() => onBlockModeChange(!blockMode)}><i /></button></div>
-      <div className="settings-group guide-setting"><div><b>Code guide</b><span>Show a faint, colour-coded copy of the expected answer in the editor.</span></div><button className={`switch ${showGuide ? "on" : ""}`} role="switch" aria-checked={showGuide} onClick={() => onGuideChange(!showGuide)}><i /></button></div>
-      <div className="settings-group guide-setting"><div><b>Colour typed code</b><span>Give your typed code the same syntax colours as the ghost guide.</span></div><button className={`switch ${colourTyping ? "on" : ""}`} role="switch" aria-checked={colourTyping} onClick={() => onColourTypingChange(!colourTyping)}><i /></button></div>
+      <div className="settings-group guide-setting"><div><b>Code guide</b><span>Show a faint, colour-coded copy of the expected answer in the editor.</span></div><button aria-label="Code guide" className={`switch ${showGuide ? "on" : ""}`} role="switch" aria-checked={showGuide} onClick={() => onGuideChange(!showGuide)}><i /></button></div>
+      <div className="settings-group guide-setting"><div><b>Colour typed code</b><span>Give your typed code the same syntax colours as the ghost guide.</span></div><button aria-label="Colour typed code" className={`switch ${colourTyping ? "on" : ""}`} role="switch" aria-checked={colourTyping} onClick={() => onColourTypingChange(!colourTyping)}><i /></button></div>
       <p className="settings-foot">The guide shows only the code you need to type. Lesson comments stay in the explanation panel.</p>
     </section>
   </div>;
@@ -4305,16 +4325,16 @@ function LanguageComparison({ language, lesson, editorCode, onClose }: { languag
   const other = lessons[target].find(item => item.title === pickedTitle) ?? equivalent;
   useEffect(() => { dialog.current?.showModal(); }, []);
   useEffect(() => { setPickedTitle(""); }, [lesson, target]);
-  return <dialog ref={dialog} className="language-comparison" onCancel={onClose} onClick={event => { if (event.target === event.currentTarget) onClose(); }} aria-labelledby="language-comparison-title">
-    <div className="language-comparison-head"><h2 id="language-comparison-title">Compare code</h2><button onClick={onClose} aria-label="Close language comparison">×</button></div>
-    <div className="language-comparison-controls"><div className="compare-language-choices"><span>Compare {languageName(language)} with</span><div role="group" aria-label="Comparison language">{(Object.keys(lessons) as Language[]).filter(item => item !== language).map(item => <button key={item} aria-pressed={target === item} onClick={() => { setTarget(item); setPickedTitle(""); }}>{languageName(item)}</button>)}</div></div>
-      {!equivalent && <p>{target === "html" || target === "css" || language === "html" || language === "css" ? "HTML describes page content and CSS styles it; they do not have a direct equivalent for every programming task." : "There is no matching lesson for this topic yet."} Choose an example below to view alongside your lesson.</p>}
-      <details key={target} className="compare-example-picker"><summary><span>Example</span><b>{other?.title ?? "Choose an example"}</b><span className="example-picker-hint">Change</span></summary><div className="compare-example-list" role="group" aria-label={`${languageName(target)} examples`}>{lessons[target].map((item, i) => <button key={item.title} aria-pressed={other?.title === item.title} onClick={event => { setPickedTitle(item.title); const picker = event.currentTarget.closest("details"); if (picker) { picker.open = false; picker.querySelector("summary")?.focus(); } }}><span>{String(i + 1).padStart(2, "0")}</span><b>{item.title}</b>{other?.title === item.title && <span aria-hidden="true">✓</span>}</button>)}</div></details>
-      {other && other !== equivalent && <p>These examples cover different topics.</p>}
+  return <dialog ref={dialog} className="language-comparison" onCancel={onClose} aria-labelledby="language-comparison-title">
+    <header className="language-comparison-head"><div><small>CODESTEP</small><h2 id="language-comparison-title">Compare code</h2></div><button onClick={onClose} aria-label="Close language comparison">×</button></header>
+    <div className="language-comparison-controls">
+      <div className="compare-language-choices"><span>Compare {languageName(language)} with</span><div role="group" aria-label="Comparison language">{(Object.keys(lessons) as Language[]).filter(item => item !== language).map(item => <button key={item} aria-pressed={target === item} onClick={() => { setTarget(item); setPickedTitle(""); }}>{languageName(item)}</button>)}</div></div>
+      <label className="compare-example-select">Example<select aria-label="Comparison example" value={other?.title ?? ""} onChange={event => setPickedTitle(event.target.value)}><option value="" disabled>Choose an example</option>{lessons[target].map(item => <option key={item.title} value={item.title}>{item.title}</option>)}</select></label>
+      <p className="comparison-context">{!equivalent ? "These languages do not have a matching lesson for this topic. Choose an example to compare." : other && other !== equivalent ? "These examples cover different topics." : "Compare the same idea in two languages."}</p>
     </div>
     <div className="language-comparison-columns">
-      <section><h3>{languageName(language)} · {hasEditorCode ? "Your code" : "Lesson example"}</h3><b>{lesson.title}</b><pre aria-label="Current code for comparison"><code><HighlightedCode code={sourceCode} language={language} /></code></pre><p>{hasEditorCode ? "This is the code currently in your editor." : <LessonExplanation lesson={lesson} language={language} />}</p></section>
-      <section><h3>{languageName(target)} · Lesson example</h3>{other ? <><b>{other.title}</b><pre><code><HighlightedCode code={other.answer} language={target} /></code></pre><p><LessonExplanation lesson={other} language={target} /></p>{target === "cpp" && <CppSetupGuide key={other.title} lesson={other} />}{other.runHint && <p>{other.runHint}</p>}</> : <p>Select an example to show its code here.</p>}</section>
+      <section className="comparison-card"><header><h3>{languageName(language)} · {hasEditorCode ? "Your code" : "Lesson example"}</h3><b>{lesson.title}</b></header><pre aria-label="Current code for comparison"><code><HighlightedCode code={sourceCode} language={language} /></code></pre><div className="comparison-description"><p>{hasEditorCode ? "This is the code currently in your editor." : <LessonExplanation lesson={lesson} language={language} />}</p></div></section>
+      <section className="comparison-card" key={target + (other?.title ?? "")}><header><h3>{languageName(target)} · Lesson example</h3><b>{other?.title ?? "Choose an example"}</b></header><pre aria-label="Other language code"><code>{other ? <HighlightedCode code={other.answer} language={target} /> : "Choose an example above to view its code."}</code></pre><div className="comparison-description">{other && <><p><LessonExplanation lesson={other} language={target} /></p>{target === "cpp" && <CppSetupGuide lesson={other} />}{other.runHint && <p>{other.runHint}</p>}</>}</div></section>
     </div>
   </dialog>;
 }
@@ -4342,6 +4362,12 @@ export default function Home() {
     window.addEventListener("resize", resize);
     return () => { viewport?.removeEventListener("resize", resize); window.removeEventListener("resize", resize); document.documentElement.style.removeProperty("--visible-height"); };
   }, []);
+  useEffect(() => {
+    const narrow = window.matchMedia("(max-width: 850px)");
+    const update = () => setNavOpen(!narrow.matches);
+    narrow.addEventListener("change", update);
+    return () => narrow.removeEventListener("change", update);
+  }, []);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [themeMode, setThemeMode] = useState<ThemeMode>("system");
   const [showGuide, setShowGuide] = useState(true);
@@ -4366,7 +4392,7 @@ export default function Home() {
     try { saved = localStorage.getItem("codestep-code-blocks"); } catch {}
     if (saved === "true" || saved === "false") setBlockMode(saved === "true");
     else setBlockMode(mobile.matches);
-    if (mobile.matches) setNavOpen(false);
+    setNavOpen(window.innerWidth > 850);
     const update = () => {
       try { saved = localStorage.getItem("codestep-code-blocks"); } catch {}
       if (saved !== "true" && saved !== "false") setBlockMode(mobile.matches);
@@ -4854,7 +4880,7 @@ export default function Home() {
           </div> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className="file-tab"><span>◆</span> {current!.fileName || challengeFile(language)}<small className="file-language">{languageName(language)}</small></div><div className="panel-actions"><button className="editor-mode-button" onClick={() => changeBlockMode(!blockMode)}>{blockMode ? "Use keyboard" : "Use blocks"}</button><button onClick={() => changeBlockCode(current!.starter || "")} title="Reset code">↻ Reset</button></div></div>
-            {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className={`code-guide ${current!.title === "Check an answer with if and else" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code>{current!.title === "Check an answer with if and else" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Check an answer with if and else"} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div>}
+            {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className={`code-guide ${current!.title === "Check an answer with if and else" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{current!.title === "Check an answer with if and else" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Check an answer with if and else"} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div>}
           </div>
           <div className="console-panel">
             <div className="console-bar"><span><i /> {language === "html" || language === "css" ? "RESULT PREVIEW" : "CONSOLE"}</span><button onClick={() => setStatus("idle")}>Clear</button></div>
