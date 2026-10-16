@@ -125,3 +125,18 @@ for (const language of ['javascript', 'python', 'csharp', 'cpp']) {
     assert.equal(check(language, lesson.title, alternate).accepted, true);
   });
 }
+
+for (const language of Object.keys(courses)) {
+  test(`${language}: capitals are optional for every lesson example`, () => {
+    for (const lesson of courses[language].filter(item => !item.referenceOnly)) {
+      assert.equal(check(language, lesson.title, lesson.answer.toLowerCase()).accepted, true, lesson.title + ' lowercase');
+      assert.equal(check(language, lesson.title, lesson.answer.toUpperCase()).accepted, true, lesson.title + ' uppercase');
+    }
+  });
+}
+test('case tolerance still rejects missing punctuation, changed text and Python indentation', () => {
+  assert.equal(check('csharp', 'Print several lines at once', 'console.writeline(" something different ");').accepted, false);
+  assert.equal(check('javascript', 'Print several lines at once', 'CONSOLE.LOG(" Hello \\n Welcome \\n Goodbye"').accepted, false);
+  const python = courses.python.find(item => item.title === 'Make something happen');
+  assert.equal(check('python', python.title, python.answer.toUpperCase().replace('    PRINT', 'PRINT')).accepted, false);
+});

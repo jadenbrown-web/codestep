@@ -325,7 +325,39 @@ function canonical(root: Node, language: CourseLanguage, lesson: Exercise): Form
   return convert(root);
 }
 
+// Typing practice accepts different letter case without changing the lesson example.
+// Keep token boundaries, quoted spaces, punctuation and Python indentation intact.
+function typingTokens(code: string, language: CourseLanguage): string {
+  const comments = language === 'python' ? '#[^\\n]*' : language === 'html' ? '<!--[\\s\\S]*?-->' : '//[^\\n]*|/\\*[\\s\\S]*?\\*/';
+  const pattern = new RegExp(`("""[\\s\\S]*?"""|\\'\\'\\'[\\s\\S]*?\\'\\'\\'|@?"(?:\\\\.|[^"\\\\])*"|'(?:\\\\.|[^'\\\\])*'|\\x60(?:\\\\.|[^\\x60\\\\])*\\x60)|(${comments})|([A-Za-z_$][\\w$]*|[0-9]+(?:\\.[0-9]+)?|[^\\s])`, 'g');
+  const tokens: string[] = [];
+  const indentation: string[] = [];
+  let lastRow = -1;
+  for (const match of code.matchAll(pattern)) {
+    if (match[2]) continue;
+    if (language === 'python') {
+      const before = code.slice(0, match.index);
+      const row = before.split('\n').length;
+      if (row !== lastRow) {
+        const line = code.slice(before.lastIndexOf('\n') + 1);
+        indentation.push(line.match(/^[ \t]*/)?.[0] ?? '');
+        lastRow = row;
+      }
+    }
+    tokens.push(match[0].toLowerCase());
+  }
+  return JSON.stringify([tokens, indentation]);
+}
+
 export function compareLesson(parser: Parser, code: string, lesson: Exercise, language: CourseLanguage): CheckResult {
+  const result = compareStrictLesson(parser, code, lesson, language);
+  if (result.accepted || code.length > 50000) return result;
+  if (typingTokens(code, language) !== typingTokens(lesson.answer, language)) return result;
+  const example = compareStrictLesson(parser, lesson.answer, lesson, language);
+  return example.accepted ? { ...example, message: 'Capital letters are optional in typing practice.' } : result;
+}
+
+function compareStrictLesson(parser: Parser, code: string, lesson: Exercise, language: CourseLanguage): CheckResult {
   if (code.length > 50000) return { accepted: false, kind: 'unverified', message: 'Keep this exercise under 50,000 characters.' };
   const actual = parser.parse(code); const expected = parser.parse(lesson.answer);
   try {
