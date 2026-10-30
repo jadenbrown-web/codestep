@@ -4341,20 +4341,24 @@ function LanguageComparison({ language, lesson, editorCode, onClose }: { languag
   const dialog = useRef<HTMLDialogElement>(null);
   const [target, setTarget] = useState<Language>(language === "javascript" ? "cpp" : "javascript");
   const [pickedTitle, setPickedTitle] = useState("");
-  const picked = lessons[target].find(item => item.title === pickedTitle);
-  const sourceLesson = picked ? matchingLesson(picked, language) : lesson;
-  const hasEditorCode = !picked && !lesson.referenceOnly && !!editorCode.trim();
+  const sourceLesson = lesson;
+  const hasEditorCode = !lesson.referenceOnly && !!editorCode.trim();
   const sourceCode = hasEditorCode ? editorCode : sourceLesson ? withoutGuideComments(sourceLesson.answer, language) : "No equivalent example in this language.";
   const equivalent = matchingLesson(lesson, target);
   const other = lessons[target].find(item => item.title === pickedTitle) ?? equivalent;
-  useEffect(() => { dialog.current?.showModal(); }, []);
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    dialog.current?.showModal();
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, []);
   useEffect(() => { setPickedTitle(""); }, [lesson]);
   return <dialog ref={dialog} className="language-comparison" onCancel={onClose} aria-labelledby="language-comparison-title">
     <header className="language-comparison-head"><div><small>CODESTEP</small><h2 id="language-comparison-title">Compare code</h2></div><button onClick={onClose} aria-label="Close language comparison">×</button></header>
     <div className="language-comparison-controls">
-      <div className="compare-language-choices"><span>Compare {languageName(language)} with</span><div role="group" aria-label="Comparison language">{(Object.keys(lessons) as Language[]).filter(item => item !== language).map(item => <button key={item} aria-pressed={target === item} onClick={() => { setPickedTitle(pickedTitle && other ? matchingLesson(other, item)?.title ?? "" : ""); setTarget(item); }}>{languageName(item)}</button>)}</div></div>
+      <div className="compare-language-choices"><span className="comparison-source-label">Your language: <strong>{languageName(language)}</strong><small>Choose a language to compare with</small></span><div role="group" aria-label="Comparison language">{(Object.keys(lessons) as Language[]).filter(item => item !== language).map(item => <button key={item} aria-pressed={target === item} onClick={() => { setPickedTitle(pickedTitle && other ? matchingLesson(other, item)?.title ?? "" : ""); setTarget(item); }}>{languageName(item)}</button>)}</div></div>
       <ComparisonExamplePicker key={target} target={target} selected={other} onSelect={setPickedTitle} />
-      <p className="comparison-context">{!equivalent ? "These languages do not have a matching lesson for this topic. Choose an example to compare." : other && other !== equivalent ? sourceLesson ? "Compare the selected topic in both languages." : "This topic has no equivalent example in the current language." : "Compare the same idea in two languages."}</p>
+      <p className="comparison-context">{!equivalent ? "These languages do not have a matching lesson for this topic. Choose an example to compare." : other && other !== equivalent ? "Your current code stays on the left. The selected example is shown on the right." : "Compare the same idea in two languages."}</p>
     </div>
     <div className="language-comparison-columns">
       <section className="comparison-card"><header><h3>{languageName(language)} · {hasEditorCode ? "Your code" : "Lesson example"}</h3><b>{sourceLesson?.title ?? "No matching example"}</b></header><pre aria-label="Current code for comparison"><code><HighlightedCode code={sourceCode} language={language} /></code></pre><div className="comparison-description"><p>{hasEditorCode ? "This is the code currently in your editor." : sourceLesson ? <LessonExplanation lesson={sourceLesson} language={language} /> : "Choose another example to compare this topic."}</p></div></section>

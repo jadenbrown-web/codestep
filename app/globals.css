@@ -304,3 +304,22 @@ html[data-theme="dark"] .explanation-code .syntax-keyword{color:#ee7a92}html[dat
 @media(max-width:850px){.editor-body{--editor-line-height:24px;--editor-padding:20px;font-size:16px;line-height:1.5}}
 .example-picker-panel{max-height:calc(var(--visible-height,100dvh) - 230px);overflow:auto}
 .example-picker-list{max-height:min(340px,calc(var(--visible-height,100dvh) - 310px))}
+
+/* Keep the current language and comparison controls in view. */
+.language-comparison{height:var(--visible-height,100dvh);max-height:var(--visible-height,100dvh);overscroll-behavior:none}
+.language-comparison-head,.language-comparison-controls{position:relative;z-index:2;flex-shrink:0;background:var(--cream)}
+.comparison-source-label strong{color:var(--green-dark)}.comparison-source-label small{display:block;font-size:12px;font-weight:400;margin-top:4px}
+@media(max-width:850px){
+ .language-comparison-columns{grid-template-columns:minmax(0,1fr);grid-template-rows:repeat(2,minmax(0,1fr));grid-auto-rows:auto;overflow:hidden}
+ .language-comparison-columns .comparison-card{grid-template-rows:54px minmax(0,1fr);min-height:0}
+ .language-comparison-columns .comparison-card>header{padding:7px 10px}
+ .language-comparison-columns .comparison-card>pre{font-size:12px;padding:10px}
+ .language-comparison-columns .comparison-description{display:none}
+}
+@media(max-height:500px){.language-comparison{padding:8px}.language-comparison[open]{gap:6px}.language-comparison-head{padding-bottom:4px}.language-comparison-head small{display:none}.language-comparison-head h2{font-size:18px}.language-comparison-head button{height:32px;width:32px}.language-comparison-controls{gap:5px}.comparison-source-label small{display:none}.language-comparison-controls .comparison-context{display:none}.compare-language-choices{gap:4px}.compare-language-choices button{min-height:30px;padding:4px 8px}.example-picker-trigger{min-height:32px;padding:6px 8px}.language-comparison-columns .comparison-card{grid-template-rows:44px minmax(0,1fr)}}
+@media(max-width:850px){
+ .language-comparison-columns .comparison-card{display:block;overflow:auto;overscroll-behavior:contain}
+ .language-comparison-columns .comparison-card>header{position:sticky;top:0;z-index:1;background:var(--cream);min-height:54px}
+ .language-comparison-columns .comparison-card>pre{overflow:visible;min-height:100px}
+ .language-comparison-columns .comparison-description{display:block;overflow:visible}
+}
