@@ -4051,7 +4051,7 @@ const withoutGuideComments = (value: string, language: Language) => {
         return commentIndex < 0 ? line : line.slice(0, commentIndex);
       }).join("\n");
 
-  return uncommented.split("\n").filter((line) => line.trim()).join("\n");
+  return uncommented.replace(/\n[ \t]*\n(?:[ \t]*\n)+/g, "\n\n").trim();
 };
 
 const languageName = (language: Language) => language === "cpp" ? "C++" : language === "python" ? "Python" : language === "javascript" ? "JavaScript" : language === "csharp" ? "C#" : language === "html" ? "HTML" : "CSS";
@@ -4086,7 +4086,8 @@ function alignedGuide(code: string, expected: string) {
   // Stop suggesting a suffix when the learner types a different approach.
   if (matched < actual.length) return "";
   const expectedPosition = matched ? target[matched - 1].index + 1 : 0;
-  const remainingGuide = expected.slice(expectedPosition).replace(/^\s+/, "");
+  const typedWhitespace = matched ? code.length - actual[matched - 1].index - 1 : code.length;
+  const remainingGuide = expected.slice(expectedPosition).replace(/^\s*/, whitespace => whitespace.slice(typedWhitespace));
   return remainingGuide;
 }
 
@@ -4123,7 +4124,7 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
     : language === "css"
     ? /(\/\*[\s\S]*?\*\/|#[0-9a-fA-F]{3,8}\b|#[A-Za-z_]\w*|\b(?:body|p|background-color|color|text-align|font-family|border|border-radius|solid|dotted|center|lightblue|red|blue|tomato)\b|\d+(?:px)?|[{}();:.,])/g
     : language === "python"
-    ? /(#.*|f?"[^"\n]*"|f?'[^'\n]*'|\b(?:def|class|self|return|import|from|if|elif|else|for|in|while|True|False|None|break|and|or|not|is)\b|\b(?:print|input|datetime|random|re|time|set|list|sorted)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|[{}()[\];=.:<>+*%/-])/g
+    ? /(#.*|f?"[^"\n]*"|f?'[^'\n]*'|\b(?:def|class|self|return|import|from|if|elif|else|for|in|while|True|False|None|break|and|or|not|is)\b|\b(?:print|input|datetime|random|re|time|set|list|sorted|__init__)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|[{}()[\];=.:<>+*%/-])/g
     : /(\/\/[^\n]*|\/\^[A-Za-z]+\/[gimsuy]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:def|self|import|from|True|False|None|and|or|not|is|using|static_cast|function|class|constructor|this|let|const|double|bool|out|auto|include|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:Math|Object|process|fs|path|console|Console|Task|Date|DateTime|List|Set|HashSet|Dictionary|Random|std|cout|cin|vector|map|optional|print|input|datetime|random|re|time|Regex|RegexOptions|mt19937|uniform_int_distribution|random_device)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|===|!==|==|!=|&&|\|\||!|>=|<=|\+\+|--|[{}()[\];=.:<>?^/])/g;
   if (language === "cpp") pattern = new RegExp(String.raw`#[ \t]*include[ \t]+(?:<[^>\n]+>|"[^"\n]+")|` + pattern.source, "g");
   const parts: { text: string; kind: string }[] = [];
@@ -4144,6 +4145,7 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
     else if (/^(solid|dotted|center|lightblue|red|blue|tomato|#[0-9a-fA-F]+)$/.test(text)) kind = "string";
     else if (/^#[A-Za-z_]/.test(text)) kind = "function-name";
     else if (/^\d+$/.test(text)) kind = "number";
+    else if (language === "python" && text === "__init__") kind = "function-name";
     else if (/^[A-Za-z_]/.test(text)) kind = /^\s*\(/.test(code.slice(match.index! + text.length)) ? "function-name" : "plain";
     parts.push({ text, kind });
     lastIndex = match.index! + text.length;
@@ -4315,25 +4317,47 @@ function LessonExplanation({ lesson, language }: { lesson: Lesson; language: Lan
   return <>{result}</>;
 }
 
+function ComparisonExamplePicker({ target, selected, onSelect }: { target: Language; selected?: Lesson; onSelect: (title: string) => void }) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const root = useRef<HTMLDivElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
+  const search = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    search.current?.focus();
+    const dismiss = (event: PointerEvent) => { if (!root.current?.contains(event.target as Node)) setOpen(false); };
+    document.addEventListener("pointerdown", dismiss);
+    return () => document.removeEventListener("pointerdown", dismiss);
+  }, [open]);
+  const choices = lessons[target].filter(item => `${item.title} ${item.eyebrow}`.toLowerCase().includes(query.toLowerCase().trim()));
+  return <div className="compare-example-select example-picker" ref={root} onKeyDown={event => { if (event.key === "Escape" && open) { event.preventDefault(); event.stopPropagation(); setOpen(false); trigger.current?.focus(); } }}>
+    <span>Example</span><button ref={trigger} className="example-picker-trigger" aria-label="Comparison example" aria-expanded={open} aria-controls="comparison-examples" onClick={() => { setOpen(!open); setQuery(""); }}>{selected?.title ?? "Choose an example"}<span aria-hidden="true">⌄</span></button>
+    {open && <div className="example-picker-panel" id="comparison-examples"><input ref={search} aria-label="Search comparison examples" placeholder="Search examples…" value={query} onChange={event => setQuery(event.target.value)} /><div className="example-picker-list">{choices.map(item => <button key={item.title} aria-pressed={selected === item} onClick={() => { onSelect(item.title); setOpen(false); trigger.current?.focus(); }}><small>{item.eyebrow}</small><span>{item.title}</span>{selected === item && <b aria-hidden="true">✓</b>}</button>)}{!choices.length && <p>No matching examples.</p>}</div></div>}
+  </div>;
+}
+
 function LanguageComparison({ language, lesson, editorCode, onClose }: { language: Language; lesson: Lesson; editorCode: string; onClose: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [target, setTarget] = useState<Language>(language === "javascript" ? "cpp" : "javascript");
   const [pickedTitle, setPickedTitle] = useState("");
-  const hasEditorCode = !lesson.referenceOnly && !!editorCode.trim();
-  const sourceCode = hasEditorCode ? editorCode : withoutGuideComments(lesson.answer, language);
+  const picked = lessons[target].find(item => item.title === pickedTitle);
+  const sourceLesson = picked ? matchingLesson(picked, language) : lesson;
+  const hasEditorCode = !picked && !lesson.referenceOnly && !!editorCode.trim();
+  const sourceCode = hasEditorCode ? editorCode : sourceLesson ? withoutGuideComments(sourceLesson.answer, language) : "No equivalent example in this language.";
   const equivalent = matchingLesson(lesson, target);
   const other = lessons[target].find(item => item.title === pickedTitle) ?? equivalent;
   useEffect(() => { dialog.current?.showModal(); }, []);
-  useEffect(() => { setPickedTitle(""); }, [lesson, target]);
+  useEffect(() => { setPickedTitle(""); }, [lesson]);
   return <dialog ref={dialog} className="language-comparison" onCancel={onClose} aria-labelledby="language-comparison-title">
     <header className="language-comparison-head"><div><small>CODESTEP</small><h2 id="language-comparison-title">Compare code</h2></div><button onClick={onClose} aria-label="Close language comparison">×</button></header>
     <div className="language-comparison-controls">
-      <div className="compare-language-choices"><span>Compare {languageName(language)} with</span><div role="group" aria-label="Comparison language">{(Object.keys(lessons) as Language[]).filter(item => item !== language).map(item => <button key={item} aria-pressed={target === item} onClick={() => { setTarget(item); setPickedTitle(""); }}>{languageName(item)}</button>)}</div></div>
-      <label className="compare-example-select">Example<select aria-label="Comparison example" value={other?.title ?? ""} onChange={event => setPickedTitle(event.target.value)}><option value="" disabled>Choose an example</option>{lessons[target].map(item => <option key={item.title} value={item.title}>{item.title}</option>)}</select></label>
-      <p className="comparison-context">{!equivalent ? "These languages do not have a matching lesson for this topic. Choose an example to compare." : other && other !== equivalent ? "These examples cover different topics." : "Compare the same idea in two languages."}</p>
+      <div className="compare-language-choices"><span>Compare {languageName(language)} with</span><div role="group" aria-label="Comparison language">{(Object.keys(lessons) as Language[]).filter(item => item !== language).map(item => <button key={item} aria-pressed={target === item} onClick={() => { setPickedTitle(pickedTitle && other ? matchingLesson(other, item)?.title ?? "" : ""); setTarget(item); }}>{languageName(item)}</button>)}</div></div>
+      <ComparisonExamplePicker key={target} target={target} selected={other} onSelect={setPickedTitle} />
+      <p className="comparison-context">{!equivalent ? "These languages do not have a matching lesson for this topic. Choose an example to compare." : other && other !== equivalent ? sourceLesson ? "Compare the selected topic in both languages." : "This topic has no equivalent example in the current language." : "Compare the same idea in two languages."}</p>
     </div>
     <div className="language-comparison-columns">
-      <section className="comparison-card"><header><h3>{languageName(language)} · {hasEditorCode ? "Your code" : "Lesson example"}</h3><b>{lesson.title}</b></header><pre aria-label="Current code for comparison"><code><HighlightedCode code={sourceCode} language={language} /></code></pre><div className="comparison-description"><p>{hasEditorCode ? "This is the code currently in your editor." : <LessonExplanation lesson={lesson} language={language} />}</p></div></section>
+      <section className="comparison-card"><header><h3>{languageName(language)} · {hasEditorCode ? "Your code" : "Lesson example"}</h3><b>{sourceLesson?.title ?? "No matching example"}</b></header><pre aria-label="Current code for comparison"><code><HighlightedCode code={sourceCode} language={language} /></code></pre><div className="comparison-description"><p>{hasEditorCode ? "This is the code currently in your editor." : sourceLesson ? <LessonExplanation lesson={sourceLesson} language={language} /> : "Choose another example to compare this topic."}</p></div></section>
       <section className="comparison-card" key={target + (other?.title ?? "")}><header><h3>{languageName(target)} · Lesson example</h3><b>{other?.title ?? "Choose an example"}</b></header><pre aria-label="Other language code"><code>{other ? <HighlightedCode code={other.answer} language={target} /> : "Choose an example above to view its code."}</code></pre><div className="comparison-description">{other && <><p><LessonExplanation lesson={other} language={target} /></p>{target === "cpp" && <CppSetupGuide lesson={other} />}{other.runHint && <p>{other.runHint}</p>}</>}</div></section>
     </div>
   </dialog>;
@@ -4880,7 +4904,7 @@ export default function Home() {
           </div> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className="file-tab"><span>◆</span> {current!.fileName || challengeFile(language)}<small className="file-language">{languageName(language)}</small></div><div className="panel-actions"><button className="editor-mode-button" onClick={() => changeBlockMode(!blockMode)}>{blockMode ? "Use keyboard" : "Use blocks"}</button><button onClick={() => changeBlockCode(current!.starter || "")} title="Reset code">↻ Reset</button></div></div>
-            {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className={`code-guide ${current!.title === "Check an answer with if and else" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{current!.title === "Check an answer with if and else" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Check an answer with if and else"} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div>}
+            {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="editor-surface" style={{ minHeight: `max(100%, calc(${lineNumbers.length} * var(--editor-line-height) + var(--editor-padding)))`, minWidth: `max(100%, calc(${Math.max(...(code + guideCode).split("\n").map(line => line.length), 1)}ch + 86px))` }}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className={`code-guide ${current!.title === "Check an answer with if and else" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{current!.title === "Check an answer with if and else" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Check an answer with if and else"} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div></div>}
           </div>
           <div className="console-panel">
             <div className="console-bar"><span><i /> {language === "html" || language === "css" ? "RESULT PREVIEW" : "CONSOLE"}</span><button onClick={() => setStatus("idle")}>Clear</button></div>
