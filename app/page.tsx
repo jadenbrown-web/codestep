@@ -4051,8 +4051,20 @@ const withoutGuideComments = (value: string, language: Language) => {
         return commentIndex < 0 ? line : line.slice(0, commentIndex);
       }).join("\n");
 
-  return uncommented.replace(/\n[ \t]*\n(?:[ \t]*\n)+/g, "\n\n").trim();
+  return uncommented.split("\n").map(line => line.trimEnd()).join("\n").replace(/\n[ \t]*\n(?:[ \t]*\n)+/g, "\n\n").trim();
 };
+
+function lessonComment(lesson: Lesson, language: Language) {
+  const text = lesson.note.trim().replace(/^(?:\/\/|#|<!--|\/\*)\s*/, "").replace(/\s*(?:-->|\*\/)$/, "");
+  if (!text) return "";
+  const lines = text.split("\n").map(line => line.replace(/^\s*(?:\/\/|#|\*)\s?/, ""));
+  const comment = language === "html" ? `<!-- ${lines.join(" ").replace(/--/g, "—")} -->` : language === "css" ? `/* ${lines.join(" ").replace(/\*\//g, "* / ")} */` : lines.map(line => `${language === "python" ? "#" : "//"} ${line}`).join("\n");
+  return `${comment}\n\n`;
+}
+
+function lessonExample(lesson: Lesson, language: Language, comments: boolean) {
+  return (comments ? lessonComment(lesson, language) : "") + withoutGuideComments(lesson.answer, language);
+}
 
 const languageName = (language: Language) => language === "cpp" ? "C++" : language === "python" ? "Python" : language === "javascript" ? "JavaScript" : language === "csharp" ? "C#" : language === "html" ? "HTML" : "CSS";
 const languageBadge = (language: Language) => language === "cpp" ? "C++" : language === "python" ? "PY" : language === "javascript" ? "JS" : language === "csharp" ? "C#" : language === "html" ? "HTML" : "CSS";
@@ -4195,7 +4207,7 @@ function LearningCode({ code, starter, language, caretIndex, focusConditions }: 
   </>;
 }
 
-function SettingsPanel({ open, themeMode, showGuide, colourTyping, blockMode, onBlockModeChange, onThemeChange, onGuideChange, onColourTypingChange, onClose }: { open: boolean; themeMode: ThemeMode; showGuide: boolean; colourTyping: boolean; blockMode: boolean; onBlockModeChange: (enabled: boolean) => void; onThemeChange: (mode: ThemeMode) => void; onGuideChange: (show: boolean) => void; onColourTypingChange: (show: boolean) => void; onClose: () => void }) {
+function SettingsPanel({ open, themeMode, showGuide, showComments, onCommentsChange, colourTyping, blockMode, onBlockModeChange, onThemeChange, onGuideChange, onColourTypingChange, onClose }: { open: boolean; themeMode: ThemeMode; showGuide: boolean; showComments: boolean; onCommentsChange: (show: boolean) => void; colourTyping: boolean; blockMode: boolean; onBlockModeChange: (enabled: boolean) => void; onThemeChange: (mode: ThemeMode) => void; onGuideChange: (show: boolean) => void; onColourTypingChange: (show: boolean) => void; onClose: () => void }) {
   const close = useRef(onClose);
   close.current = onClose;
   useEffect(() => {
@@ -4224,7 +4236,8 @@ function SettingsPanel({ open, themeMode, showGuide, colourTyping, blockMode, on
       <div className="settings-group guide-setting"><div><b>Code blocks</b><span>Tap or drag ready-made lines into your code. Turn off to type instead. Your choice is saved on this device.</span></div><button aria-label="Code blocks" className={`switch ${blockMode ? "on" : ""}`} role="switch" aria-checked={blockMode} onClick={() => onBlockModeChange(!blockMode)}><i /></button></div>
       <div className="settings-group guide-setting"><div><b>Code guide</b><span>Show a faint, colour-coded copy of the expected answer in the editor.</span></div><button aria-label="Code guide" className={`switch ${showGuide ? "on" : ""}`} role="switch" aria-checked={showGuide} onClick={() => onGuideChange(!showGuide)}><i /></button></div>
       <div className="settings-group guide-setting"><div><b>Colour typed code</b><span>Give your typed code the same syntax colours as the ghost guide.</span></div><button aria-label="Colour typed code" className={`switch ${colourTyping ? "on" : ""}`} role="switch" aria-checked={colourTyping} onClick={() => onColourTypingChange(!colourTyping)}><i /></button></div>
-      <p className="settings-foot">The guide shows only the code you need to type. Lesson comments stay in the explanation panel.</p>
+      <div className="settings-group guide-setting"><div><b>Lesson comments</b><span>Add the lesson hint as a comment at the top of your code. It is added automatically, so you do not need to type it.</span></div><button aria-label="Lesson comments" className={`switch ${showComments ? "on" : ""}`} role="switch" aria-checked={showComments} onClick={() => onCommentsChange(!showComments)}><i /></button></div>
+      <p className="settings-foot">Comments explain the code and do not change the result. Your choice is saved on this device.</p>
     </section>
   </div>;
 }
@@ -4344,13 +4357,15 @@ function ComparisonExamplePicker({ target, selected, onSelect }: { target: Langu
   </div>;
 }
 
-function LanguageComparison({ language, lesson, editorCode, onClose }: { language: Language; lesson: Lesson; editorCode: string; onClose: () => void }) {
+function LanguageComparison({ language, lesson, editorCode, showComments, onClose }: { language: Language; lesson: Lesson; editorCode: string; showComments: boolean; onClose: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [target, setTarget] = useState<Language>(language === "javascript" ? "cpp" : "javascript");
   const [pickedTitle, setPickedTitle] = useState("");
   const sourceLesson = lesson;
-  const hasEditorCode = !lesson.referenceOnly && !!editorCode.trim();
-  const sourceCode = hasEditorCode ? editorCode : sourceLesson ? withoutGuideComments(sourceLesson.answer, language) : "No equivalent example in this language.";
+  const prefix = lessonComment(lesson, language);
+  const editedBody = editorCode.startsWith(prefix) ? editorCode.slice(prefix.length) : editorCode;
+  const hasEditorCode = !lesson.referenceOnly && !!editedBody.trim();
+  const sourceCode = hasEditorCode ? editorCode : sourceLesson ? lessonExample(sourceLesson, language, showComments) : "No equivalent example in this language.";
   const equivalent = matchingLesson(lesson, target);
   const other = lessons[target].find(item => item.title === pickedTitle) ?? equivalent;
   useEffect(() => {
@@ -4369,7 +4384,7 @@ function LanguageComparison({ language, lesson, editorCode, onClose }: { languag
     </div>
     <div className="language-comparison-columns">
       <section className={`comparison-card tone-${lessonTone(lesson)}`}><header><h3>{languageName(language)} · {hasEditorCode ? "Your code" : "Lesson example"}</h3><small className="comparison-topic">{lesson.eyebrow.split("·").pop()?.trim()}</small><b>{sourceLesson?.title ?? "No matching example"}</b></header><pre aria-label="Current code for comparison"><code><HighlightedCode code={sourceCode} language={language} /></code></pre><div className="comparison-description"><p>{hasEditorCode ? "This is the code currently in your editor." : sourceLesson ? <LessonExplanation lesson={sourceLesson} language={language} /> : "Choose another example to compare this topic."}</p></div></section>
-      <section className={`comparison-card ${other ? `tone-${lessonTone(other)}` : ""}`} key={target + (other?.title ?? "")}><header><h3>{languageName(target)} · Lesson example</h3>{other && <small className="comparison-topic">{other.eyebrow.split("·").pop()?.trim()}</small>}<b>{other?.title ?? "Choose an example"}</b></header><pre aria-label="Other language code"><code>{other ? <HighlightedCode code={other.answer} language={target} /> : "Choose an example above to view its code."}</code></pre><div className="comparison-description">{other && <><p><LessonExplanation lesson={other} language={target} /></p>{target === "cpp" && <CppSetupGuide lesson={other} />}{other.runHint && <p>{other.runHint}</p>}</>}</div></section>
+      <section className={`comparison-card ${other ? `tone-${lessonTone(other)}` : ""}`} key={target + (other?.title ?? "")}><header><h3>{languageName(target)} · Lesson example</h3>{other && <small className="comparison-topic">{other.eyebrow.split("·").pop()?.trim()}</small>}<b>{other?.title ?? "Choose an example"}</b></header><pre aria-label="Other language code"><code>{other ? <HighlightedCode code={lessonExample(other, target, showComments)} language={target} /> : "Choose an example above to view its code."}</code></pre><div className="comparison-description">{other && <><p><LessonExplanation lesson={other} language={target} /></p>{target === "cpp" && <CppSetupGuide lesson={other} />}{other.runHint && <p>{other.runHint}</p>}</>}</div></section>
     </div>
   </dialog>;
 }
@@ -4406,6 +4421,8 @@ export default function Home() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [themeMode, setThemeMode] = useState<ThemeMode>("system");
   const [showGuide, setShowGuide] = useState(true);
+  const [showComments, setShowComments] = useState(false);
+  const insertedComment = useRef("");
   const [colourTyping, setColourTyping] = useState(true);
   const [blockMode, setBlockMode] = useState(false);
   const [checkerVersion, setCheckerVersion] = useState(0);
@@ -4462,7 +4479,21 @@ export default function Home() {
   const current = language ? lessons[language][index] : null;
   const ghostSource = current ? withoutGuideComments(current.answer, language ?? "javascript") : "";
   const visibleGhost = ghostSource.slice(0, ghostLength);
-  const guideCode = alignedGuide(code, visibleGhost);
+  const commentPrefix = current && language && showComments ? lessonComment(current, language) : "";
+  const practiceCode = insertedComment.current && code.startsWith(insertedComment.current) ? code.slice(insertedComment.current.length) : code;
+  const guideCode = alignedGuide(practiceCode, visibleGhost);
+  function changeComments(enabled: boolean) {
+    const oldPrefix = insertedComment.current;
+    const newPrefix = current && language && enabled ? lessonComment(current, language) : "";
+    setCode(previous => {
+      const body = oldPrefix && previous.startsWith(oldPrefix) ? previous.slice(oldPrefix.length) : previous;
+      return newPrefix + body;
+    });
+    insertedComment.current = newPrefix;
+    setShowComments(enabled);
+    setStatus("idle");
+    localStorage.setItem("codestep-lesson-comments", String(enabled));
+  }
   const breakdown = current?.parts;
   const progress = language ? Math.round((index / lessons[language].length) * 100) : 0;
   const lessonCheck = useMemo(() => {
@@ -4477,8 +4508,10 @@ export default function Home() {
 
   useEffect(() => {
     if (current) {
-      setCode(current.starter || "");
-      setCaretIndex((current.starter || "").length);
+      const prefix = showComments && language ? lessonComment(current, language) : "";
+      insertedComment.current = prefix;
+      setCode(prefix + (current.starter || ""));
+      setCaretIndex((prefix + (current.starter || "")).length);
       setStatus("idle");
       setTypedOutput("");
     }
@@ -4523,6 +4556,7 @@ export default function Home() {
   useEffect(() => {
     const savedTheme = localStorage.getItem("codestep-theme") as ThemeMode | null;
     const savedGuide = localStorage.getItem("codestep-code-guide");
+    setShowComments(localStorage.getItem("codestep-lesson-comments") === "true");
     const savedColourTyping = localStorage.getItem("codestep-colour-typing");
     if (savedTheme && ["light", "dark", "system"].includes(savedTheme)) setThemeMode(savedTheme);
     if (savedGuide !== null) setShowGuide(savedGuide === "true");
@@ -4565,7 +4599,7 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, [language, homeDemoLanguage]);
 
-  const lineNumbers = useMemo(() => Array.from({ length: Math.max(8, code.split("\n").length, showGuide ? ghostSource.split("\n").length : 0) }, (_, i) => i + 1), [code, ghostSource, showGuide]);
+  const lineNumbers = useMemo(() => Array.from({ length: Math.max(8, code.split("\n").length, showGuide ? (commentPrefix + ghostSource).split("\n").length : 0) }, (_, i) => i + 1), [code, ghostSource, showGuide, commentPrefix]);
 
   function openCourse(next: Language) {
     setLanguage(next);
@@ -4687,14 +4721,14 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <SettingsPanel open={settingsOpen} themeMode={themeMode} showGuide={showGuide} colourTyping={colourTyping} blockMode={blockMode} onBlockModeChange={changeBlockMode} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onColourTypingChange={setColourTyping} onClose={() => setSettingsOpen(false)} />
+      <SettingsPanel open={settingsOpen} themeMode={themeMode} showGuide={showGuide} showComments={showComments} onCommentsChange={changeComments} colourTyping={colourTyping} blockMode={blockMode} onBlockModeChange={changeBlockMode} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onColourTypingChange={setColourTyping} onClose={() => setSettingsOpen(false)} />
       </>
     );
   }
 
   return (
     <>
-    {comparisonOpen && <LanguageComparison language={language} lesson={current!} editorCode={code} onClose={() => setComparisonOpen(false)} />}
+    {comparisonOpen && <LanguageComparison language={language} lesson={current!} editorCode={code} showComments={showComments} onClose={() => setComparisonOpen(false)} />}
     <main className={`lesson-shell mobile-${mobilePane}`}>
       <header className="lesson-nav">
         <div className="lesson-brand-group"><button className="app-back" onClick={() => index ? setIndex(index - 1) : setLanguage(null)} aria-label="Back">← Back</button><button className="drawer-toggle" onClick={() => setNavOpen((open) => !open)} aria-label={navOpen ? "Close lesson list" : "Open lesson list"} aria-expanded={navOpen}><span>☰</span></button><button className="brand brand-button" onClick={() => setLanguage(null)}><span className="brand-mark">&gt;_</span> Code<span>Step</span></button></div>
@@ -4835,7 +4869,6 @@ export default function Home() {
             <div><code>style=&quot;...&quot;</code><p><b>Inline style</b><span>Adds CSS directly to one element, such as a colour or centred alignment.</span></p></div>
             <div><code>&lt;a href=&quot;...&quot;&gt;</code><p><b>Link</b><span>Creates clickable text and stores its destination in href.</span></p></div>
           </div> : <>
-            <div className="comment-card"><div className="comment-label">READ THE COMMENT</div><code>{current!.note}</code></div>
             <div className="tip">{blockMode ? "Tap or drag lesson blocks into your code, then choose Check code." : language === "python" ? "Type over the guide, then press Enter to check it. Python uses indentation for blocks; Tab inserts four spaces. Equivalent supported code is accepted." : "Type over the guide in the editor, then press Enter to check it. Capital letters are optional in typing practice."}</div>
           </>}
         </aside>
@@ -4913,8 +4946,8 @@ export default function Home() {
             <button className="reference-next" onClick={nextLesson}>Continue to the next lesson →</button>
           </div> : <>
           <div className="editor-panel">
-            <div className="panel-bar"><div className="file-tab"><span>◆</span> {current!.fileName || challengeFile(language)}<small className="file-language">{languageName(language)}</small></div><div className="panel-actions"><button className="editor-mode-button" onClick={() => changeBlockMode(!blockMode)}>{blockMode ? "Use keyboard" : "Use blocks"}</button><button onClick={() => changeBlockCode(current!.starter || "")} title="Reset code">↻ Reset</button></div></div>
-            {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="editor-surface" style={{ minHeight: `max(100%, calc(${lineNumbers.length} * var(--editor-line-height) + var(--editor-padding)))`, minWidth: `max(100%, calc(${Math.max(...(code + guideCode).split("\n").map(line => line.length), 1)}ch + 86px))` }}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className={`code-guide ${current!.title === "Check an answer with if and else" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{current!.title === "Check an answer with if and else" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Check an answer with if and else"} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div></div>}
+            <div className="panel-bar"><div className="file-tab"><span>◆</span> {current!.fileName || challengeFile(language)}<small className="file-language">{languageName(language)}</small></div><div className="panel-actions"><button className="editor-mode-button" onClick={() => changeBlockMode(!blockMode)}>{blockMode ? "Use keyboard" : "Use blocks"}</button><button onClick={() => changeBlockCode(commentPrefix + (current!.starter || ""))} title="Reset code">↻ Reset</button></div></div>
+            {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={commentPrefix + ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="editor-surface" style={{ minHeight: `max(100%, calc(${lineNumbers.length} * var(--editor-line-height) + var(--editor-padding)))`, minWidth: `max(100%, calc(${Math.max(...(code + guideCode).split("\n").map(line => line.length), 1)}ch + 86px))` }}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className={`code-guide ${current!.title === "Check an answer with if and else" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{current!.title === "Check an answer with if and else" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Check an answer with if and else"} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" wrap="off" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div></div>}
           </div>
           <div className="console-panel">
             <div className="console-bar"><span><i /> {language === "html" || language === "css" ? "RESULT PREVIEW" : "CONSOLE"}</span><button onClick={() => setStatus("idle")}>Clear</button></div>
@@ -4926,13 +4959,13 @@ export default function Home() {
           </div>
           <div className={`feedback ${status}`}>
             <div>{status === "correct" ? <><span className="feedback-icon">✓</span><p><b>That’s correct!</b><small>{blockMode ? "Choose the next lesson when you’re ready." : "Press Enter again or choose the next lesson."}</small></p></> : status === "wrong" ? <><span className="feedback-icon">!</span><p><b>{lessonCheck?.kind === "syntax" ? "Check the syntax" : "Not verified yet"}</b><small>{lessonCheck?.kind === "syntax" ? "Review the parser’s message above." : "Check the lesson requirements. This checker may not recognise every valid approach."}</small></p></> : <p><b>Ready to run?</b><small>{blockMode ? "Arrange your blocks, then choose Check code." : "Use your own approach, then choose Check code."}</small></p>}</div>
-            {status === "correct" ? <button onClick={nextLesson}>{index === lessons[language].length - 1 ? "Finish path" : "Next lesson"} →</button> : <button onClick={checkCode} disabled={!code.trim() || checking}>{checking ? "Checking…" : "▶ Check code"}</button>}
+            {status === "correct" ? <button onClick={nextLesson}>{index === lessons[language].length - 1 ? "Finish path" : "Next lesson"} →</button> : <button onClick={checkCode} disabled={!practiceCode.trim() || checking}>{checking ? "Checking…" : "▶ Check code"}</button>}
           </div>
           </>}
         </section>
       </div>
     </main>
-    <SettingsPanel open={settingsOpen} themeMode={themeMode} showGuide={showGuide} colourTyping={colourTyping} blockMode={blockMode} onBlockModeChange={changeBlockMode} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onColourTypingChange={setColourTyping} onClose={() => setSettingsOpen(false)} />
+    <SettingsPanel open={settingsOpen} themeMode={themeMode} showGuide={showGuide} showComments={showComments} onCommentsChange={changeComments} colourTyping={colourTyping} blockMode={blockMode} onBlockModeChange={changeBlockMode} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onColourTypingChange={setColourTyping} onClose={() => setSettingsOpen(false)} />
     </>
   );
 }

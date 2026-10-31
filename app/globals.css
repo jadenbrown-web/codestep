@@ -368,3 +368,7 @@ html[data-theme="dark"] .example-picker-list button:hover,html[data-theme="dark"
 html[data-theme="dark"] .explanation-code .syntax-header,html[data-theme="dark"] .explanation-code .syntax-attribute{color:#71cbea}html[data-theme="dark"] .explanation-code .syntax-function-name{color:#f2c75a}
 html[data-theme="dark"] .comparison-card>header{background:color-mix(in srgb,var(--tone-dark) 65%,var(--cream))}html[data-theme="dark"] .comparison-topic{background:var(--tone-dark);color:var(--tone-soft)}html[data-theme="dark"] .example-picker-trigger[class*="tone-"]{background:color-mix(in srgb,var(--tone-dark) 65%,var(--cream))}
 @media(max-width:850px){.lesson-brand-group{gap:7px}.app-back{min-width:58px;padding:6px 8px;font-size:12px;min-height:34px}.language-comparison-head,.settings-head{gap:12px}.language-comparison-columns .comparison-card>header{min-height:86px;background:color-mix(in srgb,var(--tone-soft) 22%,var(--cream))}html[data-theme="dark"] .language-comparison-columns .comparison-card>header{background:color-mix(in srgb,var(--tone-dark) 65%,var(--cream))}}
+
+/* Keep line breaks and indentation identical in every syntax-coloured example. */
+pre code,pre code span{white-space:inherit;font-family:inherit;font-size:inherit;line-height:inherit;letter-spacing:inherit;tab-size:inherit}
+.editor-body textarea,.editor-body .code-guide,.editor-body .typed-code-layer{white-space:pre;tab-size:4;font-variant-ligatures:none}
