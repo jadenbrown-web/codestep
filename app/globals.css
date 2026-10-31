@@ -427,3 +427,11 @@ html[data-theme] .theme-options button{background:var(--ui-surface);color:var(--
 html[data-theme] .theme-options button:hover{background:var(--ui-hover)}
 html[data-theme] :is(.theme-options button.selected,.compare-language-choices .language-choice[aria-pressed="true"],.mobile-pane-tabs button[aria-pressed="true"]){background:color-mix(in srgb,var(--green-dark) 12%,var(--ui-surface));border-color:var(--green-dark);color:var(--ui-text);box-shadow:none}
 .app-header.menu-header{padding:12px;border-radius:var(--control-radius)}
+
+/* Keep the two main lesson actions above the scrolling panes. */
+.lesson-tools{display:flex;flex:none;align-items:center;justify-content:space-between;gap:16px;min-height:60px;padding:8px 20px;background:var(--ui-surface);border-bottom:1px solid var(--ui-border);z-index:3}
+.lesson-tools .compare-language-button{margin:0;min-height:40px}
+.lesson-copy-tools{display:flex;align-items:center;gap:14px;min-width:0}.lesson-copy-tools>span{font-size:12px;color:var(--ui-muted)}
+.lesson-tools .copy-code-button{min-height:40px;padding:9px 16px;background:var(--green-dark);border:1px solid var(--green-dark);border-radius:var(--control-radius);color:var(--cream);font:700 14px/1.25 var(--sans)}
+.lesson-tools .copy-code-button:hover{filter:brightness(.93)}
+@media(max-width:850px){.lesson-tools{padding:7px 10px;gap:10px;min-height:52px}.lesson-copy-tools>span{display:none}.lesson-tools .compare-language-button{font-size:12px;padding:8px 10px;min-width:0;min-height:36px;text-align:left}.lesson-tools .copy-code-button{font-size:12px;min-height:36px;padding:8px 12px}.editor-panel .panel-bar{height:auto;flex-wrap:wrap}.editor-panel .panel-actions{flex-wrap:wrap;padding:5px 8px;gap:6px}}

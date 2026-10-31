@@ -4384,7 +4384,7 @@ async function copyCodeText(value: string) {
   return copied;
 }
 
-function CopyCodeButton({ code, label }: { code: string; label: string }) {
+function CopyCodeButton({ code, label, text = "Copy code" }: { code: string; label: string; text?: string }) {
   const [status, setStatus] = useState<"idle" | "copied" | "failed">("idle");
   useEffect(() => { setStatus("idle"); }, [code]);
   useEffect(() => {
@@ -4392,7 +4392,7 @@ function CopyCodeButton({ code, label }: { code: string; label: string }) {
     const timer = setTimeout(() => setStatus("idle"), 2400);
     return () => clearTimeout(timer);
   }, [status]);
-  return <span className="copy-code-control"><button className="copy-code-button" title={status === "failed" ? "Select the code and copy it manually." : "Copy code with its indentation and line breaks"} aria-label={`Copy ${label} code`} disabled={!code.trim()} onClick={async () => setStatus(await copyCodeText(code) ? "copied" : "failed")}>{status === "copied" ? "✓ Copied" : status === "failed" ? "Copy blocked" : "Copy code"}</button><span className="copy-code-status" role="status">{status === "copied" ? "Code copied." : status === "failed" ? "Copy was blocked. Select the code and copy it manually." : ""}</span></span>;
+  return <span className="copy-code-control"><button className="copy-code-button" title={status === "failed" ? "Select the code and copy it manually." : "Copy code with its indentation and line breaks"} aria-label={`Copy ${label} code`} disabled={!code.trim()} onClick={async () => setStatus(await copyCodeText(code) ? "copied" : "failed")}>{status === "copied" ? "✓ Copied" : status === "failed" ? "Copy blocked" : text}</button><span className="copy-code-status" role="status">{status === "copied" ? "Code copied." : status === "failed" ? "Copy was blocked. Select the code and copy it manually." : ""}</span></span>;
 }
 
 function LanguageComparison({ language, lesson, editorCode, showComments, onClose }: { language: Language; lesson: Lesson; editorCode: string; showComments: boolean; onClose: () => void }) {
@@ -4773,6 +4773,10 @@ export default function Home() {
         <div className="lesson-progress"><div><span>{languageName(language)} path</span><b>{index + 1} / {lessons[language].length}</b></div><div className="progress-track"><i style={{width: `${Math.max(progress, 4)}%`}} /></div></div>
         <div className="lesson-actions"><button className="settings-button" onClick={() => setSettingsOpen(true)}>⚙ <span>Settings</span></button></div>
       </header>
+      <nav className="lesson-tools" aria-label="Lesson tools">
+        <button className="compare-language-button" onClick={() => setComparisonOpen(true)}>Compare with another language</button>
+        <div className="lesson-copy-tools"><span>Full example · {current!.fileName || challengeFile(language)}</span><CopyCodeButton code={lessonExample(current!, language, showComments)} label="full lesson example for VS Code" /></div>
+      </nav>
       <nav className="mobile-pane-tabs" aria-label="Lesson view"><button aria-pressed={mobilePane === "lesson"} onClick={() => setMobilePane("lesson")}>Lesson</button><button aria-pressed={mobilePane === "practice"} onClick={() => setMobilePane("practice")}>Practice</button></nav>
       <div className={`lesson-layout ${navOpen ? "drawer-open" : "drawer-closed"}`}>
         <aside className="lesson-drawer" aria-label="Lesson list">
@@ -4792,7 +4796,6 @@ export default function Home() {
           <div className="lesson-number">{String(index + 1).padStart(2, "0")} · {current!.eyebrow.split("·")[1]}</div>
           <h1>{current!.title}</h1>
           <p><LessonExplanation lesson={current!} language={language} /></p>
-          <button className="compare-language-button" onClick={() => setComparisonOpen(true)}>Compare with another language</button>
           {current!.eyebrow.includes("Files and paths") && <details className="symbol-guide" open>
             <summary>Filename, file contents, and image text</summary>
             <p><b>Filename:</b> chopin-nocturne.png is the name stored in the folder listing. The program can list or compare it without opening the picture.</p>
@@ -4984,7 +4987,7 @@ export default function Home() {
             <button className="reference-next" onClick={nextLesson}>Continue to the next lesson →</button>
           </div> : <>
           <div className="editor-panel">
-            <div className="panel-bar"><div className="file-tab"><span>◆</span> {current!.fileName || challengeFile(language)}<small className="file-language">{languageName(language)}</small></div><div className="panel-actions"><CopyCodeButton code={practiceCode.trim() ? code : commentPrefix + ghostSource} label="editor" /><button className="editor-mode-button" onClick={() => changeBlockMode(!blockMode)}>{blockMode ? "Use keyboard" : "Use blocks"}</button><button onClick={() => changeBlockCode(commentPrefix + (current!.starter || ""))} title="Reset code">↻ Reset</button></div></div>
+            <div className="panel-bar"><div className="file-tab"><span>◆</span> {current!.fileName || challengeFile(language)}<small className="file-language">{languageName(language)}</small></div><div className="panel-actions"><CopyCodeButton code={practiceCode.trim() ? code : ""} label="my editor" text="Copy my code" /><button className="editor-mode-button" onClick={() => changeBlockMode(!blockMode)}>{blockMode ? "Use keyboard" : "Use blocks"}</button><button onClick={() => changeBlockCode(commentPrefix + (current!.starter || ""))} title="Reset code">↻ Reset</button></div></div>
             {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={commentPrefix + ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="editor-surface" style={{ minHeight: `max(100%, calc(${lineNumbers.length} * var(--editor-line-height) + var(--editor-padding)))`, minWidth: `max(100%, calc(${Math.max(...(code + guideCode).split("\n").map(line => line.length), 1)}ch + 86px))` }}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className={`code-guide ${current!.title === "Check an answer with if and else" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{current!.title === "Check an answer with if and else" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Check an answer with if and else"} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" wrap="off" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div></div>}
           </div>
           <div className="console-panel">
