@@ -323,3 +323,28 @@ html[data-theme="dark"] .explanation-code .syntax-keyword{color:#ee7a92}html[dat
  .language-comparison-columns .comparison-card>pre{overflow:visible;min-height:100px}
  .language-comparison-columns .comparison-description{display:block;overflow:visible}
 }
+
+/* Comparison examples use the same numbered topic colours as the lesson list. */
+.example-picker-list button.tone-rose{--tone-soft:#f9d5e1;--tone-strong:#d85782;--tone-ink:#741d3d;--tone-dark:#4b2634}
+.example-picker-list button.tone-blue{--tone-soft:#cde8f6;--tone-strong:#3b92bd;--tone-ink:#075276;--tone-dark:#1e3b49}
+.example-picker-list button.tone-gold{--tone-soft:#f7e3ad;--tone-strong:#d9a52e;--tone-ink:#624700;--tone-dark:#493d20}
+.example-picker-list button.tone-cyan{--tone-soft:#c8ece9;--tone-strong:#34a9a0;--tone-ink:#075b55;--tone-dark:#1c4541}
+.example-picker-list button.tone-violet{--tone-soft:#e3d9f8;--tone-strong:#8566c9;--tone-ink:#4c3188;--tone-dark:#372d51}
+.example-picker-list button.tone-green{--tone-soft:#d1eddc;--tone-strong:#46a874;--tone-ink:#155b3a;--tone-dark:#234534}
+.example-picker-list button.tone-orange{--tone-soft:#f8dcc8;--tone-strong:#d87c3f;--tone-ink:#743610;--tone-dark:#4b3022}
+
+.example-picker-panel{padding:12px;border-radius:14px;box-shadow:0 16px 44px #17251e28}
+.example-picker-panel input{border-radius:9px;min-height:44px;font-weight:500}
+.example-picker-list{padding:4px 3px;scrollbar-width:thin}
+.example-picker-list button{display:grid;grid-template-columns:40px minmax(0,1fr) 18px;align-items:center;gap:12px;padding:12px 10px;margin:5px 0;border:1px solid transparent;border-left:4px solid transparent;border-radius:10px;min-height:84px}
+.example-picker-list .example-number{display:grid;place-items:center;width:38px;height:38px;background:var(--tone-soft);color:var(--tone-ink);border:1px solid var(--tone-strong);border-left-width:5px;border-radius:9px;font:800 14px var(--mono);box-shadow:inset 0 1px #ffffff88}
+.example-picker-list .example-label{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0}
+.example-picker-list .example-label small{display:inline-block;width:fit-content;max-width:100%;padding:3px 7px;border-radius:5px;background:var(--tone-soft);color:var(--tone-ink);font:800 10px/1.4 var(--mono);letter-spacing:.4px;text-transform:uppercase}
+.example-picker-list .example-label strong{color:var(--ink);font-size:14px;font-weight:750;line-height:1.4;text-align:left}
+.example-picker-list .example-choice-mark{font-size:20px;font-weight:700;color:var(--tone-strong);text-align:center}
+.example-picker-list button:hover,.example-picker-list button:focus-visible{background:color-mix(in srgb,var(--tone-soft) 22%,var(--cream));border-color:color-mix(in srgb,var(--tone-strong) 30%,transparent)}
+.example-picker-list button[aria-pressed="true"]{background:color-mix(in srgb,var(--tone-soft) 38%,var(--cream));border-color:color-mix(in srgb,var(--tone-strong) 40%,transparent);border-left-color:var(--tone-strong)}
+.example-picker-list button[aria-pressed="true"] .example-number{box-shadow:0 3px 9px color-mix(in srgb,var(--tone-strong) 24%,transparent)}
+html[data-theme="dark"] .example-picker-list .example-label small{background:var(--tone-dark);color:var(--tone-soft)}
+html[data-theme="dark"] .example-picker-list button:hover,html[data-theme="dark"] .example-picker-list button:focus-visible,html[data-theme="dark"] .example-picker-list button[aria-pressed="true"]{background:color-mix(in srgb,var(--tone-dark) 65%,var(--cream))}
+@media(max-width:850px){.example-picker-panel{padding:9px}.example-picker-list button{gap:9px;padding:10px 7px;grid-template-columns:34px minmax(0,1fr) 14px;min-height:76px}.example-picker-list .example-number{width:32px;height:34px;font-size:12px}.example-picker-list .example-label strong{font-size:13px}.example-picker-list .example-label small{font-size:9px}}
