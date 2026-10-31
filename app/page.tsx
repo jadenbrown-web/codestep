@@ -4062,8 +4062,46 @@ function lessonComment(lesson: Lesson, language: Language) {
   return `${comment}\n\n`;
 }
 
+function annotatedLessonCode(lesson: Lesson, language: Language) {
+  const source = withoutGuideComments(lesson.answer, language);
+  const used = new Set<string>();
+  const compact = (text: string) => text.replace(/\s+/g, "");
+  const headerHelp: Record<string, string> = { iostream: "Allows printing and keyboard input.", string: "Allows us to store text.", vector: "Provides a list that can grow.", map: "Provides a dictionary of keys and values.", set: "Provides a collection of unique values.", chrono: "Provides clocks and time durations.", thread: "Provides threads and waiting.", filesystem: "Provides tools for files, folders, and paths.", random: "Provides random-number generators.", regex: "Provides tools for matching text patterns." };
+  const output: string[] = [];
+  let script = false, style = false;
+  for (const line of source.split("\n")) {
+    const trimmed = line.trim();
+    const indent = line.match(/^[ \t]*/)?.[0] ?? "";
+    const syntax: Language = language === "html" && script && !/^<\/script/i.test(trimmed) ? "javascript" : language === "html" && style && !/^<\/style/i.test(trimmed) ? "css" : language;
+    const header = language === "cpp" ? trimmed.match(/^#include <([^>]+)>$/) : null;
+    if (header) { output.push(`${line} // ${headerHelp[header[1]] ?? "Makes this library's tools available to the program."}`); continue; }
+    const matching = (lesson.parts ?? []).filter(part => !used.has(part.code) && compact(part.code).length > 2 && compact(line).includes(compact(part.code)));
+    let help = matching.map(part => { used.add(part.code); return part.meaning; }).join(" ");
+    if (!help && syntax === "cpp" && /^int main\(/.test(trimmed)) help = "Start the program here.";
+    if (!help && /^(?:std::cout|Console\.WriteLine|console\.log|print\()/.test(trimmed)) help = /[?]|Enter your|Search:/.test(trimmed) ? "Display the question for the user." : "Print the result.";
+    if (!help && syntax === "cpp" && /^std::string\s+\w+;$/.test(trimmed)) help = "Create a text variable to store the user's input.";
+    if (/std::getline\(std::cin/.test(trimmed)) help = "Read the whole line the user types, including spaces, until they press Enter.";
+    if (lesson.title === "Ask for a name in VS Code" && syntax === "cpp" && /^std::cout/.test(trimmed) && trimmed.includes("Hello")) help = "Print a greeting using the name the user entered.";
+    if (!help && /^return 0;/.test(trimmed)) help = "End the program successfully.";
+    if (language === "html" && (script || style) && !/^<\/(?:script|style)/i.test(trimmed)) help = "";
+    if (language === "html" && /^<script\b/i.test(trimmed)) help = "Run the JavaScript instructions in this script block.";
+    if (language === "html" && /^<style\b/i.test(trimmed)) help = "Apply the CSS rules in this style block.";
+    if (help && trimmed) {
+      if (output.length && output[output.length - 1].trim() && !/[{:>]$/.test(output[output.length - 1].trim())) output.push("");
+      const words = help.replace(/-->/g, "—>").replace(/\*\//g, "* / ").split(/\s+/);
+      const wrapped: string[] = []; let row = "";
+      for (const word of words) { if (row && row.length + word.length > 72) { wrapped.push(row); row = ""; } row += (row ? " " : "") + word; }
+      if (row) wrapped.push(row);
+      for (const text of wrapped) output.push(indent + (syntax === "html" ? `<!-- ${text} -->` : syntax === "css" ? `/* ${text} */` : `${syntax === "python" ? "#" : "//"} ${text}`));
+    }
+    output.push(line);
+    if (language === "html") { if (/<script\b/i.test(line)) script = true; if (/<\/script/i.test(line)) script = false; if (/<style\b/i.test(line)) style = true; if (/<\/style/i.test(line)) style = false; }
+  }
+  return output.join("\n");
+}
+
 function lessonExample(lesson: Lesson, language: Language, comments: boolean) {
-  return (comments ? lessonComment(lesson, language) : "") + withoutGuideComments(lesson.answer, language);
+  return comments ? lessonComment(lesson, language) + annotatedLessonCode(lesson, language) : withoutGuideComments(lesson.answer, language);
 }
 
 const languageName = (language: Language) => language === "cpp" ? "C++" : language === "python" ? "Python" : language === "javascript" ? "JavaScript" : language === "csharp" ? "C#" : language === "html" ? "HTML" : "CSS";
@@ -4072,27 +4110,31 @@ const challengeFile = (language: Language) => language === "cpp" ? "main.cpp" : 
 
 type DiagnosticPart = { text: string; help: string; kind: "type" | "message" | "token" | "location" };
 
-function significantCharacters(value: string) {
+function significantCharacters(value: string, language: Language) {
   const characters: { character: string; index: number }[] = [];
-  let quote = "";
-  let lineComment = false;
+  let quote = "", comment = "";
+  let script = false, style = false;
   for (let index = 0; index < value.length; index += 1) {
-    const character = value[index];
-    const next = value[index + 1];
-    if (lineComment) {
-      if (character === "\n") lineComment = false;
-      continue;
+    const character = value[index], next = value[index + 1];
+    if (comment === "line") { if (character === "\n") comment = ""; continue; }
+    if (comment === "block") { if (character === "*" && next === "/") { comment = ""; index++; } continue; }
+    if (comment === "html") { if (value.startsWith("-->", index)) { comment = ""; index += 2; } continue; }
+    if (!quote) {
+      if (language === "html") { if (/^<script\b/i.test(value.slice(index))) script = true; if (/^<\/script/i.test(value.slice(index))) script = false; if (/^<style\b/i.test(value.slice(index))) style = true; if (/^<\/style/i.test(value.slice(index))) style = false; }
+      if (language === "html" && value.startsWith("<!--", index)) { comment = "html"; index += 3; continue; }
+      if ((language === "css" || language === "javascript" || language === "csharp" || language === "cpp" || script || style) && character === "/" && next === "*") { comment = "block"; index++; continue; }
+      if (((language !== "python" && language !== "html" && language !== "css") || script) && character === "/" && next === "/") { comment = "line"; index++; continue; }
+      if (language === "python" && character === "#") { comment = "line"; continue; }
     }
-    if (!quote && character === "/" && next === "/") { lineComment = true; index += 1; continue; }
     if ((character === '"' || character === "'" || character === "`") && value[index - 1] !== "\\") quote = quote === character ? "" : quote || character;
     if (!/[\s\u00a0\u200b-\u200d\ufeff]/.test(character)) characters.push({ character, index });
   }
   return characters;
 }
 
-function alignedGuide(code: string, expected: string) {
-  const actual = significantCharacters(code);
-  const target = significantCharacters(expected);
+function alignedGuide(code: string, expected: string, language: Language) {
+  const actual = significantCharacters(code, language);
+  const target = significantCharacters(expected, language);
   let matched = 0;
   while (matched < actual.length && matched < target.length && actual[matched].character.toLowerCase() === target[matched].character.toLowerCase()) matched += 1;
   // Stop suggesting a suffix when the learner types a different approach.
@@ -4244,7 +4286,7 @@ function SettingsPanel({ open, themeMode, showGuide, showComments, onCommentsCha
       <div className="settings-group guide-setting"><div><b>Code blocks</b><span>Tap or drag ready-made lines into your code. Turn off to type instead. Your choice is saved on this device.</span></div><button aria-label="Code blocks" className={`switch ${blockMode ? "on" : ""}`} role="switch" aria-checked={blockMode} onClick={() => onBlockModeChange(!blockMode)}><i /></button></div>
       <div className="settings-group guide-setting"><div><b>Code guide</b><span>Show a faint, colour-coded copy of the expected answer in the editor.</span></div><button aria-label="Code guide" className={`switch ${showGuide ? "on" : ""}`} role="switch" aria-checked={showGuide} onClick={() => onGuideChange(!showGuide)}><i /></button></div>
       <div className="settings-group guide-setting"><div><b>Colour typed code</b><span>Give your typed code the same syntax colours as the ghost guide.</span></div><button aria-label="Colour typed code" className={`switch ${colourTyping ? "on" : ""}`} role="switch" aria-checked={colourTyping} onClick={() => onColourTypingChange(!colourTyping)}><i /></button></div>
-      <div className="settings-group guide-setting"><div><b>Lesson comments</b><span>Add the lesson hint as a comment at the top of your code. It is added automatically, so you do not need to type it.</span></div><button aria-label="Lesson comments" className={`switch ${showComments ? "on" : ""}`} role="switch" aria-checked={showComments} onClick={() => onCommentsChange(!showComments)}><i /></button></div>
+      <div className="settings-group guide-setting"><div><b>Lesson comments</b><span>Show step-by-step comments in the code guide and copied examples. You can skip typing the comments.</span></div><button aria-label="Lesson comments" className={`switch ${showComments ? "on" : ""}`} role="switch" aria-checked={showComments} onClick={() => onCommentsChange(!showComments)}><i /></button></div>
       <p className="settings-foot">Comments explain the code and do not change the result. Your choice is saved on this device.</p>
     </section>
   </div>;
@@ -4421,8 +4463,8 @@ function LanguageComparison({ language, lesson, editorCode, showComments, onClos
       <p className="comparison-context">{!equivalent ? "These languages do not have a matching lesson for this topic. Choose an example to compare." : other && other !== equivalent ? "Your current code stays on the left. The selected example is shown on the right." : "Compare the same idea in two languages."}</p>
     </div>
     <div className="language-comparison-columns">
-      <section className={`comparison-card tone-${lessonTone(lesson)}`}><header><CopyCodeButton code={sourceCode} label={languageName(language)} /><h3>{languageName(language)} · {hasEditorCode ? "Your code" : "Lesson example"}</h3><small className="comparison-topic">{lesson.eyebrow.split("·").pop()?.trim()}</small><b>{sourceLesson?.title ?? "No matching example"}</b></header><pre aria-label="Current code for comparison"><code><HighlightedCode code={sourceCode} language={language} /></code></pre><div className="comparison-description"><p>{hasEditorCode ? "This is the code currently in your editor." : sourceLesson ? <LessonExplanation lesson={sourceLesson} language={language} /> : "Choose another example to compare this topic."}</p></div></section>
-      <section className={`comparison-card ${other ? `tone-${lessonTone(other)}` : ""}`} key={target + (other?.title ?? "")}><header><CopyCodeButton code={other ? lessonExample(other, target, showComments) : ""} label={languageName(target)} /><h3>{languageName(target)} · Lesson example</h3>{other && <small className="comparison-topic">{other.eyebrow.split("·").pop()?.trim()}</small>}<b>{other?.title ?? "Choose an example"}</b></header><pre aria-label="Other language code"><code>{other ? <HighlightedCode code={lessonExample(other, target, showComments)} language={target} /> : "Choose an example above to view its code."}</code></pre><div className="comparison-description">{other && <><p><LessonExplanation lesson={other} language={target} /></p>{target === "cpp" && <CppSetupGuide lesson={other} />}{other.runHint && <p>{other.runHint}</p>}</>}</div></section>
+      <section className={`comparison-card tone-${lessonTone(lesson)}`}><header><h3>{languageName(language)} · {hasEditorCode ? "Your code" : "Lesson example"}</h3><small className="comparison-topic">{lesson.eyebrow.split("·").pop()?.trim()}</small><b>{sourceLesson?.title ?? "No matching example"}</b></header><div className="comparison-code-actions"><span>{lesson.fileName || challengeFile(language)}</span><CopyCodeButton code={sourceCode} label={languageName(language)} /></div><pre aria-label="Current code for comparison"><code><HighlightedCode code={sourceCode} language={language} /></code></pre><div className="comparison-description"><p>{hasEditorCode ? "This is the code currently in your editor." : sourceLesson ? <LessonExplanation lesson={sourceLesson} language={language} /> : "Choose another example to compare this topic."}</p></div></section>
+      <section className={`comparison-card ${other ? `tone-${lessonTone(other)}` : ""}`} key={target + (other?.title ?? "")}><header><h3>{languageName(target)} · Lesson example</h3>{other && <small className="comparison-topic">{other.eyebrow.split("·").pop()?.trim()}</small>}<b>{other?.title ?? "Choose an example"}</b></header><div className="comparison-code-actions"><span>{other?.fileName || challengeFile(target)}</span><CopyCodeButton code={other ? lessonExample(other, target, showComments) : ""} label={languageName(target)} /></div><pre aria-label="Other language code"><code>{other ? <HighlightedCode code={lessonExample(other, target, showComments)} language={target} /> : "Choose an example above to view its code."}</code></pre><div className="comparison-description">{other && <><p><LessonExplanation lesson={other} language={target} /></p>{target === "cpp" && <CppSetupGuide lesson={other} />}{other.runHint && <p>{other.runHint}</p>}</>}</div></section>
     </div>
   </dialog>;
 }
@@ -4515,11 +4557,11 @@ export default function Home() {
   const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0, cpp: 0, python: 0, html: 0, css: 0 });
 
   const current = language ? lessons[language][index] : null;
-  const ghostSource = current ? withoutGuideComments(current.answer, language ?? "javascript") : "";
+  const ghostSource = current && language ? showComments ? annotatedLessonCode(current, language) : withoutGuideComments(current.answer, language) : "";
   const visibleGhost = ghostSource.slice(0, ghostLength);
   const commentPrefix = current && language && showComments ? lessonComment(current, language) : "";
   const practiceCode = insertedComment.current && code.startsWith(insertedComment.current) ? code.slice(insertedComment.current.length) : code;
-  const guideCode = alignedGuide(practiceCode, visibleGhost);
+  const guideCode = alignedGuide(practiceCode, visibleGhost, language ?? "javascript");
   function changeComments(enabled: boolean) {
     const oldPrefix = insertedComment.current;
     const newPrefix = current && language && enabled ? lessonComment(current, language) : "";

@@ -435,3 +435,10 @@ html[data-theme] :is(.theme-options button.selected,.compare-language-choices .l
 .lesson-tools .copy-code-button{min-height:40px;padding:9px 16px;background:var(--green-dark);border:1px solid var(--green-dark);border-radius:var(--control-radius);color:var(--cream);font:700 14px/1.25 var(--sans)}
 .lesson-tools .copy-code-button:hover{filter:brightness(.93)}
 @media(max-width:850px){.lesson-tools{padding:7px 10px;gap:10px;min-height:52px}.lesson-copy-tools>span{display:none}.lesson-tools .compare-language-button{font-size:12px;padding:8px 10px;min-width:0;min-height:36px;text-align:left}.lesson-tools .copy-code-button{font-size:12px;min-height:36px;padding:8px 12px}.editor-panel .panel-bar{height:auto;flex-wrap:wrap}.editor-panel .panel-actions{flex-wrap:wrap;padding:5px 8px;gap:6px}}
+
+.language-comparison-columns .comparison-card{grid-template-rows:104px 42px minmax(0,1fr) minmax(100px,28%)}
+.comparison-code-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:5px 12px;border-bottom:1px solid var(--ui-border);background:var(--ui-surface)}
+.comparison-code-actions>span{font:12px var(--mono);color:var(--ui-muted)}
+.comparison-code-actions .copy-code-button{min-width:92px;background:color-mix(in srgb,var(--green-dark) 12%,var(--ui-surface));border-color:var(--green-dark);font-weight:700}
+.language-comparison .comparison-card>header h3{padding-right:0}
+@media(max-width:850px){.comparison-code-actions{position:sticky;top:86px;z-index:1;min-height:40px}.language-comparison-columns .comparison-card{display:block}}
