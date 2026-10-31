@@ -4207,6 +4207,14 @@ function LearningCode({ code, starter, language, caretIndex, focusConditions }: 
   </>;
 }
 
+function BackButton({ onClick, label = "Back" }: { onClick: () => void; label?: string }) {
+  return <button className="app-back" onClick={onClick} aria-label={label}><span aria-hidden="true">←</span><span>Back</span></button>;
+}
+
+function MenuHeader({ title, titleId, onBack, backLabel, className }: { title: string; titleId: string; onBack: () => void; backLabel: string; className: string }) {
+  return <header className={`app-header menu-header ${className}`}><BackButton onClick={onBack} label={backLabel} /><div className="menu-header-heading"><small>CODESTEP</small><h2 id={titleId}>{title}</h2></div></header>;
+}
+
 function SettingsPanel({ open, themeMode, showGuide, showComments, onCommentsChange, colourTyping, blockMode, onBlockModeChange, onThemeChange, onGuideChange, onColourTypingChange, onClose }: { open: boolean; themeMode: ThemeMode; showGuide: boolean; showComments: boolean; onCommentsChange: (show: boolean) => void; colourTyping: boolean; blockMode: boolean; onBlockModeChange: (enabled: boolean) => void; onThemeChange: (mode: ThemeMode) => void; onGuideChange: (show: boolean) => void; onColourTypingChange: (show: boolean) => void; onClose: () => void }) {
   const close = useRef(onClose);
   close.current = onClose;
@@ -4229,7 +4237,7 @@ function SettingsPanel({ open, themeMode, showGuide, showComments, onCommentsCha
   if (!open) return null;
   return <div className="settings-backdrop" role="presentation" onMouseDown={onClose}>
     <section className="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settings-title" onMouseDown={(event) => event.stopPropagation()}>
-      <div className="settings-head"><button className="app-back" onClick={onClose} aria-label="Back from settings">← Back</button><div><small>CODESTEP</small><h2 id="settings-title">Settings</h2></div></div>
+      <MenuHeader title="Settings" titleId="settings-title" onBack={onClose} backLabel="Back from settings" className="settings-head" />
       <div className="settings-group"><b>Appearance</b><span>Choose a theme or follow your device setting.</span><div className="theme-options">
         {(["light", "dark", "system"] as ThemeMode[]).map((mode) => <button key={mode} className={themeMode === mode ? "selected" : ""} onClick={() => onThemeChange(mode)}><i>{mode === "light" ? "☀" : mode === "dark" ? "☾" : "◐"}</i><span>{mode[0].toUpperCase() + mode.slice(1)}</span><small>{mode === "system" ? "Use device setting" : `${mode} appearance`}</small></button>)}
       </div></div>
@@ -4406,7 +4414,7 @@ function LanguageComparison({ language, lesson, editorCode, showComments, onClos
   }, []);
   useEffect(() => { setPickedTitle(""); }, [lesson]);
   return <dialog ref={dialog} className="language-comparison" onCancel={onClose} aria-labelledby="language-comparison-title">
-    <header className="language-comparison-head"><button className="app-back" onClick={onClose} aria-label="Back to lesson">← Back</button><div><small>CODESTEP</small><h2 id="language-comparison-title">Compare code</h2></div></header>
+    <MenuHeader title="Compare code" titleId="language-comparison-title" onBack={onClose} backLabel="Back to lesson" className="language-comparison-head" />
     <div className="language-comparison-controls">
       <div className="compare-language-choices"><span className="comparison-source-label">Your language: <strong>{languageName(language)}</strong><small>Choose a language to compare with</small></span><div role="group" aria-label="Comparison language">{(Object.keys(lessons) as Language[]).filter(item => item !== language && item !== "html" && item !== "css").map(item => <button className={`language-choice language-${item}`} key={item} aria-pressed={target === item} onClick={() => { setPickedTitle(pickedTitle && other ? matchingLesson(other, item)?.title ?? "" : ""); setTarget(item); }}>{languageName(item)}</button>)}</div></div>
       <ComparisonExamplePicker key={target} target={target} selected={other} onSelect={setPickedTitle} />
@@ -4706,7 +4714,7 @@ export default function Home() {
     return (
       <>
       <main className="home-shell">
-        <header className="home-nav"><div className="brand"><span className="brand-mark">&gt;_</span> Code<span>Step</span></div><div className="home-actions"><div className="nav-note">LEARN BY TYPING</div><button className="settings-button" onClick={() => setSettingsOpen(true)}>⚙ <span>Settings</span></button></div></header>
+        <header className="home-nav app-header"><div className="brand"><span className="brand-mark">&gt;_</span> Code<span>Step</span></div><div className="home-actions"><div className="nav-note">LEARN BY TYPING</div><button className="settings-button" onClick={() => setSettingsOpen(true)}>⚙ <span>Settings</span></button></div></header>
         <section className="hero">
           <div className="terminal-card" aria-hidden="true">
             <div className="terminal-top"><i/><i/><i/><span>{languageName(homeDemoLanguage)} · {homeDemos[homeDemoLanguage].file}</span></div>
@@ -4760,8 +4768,8 @@ export default function Home() {
     <>
     {comparisonOpen && <LanguageComparison language={language} lesson={current!} editorCode={code} showComments={showComments} onClose={() => setComparisonOpen(false)} />}
     <main className={`lesson-shell mobile-${mobilePane}`}>
-      <header className="lesson-nav">
-        <div className="lesson-brand-group"><button className="app-back" onClick={() => index ? setIndex(index - 1) : setLanguage(null)} aria-label="Back">← Back</button><button className="drawer-toggle" onClick={() => setNavOpen((open) => !open)} aria-label={navOpen ? "Close lesson list" : "Open lesson list"} aria-expanded={navOpen}><span>☰</span></button><button className="brand brand-button" onClick={() => setLanguage(null)}><span className="brand-mark">&gt;_</span> Code<span>Step</span></button></div>
+      <header className="lesson-nav app-header">
+        <div className="lesson-brand-group"><BackButton onClick={() => index ? setIndex(index - 1) : setLanguage(null)} /><button className="drawer-toggle" onClick={() => setNavOpen((open) => !open)} aria-label={navOpen ? "Close lesson list" : "Open lesson list"} aria-expanded={navOpen}><span>☰</span></button><button className="brand brand-button" onClick={() => setLanguage(null)}><span className="brand-mark">&gt;_</span> Code<span>Step</span></button></div>
         <div className="lesson-progress"><div><span>{languageName(language)} path</span><b>{index + 1} / {lessons[language].length}</b></div><div className="progress-track"><i style={{width: `${Math.max(progress, 4)}%`}} /></div></div>
         <div className="lesson-actions"><button className="settings-button" onClick={() => setSettingsOpen(true)}>⚙ <span>Settings</span></button></div>
       </header>

@@ -389,3 +389,41 @@ pre code,pre code span{white-space:inherit;font-family:inherit;font-size:inherit
 .copy-code-status{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .panel-actions .copy-code-button{color:#c3dacc;font-size:11px;padding:5px 8px}
 @media(max-width:850px){.language-comparison .comparison-card>header h3{padding-right:83px;font-size:12px}.comparison-card>header>.copy-code-control{right:8px;top:8px}.copy-code-button{font-size:11px;min-height:28px;padding:5px 8px}.editor-panel .panel-actions{gap:6px}.panel-actions .copy-code-button{font-size:10px;padding:4px 5px}}
+
+/* Shared chrome and control tokens for every app menu. */
+:root{--ui-surface:#fcfcfa;--ui-border:#cbd8cf;--ui-hover:#edf4ef;--ui-text:#17221d;--ui-muted:#586b5f;--control-radius:8px;--control-height:40px;--header-height:72px}
+html[data-theme="dark"]{--ui-surface:#18251d;--ui-border:#405348;--ui-hover:#23372b;--ui-text:#edf5ef;--ui-muted:#afc1b5}
+.app-header.home-nav,.app-header.lesson-nav,.app-header.menu-header{color:var(--ui-text);background:var(--ui-surface);border-bottom:1px solid var(--ui-border);box-shadow:none;min-height:var(--header-height);height:var(--header-height);display:flex;align-items:center;flex:none}
+.app-header.home-nav,.app-header.lesson-nav{padding:0 20px}
+.language-comparison{padding:20px}.settings-panel{padding:20px;background:var(--cream)}
+.app-header.menu-header{gap:18px;margin:0;padding:0 0 14px;background:transparent;height:auto;min-height:var(--header-height);justify-content:flex-start}
+.app-header.menu-header .menu-header-heading small{display:block;font:750 10px/1.4 var(--mono);letter-spacing:1.6px;color:var(--green-dark)}
+.app-header.menu-header .menu-header-heading h2{margin:4px 0 0;font-size:26px;font-weight:650;line-height:1.2;letter-spacing:-.5px;color:var(--ui-text)}
+.app-header .app-back,.app-back,.settings-button,.drawer-toggle,.drawer-home,.compare-language-button,.example-picker-trigger,.compare-language-choices .language-choice,.mobile-pane-tabs button{
+ border:1px solid var(--ui-border);border-radius:var(--control-radius);background:var(--ui-surface);color:var(--ui-text);font:650 14px/1.25 var(--sans);box-shadow:none;cursor:pointer;min-height:var(--control-height);transition:background .15s,border-color .15s,color .15s;
+}
+.app-header .app-back,.app-back{display:inline-flex;justify-content:center;align-items:center;gap:6px;min-width:80px;width:auto;height:var(--control-height);padding:8px 12px;flex:none;white-space:nowrap}
+.app-header .app-back>span{display:inline;color:inherit;font:inherit}.app-header .app-back>span:first-child{font-size:17px;line-height:1}
+.settings-button{height:var(--control-height);padding:8px 12px}.drawer-toggle{height:var(--control-height);width:40px}
+.drawer-home,.compare-language-button{padding:10px 14px}.compare-language-choices .language-choice{padding:8px 12px}
+.app-back:hover,.settings-button:hover,.drawer-toggle:hover,.drawer-home:hover,.compare-language-button:hover,.example-picker-trigger:hover,.compare-language-choices .language-choice:hover{background:var(--ui-hover);color:var(--ui-text);border-color:var(--green-dark)}
+.theme-options button{border:1px solid var(--ui-border);border-radius:var(--control-radius);background:var(--ui-surface);color:var(--ui-text);box-shadow:none}
+.theme-options button:hover{background:var(--ui-hover)}.theme-options button.selected,.compare-language-choices .language-choice[aria-pressed="true"],.mobile-pane-tabs button[aria-pressed="true"]{background:color-mix(in srgb,var(--green-dark) 12%,var(--ui-surface));border-color:var(--green-dark);color:var(--ui-text);box-shadow:none}
+.settings-group{border-color:var(--ui-border)}.settings-group>span,.guide-setting>div>span,.theme-options small,.settings-foot{color:var(--ui-muted)}
+.editor-panel,.console-panel{--ui-surface:#1a2d23;--ui-border:#4a6455;--ui-hover:#243d2f;--ui-text:#dcebe1}
+.panel-actions button,.console-bar button{min-height:30px;padding:5px 8px;border:1px solid var(--ui-border);border-radius:var(--control-radius);background:transparent;color:var(--ui-text);font:600 11px/1.25 var(--sans);cursor:pointer}
+.panel-actions button:hover,.console-bar button:hover{background:var(--ui-hover)}
+.copy-code-button{min-height:30px;border-radius:var(--control-radius);border-color:var(--ui-border);color:var(--ui-text);font:600 12px/1.25 var(--sans)}
+.feedback button{border-radius:var(--control-radius);font-family:var(--sans);font-weight:650}
+button:focus:not(:focus-visible){outline:none}button:focus-visible,.app-header .app-back:focus-visible,.settings-button:focus-visible,.drawer-toggle:focus-visible,.compare-language-choices .language-choice:focus-visible{outline:2px solid var(--green-dark);outline-offset:3px;box-shadow:none}
+button:disabled{cursor:default;opacity:.45}
+@media(prefers-reduced-motion:reduce){button{transition:none!important}}
+@media(max-width:850px){:root{--header-height:52px;--control-height:36px}.app-header.home-nav,.app-header.lesson-nav{padding:0 10px}.language-comparison,.settings-panel{padding:12px}.app-header.menu-header{gap:12px;min-height:64px;padding-bottom:10px}.app-header.menu-header .menu-header-heading h2{font-size:22px}.app-header .app-back,.app-back{min-width:70px;padding:7px 9px;font-size:13px}.settings-button{padding:7px 9px;font-size:13px}.drawer-toggle{width:36px}.compare-language-choices .language-choice{font-size:13px;padding:6px 10px}.copy-code-button{font-size:11px}}
+/* These selectors also override the older theme-specific menu rules. */
+html[data-theme] :is(.home-nav.app-header,.lesson-nav.app-header,.menu-header.app-header){background:var(--ui-surface);color:var(--ui-text);border-color:var(--ui-border)}
+html[data-theme] :is(.app-header .app-back,.settings-button,.drawer-toggle,.drawer-home,.compare-language-button,.example-picker-trigger,.compare-language-choices .language-choice){background:var(--ui-surface);color:var(--ui-text);border-color:var(--ui-border);border-radius:var(--control-radius);box-shadow:none}
+html[data-theme] :is(.app-header .app-back,.settings-button,.drawer-toggle,.drawer-home,.compare-language-button,.example-picker-trigger,.compare-language-choices .language-choice):hover{background:var(--ui-hover);color:var(--ui-text);border-color:var(--green-dark)}
+html[data-theme] .theme-options button{background:var(--ui-surface);color:var(--ui-text);border-color:var(--ui-border);border-radius:var(--control-radius)}
+html[data-theme] .theme-options button:hover{background:var(--ui-hover)}
+html[data-theme] :is(.theme-options button.selected,.compare-language-choices .language-choice[aria-pressed="true"],.mobile-pane-tabs button[aria-pressed="true"]){background:color-mix(in srgb,var(--green-dark) 12%,var(--ui-surface));border-color:var(--green-dark);color:var(--ui-text);box-shadow:none}
+.app-header.menu-header{padding:12px;border-radius:var(--control-radius)}
