@@ -325,13 +325,13 @@ html[data-theme="dark"] .explanation-code .syntax-keyword{color:#ee7a92}html[dat
 }
 
 /* Comparison examples use the same numbered topic colours as the lesson list. */
-.example-picker-list button.tone-rose{--tone-soft:#f9d5e1;--tone-strong:#d85782;--tone-ink:#741d3d;--tone-dark:#4b2634}
-.example-picker-list button.tone-blue{--tone-soft:#cde8f6;--tone-strong:#3b92bd;--tone-ink:#075276;--tone-dark:#1e3b49}
-.example-picker-list button.tone-gold{--tone-soft:#f7e3ad;--tone-strong:#d9a52e;--tone-ink:#624700;--tone-dark:#493d20}
-.example-picker-list button.tone-cyan{--tone-soft:#c8ece9;--tone-strong:#34a9a0;--tone-ink:#075b55;--tone-dark:#1c4541}
-.example-picker-list button.tone-violet{--tone-soft:#e3d9f8;--tone-strong:#8566c9;--tone-ink:#4c3188;--tone-dark:#372d51}
-.example-picker-list button.tone-green{--tone-soft:#d1eddc;--tone-strong:#46a874;--tone-ink:#155b3a;--tone-dark:#234534}
-.example-picker-list button.tone-orange{--tone-soft:#f8dcc8;--tone-strong:#d87c3f;--tone-ink:#743610;--tone-dark:#4b3022}
+.example-picker-list button.tone-rose,.comparison-card.tone-rose,.example-picker-trigger.tone-rose{--tone-soft:#f9d5e1;--tone-strong:#d85782;--tone-ink:#741d3d;--tone-dark:#4b2634}
+.example-picker-list button.tone-blue,.comparison-card.tone-blue,.example-picker-trigger.tone-blue{--tone-soft:#cde8f6;--tone-strong:#3b92bd;--tone-ink:#075276;--tone-dark:#1e3b49}
+.example-picker-list button.tone-gold,.comparison-card.tone-gold,.example-picker-trigger.tone-gold{--tone-soft:#f7e3ad;--tone-strong:#d9a52e;--tone-ink:#624700;--tone-dark:#493d20}
+.example-picker-list button.tone-cyan,.comparison-card.tone-cyan,.example-picker-trigger.tone-cyan{--tone-soft:#c8ece9;--tone-strong:#34a9a0;--tone-ink:#075b55;--tone-dark:#1c4541}
+.example-picker-list button.tone-violet,.comparison-card.tone-violet,.example-picker-trigger.tone-violet{--tone-soft:#e3d9f8;--tone-strong:#8566c9;--tone-ink:#4c3188;--tone-dark:#372d51}
+.example-picker-list button.tone-green,.comparison-card.tone-green,.example-picker-trigger.tone-green{--tone-soft:#d1eddc;--tone-strong:#46a874;--tone-ink:#155b3a;--tone-dark:#234534}
+.example-picker-list button.tone-orange,.comparison-card.tone-orange,.example-picker-trigger.tone-orange{--tone-soft:#f8dcc8;--tone-strong:#d87c3f;--tone-ink:#743610;--tone-dark:#4b3022}
 
 .example-picker-panel{padding:12px;border-radius:14px;box-shadow:0 16px 44px #17251e28}
 .example-picker-panel input{border-radius:9px;min-height:44px;font-weight:500}
@@ -348,3 +348,23 @@ html[data-theme="dark"] .explanation-code .syntax-keyword{color:#ee7a92}html[dat
 html[data-theme="dark"] .example-picker-list .example-label small{background:var(--tone-dark);color:var(--tone-soft)}
 html[data-theme="dark"] .example-picker-list button:hover,html[data-theme="dark"] .example-picker-list button:focus-visible,html[data-theme="dark"] .example-picker-list button[aria-pressed="true"]{background:color-mix(in srgb,var(--tone-dark) 65%,var(--cream))}
 @media(max-width:850px){.example-picker-panel{padding:9px}.example-picker-list button{gap:9px;padding:10px 7px;grid-template-columns:34px minmax(0,1fr) 14px;min-height:76px}.example-picker-list .example-number{width:32px;height:34px;font-size:12px}.example-picker-list .example-label strong{font-size:13px}.example-picker-list .example-label small{font-size:9px}}
+
+/* Navigation stays at the left, with one clear route back. */
+.app-back{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:72px;min-height:40px;padding:8px 12px;border:1px solid #7e998b77;border-radius:9px;background:var(--cream);color:var(--ink);font-size:14px;font-weight:700;white-space:nowrap;cursor:pointer;flex:none}
+.language-comparison-head,.settings-head{display:flex;align-items:center;justify-content:flex-start;gap:18px}
+.language-comparison-head .app-back,.settings-head .app-back{width:auto;height:auto;min-width:72px;font-size:14px}
+.comparison-card>header{border-top:4px solid var(--tone-strong);background:color-mix(in srgb,var(--tone-soft) 22%,var(--cream))}
+.language-comparison-columns .comparison-card{grid-template-rows:104px minmax(0,1fr) minmax(100px,28%)}
+.comparison-card>header h3{margin-bottom:6px}.comparison-card>header b{display:block;margin-top:5px}
+.comparison-topic{display:inline-block;padding:3px 7px;border-radius:5px;background:var(--tone-soft);color:var(--tone-ink);font:800 10px/1.3 var(--mono);letter-spacing:.4px;text-transform:uppercase}
+.example-picker-trigger[class*="tone-"]{border-left:5px solid var(--tone-strong);background:color-mix(in srgb,var(--tone-soft) 25%,var(--cream))}
+.language-choice.language-javascript{--language-soft:#f7e3ad;--language-ink:#624700;--language-strong:#d9a52e}
+.language-choice.language-csharp{--language-soft:#e3d9f8;--language-ink:#4c3188;--language-strong:#8566c9}
+.language-choice.language-cpp{--language-soft:#cde8f6;--language-ink:#075276;--language-strong:#3b92bd}
+.language-choice.language-python{--language-soft:#d1eddc;--language-ink:#155b3a;--language-strong:#46a874}
+.compare-language-choices .language-choice{background:var(--language-soft);color:var(--language-ink);border-color:var(--language-strong);border-bottom-width:3px}
+.compare-language-choices .language-choice[aria-pressed="true"]{background:var(--language-ink);color:#fff;box-shadow:0 0 0 2px var(--cream),0 0 0 4px var(--language-strong)}
+.explanation-code .syntax-header,.explanation-code .syntax-attribute{color:#166887}.explanation-code .syntax-function-name{color:#886409}
+html[data-theme="dark"] .explanation-code .syntax-header,html[data-theme="dark"] .explanation-code .syntax-attribute{color:#71cbea}html[data-theme="dark"] .explanation-code .syntax-function-name{color:#f2c75a}
+html[data-theme="dark"] .comparison-card>header{background:color-mix(in srgb,var(--tone-dark) 65%,var(--cream))}html[data-theme="dark"] .comparison-topic{background:var(--tone-dark);color:var(--tone-soft)}html[data-theme="dark"] .example-picker-trigger[class*="tone-"]{background:color-mix(in srgb,var(--tone-dark) 65%,var(--cream))}
+@media(max-width:850px){.lesson-brand-group{gap:7px}.app-back{min-width:58px;padding:6px 8px;font-size:12px;min-height:34px}.language-comparison-head,.settings-head{gap:12px}.language-comparison-columns .comparison-card>header{min-height:86px;background:color-mix(in srgb,var(--tone-soft) 22%,var(--cream))}html[data-theme="dark"] .language-comparison-columns .comparison-card>header{background:color-mix(in srgb,var(--tone-dark) 65%,var(--cream))}}

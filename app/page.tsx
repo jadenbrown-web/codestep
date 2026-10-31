@@ -4126,6 +4126,7 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
     : language === "python"
     ? /(#.*|f?"[^"\n]*"|f?'[^'\n]*'|\b(?:def|class|self|return|import|from|if|elif|else|for|in|while|True|False|None|break|and|or|not|is)\b|\b(?:print|input|datetime|random|re|time|set|list|sorted|__init__)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|[{}()[\];=.:<>+*%/-])/g
     : /(\/\/[^\n]*|\/\^[A-Za-z]+\/[gimsuy]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:def|self|import|from|True|False|None|and|or|not|is|using|static_cast|function|class|constructor|this|let|const|double|bool|out|auto|include|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:Math|Object|process|fs|path|console|Console|Task|Date|DateTime|List|Set|HashSet|Dictionary|Random|std|cout|cin|vector|map|optional|print|input|datetime|random|re|time|Regex|RegexOptions|mt19937|uniform_int_distribution|random_device)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|===|!==|==|!=|&&|\|\||!|>=|<=|\+\+|--|[{}()[\];=.:<>?^/])/g;
+  if (language === "csharp" || language === "javascript") pattern = new RegExp(String.raw`\b(?:WriteLine|ReadLine|log)\b|` + pattern.source, "g");
   if (language === "cpp") pattern = new RegExp(String.raw`#[ \t]*include[ \t]+(?:<[^>\n]+>|"[^"\n]+")|` + pattern.source, "g");
   const parts: { text: string; kind: string }[] = [];
   let lastIndex = 0;
@@ -4145,7 +4146,7 @@ function HighlightedCode({ code, language, caretIndex }: { code: string; languag
     else if (/^(solid|dotted|center|lightblue|red|blue|tomato|#[0-9a-fA-F]+)$/.test(text)) kind = "string";
     else if (/^#[A-Za-z_]/.test(text)) kind = "function-name";
     else if (/^\d+$/.test(text)) kind = "number";
-    else if (language === "python" && text === "__init__") kind = "function-name";
+    else if ((language === "python" && text === "__init__") || /^(WriteLine|ReadLine|log)$/.test(text)) kind = "function-name";
     else if (/^[A-Za-z_]/.test(text)) kind = /^\s*\(/.test(code.slice(match.index! + text.length)) ? "function-name" : "plain";
     parts.push({ text, kind });
     lastIndex = match.index! + text.length;
@@ -4216,7 +4217,7 @@ function SettingsPanel({ open, themeMode, showGuide, colourTyping, blockMode, on
   if (!open) return null;
   return <div className="settings-backdrop" role="presentation" onMouseDown={onClose}>
     <section className="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settings-title" onMouseDown={(event) => event.stopPropagation()}>
-      <div className="settings-head"><div><small>CODESTEP</small><h2 id="settings-title">Settings</h2></div><button onClick={onClose} aria-label="Close settings">×</button></div>
+      <div className="settings-head"><button className="app-back" onClick={onClose} aria-label="Back from settings">← Back</button><div><small>CODESTEP</small><h2 id="settings-title">Settings</h2></div></div>
       <div className="settings-group"><b>Appearance</b><span>Choose a theme or follow your device setting.</span><div className="theme-options">
         {(["light", "dark", "system"] as ThemeMode[]).map((mode) => <button key={mode} className={themeMode === mode ? "selected" : ""} onClick={() => onThemeChange(mode)}><i>{mode === "light" ? "☀" : mode === "dark" ? "☾" : "◐"}</i><span>{mode[0].toUpperCase() + mode.slice(1)}</span><small>{mode === "system" ? "Use device setting" : `${mode} appearance`}</small></button>)}
       </div></div>
@@ -4251,16 +4252,16 @@ function CppSetupGuide({ lesson, initiallyOpen = false }: { lesson: Lesson; init
     <summary>Understand the C++ setup code</summary>
     <pre><code><HighlightedCode language="cpp" code={'#include <iostream> // Make cout available.\n\nint main() {        // The program starts here.\n  std::cout << "Hello\\n";\n  return 0;         // Tell the system it finished successfully.\n}'} /></code></pre>
     <dl>
-      <div><dt><code>#include &lt;iostream&gt;</code></dt><dd><code>#include</code> is a preprocessor instruction: it brings a header’s declarations into this file before compilation. A header describes library tools your code can use. The angle brackets <code>&lt; &gt;</code> tell the compiler to search its configured include locations. This does not install a library. Use <code>#include "myfile.h"</code> for a project header, usually searched relative to the current file first. Include directives do not need a semicolon.</dd></div>
-      <div><dt><code>int main()</code></dt><dd><code>main</code> is the starting function for a normal C++ console program. <code>int</code> means it returns a whole number to the operating system; it is not the number your program prints. Empty <code>()</code> means this version takes no parameters. Write ordinary executable statements inside main or another function. Removing main from this standalone example prevents it from linking as a normal executable.</dd></div>
+      <div><dt><InlineCode language={"cpp"} code={"#include <iostream>"} /></dt><dd><InlineCode language={"cpp"} code={"#include"} /> is a preprocessor instruction: it brings a header’s declarations into this file before compilation. A header describes library tools your code can use. The angle brackets <InlineCode language={"cpp"} code={"< >"} /> tell the compiler to search its configured include locations. This does not install a library. Use <InlineCode language={"cpp"} code={"#include \"myfile.h\""} /> for a project header, usually searched relative to the current file first. Include directives do not need a semicolon.</dd></div>
+      <div><dt><InlineCode language={"cpp"} code={"int main()"} /></dt><dd><InlineCode language={"cpp"} code={"main"} /> is the starting function for a normal C++ console program. <InlineCode language={"cpp"} code={"int"} /> means it returns a whole number to the operating system; it is not the number your program prints. Empty <InlineCode language={"cpp"} code={"()"} /> means this version takes no parameters. Write ordinary executable statements inside main or another function. Removing main from this standalone example prevents it from linking as a normal executable.</dd></div>
       <div><dt><code>{"{ ... }"}</code></dt><dd>The braces mark the start and end of the function body. Indentation makes it easier to read; the braces determine which instructions belong to it.</dd></div>
-      <div><dt><code>std::cout &lt;&lt; "Hello\\n";</code></dt><dd><code>std</code> is the standard-library namespace, a group of names. <code>::</code> selects a name inside it. <code>cout</code> is the standard output stream; <code>&lt;&lt;</code> sends the text into it. <code>\n</code> starts a new line and <code>;</code> ends the statement. Removing <code>std::</code> makes cout unknown unless you have brought that name into scope.</dd></div>
-      <div><dt><code>return 0;</code></dt><dd>Ends main and sends a success status to the operating system. A nonzero status usually signals a problem. You can leave this line out at the end of main: C++ automatically returns 0 there. That special rule does not apply to ordinary functions that must return a value.</dd></div>
-      <div><dt><code>int</code>, <code>void</code>, and <code>std::string</code></dt><dd>Types describe values. <code>int score = 5;</code> stores a whole number; <code>double speed = 5.5;</code> stores a decimal; <code>bool ready = true;</code> stores true or false; <code>std::string name = "Jordan";</code> stores text. Before a function name, its type describes what it returns: <code>void correct()</code> returns no value. main must return int, so do not replace it with void main.</dd></div>
-      <div><dt>Defining and calling a function</dt><dd><code>void correct() {"{ ... }"}</code> defines instructions; <code>correct();</code> runs them. In these examples, define your function before main, then call it inside main. Otherwise, you need a declaration before its first use. Do not call correct from inside its own body just to start it: that repeatedly calls itself.</dd></div>
-      <div><dt>Can it be simpler?</dt><dd>For a program that only prints, you need just <code>&lt;iostream&gt;</code>, <code>int main()</code>, its braces, and the print statement. Add other headers only when you use their tools. <code>using std::cout;</code> lets you write cout without std::, but keeping std:: makes its source clear.</dd></div>
+      <div><dt><InlineCode language={"cpp"} code={"std::cout << \"Hello\\\\n\";"} /></dt><dd><InlineCode language={"cpp"} code={"std"} /> is the standard-library namespace, a group of names. <InlineCode language={"cpp"} code={"::"} /> selects a name inside it. <InlineCode language={"cpp"} code={"cout"} /> is the standard output stream; <InlineCode language={"cpp"} code={"<<"} /> sends the text into it. <InlineCode language={"cpp"} code={"\\n"} /> starts a new line and <InlineCode language={"cpp"} code={";"} /> ends the statement. Removing <InlineCode language={"cpp"} code={"std::"} /> makes cout unknown unless you have brought that name into scope.</dd></div>
+      <div><dt><InlineCode language={"cpp"} code={"return 0;"} /></dt><dd>Ends main and sends a success status to the operating system. A nonzero status usually signals a problem. You can leave this line out at the end of main: C++ automatically returns 0 there. That special rule does not apply to ordinary functions that must return a value.</dd></div>
+      <div><dt><InlineCode language={"cpp"} code={"int"} />, <InlineCode language={"cpp"} code={"void"} />, and <InlineCode language={"cpp"} code={"std::string"} /></dt><dd>Types describe values. <InlineCode language={"cpp"} code={"int score = 5;"} /> stores a whole number; <InlineCode language={"cpp"} code={"double speed = 5.5;"} /> stores a decimal; <InlineCode language={"cpp"} code={"bool ready = true;"} /> stores true or false; <InlineCode language={"cpp"} code={"std::string name = \"Jordan\";"} /> stores text. Before a function name, its type describes what it returns: <InlineCode language={"cpp"} code={"void correct()"} /> returns no value. main must return int, so do not replace it with void main.</dd></div>
+      <div><dt>Defining and calling a function</dt><dd><code>void correct() {"{ ... }"}</code> defines instructions; <InlineCode language={"cpp"} code={"correct();"} /> runs them. In these examples, define your function before main, then call it inside main. Otherwise, you need a declaration before its first use. Do not call correct from inside its own body just to start it: that repeatedly calls itself.</dd></div>
+      <div><dt>Can it be simpler?</dt><dd>For a program that only prints, you need just <InlineCode language={"cpp"} code={"<iostream>"} />, <InlineCode language={"cpp"} code={"int main()"} />, its braces, and the print statement. Add other headers only when you use their tools. <InlineCode language={"cpp"} code={"using std::cout;"} /> lets you write cout without std::, but keeping std:: makes its source clear.</dd></div>
     </dl>
-    <p>Code colours are reading aids, not errors. A header such as <code>&lt;string&gt;</code> names a library header; <code>std::string</code> is a text type; <code>"Hello"</code> is an actual string value.</p>
+    <p>Code colours are reading aids, not errors. A header such as <InlineCode language={"cpp"} code={"<string>"} /> names a library header; <InlineCode language={"cpp"} code={"std::string"} /> is a text type; <InlineCode language={"cpp"} code={"\"Hello\""} /> is an actual string value.</p>
     <h3>Headers in this lesson</h3>
     {headers.map(header => <p key={header}><code>{`#include <${header}>`}</code> — {cppHeaderNotes[header] ?? "Makes this header’s declarations available to the example."}</p>)}
     <p>If you remove a required header, the compiler may report an unknown name. Another header can sometimes include it indirectly; include what your code uses so it does not depend on that accident.</p>
@@ -4294,9 +4295,15 @@ function matchingLesson(source: Lesson, target: Language) {
     ?? lessons[target].find(item => aliases[source.title]?.includes(item.title));
 }
 
+function InlineCode({ code, language }: { code: string; language: Language }) {
+  const special = /^\\[nrt]$/.test(code) ? "attribute" : /^<[^>]+>$|^#include$/.test(code) ? "header" : /^(main|correct|WriteLine|ReadLine)$/.test(code) ? "function-name" : "";
+  return <code className="explanation-code">{special ? <span className={`syntax-${special}`}>{code}</span> : <HighlightedCode code={code} language={language} />}</code>;
+}
+
 function LessonExplanation({ lesson, language }: { lesson: Lesson; language: Language }) {
   const terms = [...new Set([
     ...(lesson.explanationTerms ?? []),
+    ...(lesson.answer.match(/#include(?:[ \t]+<[^>]+>)?|\b(?:std::\w+|Console\.\w+|console\.\w+|self\.\w+|__init__|int|void|double|bool|string|main|class|def|return|const|let|var|if|else|print|input)\b|\\n|<<|==|!=/g) ?? []),
     ...(lesson.parts ?? []).map(part => part.code),
   ])].filter(term => term && lesson.explanation.includes(term)).sort((a, b) => b.length - a.length);
   if (!terms.length) return <>{lesson.explanation}</>;
@@ -4310,7 +4317,7 @@ function LessonExplanation({ lesson, language }: { lesson: Lesson; language: Lan
     if (/\w$/.test(match[0]) && /[\w]/.test(lesson.explanation[end] ?? "")) continue;
     result.push(lesson.explanation.slice(offset, start));
     const concept = ["named block of code", "colon", "indented body", "method"].includes(match[0]);
-    result.push(concept ? <strong key={start}>{match[0]}</strong> : <code className="explanation-code" key={start}><HighlightedCode code={match[0]} language={language} /></code>);
+    result.push(concept ? <strong key={start}>{match[0]}</strong> : <InlineCode key={start} code={match[0]} language={language} />);
     offset = end;
   }
   result.push(lesson.explanation.slice(offset));
@@ -4332,7 +4339,7 @@ function ComparisonExamplePicker({ target, selected, onSelect }: { target: Langu
   }, [open]);
   const choices = lessons[target].filter(item => `${item.title} ${item.eyebrow}`.toLowerCase().includes(query.toLowerCase().trim()));
   return <div className="compare-example-select example-picker" ref={root} onKeyDown={event => { if (event.key === "Escape" && open) { event.preventDefault(); event.stopPropagation(); setOpen(false); trigger.current?.focus(); } }}>
-    <span>Example</span><button ref={trigger} className="example-picker-trigger" aria-label="Comparison example" aria-expanded={open} aria-controls="comparison-examples" onClick={() => { setOpen(!open); setQuery(""); }}>{selected?.title ?? "Choose an example"}<span aria-hidden="true">⌄</span></button>
+    <span>Example</span><button ref={trigger} className={`example-picker-trigger ${selected ? `tone-${lessonTone(selected)}` : ""}`} aria-label="Comparison example" aria-expanded={open} aria-controls="comparison-examples" onClick={() => { setOpen(!open); setQuery(""); }}>{selected?.title ?? "Choose an example"}<span aria-hidden="true">⌄</span></button>
     {open && <div className="example-picker-panel" id="comparison-examples"><input ref={search} aria-label="Search comparison examples" placeholder="Search examples…" value={query} onChange={event => setQuery(event.target.value)} /><div className="example-picker-list">{choices.map(item => <button className={`tone-${lessonTone(item)}`} key={item.title} aria-pressed={selected === item} onClick={() => { onSelect(item.title); setOpen(false); trigger.current?.focus(); }}><span className="example-number" aria-hidden="true">{lessons[target].indexOf(item) + 1}</span><span className="example-label"><small>{item.eyebrow.replace(/^\d+\s*[·.]\s*/, "")}</small><strong>{item.title}</strong></span><span className="example-choice-mark" aria-hidden="true">{selected === item ? "✓" : "›"}</span></button>)}{!choices.length && <p>No matching examples.</p>}</div></div>}
   </div>;
 }
@@ -4354,15 +4361,15 @@ function LanguageComparison({ language, lesson, editorCode, onClose }: { languag
   }, []);
   useEffect(() => { setPickedTitle(""); }, [lesson]);
   return <dialog ref={dialog} className="language-comparison" onCancel={onClose} aria-labelledby="language-comparison-title">
-    <header className="language-comparison-head"><div><small>CODESTEP</small><h2 id="language-comparison-title">Compare code</h2></div><button onClick={onClose} aria-label="Close language comparison">×</button></header>
+    <header className="language-comparison-head"><button className="app-back" onClick={onClose} aria-label="Back to lesson">← Back</button><div><small>CODESTEP</small><h2 id="language-comparison-title">Compare code</h2></div></header>
     <div className="language-comparison-controls">
-      <div className="compare-language-choices"><span className="comparison-source-label">Your language: <strong>{languageName(language)}</strong><small>Choose a language to compare with</small></span><div role="group" aria-label="Comparison language">{(Object.keys(lessons) as Language[]).filter(item => item !== language).map(item => <button key={item} aria-pressed={target === item} onClick={() => { setPickedTitle(pickedTitle && other ? matchingLesson(other, item)?.title ?? "" : ""); setTarget(item); }}>{languageName(item)}</button>)}</div></div>
+      <div className="compare-language-choices"><span className="comparison-source-label">Your language: <strong>{languageName(language)}</strong><small>Choose a language to compare with</small></span><div role="group" aria-label="Comparison language">{(Object.keys(lessons) as Language[]).filter(item => item !== language && item !== "html" && item !== "css").map(item => <button className={`language-choice language-${item}`} key={item} aria-pressed={target === item} onClick={() => { setPickedTitle(pickedTitle && other ? matchingLesson(other, item)?.title ?? "" : ""); setTarget(item); }}>{languageName(item)}</button>)}</div></div>
       <ComparisonExamplePicker key={target} target={target} selected={other} onSelect={setPickedTitle} />
       <p className="comparison-context">{!equivalent ? "These languages do not have a matching lesson for this topic. Choose an example to compare." : other && other !== equivalent ? "Your current code stays on the left. The selected example is shown on the right." : "Compare the same idea in two languages."}</p>
     </div>
     <div className="language-comparison-columns">
-      <section className="comparison-card"><header><h3>{languageName(language)} · {hasEditorCode ? "Your code" : "Lesson example"}</h3><b>{sourceLesson?.title ?? "No matching example"}</b></header><pre aria-label="Current code for comparison"><code><HighlightedCode code={sourceCode} language={language} /></code></pre><div className="comparison-description"><p>{hasEditorCode ? "This is the code currently in your editor." : sourceLesson ? <LessonExplanation lesson={sourceLesson} language={language} /> : "Choose another example to compare this topic."}</p></div></section>
-      <section className="comparison-card" key={target + (other?.title ?? "")}><header><h3>{languageName(target)} · Lesson example</h3><b>{other?.title ?? "Choose an example"}</b></header><pre aria-label="Other language code"><code>{other ? <HighlightedCode code={other.answer} language={target} /> : "Choose an example above to view its code."}</code></pre><div className="comparison-description">{other && <><p><LessonExplanation lesson={other} language={target} /></p>{target === "cpp" && <CppSetupGuide lesson={other} />}{other.runHint && <p>{other.runHint}</p>}</>}</div></section>
+      <section className={`comparison-card tone-${lessonTone(lesson)}`}><header><h3>{languageName(language)} · {hasEditorCode ? "Your code" : "Lesson example"}</h3><small className="comparison-topic">{lesson.eyebrow.split("·").pop()?.trim()}</small><b>{sourceLesson?.title ?? "No matching example"}</b></header><pre aria-label="Current code for comparison"><code><HighlightedCode code={sourceCode} language={language} /></code></pre><div className="comparison-description"><p>{hasEditorCode ? "This is the code currently in your editor." : sourceLesson ? <LessonExplanation lesson={sourceLesson} language={language} /> : "Choose another example to compare this topic."}</p></div></section>
+      <section className={`comparison-card ${other ? `tone-${lessonTone(other)}` : ""}`} key={target + (other?.title ?? "")}><header><h3>{languageName(target)} · Lesson example</h3>{other && <small className="comparison-topic">{other.eyebrow.split("·").pop()?.trim()}</small>}<b>{other?.title ?? "Choose an example"}</b></header><pre aria-label="Other language code"><code>{other ? <HighlightedCode code={other.answer} language={target} /> : "Choose an example above to view its code."}</code></pre><div className="comparison-description">{other && <><p><LessonExplanation lesson={other} language={target} /></p>{target === "cpp" && <CppSetupGuide lesson={other} />}{other.runHint && <p>{other.runHint}</p>}</>}</div></section>
     </div>
   </dialog>;
 }
@@ -4690,9 +4697,9 @@ export default function Home() {
     {comparisonOpen && <LanguageComparison language={language} lesson={current!} editorCode={code} onClose={() => setComparisonOpen(false)} />}
     <main className={`lesson-shell mobile-${mobilePane}`}>
       <header className="lesson-nav">
-        <div className="lesson-brand-group"><button className="drawer-toggle" onClick={() => setNavOpen((open) => !open)} aria-label={navOpen ? "Close lesson list" : "Open lesson list"} aria-expanded={navOpen}><span>☰</span></button><button className="brand brand-button" onClick={() => setLanguage(null)}><span className="brand-mark">&gt;_</span> Code<span>Step</span></button></div>
+        <div className="lesson-brand-group"><button className="app-back" onClick={() => index ? setIndex(index - 1) : setLanguage(null)} aria-label="Back">← Back</button><button className="drawer-toggle" onClick={() => setNavOpen((open) => !open)} aria-label={navOpen ? "Close lesson list" : "Open lesson list"} aria-expanded={navOpen}><span>☰</span></button><button className="brand brand-button" onClick={() => setLanguage(null)}><span className="brand-mark">&gt;_</span> Code<span>Step</span></button></div>
         <div className="lesson-progress"><div><span>{languageName(language)} path</span><b>{index + 1} / {lessons[language].length}</b></div><div className="progress-track"><i style={{width: `${Math.max(progress, 4)}%`}} /></div></div>
-        <div className="lesson-actions"><button className="settings-button" onClick={() => setSettingsOpen(true)}>⚙ <span>Settings</span></button><button className="exit-button" onClick={() => setLanguage(null)}>Exit lesson ×</button></div>
+        <div className="lesson-actions"><button className="settings-button" onClick={() => setSettingsOpen(true)}>⚙ <span>Settings</span></button></div>
       </header>
       <nav className="mobile-pane-tabs" aria-label="Lesson view"><button aria-pressed={mobilePane === "lesson"} onClick={() => setMobilePane("lesson")}>Lesson</button><button aria-pressed={mobilePane === "practice"} onClick={() => setMobilePane("practice")}>Practice</button></nav>
       <div className={`lesson-layout ${navOpen ? "drawer-open" : "drawer-closed"}`}>
@@ -4710,7 +4717,6 @@ export default function Home() {
         </aside>
         {navOpen && <button className="drawer-backdrop" aria-label="Close lesson list" onClick={() => setNavOpen(false)} />}
         <aside className="lesson-copy">
-          <button className="back-link" onClick={() => index ? setIndex(index - 1) : setLanguage(null)}>← Back</button>
           <div className="lesson-number">{String(index + 1).padStart(2, "0")} · {current!.eyebrow.split("·")[1]}</div>
           <h1>{current!.title}</h1>
           <p><LessonExplanation lesson={current!} language={language} /></p>
@@ -4727,29 +4733,29 @@ export default function Home() {
           {language === "cpp" && <CppSetupGuide key={current!.title} lesson={current!} initiallyOpen={index < 2} />}
           {language === "csharp" && <details className="symbol-guide csharp-essentials" open={index < 2}>
             <summary>C# essentials</summary>
-            <p>C# is a separate language from JavaScript and C++. Use the .NET SDK and a console project: <code>dotnet new console</code>, then <code>dotnet run</code>.</p>
-            <p>Declare types with <code>string</code> (text), <code>int</code> (whole numbers), <code>double</code> (decimals), and <code>bool</code> (true/false). <code>var</code> infers a fixed type from the initial value; it does not let that type change.</p>
-            <p>Names are case-sensitive: <code>Console.WriteLine</code> prints and <code>Console.ReadLine()</code> reads text, possibly null. End statements with <code>;</code>. Use <code>==</code> to compare and <code>=</code> to assign. C# has no JavaScript <code>===</code>.</p>
-            <p>Use <code>using System;</code> to bring library names into scope when needed. Modern console projects include common imports automatically. Top-level examples go in Program.cs; class examples include their own Main entry point, so replace the file rather than combining both styles.</p>
+            <p>C# is a separate language from JavaScript and C++. Use the .NET SDK and a console project: <InlineCode language={language} code={"dotnet new console"} />, then <InlineCode language={language} code={"dotnet run"} />.</p>
+            <p>Declare types with <InlineCode language={language} code={"string"} /> (text), <InlineCode language={language} code={"int"} /> (whole numbers), <InlineCode language={language} code={"double"} /> (decimals), and <InlineCode language={language} code={"bool"} /> (true/false). <InlineCode language={language} code={"var"} /> infers a fixed type from the initial value; it does not let that type change.</p>
+            <p>Names are case-sensitive: <InlineCode language={language} code={"Console.WriteLine"} /> prints and <InlineCode language={language} code={"Console.ReadLine()"} /> reads text, possibly null. End statements with <InlineCode language={language} code={";"} />. Use <InlineCode language={language} code={"=="} /> to compare and <InlineCode language={language} code={"="} /> to assign. C# has no JavaScript <InlineCode language={language} code={"==="} />.</p>
+            <p>Use <InlineCode language={language} code={"using System;"} /> to bring library names into scope when needed. Modern console projects include common imports automatically. Top-level examples go in Program.cs; class examples include their own Main entry point, so replace the file rather than combining both styles.</p>
           </details>}
           {language === "javascript" && current!.title === "Choose let or const" && <section className="variable-examples" aria-label="Changeable and fixed variables">
-            <article className="reference-card"><div className="reference-head"><b>let · can be reassigned</b></div><pre><code><HighlightedCode language="javascript" code={'let name = prompt ("Enter your name: ");\nconsole.log(`hello ${name}`);\n// this variable is changeable'} /></code></pre><p>Later, <code>name = "Sam";</code> is allowed. Printing name again would use Sam.</p></article>
-            <article className="reference-card"><div className="reference-head"><b>const · cannot be reassigned</b></div><pre><code><HighlightedCode language="javascript" code={'const name = prompt ("Enter your name: ");\nconsole.log(`hello ${name}`);\n// this variable is not changeable'} /></code></pre><p>Later, <code>name = "Sam";</code> causes an error. const prevents reassignment; arrays and objects can still have their contents changed.</p></article>
+            <article className="reference-card"><div className="reference-head"><b>let · can be reassigned</b></div><pre><code><HighlightedCode language="javascript" code={'let name = prompt ("Enter your name: ");\nconsole.log(`hello ${name}`);\n// this variable is changeable'} /></code></pre><p>Later, <InlineCode language={language} code={"name = \"Sam\";"} /> is allowed. Printing name again would use Sam.</p></article>
+            <article className="reference-card"><div className="reference-head"><b>const · cannot be reassigned</b></div><pre><code><HighlightedCode language="javascript" code={'const name = prompt ("Enter your name: ");\nconsole.log(`hello ${name}`);\n// this variable is not changeable'} /></code></pre><p>Later, <InlineCode language={language} code={"name = \"Sam\";"} /> causes an error. const prevents reassignment; arrays and objects can still have their contents changed.</p></article>
             <p>Run these examples separately. For this exercise, type the let example.</p>
           </section>}
           {current!.compareNode && <section className="runtime-guide" aria-label="Browser and Node input">
             <h2>The same name question in two places</h2>
             <h3>Browser · prompt()</h3><pre><code><HighlightedCode language="javascript" code={"let name = prompt(\"What is your name?\");\nconsole.log(`Hello ${name}`);"} /></code></pre>
             <h3>VS Code terminal · name.mjs</h3><pre><code><HighlightedCode language="javascript" code={"import { createInterface } from \"node:readline/promises\";\n\nconst input = createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\nlet name = await input.question(\"What is your name?\");\nconsole.log(`Hello ${name}`);\n\ninput.close();"} /></code></pre>
-            <p>Node needs a little setup before it can read terminal input. <code>await input.question()</code> waits for the answer. <code>input.close()</code> tells Node <b>“I’m done taking input.”</b> Call it when you finish asking questions.</p>
-            <p>Save as <code>name.mjs</code>, open <b>Terminal → New Terminal</b> in VS Code, then enter <code>node name.mjs</code>. Type a name and press Enter. Use the terminal so you can type a reply.</p>
+            <p>Node needs a little setup before it can read terminal input. <InlineCode language={language} code={"await input.question()"} /> waits for the answer. <InlineCode language={language} code={"input.close()"} /> tells Node <b>“I’m done taking input.”</b> Call it when you finish asking questions.</p>
+            <p>Save as <InlineCode language={language} code={"name.mjs"} />, open <b>Terminal → New Terminal</b> in VS Code, then enter <InlineCode language={language} code={"node name.mjs"} />. Type a name and press Enter. Use the terminal so you can type a reply.</p>
             <a href="/examples/name.mjs" download>Download name.mjs</a>
           </section>}
           {(language === "html" || language === "css") && <details className="symbol-guide" open={index === 0}>
             <summary>Run these examples in a browser</summary>
             <p>HTML describes page content; CSS styles it. Neither prints terminal messages. The result preview describes the page or shows its visible text.</p>
-            <p>Save a complete HTML page as <code>index.html</code> and open it in a browser. Short HTML examples show one part of that page; the page-structure lessons explain where each part belongs.</p>
-            <p>For CSS, save the rules in <code>styles.css</code> beside your HTML file. Add <code>{'<link rel="stylesheet" href="styles.css">'}</code> inside the HTML head, and include the element named by the selector in the body. Save your changes and refresh the browser.</p>
+            <p>Save a complete HTML page as <InlineCode language={language} code={"index.html"} /> and open it in a browser. Short HTML examples show one part of that page; the page-structure lessons explain where each part belongs.</p>
+            <p>For CSS, save the rules in <InlineCode language={language} code={"styles.css"} /> beside your HTML file. Add <code>{'<link rel="stylesheet" href="styles.css">'}</code> inside the HTML head, and include the element named by the selector in the body. Save your changes and refresh the browser.</p>
           </details>}
           {current!.runHint && <p className="run-hint">{current!.runHint}</p>}
           {(language === "cpp" || language === "python") && <details className="symbol-guide" open={index === 0 || current!.title === "Check an answer with if and else"}>
