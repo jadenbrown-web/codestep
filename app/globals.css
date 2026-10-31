@@ -372,3 +372,20 @@ html[data-theme="dark"] .comparison-card>header{background:color-mix(in srgb,var
 /* Keep line breaks and indentation identical in every syntax-coloured example. */
 pre code,pre code span{white-space:inherit;font-family:inherit;font-size:inherit;line-height:inherit;letter-spacing:inherit;tab-size:inherit}
 .editor-body textarea,.editor-body .code-guide,.editor-body .typed-code-layer{white-space:pre;tab-size:4;font-variant-ligatures:none}
+
+/* A quieter comparison surface keeps topic colours as small accents. */
+.language-comparison .comparison-card>header,html[data-theme="dark"] .language-comparison .comparison-card>header{position:relative;background:color-mix(in srgb,var(--cream) 94%,var(--tone-strong));border-top-width:2px}
+.language-comparison .comparison-card>header h3{padding-right:105px;color:var(--ink);font-size:14px;font-weight:650}
+.language-comparison .comparison-topic{font-size:9px;letter-spacing:.5px;padding:3px 6px}
+.language-comparison .example-picker-trigger[class*="tone-"],html[data-theme="dark"] .language-comparison .example-picker-trigger[class*="tone-"]{background:color-mix(in srgb,var(--cream) 96%,var(--tone-strong));border-left-width:3px}
+.compare-language-choices .language-choice{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--ink);border:1px solid #7e998b66;border-radius:8px;box-shadow:none}
+.compare-language-choices .language-choice:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--language-strong);flex:none}
+.compare-language-choices .language-choice[aria-pressed="true"]{background:color-mix(in srgb,var(--green-dark) 14%,var(--cream));color:var(--ink);border-color:var(--green-dark);box-shadow:none}
+.compare-language-choices .language-choice:focus{outline:none}.compare-language-choices .language-choice:focus-visible{outline:2px solid var(--green-dark);outline-offset:3px}
+.language-comparison-controls .comparison-context{color:var(--ink);opacity:.72}
+.comparison-card>header>.copy-code-control{position:absolute;right:12px;top:12px}
+.copy-code-control{display:inline-flex;position:relative;flex:none}.copy-code-button{min-height:32px;padding:6px 10px;border:1px solid #7e998b66;border-radius:6px;background:transparent;color:var(--ink);font:600 12px/1.3 var(--sans);cursor:pointer;white-space:nowrap}
+.copy-code-button:hover{background:#7e998b18}.copy-code-button:focus-visible{outline:2px solid var(--green-dark);outline-offset:2px}.copy-code-button:disabled{opacity:.4;cursor:default}
+.copy-code-status{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.panel-actions .copy-code-button{color:#c3dacc;font-size:11px;padding:5px 8px}
+@media(max-width:850px){.language-comparison .comparison-card>header h3{padding-right:83px;font-size:12px}.comparison-card>header>.copy-code-control{right:8px;top:8px}.copy-code-button{font-size:11px;min-height:28px;padding:5px 8px}.editor-panel .panel-actions{gap:6px}.panel-actions .copy-code-button{font-size:10px;padding:4px 5px}}

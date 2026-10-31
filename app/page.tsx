@@ -4357,6 +4357,36 @@ function ComparisonExamplePicker({ target, selected, onSelect }: { target: Langu
   </div>;
 }
 
+async function copyCodeText(value: string) {
+  try {
+    if (navigator.clipboard?.writeText) { await navigator.clipboard.writeText(value); return true; }
+  } catch { /* Try the browser's selection-based copy below. */ }
+  const previous = document.activeElement as HTMLElement | null;
+  const field = document.createElement("textarea");
+  field.value = value;
+  field.setAttribute("readonly", "");
+  field.style.cssText = "position:fixed;left:0;top:0;opacity:0;pointer-events:none";
+  // A modal dialog makes elements outside it inert.
+  (document.querySelector("dialog[open]") ?? document.body).appendChild(field);
+  field.select();
+  let copied = false;
+  try { copied = document.execCommand("copy"); } catch {}
+  field.remove();
+  previous?.focus();
+  return copied;
+}
+
+function CopyCodeButton({ code, label }: { code: string; label: string }) {
+  const [status, setStatus] = useState<"idle" | "copied" | "failed">("idle");
+  useEffect(() => { setStatus("idle"); }, [code]);
+  useEffect(() => {
+    if (status === "idle") return;
+    const timer = setTimeout(() => setStatus("idle"), 2400);
+    return () => clearTimeout(timer);
+  }, [status]);
+  return <span className="copy-code-control"><button className="copy-code-button" title={status === "failed" ? "Select the code and copy it manually." : "Copy code with its indentation and line breaks"} aria-label={`Copy ${label} code`} disabled={!code.trim()} onClick={async () => setStatus(await copyCodeText(code) ? "copied" : "failed")}>{status === "copied" ? "✓ Copied" : status === "failed" ? "Copy blocked" : "Copy code"}</button><span className="copy-code-status" role="status">{status === "copied" ? "Code copied." : status === "failed" ? "Copy was blocked. Select the code and copy it manually." : ""}</span></span>;
+}
+
 function LanguageComparison({ language, lesson, editorCode, showComments, onClose }: { language: Language; lesson: Lesson; editorCode: string; showComments: boolean; onClose: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [target, setTarget] = useState<Language>(language === "javascript" ? "cpp" : "javascript");
@@ -4383,8 +4413,8 @@ function LanguageComparison({ language, lesson, editorCode, showComments, onClos
       <p className="comparison-context">{!equivalent ? "These languages do not have a matching lesson for this topic. Choose an example to compare." : other && other !== equivalent ? "Your current code stays on the left. The selected example is shown on the right." : "Compare the same idea in two languages."}</p>
     </div>
     <div className="language-comparison-columns">
-      <section className={`comparison-card tone-${lessonTone(lesson)}`}><header><h3>{languageName(language)} · {hasEditorCode ? "Your code" : "Lesson example"}</h3><small className="comparison-topic">{lesson.eyebrow.split("·").pop()?.trim()}</small><b>{sourceLesson?.title ?? "No matching example"}</b></header><pre aria-label="Current code for comparison"><code><HighlightedCode code={sourceCode} language={language} /></code></pre><div className="comparison-description"><p>{hasEditorCode ? "This is the code currently in your editor." : sourceLesson ? <LessonExplanation lesson={sourceLesson} language={language} /> : "Choose another example to compare this topic."}</p></div></section>
-      <section className={`comparison-card ${other ? `tone-${lessonTone(other)}` : ""}`} key={target + (other?.title ?? "")}><header><h3>{languageName(target)} · Lesson example</h3>{other && <small className="comparison-topic">{other.eyebrow.split("·").pop()?.trim()}</small>}<b>{other?.title ?? "Choose an example"}</b></header><pre aria-label="Other language code"><code>{other ? <HighlightedCode code={lessonExample(other, target, showComments)} language={target} /> : "Choose an example above to view its code."}</code></pre><div className="comparison-description">{other && <><p><LessonExplanation lesson={other} language={target} /></p>{target === "cpp" && <CppSetupGuide lesson={other} />}{other.runHint && <p>{other.runHint}</p>}</>}</div></section>
+      <section className={`comparison-card tone-${lessonTone(lesson)}`}><header><CopyCodeButton code={sourceCode} label={languageName(language)} /><h3>{languageName(language)} · {hasEditorCode ? "Your code" : "Lesson example"}</h3><small className="comparison-topic">{lesson.eyebrow.split("·").pop()?.trim()}</small><b>{sourceLesson?.title ?? "No matching example"}</b></header><pre aria-label="Current code for comparison"><code><HighlightedCode code={sourceCode} language={language} /></code></pre><div className="comparison-description"><p>{hasEditorCode ? "This is the code currently in your editor." : sourceLesson ? <LessonExplanation lesson={sourceLesson} language={language} /> : "Choose another example to compare this topic."}</p></div></section>
+      <section className={`comparison-card ${other ? `tone-${lessonTone(other)}` : ""}`} key={target + (other?.title ?? "")}><header><CopyCodeButton code={other ? lessonExample(other, target, showComments) : ""} label={languageName(target)} /><h3>{languageName(target)} · Lesson example</h3>{other && <small className="comparison-topic">{other.eyebrow.split("·").pop()?.trim()}</small>}<b>{other?.title ?? "Choose an example"}</b></header><pre aria-label="Other language code"><code>{other ? <HighlightedCode code={lessonExample(other, target, showComments)} language={target} /> : "Choose an example above to view its code."}</code></pre><div className="comparison-description">{other && <><p><LessonExplanation lesson={other} language={target} /></p>{target === "cpp" && <CppSetupGuide lesson={other} />}{other.runHint && <p>{other.runHint}</p>}</>}</div></section>
     </div>
   </dialog>;
 }
@@ -4946,7 +4976,7 @@ export default function Home() {
             <button className="reference-next" onClick={nextLesson}>Continue to the next lesson →</button>
           </div> : <>
           <div className="editor-panel">
-            <div className="panel-bar"><div className="file-tab"><span>◆</span> {current!.fileName || challengeFile(language)}<small className="file-language">{languageName(language)}</small></div><div className="panel-actions"><button className="editor-mode-button" onClick={() => changeBlockMode(!blockMode)}>{blockMode ? "Use keyboard" : "Use blocks"}</button><button onClick={() => changeBlockCode(commentPrefix + (current!.starter || ""))} title="Reset code">↻ Reset</button></div></div>
+            <div className="panel-bar"><div className="file-tab"><span>◆</span> {current!.fileName || challengeFile(language)}<small className="file-language">{languageName(language)}</small></div><div className="panel-actions"><CopyCodeButton code={practiceCode.trim() ? code : commentPrefix + ghostSource} label="editor" /><button className="editor-mode-button" onClick={() => changeBlockMode(!blockMode)}>{blockMode ? "Use keyboard" : "Use blocks"}</button><button onClick={() => changeBlockCode(commentPrefix + (current!.starter || ""))} title="Reset code">↻ Reset</button></div></div>
             {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={commentPrefix + ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="editor-surface" style={{ minHeight: `max(100%, calc(${lineNumbers.length} * var(--editor-line-height) + var(--editor-padding)))`, minWidth: `max(100%, calc(${Math.max(...(code + guideCode).split("\n").map(line => line.length), 1)}ch + 86px))` }}><div className="line-numbers">{lineNumbers.map(n => <span key={n}>{n}</span>)}</div>{showGuide && <pre className={`code-guide ${current!.title === "Check an answer with if and else" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{current!.title === "Check an answer with if and else" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{colourTyping && <pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Check an answer with if and else"} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" wrap="off" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div></div>}
           </div>
           <div className="console-panel">
