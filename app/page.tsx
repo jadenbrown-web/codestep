@@ -4756,7 +4756,7 @@ export default function Home() {
     return (
       <>
       <main className="home-shell">
-        <header className="home-nav app-header"><div className="brand"><span className="brand-mark">&gt;_</span> Code<span>Step</span></div><div className="home-actions"><div className="nav-note">LEARN BY TYPING</div><button className="settings-button" onClick={() => setSettingsOpen(true)}>⚙ <span>Settings</span></button></div></header>
+        <header className="home-nav app-header"><div className="brand"><span className="brand-mark">&gt;_</span> Code<span>Step</span></div><div className="home-actions"><div className="nav-note">LEARN BY TYPING</div><button className="settings-button" onClick={() => setSettingsOpen(true)} aria-label="Settings"><svg className="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 3-.7 2.5-2.4 1L3.6 6 2 9l1.8 1.8v2.4L2 15l1.6 3 2.3-.5 2.4 1L9 21h6l.7-2.5 2.4-1 2.3.5 1.6-3-1.8-1.8v-2.4L22 9l-1.6-3-2.3.5-2.4-1L15 3Z"/><circle cx="12" cy="12" r="3"/></svg><span>Settings</span></button></div></header>
         <section className="hero">
           <div className="terminal-card" aria-hidden="true">
             <div className="terminal-top"><i/><i/><i/><span>{languageName(homeDemoLanguage)} · {homeDemos[homeDemoLanguage].file}</span></div>
@@ -4813,7 +4813,7 @@ export default function Home() {
       <header className="lesson-nav app-header">
         <div className="lesson-brand-group"><BackButton onClick={() => index ? setIndex(index - 1) : setLanguage(null)} /><button className="drawer-toggle" onClick={() => setNavOpen((open) => !open)} aria-label={navOpen ? "Close lesson list" : "Open lesson list"} aria-expanded={navOpen}><span>☰</span></button><button className="brand brand-button" onClick={() => setLanguage(null)}><span className="brand-mark">&gt;_</span> Code<span>Step</span></button></div>
         <div className="lesson-progress"><div><span>{languageName(language)} path</span><b>{index + 1} / {lessons[language].length}</b></div><div className="progress-track"><i style={{width: `${Math.max(progress, 4)}%`}} /></div></div>
-        <div className="lesson-actions"><button className="settings-button" onClick={() => setSettingsOpen(true)}>⚙ <span>Settings</span></button></div>
+        <div className="lesson-actions"><button className="settings-button" onClick={() => setSettingsOpen(true)} aria-label="Settings"><svg className="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 3-.7 2.5-2.4 1L3.6 6 2 9l1.8 1.8v2.4L2 15l1.6 3 2.3-.5 2.4 1L9 21h6l.7-2.5 2.4-1 2.3.5 1.6-3-1.8-1.8v-2.4L22 9l-1.6-3-2.3.5-2.4-1L15 3Z"/><circle cx="12" cy="12" r="3"/></svg><span>Settings</span></button></div>
       </header>
       <nav className="lesson-tools" aria-label="Lesson tools">
         <button className="compare-language-button" aria-label="Compare with another language" onClick={() => setComparisonOpen(true)}><span className="compare-full-label">Compare with another language</span><span className="compare-short-label" aria-hidden="true">Compare languages</span></button>

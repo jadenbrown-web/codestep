@@ -458,3 +458,28 @@ html[data-theme] :is(.theme-options button.selected,.compare-language-choices .l
 @media(max-width:850px){:root{--chrome-gutter:10px}.editor-panel .panel-actions{padding:5px 8px;gap:8px}.editor-panel .panel-actions button,.console-panel .console-bar button,.comparison-code-actions .copy-code-button,.lesson-tools .copy-code-button,.lesson-tools .compare-language-button,.feedback button{font-size:12px;padding:7px 10px}.console-panel .console-bar{height:42px;min-height:42px}.comparison-code-actions{min-height:46px}.language-comparison-columns .comparison-card{display:block}}
 
 .compare-short-label{display:none}@media(max-width:500px){.compare-full-label{display:none}.compare-short-label{display:inline}}
+
+/* Keep lesson rows inside the drawer, including long topic labels. */
+.lesson-drawer .drawer-lessons{box-sizing:border-box;min-width:0;scrollbar-gutter:stable;padding:12px 10px}
+.drawer-lessons button{box-sizing:border-box;max-width:100%;grid-template-columns:38px minmax(0,1fr) 16px}
+.drawer-lessons button>span:nth-child(2){min-width:0;overflow-wrap:anywhere}
+.drawer-lessons button>i{justify-self:center;width:16px;text-align:center}
+.settings-button{display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.settings-icon{width:20px;height:20px;flex:none}
+@media(max-width:850px){
+ :root{--control-height:44px}
+ .app-header.lesson-nav :is(.app-back,.drawer-toggle,.settings-button),
+ .lesson-brand-group .brand-button,.lesson-brand-group .brand-mark{box-sizing:border-box;height:var(--control-height);min-height:var(--control-height);border-radius:var(--control-radius)}
+ .app-header.lesson-nav :is(.drawer-toggle,.settings-button),.lesson-brand-group .brand-button,.lesson-brand-group .brand-mark{width:var(--control-height);min-width:var(--control-height);padding:0}
+ .lesson-brand-group .brand-mark{display:grid;place-items:center;margin:0}
+ .lesson-brand-group .brand-button{display:inline-flex;align-items:center;justify-content:center}
+ .mobile-pane-tabs button{height:var(--control-height);min-height:var(--control-height);padding:8px 12px}
+ .console-panel .console-bar{height:auto;min-height:54px;padding-top:5px;padding-bottom:5px}
+ /* One vertical scroll area prevents sticky bars from obscuring examples. */
+ .language-comparison-columns{display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden}
+ .language-comparison-columns .comparison-card{display:block;flex:none;overflow:hidden}
+ .language-comparison-columns .comparison-card>header,.comparison-code-actions{position:static;top:auto;z-index:auto}
+ .language-comparison-columns .comparison-card>header{min-height:0;overflow:visible}
+ .language-comparison-columns .comparison-card>pre{overflow-x:auto;overflow-y:hidden;max-height:none;min-height:0;white-space:pre}
+ .language-comparison-columns .comparison-description{overflow:visible}
+}
