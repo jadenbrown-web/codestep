@@ -1269,3 +1269,15 @@ html[data-theme="dark"]{--workspace-rail:#1c2d24;--workspace-filebar:#18281f}
  .home-shell .course-card .course-bottom{grid-row:4;align-self:end}
 }
 @media(max-height:600px){.home-shell .course-card>p{display:none}}
+
+/* Saved shortcuts stay above the independently scrolling all-topics list. */
+.drawer-pins{flex:none;min-width:0;padding:8px;border-bottom:1px solid var(--drawer-edge)}
+.drawer-pins>b{display:block;margin:0 0 6px;font:700 10px/1.3 var(--sans);text-transform:uppercase;letter-spacing:1px;color:var(--ui-muted)}
+.drawer-pins .pinned-topic-shortcuts{display:grid;grid-template-columns:repeat(var(--pin-count,2),minmax(0,1fr));gap:6px;width:100%;min-width:0}
+.drawer-pins .pinned-topic-shortcuts button,html[data-theme] .drawer-pins .pinned-topic-shortcuts button{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:5px;box-sizing:border-box;min-width:0;width:100%;min-height:44px;height:auto;margin:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;text-align:left}
+.drawer-pins .pinned-topic-label,html[data-theme] .drawer-pins .pinned-topic-label{display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:100%;min-height:32px;padding:5px;border:1px solid var(--pin-fill);border-radius:5px;color:var(--pin-fill);background:transparent;font:850 11px/1.2 var(--sans)}
+.drawer-pins button[data-active="true"] .pinned-topic-label,html[data-theme] .drawer-pins button[data-active="true"] .pinned-topic-label{background:var(--pin-fill);color:#101813}
+.drawer-pins .pinned-topic-shortcuts button>small{font:400 11px/1.35 var(--sans);color:var(--ui-text);overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+/* Comparison's nested drawer controls are independent of the navigation grid. */
+.app-header.app-header .drawer-pins .pinned-topic-shortcuts button[aria-label]:not(:disabled),html[data-theme] .app-header.app-header .drawer-pins .pinned-topic-shortcuts button[aria-label]:not(:disabled){display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:5px;width:100%;min-width:0;max-width:none;height:auto;min-height:44px;max-height:none;margin:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;text-align:left}
+.app-header.app-header .drawer-pins button[data-active="true"]::after,html[data-theme] .app-header.app-header .drawer-pins button[data-active="true"]::after{display:none!important}
