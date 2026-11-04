@@ -1241,3 +1241,10 @@ html[data-theme="dark"]{--workspace-rail:#1c2d24;--workspace-filebar:#18281f}
 .editor-panel .panel-bar,.language-comparison-columns .comparison-card>.comparison-filebar,.home-shell .terminal-top{background:var(--workspace-filebar)}
 .editor-panel,.comparison-card,.home-shell .terminal-card{box-shadow:none}
 .home-shell .terminal-card:before,.home-shell .terminal-card:after{display:none}
+
+/* Navigation keeps its compact active marker; topic and theme tiles use fill. */
+.app-header.app-header button[data-active="true"]::after,html[data-theme] .app-header.app-header button[data-active="true"]::after{content:"";display:block!important;position:absolute;width:16px;height:3px;left:14px;bottom:3px;border-radius:3px;background:var(--ui-text);pointer-events:none}
+/* The home demo blends into the page; only language choices have card edges. */
+.home-shell .hero .terminal-card{border:0;border-radius:0;box-shadow:none;background:var(--workspace-rail)}
+.home-shell .terminal-top,.home-shell .terminal-code,.home-shell .terminal-output,html[data-theme] .home-shell .terminal-top,html[data-theme] .home-shell .terminal-code,html[data-theme] .home-shell .terminal-output{background:transparent;border:0;border-radius:0}
+.home-shell>.hero,.home-shell>.courses,html[data-theme] .home-shell>.hero,html[data-theme] .home-shell>.courses{background:var(--workspace-rail);border:0;box-shadow:none}
