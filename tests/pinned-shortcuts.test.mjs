@@ -49,3 +49,14 @@ test('desktop pin controls allow a fifth shortcut and disable a sixth', () => {
   const sixth = TopicPinButton({ topic: 'F', pins: [...four, 'E'], limit: 5, onToggle() {} });
   assert.equal(sixth.props.disabled, true);
 });
+
+test('drawer pins announce removal and remove the tapped pin only', () => {
+  const removed = [];
+  const drawerProps = { ...props, showTitles: true, removeOnSelect: true, onSelect: topic => removed.push(topic) };
+  const tree = PinnedTopicShortcuts(drawerProps);
+  tree.props.children[1].props.onClick();
+  assert.deepEqual(removed, ['Run code after a delay']);
+  const html = renderToStaticMarkup(React.createElement(PinnedTopicShortcuts, drawerProps));
+  assert.match(html, /aria-label="Unpin Make something happen"/);
+  assert.doesNotMatch(html, /aria-label="Open /);
+});
