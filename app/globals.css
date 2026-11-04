@@ -626,3 +626,18 @@ html[data-theme] :is(.theme-options button.selected,.compare-language-choices .l
 .app-header .settings-icon,.app-header .drawer-toggle .status-icon{display:block;width:var(--navigation-icon-size);height:var(--navigation-icon-size);flex:none}
 .app-header .app-back{box-sizing:border-box;flex:none;width:76px;min-width:76px;max-width:76px;height:var(--control-height);min-height:var(--control-height);max-height:var(--control-height);padding:0 8px;border-radius:var(--control-radius);font-size:13px;line-height:1.25}
 @media(max-width:850px){.app-header.home-nav,.app-header.lesson-nav,.language-comparison .comparison-topbar{height:52px;min-height:52px}}
+
+/* Compact comparison chrome: one topic title, language names and icon actions. */
+.language-comparison[open]{gap:10px}
+.language-comparison-controls{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;padding:0 12px;margin:0}
+.language-comparison-controls .compare-language-choices{width:100%;gap:0}
+.compare-language-choices>div{display:flex;width:100%;gap:8px;overflow:visible}
+.compare-language-choices .language-choice{display:inline-flex;align-items:center;justify-content:center;flex:1;min-width:0;height:var(--control-height);min-height:var(--control-height);box-sizing:border-box;padding:6px 8px;gap:6px;font-size:13px;line-height:1.25;white-space:normal}
+.language-comparison-controls .comparison-context{margin:0;min-height:0;font-size:13px;line-height:1.4}
+.language-comparison-columns .comparison-card>header{padding:10px 8px}
+.language-comparison-columns .comparison-language-title{margin:0 0 8px;min-height:24px;gap:7px}
+.language-comparison-columns .comparison-code-actions{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:6px;min-height:52px;padding:4px 8px}
+.comparison-code-actions>span:first-child{flex:1;min-width:0}
+.comparison-code-actions .copy-code-control{flex:0 0 var(--control-height);width:var(--control-height);min-width:var(--control-height);min-height:var(--control-height)}
+.comparison-code-actions .copy-code-button{width:var(--control-height);height:var(--control-height);min-height:var(--control-height);padding:0;flex:none;border-color:transparent;background:transparent;display:inline-flex;align-items:center;justify-content:center}
+.comparison-code-actions .copy-code-button:hover{background:var(--ui-hover)}
