@@ -5,6 +5,8 @@ import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboa
 import CodeBlocks from "./CodeBlocks";
 import CodeLineNumbers from "./CodeLineNumbers";
 import useQuickCodeReveal from "./useQuickCodeReveal";
+import { CODE_TYPING_START_DELAY, codeTypingDelay } from "./typing-rhythm";
+import { filterTopicLessons, lessonTopic, restoreTopicPins, toggleTopicPin } from "./topic-pins";
 import { checkLesson, checkPreparedLesson, prepareChecker } from "./lesson-checker";
 
 type Language = "javascript" | "csharp" | "cpp" | "python" | "html" | "css";
@@ -4251,6 +4253,11 @@ function LearningCode({ code, starter, language, caretIndex, focusConditions }: 
   </>;
 }
 
+function PinnedTopicShortcuts({ topics, activeTopic, onSelect }: { topics: string[]; activeTopic: string | null; onSelect: (topic: string) => void }) {
+  if (!topics.length) return null;
+  return <nav className="pinned-topic-shortcuts" aria-label="Pinned topics">{topics.map(topic => <button key={topic} data-active={activeTopic === topic} aria-pressed={activeTopic === topic} onClick={() => onSelect(topic)} title={`Open ${topic} lessons`}>{topic}</button>)}</nav>;
+}
+
 function HomeButton({ onClick, active = false }: { onClick: () => void; active?: boolean }) {
   return <button className="drawer-toggle home-button nav-control" onClick={onClick} aria-current={active ? "page" : undefined} aria-label="Go home" title="Go home"><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>;
 }
@@ -4511,6 +4518,19 @@ export default function Home() {
     return () => narrow.removeEventListener("change", update);
   }, []);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [pinnedByLanguage, setPinnedByLanguage] = useState<Record<string, string[]>>({});
+  const [pinsReady, setPinsReady] = useState(false);
+  const [topicFilter, setTopicFilter] = useState<string | null>(null);
+  useEffect(() => {
+    const available = Object.fromEntries(Object.entries(lessons).map(([key, course]) => [key, [...new Set(course.map(lessonTopic))]]));
+    try { setPinnedByLanguage(restoreTopicPins(localStorage.getItem("codestep-pinned-topics"), available)); } catch {}
+    setPinsReady(true);
+  }, []);
+  useEffect(() => {
+    if (!pinsReady) return;
+    try { localStorage.setItem("codestep-pinned-topics", JSON.stringify(pinnedByLanguage)); } catch {}
+  }, [pinnedByLanguage, pinsReady]);
+  useEffect(() => { setTopicFilter(null); }, [language]);
   const [themeMode, setThemeMode] = useState<ThemeMode>("system");
   const [showGuide, setShowGuide] = useState(true);
   const [showComments, setShowComments] = useState(false);
@@ -4569,6 +4589,13 @@ export default function Home() {
   const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0, cpp: 0, python: 0, html: 0, css: 0 });
 
   const current = language ? lessons[language][index] : null;
+  const pinnedTopics = language ? pinnedByLanguage[language] ?? [] : [];
+  const visibleLessons = language ? filterTopicLessons(lessons[language], topicFilter) : [];
+  const openPinnedTopic = (topic: string) => { setTopicFilter(topic); setSettingsOpen(false); setNavOpen(true); };
+  const togglePinnedTopic = (topic: string) => {
+    if (!language) return;
+    setPinnedByLanguage(previous => ({ ...previous, [language]: toggleTopicPin(previous[language] ?? [], topic) }));
+  };
   const ghostSource = current && language ? showComments ? annotatedLessonCode(current, language) : withoutGuideComments(current.answer, language) : "";
   const visibleGhost = ghostSource.slice(0, ghostLength);
   const commentPrefix = current && language && showComments ? lessonComment(current, language) : "";
@@ -4619,10 +4646,10 @@ export default function Home() {
       setGhostLength(position);
       if (position >= ghostSource.length) return;
       const character = ghostSource[position - 1];
-      const rhythm = character === "\n" ? 24 : /[.,;{}]/.test(character) ? 11 : 5 + (position % 3) * 2;
+      const rhythm = codeTypingDelay(character, position);
       typingTimer = setTimeout(typeGhostCharacter, rhythm);
     };
-    const delay = setTimeout(typeGhostCharacter, 180);
+    const delay = setTimeout(typeGhostCharacter, CODE_TYPING_START_DELAY);
     return () => { clearTimeout(delay); if (typingTimer) clearTimeout(typingTimer); };
   }, [current, ghostSource, showGuide]);
 
@@ -4684,10 +4711,10 @@ export default function Home() {
     const typeCode = () => {
       codePosition += 1;
       setHomeCodeLength(codePosition);
-      if (codePosition < demoCode.length) timer = setTimeout(typeCode, demoCode[codePosition - 1] === "\n" ? 28 : 10);
+      if (codePosition < demoCode.length) timer = setTimeout(typeCode, codeTypingDelay(demoCode[codePosition - 1], codePosition));
       else timer = setTimeout(typeOutput, 160);
     };
-    timer = setTimeout(typeCode, 220);
+    timer = setTimeout(typeCode, CODE_TYPING_START_DELAY);
     return () => clearTimeout(timer);
   }, [language, homeDemoLanguage]);
 
@@ -4835,16 +4862,19 @@ export default function Home() {
         <aside className="lesson-drawer" aria-label="Lesson list">
           <div className="drawer-head"><span className="drawer-language-logo" aria-hidden="true"><img src={`/language-logos/${language}.svg`} alt="" width="36" height="36" /></span><div><small>LEARNING PATH</small><b>{languageName(language)}</b></div></div>
           <div className="drawer-summary"><div><span>{completed[language]} of {lessons[language].length} completed</span><b>{Math.round(completed[language] / lessons[language].length * 100)}%</b></div><div className="drawer-progress"><i style={{width: `${completed[language] / lessons[language].length * 100}%`}} /></div></div>
+          <div className="drawer-pin-hint">Pin up to two topics · {pinnedTopics.length}/2</div>
+          {topicFilter && <div className="topic-filter-summary"><b>{topicFilter}</b><button onClick={() => setTopicFilter(null)} aria-label="Show all topics">All topics</button></div>}
           <nav className="drawer-lessons topic-list">
-            {lessons[language].map((lesson, lessonIndex) => (
-              <button key={lesson.title} data-active={lessonIndex === index} className={`tone-${lessonTone(lesson)} ${lessonIndex === index ? "active" : ""} ${lessonIndex < completed[language] ? "done" : ""}`} onClick={() => { setIndex(lessonIndex); if (window.innerWidth <= 850) setNavOpen(false); }}>
+            {visibleLessons.map(({ lesson, index: lessonIndex }) => (
+              <div className="lesson-list-row" key={lesson.title}><button data-active={lessonIndex === index} className={`tone-${lessonTone(lesson)} ${lessonIndex === index ? "active" : ""} ${lessonIndex < completed[language] ? "done" : ""}`} onClick={() => { setIndex(lessonIndex); if (window.innerWidth <= 850) setNavOpen(false); }}>
                 <span className="lesson-state">{lessonIndex + 1}</span><span><small>{lesson.eyebrow.split("·")[1]}</small><b>{lesson.title}</b></span><i>›</i>
-              </button>
+              </button><button className="topic-pin-button" aria-label={`${pinnedTopics.includes(lessonTopic(lesson)) ? "Unpin" : "Pin"} ${lessonTopic(lesson)}`} title={pinnedTopics.includes(lessonTopic(lesson)) ? `Unpin ${lessonTopic(lesson)}` : pinnedTopics.length >= 2 ? "Unpin a topic before adding another" : `Pin ${lessonTopic(lesson)}`} aria-pressed={pinnedTopics.includes(lessonTopic(lesson))} data-active={pinnedTopics.includes(lessonTopic(lesson))} disabled={!pinnedTopics.includes(lessonTopic(lesson)) && pinnedTopics.length >= 2} onClick={() => togglePinnedTopic(lessonTopic(lesson))}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 3h6l-1 6 4 4v2H6v-2l4-4-1-6ZM12 15v6"/></svg></button></div>
             ))}
           </nav>
         </aside>
         {navOpen && <button className="drawer-backdrop" aria-label="Close lesson list" onClick={() => setNavOpen(false)} />}
         <aside className="lesson-copy">
+          <PinnedTopicShortcuts topics={pinnedTopics} activeTopic={navOpen ? topicFilter : null} onSelect={openPinnedTopic} />
           <div className="lesson-number">{String(index + 1).padStart(2, "0")} · {current!.eyebrow.split("·")[1]}</div>
           <h1>{current!.title}</h1>
           <p><LessonExplanation lesson={current!} language={language} /></p>
@@ -5040,6 +5070,7 @@ export default function Home() {
           </div> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className="file-tab"><img className="editor-file-logo" src={`/language-logos/${language}.svg`} alt="" width="18" height="18" /> {current!.fileName || challengeFile(language)}<small className="file-language">{languageName(language)}</small></div><div className="panel-actions"><span className="mobile-editor-copy"><CopyCodeButton iconOnly code={lessonExample(current!, language, showComments)} label="full lesson example for VS Code" /></span><button className="editor-mode-button" onClick={() => changeBlockMode(!blockMode)} title={blockMode ? "Switch to keyboard" : "Switch to code blocks"} aria-label={blockMode ? "Switch to keyboard" : "Switch to code blocks"}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{blockMode ? <><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 9h1m4 0h1m4 0h1M6 13h1m4 0h1m4 0h1M8 16h8"/></> : <><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="18" height="8" rx="1"/></>}</svg><span className="editor-action-label">{blockMode ? "Use keyboard" : "Use blocks"}</span></button><button onClick={() => changeBlockCode(commentPrefix + (current!.starter || ""))} title="Reset code" aria-label="Reset code"><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></svg><span className="editor-action-label">Reset</span></button></div></div>
+            <PinnedTopicShortcuts topics={pinnedTopics} activeTopic={navOpen ? topicFilter : null} onSelect={openPinnedTopic} />
             {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={commentPrefix + ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="editor-surface" style={{ minHeight: `max(100%, calc(${lineNumbers.length} * var(--editor-line-height) + var(--editor-padding)))`, minWidth: `max(100%, calc(${Math.max(...(code + guideCode).split("\n").map(line => line.length), 1)}ch + 86px))` }}><CodeLineNumbers text={code + (showGuide ? guideCode : "")} minimumLines={8} />{showGuide && <pre className={`code-guide ${current!.title === "Check an answer with if and else" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{current!.title === "Check an answer with if and else" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{<pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Check an answer with if and else"} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" wrap="soft" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div></div>}
           </div>
           <div className="console-panel">
