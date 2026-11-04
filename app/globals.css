@@ -517,3 +517,36 @@ html[data-theme] :is(.theme-options button.selected,.compare-language-choices .l
 .lesson-drawer .drawer-head>.drawer-language-logo{display:grid;place-items:center;width:40px;height:40px;border:0;background:transparent!important;box-shadow:none;border-radius:0}
 .drawer-language-logo img{display:block;width:36px;height:36px;object-fit:contain}
 .lesson-drawer .drawer-lessons{padding-top:6px;padding-bottom:12px}
+
+/* Equal path tiles and explicit logo dimensions avoid Safari percentage sizing. */
+.course-grid{grid-auto-rows:1fr;align-items:stretch}
+.course-card{height:100%;box-sizing:border-box}
+.course-card .course-icon.language-logo{width:52px;height:52px;flex:none}
+.course-card .language-logo img{width:52px;height:52px;max-width:none;max-height:none}
+/* Paired rows keep both examples visible and aligned while scrolling together. */
+.language-comparison-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto auto minmax(120px,auto) auto;grid-auto-flow:column;gap:0 12px;overflow:auto;align-content:start;min-height:0}
+.language-comparison-columns .comparison-card{display:grid;grid-template-rows:subgrid;grid-row:1 / span 4;min-width:0;min-height:0;overflow:clip;flex:initial}
+.language-comparison-columns .comparison-card>header{position:static;min-height:0;overflow:visible;padding:12px}
+.language-comparison-columns .comparison-card>header h3{padding-right:0;overflow-wrap:anywhere}
+.comparison-code-actions{position:static;top:auto;min-height:0;padding:8px 10px;flex-wrap:wrap}
+.comparison-code-actions>span{min-width:0;overflow-wrap:anywhere}
+.language-comparison-columns .comparison-card>pre{min-height:0;max-height:none;overflow:visible;white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;padding:12px;margin:0}
+.language-comparison-columns .comparison-description{overflow:visible;min-width:0;padding:12px;overflow-wrap:anywhere}
+.language-comparison-columns .comparison-description pre{white-space:pre-wrap;overflow-wrap:anywhere}
+.example-picker-panel input{box-sizing:border-box;width:100%;min-width:0;font-size:16px;line-height:1.4}
+.example-picker-panel{box-sizing:border-box;min-width:0;max-width:calc(100vw - 24px)}
+@media(max-width:850px){
+ .course-card .course-icon.language-logo,.course-card .language-logo img{width:32px;height:32px}
+ .language-comparison-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 8px;overflow:auto}
+ .language-comparison-columns .comparison-card{display:grid;grid-template-rows:subgrid;overflow:clip}
+ .language-comparison-columns .comparison-card>header{min-height:0;padding:9px 8px}
+ .language-comparison-columns .comparison-card>header h3{font-size:12px;padding-right:0}
+ .language-comparison-columns .comparison-card>header b{font-size:12px;line-height:1.35}
+ .comparison-code-actions{display:flex;flex-direction:column;align-items:stretch;gap:6px;padding:7px 8px;min-height:0}
+ .comparison-code-actions>span{font-size:11px}
+ .comparison-code-actions .copy-code-button{min-width:0;width:100%;font-size:12px;padding:6px}
+ .language-comparison-columns .comparison-card>pre{padding:10px 8px;font-size:12px;line-height:1.6;white-space:pre-wrap;overflow:visible;min-height:0}
+ .language-comparison-columns .comparison-description{padding:10px 8px}
+ .comparison-description>p{font-size:12px;line-height:1.5}
+ .example-picker-panel input{font-size:16px}
+}
