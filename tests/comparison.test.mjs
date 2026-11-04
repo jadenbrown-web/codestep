@@ -17,8 +17,8 @@ function setup(language = 'python') {
   let cursor = 0;
   const Picker = () => null;
   const Code = ({ code }) => React.createElement(React.Fragment, null, code);
-  const names = ['React', 'useState', 'useRef', 'useEffect', 'lessons', 'lessonComment', 'lessonExample', 'languageName', 'lessonTone', 'challengeFile', 'MenuHeader', 'ComparisonExamplePicker', 'CopyCodeButton', 'HighlightedCode', 'LessonExplanation', 'CppSetupGuide'];
-  const values = [React, initial => { const index = cursor++; if (!(index in states)) states[index] = initial; return [states[index], next => { states[index] = next; }]; }, () => ({ current: null }), () => {}, lessons, () => '', lesson => lesson.answer, value => value, () => 'blue', () => 'code', () => null, Picker, () => null, Code, ({ lesson }) => lesson.explanation, () => null];
+  const names = ['React', 'useState', 'useRef', 'useEffect', 'lessons', 'lessonComment', 'lessonExample', 'languageName', 'lessonTone', 'challengeFile', 'MenuHeader', 'ComparisonExamplePicker', 'CopyCodeButton', 'HighlightedCode', 'LessonExplanation', 'CppSetupGuide', 'BackButton'];
+  const values = [React, initial => { const index = cursor++; if (!(index in states)) states[index] = initial; return [states[index], next => { states[index] = next; }]; }, () => ({ current: null }), () => {}, lessons, () => '', lesson => lesson.answer, value => value, () => 'blue', () => 'code', () => null, Picker, () => null, Code, ({ lesson }) => lesson.explanation, () => null, () => null];
   const Component = new Function(...names, compiled + '\nreturn LanguageComparison;')(...values);
   const props = { language, lesson: lessons[language][0], editorCode: 'original editor code', showComments: false, onClose() {} };
   function render() { cursor = 0; return Component(props); }

@@ -588,3 +588,33 @@ html[data-theme] :is(.theme-options button.selected,.compare-language-choices .l
  .editor-panel .panel-actions button{box-sizing:border-box;min-width:0;width:100%;height:var(--control-height);min-height:var(--control-height);padding:6px;font-size:12px;line-height:1.2}
  .editor-panel .panel-actions .copy-code-button{font-size:12px;padding:6px}
 }
+
+/* Same Back + menu structure in lessons and comparison. */
+.language-comparison{padding:0}
+.language-comparison .comparison-topbar{position:relative;z-index:5;flex:none;min-height:60px;height:60px;padding:0 12px;gap:16px;border-radius:0}
+.comparison-topbar h2{margin:0;font-size:18px;line-height:1.2;letter-spacing:0}
+.comparison-example-menu{display:block;position:relative;flex:none}
+.comparison-topbar .drawer-toggle{width:44px;height:44px;min-height:44px}
+.comparison-menu-backdrop{position:fixed;inset:60px 0 0;border:0;background:#08110d88;z-index:19;cursor:pointer}
+.comparison-example-menu .example-picker-panel{position:fixed;inset:60px auto 0 0;width:min(310px,86vw);height:calc(var(--visible-height,100dvh) - 60px);max-height:none;max-width:none;min-width:0;margin:0;padding:12px;box-sizing:border-box;display:flex;flex-direction:column;gap:10px;overflow:hidden;border-radius:0;border:0;border-right:1px solid var(--ui-border);background:var(--ui-surface);z-index:20}
+.comparison-menu-title{font-size:15px;line-height:1.4;flex:none}
+.comparison-example-menu .example-picker-panel input{flex:none;font-size:16px;min-height:44px}
+.comparison-example-menu .example-picker-list{flex:1;min-height:0;max-height:none;overflow:auto;overscroll-behavior:contain}
+.language-comparison-controls{padding:0 12px;margin:0}
+.language-comparison-columns{margin:0 12px 12px}
+.language-comparison-controls .comparison-context{font-size:13px;font-weight:650;min-height:0}
+.editor-file-logo{display:block;flex:none;object-fit:contain}
+@media(max-width:850px){
+ .language-comparison{padding:0}
+ .language-comparison .comparison-topbar{min-height:52px;height:52px;padding:0 10px}
+ .comparison-menu-backdrop{top:52px}
+ .comparison-example-menu .example-picker-panel{top:52px;height:calc(var(--visible-height,100dvh) - 52px)}
+ .language-comparison-controls{padding:0 12px}
+ .editor-panel .panel-bar{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto;align-items:center;min-height:48px}
+ .editor-panel .file-tab{height:auto;min-height:48px;padding:8px;min-width:0;font-size:12px;gap:6px}
+ .editor-panel .panel-actions{display:flex;width:auto;min-width:0;gap:2px;padding:2px 4px;margin:0;flex-wrap:nowrap}
+ .editor-panel .panel-actions :is(button,.mobile-editor-copy,.copy-code-control){width:44px;min-width:44px;height:44px;min-height:44px;flex:none;box-sizing:border-box}
+ .editor-panel .panel-actions button,.editor-panel .panel-actions .copy-code-button{padding:0;border-color:transparent;background:transparent;display:inline-flex;align-items:center;justify-content:center}
+ .editor-panel .panel-actions button:hover{background:var(--ui-hover)}
+ .editor-panel .panel-actions .editor-action-label{display:none}
+}
