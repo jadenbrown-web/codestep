@@ -660,3 +660,18 @@ html[data-theme] :is(.theme-options button.selected,.compare-language-choices .l
  .editor-body .code-guide,.editor-body .typed-code-layer{box-sizing:border-box;width:calc(100% - 22px);margin-left:22px}
  .editor-body textarea{left:22px;width:calc(100% - 22px)}
 }
+
+/* Code stays faithful to the file; lengthy notes use the full available width. */
+.language-comparison-columns{grid-template-rows:max-content max-content minmax(150px,1fr);margin-bottom:0}
+.language-comparison-columns .comparison-card>.numbered-comparison-code{min-width:0;overflow:hidden;border-bottom:1px solid var(--ui-border);border-radius:0 0 12px 12px;white-space:pre;overflow-wrap:normal;word-break:normal}
+.numbered-comparison-code>code{box-sizing:border-box;display:block;min-width:0;width:calc(100% - 24px);margin-left:24px;overflow-x:auto;overflow-y:hidden;white-space:pre;overflow-wrap:normal;word-break:normal;tab-size:4;scrollbar-width:thin;padding-bottom:8px;overscroll-behavior-x:contain}
+.numbered-comparison-code .code-line-ruler-row{grid-template-columns:24px minmax(0,1fr)}
+.numbered-comparison-code .code-line-ruler .code-line-measure{white-space:pre;overflow-wrap:normal;word-break:normal;tab-size:4}
+.comparison-notes{flex:none;min-height:44px;max-height:45dvh;overflow:auto;margin:0 12px 12px;border:1px solid var(--ui-border);border-radius:8px;background:var(--ui-surface);font-size:14px;line-height:1.6;overscroll-behavior:contain}
+.comparison-notes>summary{position:sticky;top:0;z-index:1;min-height:44px;box-sizing:border-box;padding:10px 12px;cursor:pointer;background:var(--ui-surface);font-weight:650}
+.comparison-notes-language{padding:12px 14px;border-top:1px solid var(--ui-border)}
+.comparison-notes-language>h3{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:14px}
+.comparison-notes .comparison-description{display:block;padding:0;min-width:0;overflow:visible}
+.comparison-notes .comparison-description>p{font-size:14px;line-height:1.65;margin:0 0 10px}
+.comparison-notes .cpp-setup-guide{margin:10px 0;max-width:100%}
+.comparison-notes pre{white-space:pre;overflow-x:auto;max-width:100%;font-size:12px}

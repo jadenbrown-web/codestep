@@ -53,3 +53,12 @@ test('opening comparison preserves current editor code until a topic is chosen',
   const comparison = setup();
   assert.equal(comparison.code()[0], 'original editor code');
 });
+
+test('delay comparison preserves original JavaScript and C++ source lines', () => {
+  const comparison = setup('javascript');
+  comparison.select('Run code after a delay');
+  const expected = ['javascript', 'cpp'].map(language => lessons[language].find(lesson => lesson.title === 'Run code after a delay').answer);
+  assert.deepEqual(comparison.code(), expected);
+  assert.match(comparison.code()[1], /std::this_thread::sleep_for\(std::chrono::seconds\(2\)\);/);
+  assert.match(comparison.html(), /<details class="comparison-notes"><summary>Explanations and setup<\/summary>/);
+});
