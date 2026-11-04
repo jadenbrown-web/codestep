@@ -14,7 +14,7 @@ const compiled = ts.transpileModule(functions, { compilerOptions: { jsx: ts.JsxE
 const pinModule = ts.transpileModule(fs.readFileSync("app/topic-pins.ts", "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
 const { firstTopicLessonIndex, pinnedLessonIndex, lessonTopic } = await import("data:text/javascript;base64," + Buffer.from(pinModule).toString("base64"));
 
-function setup(language = 'python', reveal = code => code) {
+function setup(language = 'python', reveal = code => code, pinLimit = 2) {
   const states = [];
   let cursor = 0;
   const Picker = () => null;
@@ -24,7 +24,7 @@ function setup(language = 'python', reveal = code => code) {
   const names = ['React', 'useState', 'useRef', 'useEffect', 'lessons', 'lessonComment', 'lessonExample', 'languageName', 'lessonTone', 'challengeFile', 'MenuHeader', 'ComparisonExamplePicker', 'CopyCodeButton', 'HighlightedCode', 'LessonExplanation', 'CppSetupGuide', 'BackButton', 'CodeLineNumbers', 'useQuickCodeReveal', 'PinnedTopicShortcuts', 'pinnedLessonIndex', 'lessonTopic', 'LessonSymbol'];
   const values = [React, initial => { const index = cursor++; if (!(index in states)) states[index] = initial; return [states[index], next => { states[index] = next; }]; }, () => ({ current: null }), () => {}, lessons, () => '', lesson => lesson.answer, value => value, () => 'blue', () => 'code', () => null, Picker, Copy, Code, ({ lesson }) => lesson.explanation, () => null, () => null, () => null, (code, key, enabled = true) => enabled ? reveal(code, key) : "", Pins, pinnedLessonIndex, lessonTopic, () => null];
   const Component = new Function(...names, compiled + '\nreturn LanguageComparison;')(...values);
-  const props = { language, lesson: lessons[language][0], editorCode: 'original editor code', showComments: false, pinnedTopics: ['Functions', 'Time'].map(topic => lessons[language].find(lesson => lessonTopic(lesson) === topic).title), onClose() {} };
+  const props = { language, pinLimit, lesson: lessons[language][0], editorCode: 'original editor code', showComments: false, pinnedTopics: ['Functions', 'Time'].map(topic => lessons[language].find(lesson => lessonTopic(lesson) === topic).title), onClose() {} };
   function render() { cursor = 0; return Component(props); }
   function find(element, predicate) {
     if (!React.isValidElement(element)) return undefined;
@@ -159,4 +159,14 @@ test('a pin without an equivalent never substitutes another lesson in that topic
   assert.equal(comparison.copies()[0], lessons.javascript.find(lesson => lesson.title === 'Repeat code every second').answer);
   assert.equal(comparison.copies()[1], '');
   assert.match(comparison.html(), /No matching example is available/);
+});
+
+
+test('desktop comparison moves its single pin selector into the navigation bar', () => {
+  const comparison = setup('python', code => code, 5);
+  assert.equal(comparison.pinSelectorCount(), 1);
+  assert.match(comparison.html(), /class="desktop-header-pins"/);
+  assert.doesNotMatch(comparison.html(), /comparison-file-tab has-pinned-topics/);
+  comparison.selectPin('Time');
+  assert.equal(comparison.activePin(), 'Run code after a delay');
 });
