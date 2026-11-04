@@ -4821,7 +4821,7 @@ export default function Home() {
       <nav className="mobile-pane-tabs" aria-label="Lesson view"><button aria-pressed={mobilePane === "lesson"} onClick={() => setMobilePane("lesson")}>Lesson</button><button aria-pressed={mobilePane === "practice"} onClick={() => setMobilePane("practice")}>Practice</button></nav>
       <div className={`lesson-layout ${navOpen ? "drawer-open" : "drawer-closed"}`}>
         <aside className="lesson-drawer" aria-label="Lesson list">
-          <div className="drawer-head"><span>{languageBadge(language)}</span><div><small>LEARNING PATH</small><b>{languageName(language)}</b></div></div>
+          <div className="drawer-head"><span className="drawer-language-logo" aria-hidden="true"><img src={`/language-logos/${language}.svg`} alt="" width="36" height="36" /></span><div><small>LEARNING PATH</small><b>{languageName(language)}</b></div></div>
           <div className="drawer-summary"><div><span>{completed[language]} of {lessons[language].length} completed</span><b>{Math.round(completed[language] / lessons[language].length * 100)}%</b></div><div className="drawer-progress"><i style={{width: `${completed[language] / lessons[language].length * 100}%`}} /></div></div>
           <nav className="drawer-lessons">
             {lessons[language].map((lesson, lessonIndex) => (
@@ -4830,7 +4830,6 @@ export default function Home() {
               </button>
             ))}
           </nav>
-          <button className="drawer-home" onClick={() => setLanguage(null)}>← Choose another language</button>
         </aside>
         {navOpen && <button className="drawer-backdrop" aria-label="Close lesson list" onClick={() => setNavOpen(false)} />}
         <aside className="lesson-copy">
