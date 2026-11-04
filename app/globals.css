@@ -1248,3 +1248,24 @@ html[data-theme="dark"]{--workspace-rail:#1c2d24;--workspace-filebar:#18281f}
 .home-shell .hero .terminal-card{border:0;border-radius:0;box-shadow:none;background:var(--workspace-rail)}
 .home-shell .terminal-top,.home-shell .terminal-code,.home-shell .terminal-output,html[data-theme] .home-shell .terminal-top,html[data-theme] .home-shell .terminal-code,html[data-theme] .home-shell .terminal-output{background:transparent;border:0;border-radius:0}
 .home-shell>.hero,.home-shell>.courses,html[data-theme] .home-shell>.hero,html[data-theme] .home-shell>.courses{background:var(--workspace-rail);border:0;box-shadow:none}
+
+/* Bring back the layered IDE preview as the home page's focal point. */
+.home-shell .hero{padding:16px 22px 18px;overflow:hidden}
+.home-shell .hero .terminal-card{border:1px solid var(--ui-border);border-radius:12px;box-shadow:7px 7px 0 #d9b63b,-5px -5px 0 #7bb997;background:#122019;overflow:hidden}
+.home-shell .terminal-top,html[data-theme] .home-shell .terminal-top{background:#21362b;border-bottom:1px solid #354b3e;color:#bbcec1}
+.home-shell .terminal-code,html[data-theme] .home-shell .terminal-code{background:#122019;color:#dce9e1}
+.home-shell .terminal-output,html[data-theme] .home-shell .terminal-output{background:#0d1912;border-top:1px solid #354b3e;color:#a9dbbc}
+.home-shell .success-pill{right:8px;bottom:5px;padding:3px 6px;border:1px solid #48775e;border-radius:6px;background:#193b29}
+.home-shell .courses{padding:6px 16px 10px}
+.home-shell .section-heading h2{font-weight:650}
+.home-shell .course-card{background:var(--ui-surface);border:1px solid var(--ui-border);box-shadow:none}
+@media(max-width:850px){
+ .home-shell{grid-template-rows:52px minmax(0,.75fr) minmax(0,1.6fr)}
+ .home-shell .hero{padding:12px 16px 14px}
+ .home-shell .hero .terminal-card{box-shadow:5px 5px 0 #d9b63b,-3px -3px 0 #7bb997;border-radius:10px}
+ .home-shell .courses{padding:4px 8px 8px}
+ .home-shell .course-card{grid-template-rows:26px auto minmax(0,1fr) auto;gap:4px 6px;padding:8px}
+ .home-shell .course-card>p{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:11px;line-height:1.35;color:var(--ui-muted)}
+ .home-shell .course-card .course-bottom{grid-row:4;align-self:end}
+}
+@media(max-height:600px){.home-shell .course-card>p{display:none}}
