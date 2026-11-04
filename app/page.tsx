@@ -4458,10 +4458,11 @@ function LanguageComparison({ language, lesson, editorCode, showComments, onClos
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     dialog.current?.showModal();
+    dialog.current?.focus({ preventScroll: true });
     return () => { document.body.style.overflow = previousOverflow; };
   }, []);
   useEffect(() => { setPickedLesson(null); }, [lesson]);
-  return <dialog ref={dialog} className="language-comparison" onCancel={onClose} aria-labelledby="language-comparison-title">
+  return <dialog ref={dialog} tabIndex={-1} className="language-comparison" onCancel={onClose} aria-labelledby="language-comparison-title">
     <header className="lesson-nav app-header comparison-topbar"><div className="lesson-brand-group"><BackButton onClick={onClose} label="Back to lesson" /><ComparisonExamplePicker key={target} target={target} selected={other} onSelect={title => setPickedLesson(lessons[target].find(item => item.title === title) ?? null)} /></div><div className="comparison-header-languages"><h2 id="language-comparison-title">Compare code</h2><div className="compare-language-choices"><div role="group" aria-label="Comparison language">{(Object.keys(lessons) as Language[]).filter(item => item !== language && item !== "html" && item !== "css").map(item => <button className={`language-choice language-${item}`} key={item} aria-label={`Compare with ${languageName(item)}`} title={languageName(item)} aria-pressed={target === item} onClick={() => setTarget(item)}><img className="comparison-language-logo" src={`/language-logos/${item}.svg`} alt="" width="24" height="24" /></button>)}</div></div></div></header>
     <div className="language-comparison-controls">
       <p className="comparison-context">{sourceLesson && other ? (other?.title ?? sourceLesson?.title) : "No matching example is available in one of these languages. Choose another topic or language."}</p>
@@ -4761,7 +4762,7 @@ export default function Home() {
     return (
       <>
       <main className="home-shell">
-        <header className="home-nav app-header"><div className="brand"><HomeButton active={!settingsOpen} onClick={() => { setSettingsOpen(false); setLanguage(null); }} /><span className="brand-wordmark">Code<span>Step</span></span></div><div className="home-actions"><div className="nav-note">LEARN BY TYPING</div><button className="settings-button" aria-expanded={settingsOpen} aria-controls="settings-drawer" onClick={() => { setNavOpen(false); setSettingsOpen(open => !open); }} aria-label="Settings"><svg className="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 3-.7 2.5-2.4 1L3.6 6 2 9l1.8 1.8v2.4L2 15l1.6 3 2.3-.5 2.4 1L9 21h6l.7-2.5 2.4-1 2.3.5 1.6-3-1.8-1.8v-2.4L22 9l-1.6-3-2.3.5-2.4-1L15 3Z"/><circle cx="12" cy="12" r="3"/></svg><span>Settings</span></button></div></header>
+        <header className="home-nav app-header"><div className="brand"><span className="brand-wordmark">Code<span>Step</span></span></div><div className="home-actions"><div className="nav-note">LEARN BY TYPING</div><button className="settings-button" aria-expanded={settingsOpen} aria-controls="settings-drawer" onClick={() => { setNavOpen(false); setSettingsOpen(open => !open); }} aria-label="Settings"><svg className="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 3-.7 2.5-2.4 1L3.6 6 2 9l1.8 1.8v2.4L2 15l1.6 3 2.3-.5 2.4 1L9 21h6l.7-2.5 2.4-1 2.3.5 1.6-3-1.8-1.8v-2.4L22 9l-1.6-3-2.3.5-2.4-1L15 3Z"/><circle cx="12" cy="12" r="3"/></svg><span>Settings</span></button></div></header>
         <section className="hero">
           <div className="terminal-card" aria-hidden="true" style={{ "--demo-line-count": homeDemoCode.split("\n").length } as React.CSSProperties}>
             <div className="terminal-top"><i/><i/><i/><span>{languageName(homeDemoLanguage)} · {homeDemos[homeDemoLanguage].file}</span></div>

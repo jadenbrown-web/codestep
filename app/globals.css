@@ -949,3 +949,8 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 .lesson-copy .breakdown-part:nth-child(n)>code,html[data-theme] .lesson-copy .breakdown-part:nth-child(n)>code{background:var(--explanation-accent)!important;color:#101813!important;font-weight:850;padding:5px 8px;border-radius:5px}
 .lesson-copy .breakdown-part:nth-child(n)>code *,html[data-theme] .lesson-copy .breakdown-part:nth-child(n)>code *{color:inherit!important;font-weight:inherit!important}
 .lesson-copy .breakdown-part:nth-child(n) b,html[data-theme] .lesson-copy .breakdown-part:nth-child(n) b{font-weight:800;color:var(--explanation-accent)}
+
+/* Active state belongs to the current menu, never to a dialog's Back action. */
+.home-nav .brand-wordmark{grid-column:1 / 4}
+.language-comparison:focus{outline:none}
+.app-header.app-header :is(.settings-button,.drawer-toggle)[aria-expanded="true"],html[data-theme] .app-header.app-header :is(.settings-button,.drawer-toggle)[aria-expanded="true"],.app-header.app-header .language-choice[aria-pressed="true"],html[data-theme] .app-header.app-header .language-choice[aria-pressed="true"]{border-color:var(--green-dark);background:var(--ui-hover);color:var(--green-dark);box-shadow:none}
