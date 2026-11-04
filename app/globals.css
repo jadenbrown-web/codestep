@@ -578,3 +578,13 @@ html[data-theme] :is(.theme-options button.selected,.compare-language-choices .l
  .mobile-editor-copy .copy-code-control{display:inline-flex}
  .editor-panel .mobile-editor-copy .copy-code-button{font-size:12px;height:var(--control-height);min-height:var(--control-height);padding:7px 10px}
 }
+
+/* Reserve natural-height rows for the file label and mobile actions. */
+@media(max-width:850px){
+ .editor-panel .panel-bar{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto;align-items:stretch;justify-content:stretch;height:auto;min-height:0;flex:none;overflow:visible}
+ .editor-panel .file-tab{height:auto;min-height:36px;box-sizing:border-box;justify-self:start;padding:8px 12px}
+ .editor-panel .panel-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) minmax(0,.8fr);width:100%;height:auto;min-height:0;box-sizing:border-box;margin:0;gap:8px;padding:6px 8px 8px;align-items:stretch}
+ .editor-panel .panel-actions .mobile-editor-copy,.editor-panel .panel-actions .copy-code-control{display:flex;width:100%;min-width:0}
+ .editor-panel .panel-actions button{box-sizing:border-box;min-width:0;width:100%;height:var(--control-height);min-height:var(--control-height);padding:6px;font-size:12px;line-height:1.2}
+ .editor-panel .panel-actions .copy-code-button{font-size:12px;padding:6px}
+}
