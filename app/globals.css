@@ -686,3 +686,31 @@ html[data-theme] :is(.theme-options button.selected,.compare-language-choices .l
  .language-comparison-columns .comparison-card>.numbered-comparison-code{flex:none;grid-row:auto;grid-column:auto;height:auto;min-height:90px;max-height:none;border:0;border-radius:0;padding:10px 12px;font-size:14px;line-height:1.6;overflow:hidden}
  .numbered-comparison-code>code{padding-bottom:6px}
 }
+
+/* Both code views share a restrained IDE palette and compact file chrome. */
+.editor-body{--editor-line-height:21px;font-size:13px;line-height:21px}
+.editor-body textarea,.editor-body .typed-code-layer,.editor-body .code-guide{font-size:13px;line-height:21px}
+.editor-body .code-line-ruler{font-size:13px;line-height:21px}
+.language-comparison-columns{grid-template-rows:max-content minmax(150px,1fr)}
+.language-comparison-columns .comparison-card>.comparison-filebar{grid-row:1;display:flex;align-items:center;justify-content:space-between;min-height:48px;height:48px;box-sizing:border-box;padding:0 4px 0 0;background:#1a2d23!important;border-color:#31463d;border-radius:12px 12px 0 0}
+.comparison-file-tab{display:flex;align-items:center;gap:7px;min-width:0;height:100%;box-sizing:border-box;padding:0 10px;border-top:3px solid #61d09a;background:#122019;color:#d6dfda;font:650 12px/1.3 var(--mono)}
+.comparison-file-tab>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.comparison-filebar>.copy-code-control{flex:none;width:44px;height:44px;display:flex}
+.comparison-filebar .copy-code-button{display:flex;align-items:center;justify-content:center;box-sizing:border-box;flex:none;width:44px;min-width:44px;height:44px;min-height:44px;padding:0;border-color:transparent;background:transparent;color:#c3dacc}
+.comparison-filebar .copy-code-button:hover{background:#243d2f}
+.language-comparison-columns .comparison-card>.numbered-comparison-code{grid-row:2;background:#122019;color:#d8e6de;font-size:13px;line-height:20px;border-color:#31463d}
+.editor-body :is(.typed-code-layer,.code-guide) .syntax-keyword,.language-comparison .syntax-keyword{color:#7bbcff}
+.editor-body :is(.typed-code-layer,.code-guide) :is(.syntax-api,.syntax-function-name),.language-comparison :is(.syntax-api,.syntax-function-name){color:#82d5bf}
+.editor-body :is(.typed-code-layer,.code-guide) .syntax-string,.language-comparison .syntax-string{color:#bedc9b}
+.editor-body :is(.typed-code-layer,.code-guide) .syntax-number,.language-comparison .syntax-number{color:#e5c583}
+.editor-body :is(.typed-code-layer,.code-guide) .syntax-comment,.language-comparison .syntax-comment{color:#a2b5aa}
+.editor-body .code-guide,.editor-body .focused-guide{opacity:.7}
+.comparison-notes{background:var(--ui-surface);border-color:var(--ui-border)}.comparison-notes>summary{background:var(--ui-surface)}
+@media(max-width:850px){
+ .editor-body{--editor-line-height:20px;font-size:13px;line-height:20px}
+ .editor-body .typed-code-layer,.editor-body .code-guide,.editor-body .code-line-ruler{font-size:13px;line-height:20px}
+ /* Keep a 16px input font for Safari focus zoom, scaled to the code layers. */
+ .editor-body textarea{font-size:16px;line-height:24.6153846px;transform:scale(.8125);transform-origin:top left;width:calc((100% - 22px) * 1.230769231);height:calc(100% * 1.230769231);padding:12.3076923px 14.7692308px}
+ .language-comparison-columns .comparison-card{border-color:#31463d;border-top-width:1px;background:#122019;box-shadow:none}
+ .language-comparison-columns .comparison-card>.numbered-comparison-code{font-size:13px;line-height:20px;min-height:72px;padding:10px 12px}
+}
