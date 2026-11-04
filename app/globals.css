@@ -564,3 +564,17 @@ html[data-theme] :is(.theme-options button.selected,.compare-language-choices .l
 .language-comparison-columns .comparison-card>pre{grid-row:3;box-sizing:border-box;min-width:0;min-height:150px;height:auto;max-height:none;overflow:visible;border:1px solid var(--ui-border);border-top:0;border-bottom:0;border-radius:0;background:#17241d;white-space:pre-wrap;overflow-wrap:anywhere}
 .language-comparison-columns .comparison-description{grid-row:4;display:block;box-sizing:border-box;min-width:0;min-height:0;overflow:visible;border:1px solid var(--ui-border);border-top:0;border-radius:0 0 12px 12px;background:var(--ui-surface)}
 .language-comparison-columns .comparison-description>p{font-size:12px;line-height:1.5}
+
+.comparison-language-logo{display:inline-block;width:24px;height:24px;flex:none;object-fit:contain;vertical-align:middle}
+.comparison-source-label strong{display:inline-flex;align-items:center;gap:6px}
+.compare-language-choices .language-choice:before{display:none}
+.language-comparison-columns .comparison-language-title{display:flex;align-items:center;gap:7px}
+.comparison-language-title>span{min-width:0}
+.mobile-editor-copy{display:none}
+@media(max-width:850px){
+ .comparison-language-title .comparison-language-logo{width:22px;height:22px}
+ .mobile-editor-copy{display:inline-flex;min-width:0}
+ .editor-panel .panel-actions{width:100%;box-sizing:border-box;display:flex;justify-content:flex-end;flex-wrap:wrap;padding:5px 8px;gap:8px}
+ .mobile-editor-copy .copy-code-control{display:inline-flex}
+ .editor-panel .mobile-editor-copy .copy-code-button{font-size:12px;height:var(--control-height);min-height:var(--control-height);padding:7px 10px}
+}
