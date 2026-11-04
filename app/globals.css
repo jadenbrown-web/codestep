@@ -939,3 +939,13 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 .home-shell .hero .terminal-card{container-type:size}
 .home-shell .hero .terminal-code{font-size:clamp(9px,calc((100cqh - 64px) / var(--demo-line-count,6) / 1.45),13px)}
 @media(max-width:850px){.home-shell .hero .terminal-code{font-size:clamp(8px,calc((100cqh - 60px) / var(--demo-line-count,6) / 1.4),11px)}}
+
+/* Explanation cards use an even outline and saturated code labels. */
+.lesson-copy .breakdown-part:nth-child(4n+1){--explanation-accent:#ff4f92}
+.lesson-copy .breakdown-part:nth-child(4n+2){--explanation-accent:#ffc400}
+.lesson-copy .breakdown-part:nth-child(4n+3){--explanation-accent:#29b6ff}
+.lesson-copy .breakdown-part:nth-child(4n){--explanation-accent:#22cf72}
+.lesson-copy .breakdown-part:nth-child(n),html[data-theme] .lesson-copy .breakdown-part:nth-child(n){border:1px solid var(--ui-border)!important;border-left-width:1px!important;border-left-color:var(--ui-border)!important;box-shadow:none;transform:none}
+.lesson-copy .breakdown-part:nth-child(n)>code,html[data-theme] .lesson-copy .breakdown-part:nth-child(n)>code{background:var(--explanation-accent)!important;color:#101813!important;font-weight:850;padding:5px 8px;border-radius:5px}
+.lesson-copy .breakdown-part:nth-child(n)>code *,html[data-theme] .lesson-copy .breakdown-part:nth-child(n)>code *{color:inherit!important;font-weight:inherit!important}
+.lesson-copy .breakdown-part:nth-child(n) b,html[data-theme] .lesson-copy .breakdown-part:nth-child(n) b{font-weight:800;color:var(--explanation-accent)}
