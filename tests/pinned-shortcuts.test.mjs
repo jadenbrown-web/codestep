@@ -13,7 +13,7 @@ const selected = ast.statements.filter(node => (ts.isFunctionDeclaration(node) &
 const compiled = ts.transpileModule(selected, { compilerOptions: { jsx: ts.JsxEmit.React, target: ts.ScriptTarget.ES2022 } }).outputText;
 const lessonTopic = lesson => lesson.eyebrow.split('·').slice(1).join('·').trim();
 const { PinnedTopicShortcuts, TopicPinButton } = new Function('React', 'lessons', 'lessonTopic', compiled + '\nreturn { PinnedTopicShortcuts, TopicPinButton };')(React, lessons, lessonTopic);
-const props = { topics: ['Functions', 'Time'], activeTopic: 'Functions', language: 'python', onSelect() {} };
+const props = { topics: ['Make something happen', 'Run code after a delay'], activeTopic: 'Make something happen', language: 'python', onSelect() {} };
 
 test('switching between two shortcuts leaves exactly one pin selected', () => {
   for (const activeTopic of props.topics) {
@@ -26,10 +26,18 @@ test('one shortcut click calls only that topic selection', () => {
   const selected = [];
   const tree = PinnedTopicShortcuts({ ...props, onSelect: topic => selected.push(topic) });
   tree.props.children[1].props.onClick();
-  assert.deepEqual(selected, ['Time']);
+  assert.deepEqual(selected, ['Run code after a delay']);
 });
 test('saved pins are distinguished from the currently selected shortcut', () => {
   const html = props.topics.map(topic => renderToStaticMarkup(React.createElement(TopicPinButton, { topic, pins: props.topics, onToggle() {} }))).join('');
   assert.equal((html.match(/data-pinned="true"/g) ?? []).length, 2);
   assert.doesNotMatch(html, /data-active="true"|aria-pressed="true"/);
+});
+
+
+test('pinning one Time lesson does not pin another Time lesson', () => {
+  const titles = ['Run code after a delay', 'Repeat code every second'];
+  const html = titles.map(topic => renderToStaticMarkup(React.createElement(TopicPinButton, { topic, pins: [titles[1]], onToggle() {} }))).join('');
+  assert.equal((html.match(/data-pinned="true"/g) ?? []).length, 1);
+  assert.equal((html.match(/data-pinned="false"/g) ?? []).length, 1);
 });

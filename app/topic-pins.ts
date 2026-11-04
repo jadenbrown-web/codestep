@@ -27,3 +27,26 @@ export function filterTopicLessons<T extends { eyebrow: string }>(lessons: T[], 
 export function firstTopicLessonIndex<T extends { eyebrow: string }>(lessons: T[], topic: string) {
   return lessons.findIndex(lesson => lessonTopic(lesson) === topic);
 }
+
+export function pinnedLessonIndex<T extends { title: string }>(lessons: T[], title: string) {
+  return lessons.findIndex(lesson => lesson.title === title);
+}
+
+/** Upgrade earlier topic-only pins while keeping new pins tied to one lesson. */
+export function restoreLessonPins(raw: string | null, courses: Record<string, { title: string; eyebrow: string }[]>) {
+  const restored: Record<string, string[]> = {};
+  try {
+    const saved = JSON.parse(raw ?? "{}");
+    if (!saved || typeof saved !== "object" || Array.isArray(saved)) return restored;
+    for (const [language, course] of Object.entries(courses)) {
+      if (!Array.isArray(saved[language])) continue;
+      const resolved = saved[language].flatMap((value: unknown) => {
+        if (typeof value !== "string") return [];
+        const lesson = course.find(item => item.title === value) ?? course.find(item => lessonTopic(item) === value);
+        return lesson ? [lesson.title] : [];
+      });
+      restored[language] = [...new Set(resolved as string[])].slice(0, 2);
+    }
+  } catch { /* Ignore invalid or unavailable browser storage. */ }
+  return restored;
+}

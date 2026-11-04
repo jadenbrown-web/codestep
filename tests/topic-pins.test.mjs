@@ -5,7 +5,7 @@ import ts from 'typescript';
 
 const source = fs.readFileSync('app/topic-pins.ts', 'utf8');
 const compiled = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
-const { lessonTopic, toggleTopicPin, restoreTopicPins, filterTopicLessons, firstTopicLessonIndex } = await import('data:text/javascript;base64,' + Buffer.from(compiled).toString('base64'));
+const { lessonTopic, toggleTopicPin, restoreTopicPins, filterTopicLessons, firstTopicLessonIndex, restoreLessonPins, pinnedLessonIndex } = await import('data:text/javascript;base64,' + Buffer.from(compiled).toString('base64'));
 
 test('a third pin never replaces either existing shortcut', () => {
   assert.deepEqual(toggleTopicPin(['Functions', 'Time'], 'Variables'), ['Functions', 'Time']);
@@ -35,4 +35,12 @@ test('a pinned topic resolves directly to its first original lesson index', () =
   assert.equal(firstTopicLessonIndex(lessons, 'Functions'), 1);
   assert.equal(firstTopicLessonIndex(lessons, 'Time'), 2);
   assert.equal(firstTopicLessonIndex(lessons, 'Unknown'), -1);
+});
+
+
+test('legacy topics migrate to exact lessons and new lesson pins remain distinct', () => {
+  const courses = { python: [{ title: 'Delay', eyebrow: '01 · Time' }, { title: 'Repeat', eyebrow: '02 · Time' }] };
+  assert.deepEqual(restoreLessonPins(JSON.stringify({ python: ['Time'] }), courses), { python: ['Delay'] });
+  assert.deepEqual(restoreLessonPins(JSON.stringify({ python: ['Repeat'] }), courses), { python: ['Repeat'] });
+  assert.equal(pinnedLessonIndex(courses.python, 'Repeat'), 1);
 });

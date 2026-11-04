@@ -1130,3 +1130,12 @@ button[data-active="true"]:after,html[data-theme] button[data-active="true"]:aft
 /* A single solid pin fill makes the current choice unambiguous. */
 .file-tab .pinned-topic-shortcuts button .pinned-topic-label,html[data-theme] .file-tab .pinned-topic-shortcuts button .pinned-topic-label,.comparison-file-tab .pinned-topic-shortcuts button .pinned-topic-label,html[data-theme] .comparison-file-tab .pinned-topic-shortcuts button .pinned-topic-label{border:1px solid var(--pin-fill);background:var(--ui-surface);color:var(--pin-fill);-webkit-text-fill-color:var(--pin-fill);line-height:30px}
 .file-tab .pinned-topic-shortcuts button[data-active="true"] .pinned-topic-label,html[data-theme] .file-tab .pinned-topic-shortcuts button[data-active="true"] .pinned-topic-label,.comparison-file-tab .pinned-topic-shortcuts button[data-active="true"] .pinned-topic-label,html[data-theme] .comparison-file-tab .pinned-topic-shortcuts button[data-active="true"] .pinned-topic-label{background:var(--pin-fill);color:#101813;-webkit-text-fill-color:#101813}
+
+/* Each drawer keeps a scrollable list beneath its fixed heading. */
+.lesson-drawer .drawer-head,.lesson-drawer .drawer-summary,.lesson-drawer .drawer-pin-hint{flex:none}
+.lesson-drawer .drawer-lessons,.comparison-example-menu .example-picker-list{flex:1 1 0%;height:0;min-height:0;max-height:none;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--ui-muted) transparent;padding-bottom:max(12px,env(safe-area-inset-bottom));scroll-padding-bottom:12px}
+/* Stronger code weight, with identical metrics for text and line-number mirrors. */
+.editor-body,.editor-body textarea,.editor-body .typed-code-layer,.editor-body .code-guide,.editor-body .code-line-ruler{font-weight:600}
+.editor-body :is(.typed-code-layer,.code-guide) [class*="syntax-"]{font-weight:600}
+.language-comparison-columns .comparison-card>.numbered-comparison-code{font-weight:600}
+@media(max-width:850px){.lesson-layout .lesson-drawer{box-sizing:border-box;display:flex;flex-direction:column;top:var(--nav-height);bottom:auto;height:calc(var(--visible-height,100dvh) - var(--nav-height));max-height:calc(var(--visible-height,100dvh) - var(--nav-height));min-height:0}}

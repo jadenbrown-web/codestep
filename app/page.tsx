@@ -6,7 +6,7 @@ import CodeBlocks from "./CodeBlocks";
 import CodeLineNumbers from "./CodeLineNumbers";
 import useQuickCodeReveal from "./useQuickCodeReveal";
 import { CODE_TYPING_START_DELAY, codeTypingDelay } from "./typing-rhythm";
-import { filterTopicLessons, firstTopicLessonIndex, lessonTopic, restoreTopicPins, toggleTopicPin } from "./topic-pins";
+import { filterTopicLessons, pinnedLessonIndex, lessonTopic, restoreLessonPins, toggleTopicPin } from "./topic-pins";
 import { checkLesson, checkPreparedLesson, prepareChecker } from "./lesson-checker";
 
 type Language = "javascript" | "csharp" | "cpp" | "python" | "html" | "css";
@@ -4260,7 +4260,11 @@ function TopicPinButton({ topic, pins, onToggle }: { topic: string | null; pins:
 
 function PinnedTopicShortcuts({ topics, activeTopic, onSelect, language }: { topics: string[]; activeTopic: string | null; onSelect: (topic: string) => void; language: Language }) {
   if (!topics.length) return null;
-  return <div className="pinned-topic-shortcuts" role="group" aria-label="Pinned topics" style={{ "--pin-count": topics.length } as React.CSSProperties}>{topics.map(topic => <button key={topic} className={`pinned-topic-chip tone-${lessonTone(lessons[language].find(lesson => lessonTopic(lesson) === topic)!)}`} data-active={activeTopic === topic} aria-pressed={activeTopic === topic} onClick={() => onSelect(topic)} title={`Open ${topic} lessons`}><span className="pinned-topic-label">{topic}</span></button>)}</div>;
+  return <div className="pinned-topic-shortcuts" role="group" aria-label="Pinned topics" style={{ "--pin-count": topics.length } as React.CSSProperties}>{topics.map(id => {
+    const lesson = lessons[language].find(item => item.title === id);
+    if (!lesson) return null;
+    return <button key={id} className={`pinned-topic-chip tone-${lessonTone(lesson)}`} data-active={activeTopic === id} aria-pressed={activeTopic === id} aria-label={`Open ${lesson.title}`} onClick={() => onSelect(id)} title={`Open ${lesson.title}`}><span className="pinned-topic-label">{lessonTopic(lesson)}</span></button>;
+  })}</div>;
 }
 
 function HomeButton({ onClick, active = false }: { onClick: () => void; active?: boolean }) {
@@ -4423,7 +4427,7 @@ function ComparisonExamplePicker({ target, selected, onSelect, sourceLanguage, p
   return <div className="comparison-example-menu" ref={root} onKeyDown={event => { if (event.key === "Escape" && open) { event.preventDefault(); event.stopPropagation(); setOpen(false); trigger.current?.focus(); } }}>
     <button ref={trigger} className="drawer-toggle" aria-label={open ? "Close comparison examples" : "Open comparison examples"} data-active={open} aria-expanded={open} aria-controls="comparison-examples" onClick={() => { setOpen(!open); setQuery(""); }}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><path d="M5 6h14M5 12h14M5 18h14"/></svg></button>
     {open && <button className="comparison-menu-backdrop" aria-label="Close comparison examples" onClick={() => setOpen(false)} />}
-    {open && <div className="example-picker-panel" id="comparison-examples"><div className="drawer-head comparison-topic-head"><span className="drawer-language-logo" aria-hidden="true"><img src={`/language-logos/${target}.svg`} alt="" width="30" height="30" /></span><div><small>COMPARE TOPICS</small><b>{languageName(target)}</b></div></div><div className="drawer-pin-hint">All topics · Pin up to two · {pins.length}/2</div><input ref={search} aria-label="Search comparison examples" placeholder="Search examples…" value={query} onChange={event => setQuery(event.target.value)} /><div className="example-picker-list topic-list">{choices.map(item => { const matching = matchingLesson(item, sourceLanguage) ?? lessons[sourceLanguage].find(lesson => lessonTopic(lesson) === lessonTopic(item)); return <div className="lesson-list-row" key={item.title}><button className={`tone-${lessonTone(item)}`} data-active={selected === item} aria-pressed={selected === item} onClick={() => { search.current?.blur(); onSelect(item.title); setOpen(false); trigger.current?.focus({ preventScroll: true }); }}><span className="example-label"><small>{item.eyebrow.replace(/^\d+\s*[·.]\s*/, "")}</small><strong>{item.title}</strong></span><span className="example-choice-mark" aria-hidden="true">{selected === item ? <svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> : "›"}</span></button><TopicPinButton topic={matching ? lessonTopic(matching) : null} pins={pins} onToggle={onTogglePin} /></div>; })}{!choices.length && <p>No matching examples.</p>}</div></div>}
+    {open && <div className="example-picker-panel" id="comparison-examples"><div className="drawer-head comparison-topic-head"><span className="drawer-language-logo" aria-hidden="true"><img src={`/language-logos/${target}.svg`} alt="" width="30" height="30" /></span><div><small>COMPARE TOPICS</small><b>{languageName(target)}</b></div></div><div className="drawer-pin-hint">All topics · Pin up to two · {pins.length}/2</div><input ref={search} aria-label="Search comparison examples" placeholder="Search examples…" value={query} onChange={event => setQuery(event.target.value)} /><div className="example-picker-list topic-list">{choices.map(item => { const matching = matchingLesson(item, sourceLanguage); return <div className="lesson-list-row" key={item.title}><button className={`tone-${lessonTone(item)}`} data-active={selected === item} aria-pressed={selected === item} onClick={() => { search.current?.blur(); onSelect(item.title); setOpen(false); trigger.current?.focus({ preventScroll: true }); }}><span className="example-label"><small>{item.eyebrow.replace(/^\d+\s*[·.]\s*/, "")}</small><strong>{item.title}</strong></span><span className="example-choice-mark" aria-hidden="true">{selected === item ? <svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> : "›"}</span></button><TopicPinButton topic={matching?.title ?? null} pins={pins} onToggle={onTogglePin} /></div>; })}{!choices.length && <p>No matching examples.</p>}</div></div>}
   </div>;
 }
 
@@ -4469,10 +4473,10 @@ function LanguageComparison({ language, lesson, editorCode, showComments, onClos
   const sourceCode = hasEditorCode ? editorCode : sourceLesson ? lessonExample(sourceLesson, language, showComments) : "No equivalent example in this language.";
   const other = matchingLesson(pickedLesson ?? lesson, target);
   const selectPinnedTopic = (topic: string) => {
-    const nextIndex = firstTopicLessonIndex(lessons[language], topic);
+    const nextIndex = pinnedLessonIndex(lessons[language], topic);
     if (nextIndex >= 0) setPickedLesson(lessons[language][nextIndex]);
   };
-  const activeTopic = sourceLesson ? lessonTopic(sourceLesson) : null;
+  const activeTopic = sourceLesson?.title ?? null;
   const targetCode = other ? lessonExample(other, target, showComments) : "";
   const replayKey = `${language}-${target}-${pickedLesson?.title ?? lesson.title}`;
   const sourceReveal = useQuickCodeReveal(sourceCode, replayKey);
@@ -4528,16 +4532,17 @@ export default function Home() {
     return () => narrow.removeEventListener("change", update);
   }, []);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const lessonListRef = useRef<HTMLElement>(null);
+  useEffect(() => { if (navOpen && lessonListRef.current) lessonListRef.current.scrollTop = 0; }, [navOpen, language]);
   const [pinnedByLanguage, setPinnedByLanguage] = useState<Record<string, string[]>>({});
   const [pinsReady, setPinsReady] = useState(false);
   useEffect(() => {
-    const available = Object.fromEntries(Object.entries(lessons).map(([key, course]) => [key, [...new Set(course.map(lessonTopic))]]));
-    try { setPinnedByLanguage(restoreTopicPins(localStorage.getItem("codestep-pinned-topics"), available)); } catch {}
+    try { setPinnedByLanguage(restoreLessonPins(localStorage.getItem("codestep-pinned-lessons") ?? localStorage.getItem("codestep-pinned-topics"), lessons)); } catch {}
     setPinsReady(true);
   }, []);
   useEffect(() => {
     if (!pinsReady) return;
-    try { localStorage.setItem("codestep-pinned-topics", JSON.stringify(pinnedByLanguage)); } catch {}
+    try { localStorage.setItem("codestep-pinned-lessons", JSON.stringify(pinnedByLanguage)); } catch {}
   }, [pinnedByLanguage, pinsReady]);
   const [themeMode, setThemeMode] = useState<ThemeMode>("system");
   const [showGuide, setShowGuide] = useState(true);
@@ -4601,7 +4606,7 @@ export default function Home() {
   const visibleLessons = language ? filterTopicLessons(lessons[language], null) : [];
   const openPinnedTopic = (topic: string) => {
     if (!language) return;
-    const nextIndex = firstTopicLessonIndex(lessons[language], topic);
+    const nextIndex = pinnedLessonIndex(lessons[language], topic);
     if (nextIndex < 0) return;
     setIndex(nextIndex);
     setSettingsOpen(false);
@@ -4878,11 +4883,11 @@ export default function Home() {
           <div className="drawer-head"><span className="drawer-language-logo" aria-hidden="true"><img src={`/language-logos/${language}.svg`} alt="" width="36" height="36" /></span><div><small>LEARNING PATH</small><b>{languageName(language)}</b></div></div>
           <div className="drawer-summary"><div><span>{completed[language]} of {lessons[language].length} completed</span><b>{Math.round(completed[language] / lessons[language].length * 100)}%</b></div><div className="drawer-progress"><i style={{width: `${completed[language] / lessons[language].length * 100}%`}} /></div></div>
           <div className="drawer-pin-hint">All topics · Pin up to two · {pinnedTopics.length}/2</div>
-          <nav className="drawer-lessons topic-list">
+          <nav ref={lessonListRef} className="drawer-lessons topic-list">
             {visibleLessons.map(({ lesson, index: lessonIndex }) => (
               <div className="lesson-list-row" key={lesson.title}><button data-active={lessonIndex === index} className={`tone-${lessonTone(lesson)} ${lessonIndex === index ? "active" : ""} ${lessonIndex < completed[language] ? "done" : ""}`} onClick={() => { setIndex(lessonIndex); if (window.innerWidth <= 850) setNavOpen(false); }}>
                 <span className="lesson-state">{lessonIndex + 1}</span><span><small>{lesson.eyebrow.split("·")[1]}</small><b>{lesson.title}</b></span><i>›</i>
-              </button><TopicPinButton topic={lessonTopic(lesson)} pins={pinnedTopics} onToggle={togglePinnedTopic} /></div>
+              </button><TopicPinButton topic={lesson.title} pins={pinnedTopics} onToggle={togglePinnedTopic} /></div>
             ))}
           </nav>
         </aside>
@@ -5082,7 +5087,7 @@ export default function Home() {
             <button className="reference-next" onClick={nextLesson}>Continue to the next lesson →</button>
           </div> : <>
           <div className="editor-panel">
-            <div className="panel-bar"><div className={`file-tab ${pinnedTopics.length ? "has-pinned-topics" : ""}`} data-topic-tone={lessonTone(current!)} title={current!.fileName || challengeFile(language)}><img className="editor-file-logo" src={`/language-logos/${language}.svg`} alt={languageName(language)} width="18" height="18" /><span className="editor-file-name">{current!.fileName || challengeFile(language)}</span>{pinnedTopics.length ? <PinnedTopicShortcuts topics={pinnedTopics} activeTopic={current ? lessonTopic(current) : null} onSelect={openPinnedTopic} language={language} /> : <small className="file-language">{languageName(language)}</small>}</div><div className="panel-actions"><span className="mobile-editor-copy"><CopyCodeButton iconOnly code={lessonExample(current!, language, showComments)} label="full lesson example for VS Code" /></span><button className="editor-mode-button" onClick={() => changeBlockMode(!blockMode)} title={blockMode ? "Switch to keyboard" : "Switch to code blocks"} aria-label={blockMode ? "Switch to keyboard" : "Switch to code blocks"}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{blockMode ? <><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 9h1m4 0h1m4 0h1M6 13h1m4 0h1m4 0h1M8 16h8"/></> : <><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="18" height="8" rx="1"/></>}</svg><span className="editor-action-label">{blockMode ? "Use keyboard" : "Use blocks"}</span></button><button className="editor-reset-button" onClick={() => changeBlockCode(commentPrefix + (current!.starter || ""))} title="Reset code" aria-label="Reset code"><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></svg><span className="editor-action-label">Reset</span></button>{pinnedTopics.length > 0 && <details className="editor-extra-actions"><summary aria-label="Editor actions" title="Editor actions"><svg className="status-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg></summary><div><button onClick={event => { changeBlockMode(!blockMode); const menu = event.currentTarget.closest("details"); if (menu) menu.open = false; }}>{blockMode ? "Use keyboard" : "Use blocks"}</button><button onClick={event => { changeBlockCode(commentPrefix + (current!.starter || "")); const menu = event.currentTarget.closest("details"); if (menu) menu.open = false; }}>Reset code</button></div></details>}</div></div>
+            <div className="panel-bar"><div className={`file-tab ${pinnedTopics.length ? "has-pinned-topics" : ""}`} data-topic-tone={lessonTone(current!)} title={current!.fileName || challengeFile(language)}><img className="editor-file-logo" src={`/language-logos/${language}.svg`} alt={languageName(language)} width="18" height="18" /><span className="editor-file-name">{current!.fileName || challengeFile(language)}</span>{pinnedTopics.length ? <PinnedTopicShortcuts topics={pinnedTopics} activeTopic={current?.title ?? null} onSelect={openPinnedTopic} language={language} /> : <small className="file-language">{languageName(language)}</small>}</div><div className="panel-actions"><span className="mobile-editor-copy"><CopyCodeButton iconOnly code={lessonExample(current!, language, showComments)} label="full lesson example for VS Code" /></span><button className="editor-mode-button" onClick={() => changeBlockMode(!blockMode)} title={blockMode ? "Switch to keyboard" : "Switch to code blocks"} aria-label={blockMode ? "Switch to keyboard" : "Switch to code blocks"}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{blockMode ? <><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 9h1m4 0h1m4 0h1M6 13h1m4 0h1m4 0h1M8 16h8"/></> : <><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="18" height="8" rx="1"/></>}</svg><span className="editor-action-label">{blockMode ? "Use keyboard" : "Use blocks"}</span></button><button className="editor-reset-button" onClick={() => changeBlockCode(commentPrefix + (current!.starter || ""))} title="Reset code" aria-label="Reset code"><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></svg><span className="editor-action-label">Reset</span></button>{pinnedTopics.length > 0 && <details className="editor-extra-actions"><summary aria-label="Editor actions" title="Editor actions"><svg className="status-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg></summary><div><button onClick={event => { changeBlockMode(!blockMode); const menu = event.currentTarget.closest("details"); if (menu) menu.open = false; }}>{blockMode ? "Use keyboard" : "Use blocks"}</button><button onClick={event => { changeBlockCode(commentPrefix + (current!.starter || "")); const menu = event.currentTarget.closest("details"); if (menu) menu.open = false; }}>Reset code</button></div></details>}</div></div>
               {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={commentPrefix + ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="editor-surface" style={{ minHeight: `max(100%, calc(${lineNumbers.length} * var(--editor-line-height) + var(--editor-padding)))`, minWidth: `max(100%, calc(${Math.max(...(code + guideCode).split("\n").map(line => line.length), 1)}ch + var(--editor-gutter) + var(--editor-inline-padding) + var(--editor-inline-padding)))` }}><CodeLineNumbers text={code + (showGuide ? guideCode : "")} minimumLines={8} />{showGuide && <pre className={`code-guide ${current!.title === "Check an answer with if and else" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{current!.title === "Check an answer with if and else" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{<pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Check an answer with if and else"} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" wrap="soft" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div></div>}
           </div>
           <div className="console-panel">

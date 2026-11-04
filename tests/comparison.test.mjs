@@ -12,7 +12,7 @@ const lessons = JSON.parse(source.slice(start, source.indexOf('\n};', start) + 2
 const functions = ast.statements.filter(node => ts.isFunctionDeclaration(node) && ['matchingLesson', 'LanguageComparison'].includes(node.name?.text)).map(node => node.getText(ast)).join('\n');
 const compiled = ts.transpileModule(functions, { compilerOptions: { jsx: ts.JsxEmit.React, target: ts.ScriptTarget.ES2022 } }).outputText;
 const pinModule = ts.transpileModule(fs.readFileSync("app/topic-pins.ts", "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
-const { firstTopicLessonIndex, lessonTopic } = await import("data:text/javascript;base64," + Buffer.from(pinModule).toString("base64"));
+const { firstTopicLessonIndex, pinnedLessonIndex, lessonTopic } = await import("data:text/javascript;base64," + Buffer.from(pinModule).toString("base64"));
 
 function setup(language = 'python', reveal = code => code) {
   const states = [];
@@ -21,10 +21,10 @@ function setup(language = 'python', reveal = code => code) {
   const Copy = () => null;
   const Pins = () => null;
   const Code = ({ code }) => React.createElement(React.Fragment, null, code);
-  const names = ['React', 'useState', 'useRef', 'useEffect', 'lessons', 'lessonComment', 'lessonExample', 'languageName', 'lessonTone', 'challengeFile', 'MenuHeader', 'ComparisonExamplePicker', 'CopyCodeButton', 'HighlightedCode', 'LessonExplanation', 'CppSetupGuide', 'BackButton', 'CodeLineNumbers', 'useQuickCodeReveal', 'PinnedTopicShortcuts', 'firstTopicLessonIndex', 'lessonTopic'];
-  const values = [React, initial => { const index = cursor++; if (!(index in states)) states[index] = initial; return [states[index], next => { states[index] = next; }]; }, () => ({ current: null }), () => {}, lessons, () => '', lesson => lesson.answer, value => value, () => 'blue', () => 'code', () => null, Picker, Copy, Code, ({ lesson }) => lesson.explanation, () => null, () => null, () => null, (code, key, enabled = true) => enabled ? reveal(code, key) : "", Pins, firstTopicLessonIndex, lessonTopic];
+  const names = ['React', 'useState', 'useRef', 'useEffect', 'lessons', 'lessonComment', 'lessonExample', 'languageName', 'lessonTone', 'challengeFile', 'MenuHeader', 'ComparisonExamplePicker', 'CopyCodeButton', 'HighlightedCode', 'LessonExplanation', 'CppSetupGuide', 'BackButton', 'CodeLineNumbers', 'useQuickCodeReveal', 'PinnedTopicShortcuts', 'pinnedLessonIndex', 'lessonTopic'];
+  const values = [React, initial => { const index = cursor++; if (!(index in states)) states[index] = initial; return [states[index], next => { states[index] = next; }]; }, () => ({ current: null }), () => {}, lessons, () => '', lesson => lesson.answer, value => value, () => 'blue', () => 'code', () => null, Picker, Copy, Code, ({ lesson }) => lesson.explanation, () => null, () => null, () => null, (code, key, enabled = true) => enabled ? reveal(code, key) : "", Pins, pinnedLessonIndex, lessonTopic];
   const Component = new Function(...names, compiled + '\nreturn LanguageComparison;')(...values);
-  const props = { language, lesson: lessons[language][0], editorCode: 'original editor code', showComments: false, pinnedTopics: ['Functions', 'Time'], onClose() {} };
+  const props = { language, lesson: lessons[language][0], editorCode: 'original editor code', showComments: false, pinnedTopics: ['Functions', 'Time'].map(topic => lessons[language].find(lesson => lessonTopic(lesson) === topic).title), onClose() {} };
   function render() { cursor = 0; return Component(props); }
   function find(element, predicate) {
     if (!React.isValidElement(element)) return undefined;
@@ -32,7 +32,7 @@ function setup(language = 'python', reveal = code => code) {
     for (const child of React.Children.toArray(element.props.children)) { const found = find(child, predicate); if (found) return found; }
   }
   return {
-    selectPin(topic) { find(render(), node => node.type === Pins).props.onSelect(topic); },
+    selectPin(topic) { const chosen = lessons[language].find(lesson => lesson.title === topic) ?? lessons[language].find(lesson => lessonTopic(lesson) === topic); find(render(), node => node.type === Pins).props.onSelect(chosen.title); },
     pinSelectorCount() { let count = 0; function visit(node) { if (!React.isValidElement(node)) return; if (node.type === Pins) count += 1; React.Children.forEach(node.props.children, visit); } visit(render()); return count; },
     activePin() { return find(render(), node => node.type === Pins).props.activeTopic; },
     select(title) { find(render(), node => node.type === Picker).props.onSelect(title); },
@@ -115,7 +115,7 @@ test('comparison pins switch both examples directly between complete topics', ()
   for (const topic of ['Functions', 'Time']) {
     comparison.selectPin(topic);
     const chosen = lessons.python[firstTopicLessonIndex(lessons.python, topic)];
-    assert.equal(comparison.activePin(), topic);
+    assert.equal(comparison.activePin(), chosen.title);
     assert.deepEqual(comparison.code(), [chosen.answer, lessons.javascript.find(lesson => lesson.title === chosen.title).answer]);
   }
 });
@@ -137,8 +137,26 @@ test('comparison has one shared pinned-topic selector', () => {
   const comparison = setup();
   assert.equal(comparison.pinSelectorCount(), 1);
   comparison.selectPin('Functions');
-  assert.equal(comparison.activePin(), 'Functions');
+  assert.equal(comparison.activePin(), 'Make something happen');
   comparison.selectPin('Time');
-  assert.equal(comparison.activePin(), 'Time');
+  assert.equal(comparison.activePin(), 'Run code after a delay');
   assert.equal(comparison.pinSelectorCount(), 1);
+});
+
+
+test('a pinned second date-and-time lesson opens that exact example in both languages', () => {
+  const comparison = setup();
+  comparison.selectPin('Keep checking until the time is reached');
+  assert.equal(comparison.activePin(), 'Keep checking until the time is reached');
+  assert.deepEqual(comparison.code(), ['python', 'javascript'].map(language => lessons[language].find(lesson => lesson.title === 'Keep checking until the time is reached').answer));
+});
+
+
+test('a pin without an equivalent never substitutes another lesson in that topic', () => {
+  const comparison = setup('javascript');
+  comparison.selectPin('Repeat code every second');
+  assert.equal(comparison.activePin(), 'Repeat code every second');
+  assert.equal(comparison.copies()[0], lessons.javascript.find(lesson => lesson.title === 'Repeat code every second').answer);
+  assert.equal(comparison.copies()[1], '');
+  assert.match(comparison.html(), /No matching example is available/);
 });
