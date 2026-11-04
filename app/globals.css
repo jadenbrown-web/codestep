@@ -741,3 +741,35 @@ html[data-theme] :is(.theme-options button.selected,.compare-language-choices .l
  .lesson-layout .workspace{padding:6px;gap:6px}
  .workspace .feedback{min-height:52px;padding:4px 8px}
 }
+
+/* One navigation treatment, shared by every screen. */
+.app-header.app-header :is(.nav-control,.drawer-toggle,.settings-button,.app-back,.compare-language-button,.language-choice),html[data-theme] .app-header.app-header :is(.nav-control,.drawer-toggle,.settings-button,.app-back,.compare-language-button,.language-choice){box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;min-width:44px;max-width:44px;height:44px;min-height:44px;max-height:44px;margin:0;padding:0;gap:0;border:1px solid var(--ui-border);border-radius:8px;background:var(--ui-surface);color:var(--ui-text);box-shadow:none;transform:none;transition:background .15s,border-color .15s}
+.app-header.app-header :is(.nav-control,.drawer-toggle,.settings-button,.app-back,.compare-language-button,.language-choice):hover{background:var(--ui-hover)}
+.app-header .app-back>span:last-child{display:none}
+.app-header .app-back>span:first-child{font-size:20px;line-height:1}
+.app-header.app-header :is(.status-icon,.settings-icon,.comparison-language-logo){display:block;width:20px;height:20px;flex:none}
+.app-header .language-choice[aria-pressed="true"]{border-color:var(--green-dark);background:var(--ui-surface)}
+.home-nav .brand{display:flex;align-items:center;gap:12px}
+.brand-wordmark{color:var(--ui-text)!important}.brand-wordmark>span{color:var(--green)}
+.language-comparison .comparison-topbar{height:52px;min-height:52px;padding:0 8px;align-items:center}
+.comparison-header-languages{flex-direction:row;align-items:center;gap:0}
+.comparison-topbar .comparison-header-languages h2{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.comparison-example-menu .example-picker-panel{top:52px;height:calc(var(--visible-height,100dvh) - 52px)}
+.comparison-menu-backdrop{top:52px}
+.course-card:before{content:none;display:none}
+@media(max-width:850px){
+ .language-comparison .comparison-topbar{height:52px;min-height:52px;padding:0 8px}
+ .home-shell .courses{padding:10px}
+ .home-shell .section-heading{display:block;margin-bottom:12px}
+ .home-shell .section-heading>div>span{display:none}
+ .home-shell .section-heading h2{font-size:25px;line-height:1.2;letter-spacing:-.7px;margin:0 0 6px}
+ .home-shell .section-heading p{font-size:13px;line-height:1.4;margin:0}
+ .course-grid{gap:8px}
+ .course-card{display:grid;grid-template-columns:32px minmax(0,1fr);grid-template-rows:32px auto 1fr auto;column-gap:8px;row-gap:6px;min-height:0;padding:12px;border-radius:10px;box-shadow:none}
+ .course-card .course-icon{grid-column:1;grid-row:1}
+ .course-card .course-count{grid-column:2;grid-row:1;align-self:center;justify-self:end;position:static;font-size:8px;letter-spacing:.8px;margin:0}
+ .course-card h3{grid-column:1 / -1;grid-row:2;font-size:18px;line-height:1.25;margin:0}
+ .course-card>p{grid-column:1 / -1;grid-row:3;font-size:12px;line-height:1.45;margin:0}
+ .course-card .course-bottom{grid-column:1 / -1;grid-row:4;min-height:24px;margin:0;padding-top:4px}
+ .course-card .course-bottom span{font-size:10px}
+}
