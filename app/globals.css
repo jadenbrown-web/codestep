@@ -1195,3 +1195,24 @@ button[data-active="true"]:after,html[data-theme] button[data-active="true"]:aft
 .console-panel .console-bar{box-sizing:border-box;height:44px;min-height:44px;max-height:44px;padding:0 4px 0 8px}
 .console-panel .console-bar button,html[data-theme] .console-panel .console-bar button{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;width:44px;min-width:44px;height:44px;min-height:44px;margin:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;color:var(--ui-text);font:650 12px/1 var(--sans)}
 .console-panel .console-body{padding:6px 8px}
+
+/* Selected pins use their topic colour without a second selection border. */
+.file-tab .pinned-topic-shortcuts button[data-active="true"] .pinned-topic-label,html[data-theme] .file-tab .pinned-topic-shortcuts button[data-active="true"] .pinned-topic-label,.comparison-file-tab .pinned-topic-shortcuts button[data-active="true"] .pinned-topic-label,html[data-theme] .comparison-file-tab .pinned-topic-shortcuts button[data-active="true"] .pinned-topic-label{border-color:var(--pin-fill);box-shadow:none}
+.file-tab .pinned-topic-shortcuts button[data-active="true"]:after,.comparison-file-tab .pinned-topic-shortcuts button[data-active="true"]:after{display:none}
+/* Full-height drawers share the same heading, edges and control geometry. */
+.settings-backdrop{inset:0 0 auto;height:var(--visible-height,100dvh)}
+.comparison-example-menu .example-picker-panel{top:0;height:var(--visible-height,100dvh);max-height:var(--visible-height,100dvh)}
+.comparison-menu-backdrop{inset:0}
+.drawer-head>.drawer-close{display:flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box;width:44px;height:44px;min-width:44px;margin:0 0 0 auto;padding:0;border:0;border-radius:0;background:transparent;color:var(--ui-text);font:400 26px/1 var(--sans);cursor:pointer}
+.settings-panel .settings-drawer-head{display:flex;align-items:center;min-height:64px;padding:8px 10px;background:var(--drawer-surface)}
+html[data-theme="dark"] .settings-panel .settings-drawer-head{background:var(--drawer-surface)}
+.settings-panel .settings-scroll{padding:0 10px}
+.settings-panel .settings-group{padding:10px 0;border-color:var(--drawer-edge)}
+.settings-panel .theme-options button,html[data-theme] .settings-panel .theme-options button{border:1px solid var(--ui-border);border-radius:8px;background:transparent;box-shadow:none;color:var(--ui-text);min-height:52px;padding:8px}
+.settings-panel .theme-options button[data-active="true"],html[data-theme] .settings-panel .theme-options button[data-active="true"]{background:var(--selection-surface);border-color:var(--selection-border)}
+.lesson-drawer .drawer-close{display:none}
+@media(max-width:850px){
+ .lesson-layout .lesson-drawer{top:0;height:var(--visible-height,100dvh);max-height:var(--visible-height,100dvh)}
+ .lesson-layout .drawer-backdrop{inset:0}
+ .lesson-drawer .drawer-close{display:flex}
+}
