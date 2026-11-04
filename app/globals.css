@@ -1216,3 +1216,7 @@ html[data-theme="dark"] .settings-panel .settings-drawer-head{background:var(--d
  .lesson-layout .drawer-backdrop{inset:0}
  .lesson-drawer .drawer-close{display:flex}
 }
+
+/* Study and Practice share one continuous outlined file header. */
+.editor-panel .panel-bar,.language-comparison-columns .comparison-card>.comparison-filebar{background:var(--ui-surface);border-bottom:1px solid var(--ui-border)}
+.editor-panel .file-tab,.editor-panel .file-tab.has-pinned-topics,.comparison-filebar>.comparison-file-tab,.comparison-filebar>.comparison-file-tab.has-pinned-topics{border-top:0;background:transparent;box-shadow:none}

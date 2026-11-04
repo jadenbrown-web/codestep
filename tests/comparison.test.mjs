@@ -96,7 +96,7 @@ test('only the selected comparison language has a visible name in the toolbar', 
 test('copy keeps the full source while comparison typing is still in progress', () => {
   const comparison = setup('python', code => code.slice(0, 3));
   comparison.select('Make something happen');
-  assert.deepEqual(comparison.code(), ['python', 'javascript'].map(language => lessons[language].find(lesson => lesson.title === 'Make something happen').answer).map((code, index) => index === 0 ? code.slice(0, 3) : ''));
+  assert.deepEqual(comparison.code(), ['python', 'javascript'].map(language => lessons[language].find(lesson => lesson.title === 'Make something happen').answer).map(code => code.slice(0, 3)));
   assert.deepEqual(comparison.copies(), ['python', 'javascript'].map(language => lessons[language].find(lesson => lesson.title === 'Make something happen').answer));
 });
 
@@ -106,7 +106,7 @@ test('complete code reserves panel geometry while only a few characters are visi
   comparison.select('Run code after a delay');
   const complete = ['python', 'javascript'].map(language => lessons[language].find(lesson => lesson.title === 'Run code after a delay').answer);
   assert.deepEqual(comparison.reservedCode(), complete);
-  assert.deepEqual(comparison.code(), [complete[0].slice(0, 2), ""]);
+  assert.deepEqual(comparison.code(), complete.map(code => code.slice(0, 2)));
 });
 
 
@@ -121,11 +121,11 @@ test('comparison pins switch both examples directly between complete topics', ()
 });
 
 
-test('comparison reveals the second file only after the first file completes', () => {
+test('comparison reveals both files simultaneously before either finishes', () => {
   let finished = false;
   const comparison = setup('python', code => finished ? code : code.slice(0, 2));
   comparison.selectPin('Functions');
-  assert.equal(comparison.code()[1], '');
+  assert.deepEqual(comparison.code(), comparison.reservedCode().map(code => code.slice(0, 2)));
   finished = true;
   const code = comparison.code();
   assert.deepEqual(code, comparison.reservedCode());

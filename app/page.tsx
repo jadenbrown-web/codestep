@@ -4492,7 +4492,7 @@ function LanguageComparison({ language, lesson, editorCode, showComments, onClos
   const targetCode = other ? lessonExample(other, target, showComments) : "";
   const replayKey = `${language}-${target}-${pickedLesson?.title ?? lesson.title}`;
   const sourceReveal = useQuickCodeReveal(sourceCode, replayKey);
-  const targetReveal = useQuickCodeReveal(targetCode, replayKey, sourceReveal.length === sourceCode.length);
+  const targetReveal = useQuickCodeReveal(targetCode, replayKey);
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
