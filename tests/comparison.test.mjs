@@ -22,7 +22,7 @@ function setup(language = 'python', reveal = code => code) {
   const Pins = () => null;
   const Code = ({ code }) => React.createElement(React.Fragment, null, code);
   const names = ['React', 'useState', 'useRef', 'useEffect', 'lessons', 'lessonComment', 'lessonExample', 'languageName', 'lessonTone', 'challengeFile', 'MenuHeader', 'ComparisonExamplePicker', 'CopyCodeButton', 'HighlightedCode', 'LessonExplanation', 'CppSetupGuide', 'BackButton', 'CodeLineNumbers', 'useQuickCodeReveal', 'PinnedTopicShortcuts', 'firstTopicLessonIndex', 'lessonTopic'];
-  const values = [React, initial => { const index = cursor++; if (!(index in states)) states[index] = initial; return [states[index], next => { states[index] = next; }]; }, () => ({ current: null }), () => {}, lessons, () => '', lesson => lesson.answer, value => value, () => 'blue', () => 'code', () => null, Picker, Copy, Code, ({ lesson }) => lesson.explanation, () => null, () => null, () => null, reveal, Pins, firstTopicLessonIndex, lessonTopic];
+  const values = [React, initial => { const index = cursor++; if (!(index in states)) states[index] = initial; return [states[index], next => { states[index] = next; }]; }, () => ({ current: null }), () => {}, lessons, () => '', lesson => lesson.answer, value => value, () => 'blue', () => 'code', () => null, Picker, Copy, Code, ({ lesson }) => lesson.explanation, () => null, () => null, () => null, (code, key, enabled = true) => enabled ? reveal(code, key) : "", Pins, firstTopicLessonIndex, lessonTopic];
   const Component = new Function(...names, compiled + '\nreturn LanguageComparison;')(...values);
   const props = { language, lesson: lessons[language][0], editorCode: 'original editor code', showComments: false, pinnedTopics: ['Functions', 'Time'], onClose() {} };
   function render() { cursor = 0; return Component(props); }
@@ -95,7 +95,7 @@ test('only the selected comparison language has a visible name in the toolbar', 
 test('copy keeps the full source while comparison typing is still in progress', () => {
   const comparison = setup('python', code => code.slice(0, 3));
   comparison.select('Make something happen');
-  assert.deepEqual(comparison.code(), ['python', 'javascript'].map(language => lessons[language].find(lesson => lesson.title === 'Make something happen').answer.slice(0, 3)));
+  assert.deepEqual(comparison.code(), ['python', 'javascript'].map(language => lessons[language].find(lesson => lesson.title === 'Make something happen').answer).map((code, index) => index === 0 ? code.slice(0, 3) : ''));
   assert.deepEqual(comparison.copies(), ['python', 'javascript'].map(language => lessons[language].find(lesson => lesson.title === 'Make something happen').answer));
 });
 
@@ -105,7 +105,7 @@ test('complete code reserves panel geometry while only a few characters are visi
   comparison.select('Run code after a delay');
   const complete = ['python', 'javascript'].map(language => lessons[language].find(lesson => lesson.title === 'Run code after a delay').answer);
   assert.deepEqual(comparison.reservedCode(), complete);
-  assert.deepEqual(comparison.code(), complete.map(code => code.slice(0, 2)));
+  assert.deepEqual(comparison.code(), [complete[0].slice(0, 2), ""]);
 });
 
 
@@ -117,4 +117,16 @@ test('comparison pins switch both examples directly between complete topics', ()
     assert.equal(comparison.activePin(), topic);
     assert.deepEqual(comparison.code(), [chosen.answer, lessons.javascript.find(lesson => lesson.title === chosen.title).answer]);
   }
+});
+
+
+test('comparison reveals the second file only after the first file completes', () => {
+  let finished = false;
+  const comparison = setup('python', code => finished ? code : code.slice(0, 2));
+  comparison.selectPin('Functions');
+  assert.equal(comparison.code()[1], '');
+  finished = true;
+  const code = comparison.code();
+  assert.deepEqual(code, comparison.reservedCode());
+  assert.ok(code[1].length > 2);
 });

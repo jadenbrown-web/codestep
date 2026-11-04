@@ -1073,3 +1073,36 @@ button[data-active="true"]:after,html[data-theme] button[data-active="true"]:aft
 .comparison-file-tab .pinned-topic-label{background:var(--pin-fill);color:#101813;font-weight:850}
 .comparison-example-menu .example-picker-list .topic-pin-button{display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:44px;min-width:44px;height:44px;min-height:44px;margin:0;padding:0;border:1px solid transparent;background:transparent;color:var(--ui-muted)}
 .comparison-example-menu .example-picker-list .topic-pin-button[data-active="true"]{border-color:var(--selection-border);background:var(--selection-surface);color:var(--ui-text)}
+
+/* Compact, identical code metrics in the editor and comparison. */
+.editor-body{--editor-gutter:20px;--editor-inline-padding:4px;--editor-line-height:20px;--editor-padding:12px;font:13px/20px var(--mono)}
+.editor-body .code-guide,.editor-body .typed-code-layer{padding:6px 4px;font-size:13px;line-height:20px}
+.editor-body .code-line-ruler{padding:6px 4px;font-size:13px;line-height:20px}
+.editor-body .code-line-ruler-row,.numbered-comparison-code .code-line-ruler-row{grid-template-columns:20px minmax(0,1fr)}
+.code-line-number{padding-right:3px}
+.language-comparison[open]{gap:0}
+.language-comparison-controls{padding:0 2px;gap:0;margin:0}
+.language-comparison-controls .comparison-context{height:18px;min-height:18px;max-height:18px;margin:0;padding:0;font-size:12px;line-height:18px}
+.language-comparison-columns{gap:4px;margin:0 2px 2px}
+.language-comparison-columns .comparison-card>.numbered-comparison-code{box-sizing:border-box;padding:6px 4px;min-height:40px;font:13px/20px var(--mono)}
+.numbered-comparison-code>code{width:calc(100% - 20px);margin-left:20px;font:inherit;line-height:inherit}
+/* Equal-height coloured pins; selection stays on the pin itself. */
+.editor-panel .panel-bar{height:44px;min-height:44px;max-height:44px}
+.editor-panel .file-tab,.editor-panel .file-tab.has-pinned-topics{box-sizing:border-box;height:44px;min-height:44px}
+.editor-panel .panel-actions{height:44px;padding-top:0;padding-bottom:0;align-items:center}
+.editor-panel .file-tab.has-pinned-topics,.comparison-file-tab.has-pinned-topics{border-top:0;background:transparent}
+.file-tab .pinned-topic-shortcuts,.comparison-file-tab .pinned-topic-shortcuts{align-items:center}
+.file-tab .pinned-topic-shortcuts button,.comparison-file-tab .pinned-topic-shortcuts button{align-items:center;justify-content:center;height:44px;min-height:44px}
+.file-tab .pinned-topic-label,.comparison-file-tab .pinned-topic-label{display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:100%;height:32px;min-height:32px;max-height:32px;padding:2px 4px;font:850 10px/10px var(--sans);text-align:center}
+.file-tab .pinned-topic-shortcuts button[data-active="true"]:after,.comparison-file-tab .pinned-topic-shortcuts button[data-active="true"]:after{bottom:7px;background:#101813}
+@media(min-width:851px){
+ .editor-body .code-guide,.editor-body .typed-code-layer{inset:0 0 0 20px;width:calc(100% - 20px);margin-left:0}
+ .editor-body textarea{left:20px;width:calc(100% - 20px);padding:6px 4px;font-size:13px;line-height:20px}
+}
+@media(max-width:850px){
+ .editor-body .code-guide,.editor-body .typed-code-layer{width:calc(100% - 20px);margin-left:20px}
+ .editor-body textarea{left:20px;width:calc((100% - 20px) * 1.230769231);height:calc(100% * 1.230769231);padding:7.3846154px 4.9230769px;font-size:16px;line-height:24.6153846px}
+ .language-comparison-columns{gap:4px}
+ .language-comparison-columns .comparison-card{border-radius:8px}
+ .language-comparison-columns .comparison-card>.comparison-filebar{min-height:44px;height:44px}
+}

@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import { CODE_TYPING_START_DELAY, codeTypingDelay } from "./typing-rhythm";
 
-export default function useQuickCodeReveal(code: string, replayKey: string) {
+export default function useQuickCodeReveal(code: string, replayKey: string, enabled = true) {
   const [reveal, setReveal] = useState({ code, key: replayKey, length: 0 });
   useEffect(() => {
+    if (!enabled) { setReveal({ code, key: replayKey, length: 0 }); return; }
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setReveal({ code, key: replayKey, length: code.length });
       return;
@@ -21,6 +22,6 @@ export default function useQuickCodeReveal(code: string, replayKey: string) {
     };
     timer = setTimeout(typeCharacter, CODE_TYPING_START_DELAY);
     return () => clearTimeout(timer);
-  }, [code, replayKey]);
-  return reveal.code === code && reveal.key === replayKey ? code.slice(0, reveal.length) : "";
+  }, [code, replayKey, enabled]);
+  return enabled && reveal.code === code && reveal.key === replayKey ? code.slice(0, reveal.length) : "";
 }
