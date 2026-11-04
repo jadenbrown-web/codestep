@@ -31,6 +31,7 @@ function setup(language = 'python') {
     select(title) { find(render(), node => node.type === Picker).props.onSelect(title); },
     switchTo(target) { find(render(), node => node.type === 'button' && node.props.className?.includes(`language-${target}`)).props.onClick(); },
     code() { const tree = render(); const sections = []; function visit(node) { if (!React.isValidElement(node)) return; if (node.type === 'section') sections.push(node); React.Children.forEach(node.props.children, visit); } visit(tree); return sections.map(section => find(section, node => node.type === Code).props.code); },
+    toggleNotes() { find(render(), node => node.type === "button" && node.props["aria-label"] === "Explanations and setup").props.onClick(); },
     html() { return renderToStaticMarkup(render()); },
   };
 }
@@ -60,5 +61,24 @@ test('delay comparison preserves original JavaScript and C++ source lines', () =
   const expected = ['javascript', 'cpp'].map(language => lessons[language].find(lesson => lesson.title === 'Run code after a delay').answer);
   assert.deepEqual(comparison.code(), expected);
   assert.match(comparison.code()[1], /std::this_thread::sleep_for\(std::chrono::seconds\(2\)\);/);
-  assert.match(comparison.html(), /<details class="comparison-notes"><summary>Explanations and setup<\/summary>/);
+  assert.match(comparison.html(), /<aside[^>]*id="comparison-notes-panel"[^>]*hidden=""[^>]*aria-label="Explanations and setup"/);
+});
+
+
+test('toolbar notes toggle opens and closes the explanations panel', () => {
+  const comparison = setup();
+  assert.match(comparison.html(), /<aside[^>]*id="comparison-notes-panel"[^>]*hidden=""/);
+  comparison.toggleNotes();
+  assert.doesNotMatch(comparison.html(), /<aside[^>]*id="comparison-notes-panel"[^>]*hidden=""/);
+  comparison.toggleNotes();
+  assert.match(comparison.html(), /<aside[^>]*id="comparison-notes-panel"[^>]*hidden=""/);
+});
+
+test('only the selected comparison language has a visible name in the toolbar', () => {
+  const comparison = setup();
+  assert.equal((comparison.html().match(/class="comparison-language-name"/g) ?? []).length, 1);
+  assert.match(comparison.html(), /class="comparison-language-name">javascript<\/span>/);
+  comparison.switchTo('cpp');
+  assert.equal((comparison.html().match(/class="comparison-language-name"/g) ?? []).length, 1);
+  assert.match(comparison.html(), /class="comparison-language-name">cpp<\/span>/);
 });

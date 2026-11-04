@@ -977,3 +977,20 @@ html[data-theme="dark"] .comparison-example-menu .comparison-topic-head{backgrou
 .app-header.app-header :is(.settings-button,.drawer-toggle)[aria-expanded="true"],html[data-theme] .app-header.app-header :is(.settings-button,.drawer-toggle)[aria-expanded="true"],.app-header.app-header .language-choice[aria-pressed="true"],html[data-theme] .app-header.app-header .language-choice[aria-pressed="true"]{position:relative;border-color:var(--ui-border);background:var(--ui-hover);color:var(--ui-text);box-shadow:none}
 .app-header :is(.settings-button,.drawer-toggle)[aria-expanded="true"]:after,.app-header .language-choice[aria-pressed="true"]:after{content:"";position:absolute;left:16px;right:16px;bottom:4px;height:2px;background:var(--ui-text);border-radius:2px;pointer-events:none}
 .app-header.app-header button:focus-visible{outline-color:var(--ui-text)}
+
+/* Put notes in the toolbar; files use the space previously reserved below. */
+.comparison-header-languages{gap:8px}
+.app-header.app-header .language-choice[aria-pressed="true"],html[data-theme] .app-header.app-header .language-choice[aria-pressed="true"]{flex-direction:column;gap:1px}
+.comparison-language-name{display:block;max-width:42px;font:650 8px/10px var(--sans);white-space:nowrap;letter-spacing:-.15px;color:var(--ui-text)}
+.app-header .language-choice[aria-pressed="true"]:after{display:none}
+.language-comparison[open]{gap:2px}
+.language-comparison-controls{padding:0 6px}
+.language-comparison-controls .comparison-context{min-width:0;font-size:12px;line-height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.language-comparison-columns{margin:0 6px 4px}
+.comparison-notes[hidden]{display:none!important}
+.comparison-notes:not([hidden]){position:fixed;inset:58px 8px 8px;z-index:16;display:block;max-height:none;min-height:0;margin:0;overflow:auto;border:1px solid var(--ui-border);border-radius:10px;background:var(--ui-surface);box-shadow:0 8px 30px #0005}
+.comparison-notes-backdrop{position:fixed;inset:52px 0 0;z-index:15;background:#08110d88;border:0;cursor:pointer}
+.comparison-notes-heading{position:sticky;top:0;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 8px 4px 14px;background:var(--ui-surface);border-bottom:1px solid var(--ui-border)}
+.comparison-notes-heading b{font-size:14px;line-height:1.3}
+.comparison-notes-close{display:flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;height:44px;box-sizing:border-box;padding:0;border:1px solid var(--ui-border);border-radius:8px;background:var(--ui-surface);color:var(--ui-text);cursor:pointer}
+@media(max-width:380px){.comparison-header-languages{gap:4px}.comparison-header-languages .compare-language-choices>div{gap:4px}}
