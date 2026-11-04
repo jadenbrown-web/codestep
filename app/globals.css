@@ -1061,3 +1061,15 @@ button[data-active="true"]:after,html[data-theme] button[data-active="true"]:aft
 }
 .file-tab .editor-file-name{color:#d6dfda}
 .file-tab .pinned-topic-label{color:#101813;background:var(--pin-fill);font-weight:850}
+
+/* Topic pins switch files directly; all topic drawers keep the complete list. */
+[data-topic-tone="rose"]{--active-topic:#ff4f92}[data-topic-tone="blue"]{--active-topic:#29b6ff}[data-topic-tone="gold"]{--active-topic:#ffc400}[data-topic-tone="cyan"]{--active-topic:#00d6c2}[data-topic-tone="violet"]{--active-topic:#aa70ff}[data-topic-tone="green"]{--active-topic:#22cf72}[data-topic-tone="orange"]{--active-topic:#ff872e}
+.file-tab.has-pinned-topics,.comparison-file-tab.has-pinned-topics{border-top-color:var(--active-topic)}
+.file-tab .pinned-topic-shortcuts button[data-active="true"]:after,.comparison-file-tab .pinned-topic-shortcuts button[data-active="true"]:after{background:var(--pin-fill)}
+.comparison-file-tab.has-pinned-topics{flex:1;min-width:0;padding:0 6px;gap:6px}
+.comparison-file-tab.has-pinned-topics>.comparison-file-name{flex:none;max-width:72px;font-size:11px}
+.comparison-file-tab .pinned-topic-shortcuts{display:flex;flex:1;min-width:0;height:44px;gap:4px;margin:0;padding:0;border:0;background:transparent}
+.comparison-file-tab .pinned-topic-shortcuts button,html[data-theme] .comparison-file-tab .pinned-topic-shortcuts button{display:flex;align-items:center;justify-content:center;flex:1;box-sizing:border-box;min-width:44px;width:0;height:44px;min-height:44px;margin:0;padding:0;border:0;background:transparent;color:#101813;font:850 11px/1.15 var(--sans)}
+.comparison-file-tab .pinned-topic-label{background:var(--pin-fill);color:#101813;font-weight:850}
+.comparison-example-menu .example-picker-list .topic-pin-button{display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:44px;min-width:44px;height:44px;min-height:44px;margin:0;padding:0;border:1px solid transparent;background:transparent;color:var(--ui-muted)}
+.comparison-example-menu .example-picker-list .topic-pin-button[data-active="true"]{border-color:var(--selection-border);background:var(--selection-surface);color:var(--ui-text)}

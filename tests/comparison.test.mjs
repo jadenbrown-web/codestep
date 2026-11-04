@@ -11,17 +11,20 @@ const start = source.indexOf('{', source.indexOf('const lessons:'));
 const lessons = JSON.parse(source.slice(start, source.indexOf('\n};', start) + 2));
 const functions = ast.statements.filter(node => ts.isFunctionDeclaration(node) && ['matchingLesson', 'LanguageComparison'].includes(node.name?.text)).map(node => node.getText(ast)).join('\n');
 const compiled = ts.transpileModule(functions, { compilerOptions: { jsx: ts.JsxEmit.React, target: ts.ScriptTarget.ES2022 } }).outputText;
+const pinModule = ts.transpileModule(fs.readFileSync("app/topic-pins.ts", "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
+const { firstTopicLessonIndex, lessonTopic } = await import("data:text/javascript;base64," + Buffer.from(pinModule).toString("base64"));
 
 function setup(language = 'python', reveal = code => code) {
   const states = [];
   let cursor = 0;
   const Picker = () => null;
   const Copy = () => null;
+  const Pins = () => null;
   const Code = ({ code }) => React.createElement(React.Fragment, null, code);
-  const names = ['React', 'useState', 'useRef', 'useEffect', 'lessons', 'lessonComment', 'lessonExample', 'languageName', 'lessonTone', 'challengeFile', 'MenuHeader', 'ComparisonExamplePicker', 'CopyCodeButton', 'HighlightedCode', 'LessonExplanation', 'CppSetupGuide', 'BackButton', 'CodeLineNumbers', 'useQuickCodeReveal'];
-  const values = [React, initial => { const index = cursor++; if (!(index in states)) states[index] = initial; return [states[index], next => { states[index] = next; }]; }, () => ({ current: null }), () => {}, lessons, () => '', lesson => lesson.answer, value => value, () => 'blue', () => 'code', () => null, Picker, Copy, Code, ({ lesson }) => lesson.explanation, () => null, () => null, () => null, reveal];
+  const names = ['React', 'useState', 'useRef', 'useEffect', 'lessons', 'lessonComment', 'lessonExample', 'languageName', 'lessonTone', 'challengeFile', 'MenuHeader', 'ComparisonExamplePicker', 'CopyCodeButton', 'HighlightedCode', 'LessonExplanation', 'CppSetupGuide', 'BackButton', 'CodeLineNumbers', 'useQuickCodeReveal', 'PinnedTopicShortcuts', 'firstTopicLessonIndex', 'lessonTopic'];
+  const values = [React, initial => { const index = cursor++; if (!(index in states)) states[index] = initial; return [states[index], next => { states[index] = next; }]; }, () => ({ current: null }), () => {}, lessons, () => '', lesson => lesson.answer, value => value, () => 'blue', () => 'code', () => null, Picker, Copy, Code, ({ lesson }) => lesson.explanation, () => null, () => null, () => null, reveal, Pins, firstTopicLessonIndex, lessonTopic];
   const Component = new Function(...names, compiled + '\nreturn LanguageComparison;')(...values);
-  const props = { language, lesson: lessons[language][0], editorCode: 'original editor code', showComments: false, onClose() {} };
+  const props = { language, lesson: lessons[language][0], editorCode: 'original editor code', showComments: false, pinnedTopics: ['Functions', 'Time'], onClose() {} };
   function render() { cursor = 0; return Component(props); }
   function find(element, predicate) {
     if (!React.isValidElement(element)) return undefined;
@@ -29,6 +32,8 @@ function setup(language = 'python', reveal = code => code) {
     for (const child of React.Children.toArray(element.props.children)) { const found = find(child, predicate); if (found) return found; }
   }
   return {
+    selectPin(topic) { find(render(), node => node.type === Pins).props.onSelect(topic); },
+    activePin() { return find(render(), node => node.type === Pins).props.activeTopic; },
     select(title) { find(render(), node => node.type === Picker).props.onSelect(title); },
     switchTo(target) { find(render(), node => node.type === 'button' && node.props.className?.includes(`language-${target}`)).props.onClick(); },
     code() { const tree = render(); const sections = []; function visit(node) { if (!React.isValidElement(node)) return; if (node.type === 'section') sections.push(node); React.Children.forEach(node.props.children, visit); } visit(tree); return sections.map(section => find(section, node => node.type === Code).props.code); },
@@ -101,4 +106,15 @@ test('complete code reserves panel geometry while only a few characters are visi
   const complete = ['python', 'javascript'].map(language => lessons[language].find(lesson => lesson.title === 'Run code after a delay').answer);
   assert.deepEqual(comparison.reservedCode(), complete);
   assert.deepEqual(comparison.code(), complete.map(code => code.slice(0, 2)));
+});
+
+
+test('comparison pins switch both examples directly between complete topics', () => {
+  const comparison = setup();
+  for (const topic of ['Functions', 'Time']) {
+    comparison.selectPin(topic);
+    const chosen = lessons.python[firstTopicLessonIndex(lessons.python, topic)];
+    assert.equal(comparison.activePin(), topic);
+    assert.deepEqual(comparison.code(), [chosen.answer, lessons.javascript.find(lesson => lesson.title === chosen.title).answer]);
+  }
 });

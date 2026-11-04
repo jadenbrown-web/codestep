@@ -23,3 +23,7 @@ export function restoreTopicPins(raw: string | null, available: Record<string, s
 export function filterTopicLessons<T extends { eyebrow: string }>(lessons: T[], topic: string | null) {
   return lessons.flatMap((lesson, index) => !topic || lessonTopic(lesson) === topic ? [{ lesson, index }] : []);
 }
+
+export function firstTopicLessonIndex<T extends { eyebrow: string }>(lessons: T[], topic: string) {
+  return lessons.findIndex(lesson => lessonTopic(lesson) === topic);
+}
