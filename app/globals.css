@@ -1220,3 +1220,13 @@ html[data-theme="dark"] .settings-panel .settings-drawer-head{background:var(--d
 /* Study and Practice share one continuous outlined file header. */
 .editor-panel .panel-bar,.language-comparison-columns .comparison-card>.comparison-filebar{background:var(--ui-surface);border-bottom:1px solid var(--ui-border)}
 .editor-panel .file-tab,.editor-panel .file-tab.has-pinned-topics,.comparison-filebar>.comparison-file-tab,.comparison-filebar>.comparison-file-tab.has-pinned-topics{border-top:0;background:transparent;box-shadow:none}
+
+/* Selection is shown by the control itself, without underline markers. */
+button[data-active="true"]::after,html[data-theme] button[data-active="true"]::after{display:none!important}
+/* Colour and thumb position both distinguish switch states. */
+.settings-panel button.switch,html[data-theme] .settings-panel button.switch{position:relative;box-sizing:border-box;display:block;width:48px;min-width:48px;height:28px;min-height:28px;padding:3px;border:1px solid #78877f;border-radius:18px;background:#64746b;box-shadow:none}
+.settings-panel button.switch i,html[data-theme] .settings-panel button.switch i{display:block;width:20px;height:20px;background:#fff;transform:translateX(0);box-shadow:0 1px 3px #0003}
+.settings-panel button.switch.on,html[data-theme] .settings-panel button.switch.on{background:#10b981;border-color:#10b981}
+.settings-panel button.switch.on i,html[data-theme] .settings-panel button.switch.on i{background:#fff;transform:translateX(20px)}
+.settings-panel button.switch.on::before{content:"✓";position:absolute;left:6px;top:6px;color:#063a28;font:900 13px/14px var(--sans)}
+.app-header.app-header button[data-active="true"],html[data-theme] .app-header.app-header button[data-active="true"]{color:var(--ui-text);background:var(--selection-surface);border-radius:6px}
