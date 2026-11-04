@@ -714,3 +714,30 @@ html[data-theme] :is(.theme-options button.selected,.compare-language-choices .l
  .language-comparison-columns .comparison-card{border-color:#31463d;border-top-width:1px;background:#122019;box-shadow:none}
  .language-comparison-columns .comparison-card>.numbered-comparison-code{font-size:13px;line-height:20px;min-height:72px;padding:10px 12px}
 }
+
+/* Use the header for language selection and reserve the rest for files. */
+.language-comparison .comparison-topbar{height:60px;min-height:60px;padding:2px 8px;gap:8px}
+.comparison-header-languages{display:flex;flex-direction:column;align-items:flex-end;gap:0;min-width:0}
+.comparison-topbar .comparison-header-languages h2{font-size:10px;line-height:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--ui-muted);margin:0 2px}
+.comparison-header-languages .compare-language-choices{width:auto}
+.comparison-header-languages .compare-language-choices>div{width:auto;display:flex;gap:4px;overflow:visible}
+.comparison-header-languages .language-choice{box-sizing:border-box;flex:0 0 44px;width:44px;min-width:44px;max-width:44px;height:44px;min-height:44px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:var(--control-radius)}
+.comparison-header-languages .comparison-language-logo{width:24px;height:24px}
+.comparison-example-menu .example-picker-panel{top:60px;height:calc(var(--visible-height,100dvh) - 60px)}
+.comparison-menu-backdrop{top:60px}
+.language-comparison[open]{gap:6px}
+.language-comparison-controls{padding:0 8px;gap:0}
+.language-comparison-controls .comparison-context{font-size:12px;line-height:18px}
+.language-comparison-columns{margin:0 8px;gap:8px}
+.comparison-notes{margin:0 8px 4px;min-height:44px}
+/* Soft wrapping affects display only; copying retains original file lines. */
+.numbered-comparison-code>code{white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;overflow-x:hidden;padding-bottom:0}
+.numbered-comparison-code .code-line-ruler .code-line-measure{white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal}
+@media(max-width:850px){
+ .language-comparison .comparison-topbar{height:60px;min-height:60px;padding:2px 8px}
+ .language-comparison-columns{gap:8px}
+ .language-comparison-columns .comparison-card>.comparison-filebar{height:44px;min-height:44px}
+ .language-comparison-columns .comparison-card>.numbered-comparison-code{padding:8px;min-height:64px}
+ .lesson-layout .workspace{padding:6px;gap:6px}
+ .workspace .feedback{min-height:52px;padding:4px 8px}
+}
