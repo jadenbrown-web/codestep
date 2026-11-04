@@ -2,9 +2,9 @@ export function lessonTopic(lesson: { eyebrow: string }) {
   return lesson.eyebrow.split("·").slice(1).join("·").trim();
 }
 
-export function toggleTopicPin(pins: string[], topic: string) {
+export function toggleTopicPin(pins: string[], topic: string, limit = 2) {
   if (pins.includes(topic)) return pins.filter(pin => pin !== topic);
-  return pins.length < 2 ? [...pins, topic] : pins;
+  return pins.length < limit ? [...pins, topic] : pins;
 }
 
 export function restoreTopicPins(raw: string | null, available: Record<string, string[]>) {
@@ -33,7 +33,7 @@ export function pinnedLessonIndex<T extends { title: string }>(lessons: T[], tit
 }
 
 /** Upgrade earlier topic-only pins while keeping new pins tied to one lesson. */
-export function restoreLessonPins(raw: string | null, courses: Record<string, { title: string; eyebrow: string }[]>) {
+export function restoreLessonPins(raw: string | null, courses: Record<string, { title: string; eyebrow: string }[]>, limit = 2) {
   const restored: Record<string, string[]> = {};
   try {
     const saved = JSON.parse(raw ?? "{}");
@@ -45,7 +45,7 @@ export function restoreLessonPins(raw: string | null, courses: Record<string, { 
         const lesson = course.find(item => item.title === value) ?? course.find(item => lessonTopic(item) === value);
         return lesson ? [lesson.title] : [];
       });
-      restored[language] = [...new Set(resolved as string[])].slice(0, 2);
+      restored[language] = [...new Set(resolved as string[])].slice(0, limit);
     }
   } catch { /* Ignore invalid or unavailable browser storage. */ }
   return restored;

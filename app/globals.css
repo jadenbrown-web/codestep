@@ -1281,3 +1281,36 @@ html[data-theme="dark"]{--workspace-rail:#1c2d24;--workspace-filebar:#18281f}
 /* Comparison's nested drawer controls are independent of the navigation grid. */
 .app-header.app-header .drawer-pins .pinned-topic-shortcuts button[aria-label]:not(:disabled),html[data-theme] .app-header.app-header .drawer-pins .pinned-topic-shortcuts button[aria-label]:not(:disabled){display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:5px;width:100%;min-width:0;max-width:none;height:auto;min-height:44px;max-height:none;margin:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;text-align:left}
 .app-header.app-header .drawer-pins button[data-active="true"]::after,html[data-theme] .app-header.app-header .drawer-pins button[data-active="true"]::after{display:none!important}
+
+/* Desktop uses the same components and visual system in its wider layout. */
+@media(min-width:851px){
+ .app-header.lesson-nav{grid-template-columns:44px 44px minmax(0,1fr) auto;gap:8px;padding:0 12px}
+ .app-header.lesson-nav>.lesson-progress{grid-column:3;width:min(330px,100%)}
+ .app-header.lesson-nav>.lesson-actions,.app-header.lesson-nav>.comparison-header-languages{grid-column:4;grid-row:1;display:flex;align-items:center;gap:8px}
+ .lesson-shell>.lesson-tools{display:none}
+ .lesson-layout .workspace{padding:8px;gap:8px}
+ .lesson-copy{padding:20px;min-width:0;background:var(--workspace-rail)}
+ .lesson-copy h1{font-size:30px;line-height:1.15;margin:8px 0 14px;letter-spacing:-.7px}
+ .lesson-copy>p{font-size:14px;line-height:1.6}
+ .lesson-copy .breakdown-grid{gap:8px}
+ .lesson-copy .breakdown-part{padding:12px}
+ .editor-panel .panel-bar{display:grid;grid-template-columns:minmax(0,1fr) 88px;grid-template-rows:44px;height:44px;min-height:44px;max-height:44px;flex-wrap:nowrap}
+ .editor-panel .panel-actions{display:flex;gap:0;width:88px;height:44px;padding:0;margin:0}
+ .editor-panel .panel-actions button{display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:44px;min-width:44px;height:44px;padding:0;border:0;background:transparent}
+ .editor-panel .panel-actions .editor-action-label{display:none}
+ .editor-panel .file-tab{min-width:0;padding:0 8px}
+ .editor-panel .file-tab.has-pinned-topics,.comparison-filebar>.comparison-file-tab.has-pinned-topics{grid-template-columns:18px minmax(0,84px) minmax(0,1fr);padding:0 6px;gap:6px}
+ .has-pinned-topics>.editor-file-name,.comparison-file-tab.has-pinned-topics>.comparison-file-name{max-width:84px}
+ .file-tab .pinned-topic-label,.comparison-file-tab .pinned-topic-label{font-size:11px}
+ .drawer-pins .pinned-topic-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .language-comparison-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:minmax(0,1fr);grid-auto-flow:row;align-items:stretch;align-content:stretch;gap:8px;margin:0 8px 8px;padding:0;overflow:auto}
+ .language-comparison-columns .comparison-card{display:flex;flex-direction:column;grid-row:auto;box-sizing:border-box;min-width:0;min-height:0;width:100%;border:1px solid var(--ui-border);border-radius:10px;overflow:hidden;clip-path:none;background:#122019}
+ .language-comparison-columns .comparison-card>.comparison-filebar{display:grid;grid-row:auto;flex:none;border:0;border-bottom:1px solid var(--ui-border);border-radius:0;background:var(--workspace-filebar)!important;padding:0 2px}
+ .language-comparison-columns .comparison-card>.numbered-comparison-code{grid-row:auto;flex:1;min-height:0;margin:0;border:0;border-radius:0;overflow:auto}
+ .comparison-header-languages .compare-language-choices,.comparison-header-languages .compare-language-choices>div{display:flex;align-items:center;gap:8px;width:auto;margin:0;padding:0}
+ .comparison-header-languages .comparison-language-name{font-size:9px;line-height:10px}
+ .comparison-header-languages .language-choice{flex:none;flex-direction:column;gap:1px}
+ .language-comparison-controls{padding:0 8px}
+ .home-shell .hero .terminal-code{font-size:13px;line-height:20px;font-weight:600}
+ .settings-panel .settings-group{padding:10px 0}
+}

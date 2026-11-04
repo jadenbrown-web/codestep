@@ -44,3 +44,18 @@ test('legacy topics migrate to exact lessons and new lesson pins remain distinct
   assert.deepEqual(restoreLessonPins(JSON.stringify({ python: ['Repeat'] }), courses), { python: ['Repeat'] });
   assert.equal(pinnedLessonIndex(courses.python, 'Repeat'), 1);
 });
+
+test('desktop accepts five pins and refuses a sixth without replacing any', () => {
+  let pins = [];
+  for (const topic of ['A', 'B', 'C', 'D', 'E']) pins = toggleTopicPin(pins, topic, 5);
+  assert.deepEqual(pins, ['A', 'B', 'C', 'D', 'E']);
+  assert.deepEqual(toggleTopicPin(pins, 'F', 5), pins);
+  assert.deepEqual(toggleTopicPin(pins, 'C', 5), ['A', 'B', 'D', 'E']);
+});
+test('restoring desktop pins preserves all five while phone views can show two', () => {
+  const course = ['A', 'B', 'C', 'D', 'E', 'F'].map(title => ({ title, eyebrow: '01 · Functions' }));
+  const restored = restoreLessonPins(JSON.stringify({ python: course.map(item => item.title) }), { python: course }, 5);
+  assert.deepEqual(restored.python, ['A', 'B', 'C', 'D', 'E']);
+  assert.deepEqual(restored.python.slice(0, 2), ['A', 'B']);
+  assert.equal(restored.python.length, 5);
+});

@@ -4253,9 +4253,9 @@ function LearningCode({ code, starter, language, caretIndex, focusConditions }: 
   </>;
 }
 
-function TopicPinButton({ topic, pins, onToggle }: { topic: string | null; pins: string[]; onToggle: (topic: string) => void }) {
+function TopicPinButton({ topic, pins, onToggle, limit = 2 }: { topic: string | null; pins: string[]; onToggle: (topic: string) => void; limit?: number }) {
   const pinned = !!topic && pins.includes(topic);
-  return <button className="topic-pin-button" aria-label={`${pinned ? "Unpin" : "Pin"} ${topic ?? "unavailable topic"}`} title={!topic ? "No matching topic in your language" : pinned ? `Unpin ${topic}` : pins.length >= 2 ? "Unpin a topic before adding another" : `Pin ${topic}`} data-pinned={pinned} disabled={!topic || (!pinned && pins.length >= 2)} onClick={() => topic && onToggle(topic)}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 3h6l-1 6 4 4v2H6v-2l4-4-1-6ZM12 15v6"/></svg></button>;
+  return <button className="topic-pin-button" aria-label={`${pinned ? "Unpin" : "Pin"} ${topic ?? "unavailable topic"}`} title={!topic ? "No matching topic in your language" : pinned ? `Unpin ${topic}` : pins.length >= limit ? "Unpin a topic before adding another" : `Pin ${topic}`} data-pinned={pinned} disabled={!topic || (!pinned && pins.length >= limit)} onClick={() => topic && onToggle(topic)}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 3h6l-1 6 4 4v2H6v-2l4-4-1-6ZM12 15v6"/></svg></button>;
 }
 
 function PinnedTopicShortcuts({ topics, activeTopic, onSelect, language, showTitles = false }: { topics: string[]; activeTopic: string | null; onSelect: (topic: string) => void; language: Language; showTitles?: boolean }) {
@@ -4423,7 +4423,7 @@ function LessonExplanation({ lesson, language }: { lesson: Lesson; language: Lan
   return <>{result}</>;
 }
 
-function ComparisonExamplePicker({ target, selected, onSelect, sourceLanguage, pins, onTogglePin }: { target: Language; selected?: Lesson; onSelect: (title: string) => void; sourceLanguage: Language; pins: string[]; onTogglePin: (topic: string) => void }) {
+function ComparisonExamplePicker({ target, selected, onSelect, sourceLanguage, pins, onTogglePin, pinLimit = 2 }: { target: Language; selected?: Lesson; onSelect: (title: string) => void; sourceLanguage: Language; pins: string[]; onTogglePin: (topic: string) => void; pinLimit?: number }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const root = useRef<HTMLDivElement>(null);
@@ -4439,7 +4439,7 @@ function ComparisonExamplePicker({ target, selected, onSelect, sourceLanguage, p
   return <div className="comparison-example-menu" ref={root} onKeyDown={event => { if (event.key === "Escape" && open) { event.preventDefault(); event.stopPropagation(); setOpen(false); trigger.current?.focus(); } }}>
     <button ref={trigger} className="drawer-toggle" aria-label={open ? "Close comparison examples" : "Open comparison examples"} data-active={open} aria-expanded={open} aria-controls="comparison-examples" onClick={() => { setOpen(!open); setQuery(""); }}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><path d="M5 6h14M5 12h14M5 18h14"/></svg></button>
     {open && <button className="comparison-menu-backdrop" aria-label="Close comparison examples" onClick={() => setOpen(false)} />}
-    {open && <div className="example-picker-panel" id="comparison-examples"><div className="drawer-head comparison-topic-head"><span className="drawer-language-logo" aria-hidden="true"><img src={`/language-logos/${target}.svg`} alt="" width="30" height="30" /></span><div><small>COMPARE TOPICS</small><b>{languageName(target)}</b></div><button className="drawer-close" aria-label="Close comparison topics" onClick={() => { setOpen(false); trigger.current?.focus({ preventScroll: true }); }}>×</button></div>{pins.length > 0 && <section className="drawer-pins" aria-label="Pinned comparison lessons"><b>Pinned</b><PinnedTopicShortcuts topics={pins} activeTopic={selected ? matchingLesson(selected, sourceLanguage)?.title ?? null : null} language={sourceLanguage} showTitles onSelect={title => { const source = lessons[sourceLanguage].find(item => item.title === title); const destination = source ? matchingLesson(source, target) : undefined; if (!destination) return; onSelect(destination.title); setOpen(false); trigger.current?.focus({ preventScroll: true }); }} /></section>}<div className="drawer-pin-hint">All topics · Pin up to two · {pins.length}/2</div><input ref={search} aria-label="Search comparison examples" placeholder="Search examples…" value={query} onChange={event => setQuery(event.target.value)} /><div className="example-picker-list topic-list">{choices.map(item => { const matching = matchingLesson(item, sourceLanguage); return <div className="lesson-list-row" key={item.title}><button className={`tone-${lessonTone(item)}`} data-active={selected === item} aria-pressed={selected === item} onClick={() => { search.current?.blur(); onSelect(item.title); setOpen(false); trigger.current?.focus({ preventScroll: true }); }}><span className="example-label"><small>{item.eyebrow.replace(/^\d+\s*[·.]\s*/, "")}</small><strong>{item.title}</strong></span><span className="example-choice-mark" aria-hidden="true">{selected === item ? <svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> : "›"}</span></button><TopicPinButton topic={matching?.title ?? null} pins={pins} onToggle={onTogglePin} /></div>; })}{!choices.length && <p>No matching examples.</p>}</div></div>}
+    {open && <div className="example-picker-panel" id="comparison-examples"><div className="drawer-head comparison-topic-head"><span className="drawer-language-logo" aria-hidden="true"><img src={`/language-logos/${target}.svg`} alt="" width="30" height="30" /></span><div><small>COMPARE TOPICS</small><b>{languageName(target)}</b></div><button className="drawer-close" aria-label="Close comparison topics" onClick={() => { setOpen(false); trigger.current?.focus({ preventScroll: true }); }}>×</button></div>{pins.length > 0 && <section className="drawer-pins" aria-label="Pinned comparison lessons"><b>Pinned</b><PinnedTopicShortcuts topics={pins} activeTopic={selected ? matchingLesson(selected, sourceLanguage)?.title ?? null : null} language={sourceLanguage} showTitles onSelect={title => { const source = lessons[sourceLanguage].find(item => item.title === title); const destination = source ? matchingLesson(source, target) : undefined; if (!destination) return; onSelect(destination.title); setOpen(false); trigger.current?.focus({ preventScroll: true }); }} /></section>}<div className="drawer-pin-hint">All topics · Pin up to {pinLimit} · {pins.length}/{pinLimit}</div><input ref={search} aria-label="Search comparison examples" placeholder="Search examples…" value={query} onChange={event => setQuery(event.target.value)} /><div className="example-picker-list topic-list">{choices.map(item => { const matching = matchingLesson(item, sourceLanguage); return <div className="lesson-list-row" key={item.title}><button className={`tone-${lessonTone(item)}`} data-active={selected === item} aria-pressed={selected === item} onClick={() => { search.current?.blur(); onSelect(item.title); setOpen(false); trigger.current?.focus({ preventScroll: true }); }}><span className="example-label"><small>{item.eyebrow.replace(/^\d+\s*[·.]\s*/, "")}</small><strong>{item.title}</strong></span><span className="example-choice-mark" aria-hidden="true">{selected === item ? <svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> : "›"}</span></button><TopicPinButton limit={pinLimit} topic={matching?.title ?? null} pins={pins} onToggle={onTogglePin} /></div>; })}{!choices.length && <p>No matching examples.</p>}</div></div>}
   </div>;
 }
 
@@ -4473,7 +4473,7 @@ function CopyCodeButton({ code, label, text = "Copy code", iconOnly = false }: {
   return <span className="copy-code-control"><button className="copy-code-button" title={status === "failed" ? "Select the code and copy it manually." : "Copy code with its indentation and line breaks"} aria-label={`Copy ${label} code`} disabled={!code.trim()} onClick={async () => setStatus(await copyCodeText(code) ? "copied" : "failed")}>{iconOnly ? <svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{status === "copied" ? <path d="m5 12 4 4L19 6"/> : status === "failed" ? <path d="M12 4v10m0 4v2"/> : <><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></>}</svg> : status === "copied" ? "Copied" : status === "failed" ? "Copy blocked" : text}</button><span className="copy-code-status" role="status">{status === "copied" ? "Code copied." : status === "failed" ? "Copy was blocked. Select the code and copy it manually." : ""}</span></span>;
 }
 
-function LanguageComparison({ language, lesson, editorCode, showComments, onClose, pinnedTopics = [], onTogglePin = () => {} }: { language: Language; lesson: Lesson; editorCode: string; showComments: boolean; onClose: () => void; pinnedTopics?: string[]; onTogglePin?: (topic: string) => void }) {
+function LanguageComparison({ language, lesson, editorCode, showComments, onClose, pinnedTopics = [], onTogglePin = () => {}, pinLimit = 2 }: { language: Language; lesson: Lesson; editorCode: string; showComments: boolean; onClose: () => void; pinnedTopics?: string[]; onTogglePin?: (topic: string) => void; pinLimit?: number }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [target, setTarget] = useState<Language>(language === "javascript" ? "cpp" : "javascript");
   const [pickedLesson, setPickedLesson] = useState<Lesson | null>(null);
@@ -4502,7 +4502,7 @@ function LanguageComparison({ language, lesson, editorCode, showComments, onClos
   }, []);
   useEffect(() => { setPickedLesson(null); }, [lesson]);
   return <dialog ref={dialog} tabIndex={-1} className="language-comparison" onCancel={event => { if (notesOpen) { event.preventDefault(); setNotesOpen(false); } else onClose(); }} aria-labelledby="language-comparison-title">
-    <header className="lesson-nav app-header comparison-topbar"><div className="lesson-brand-group"><BackButton onClick={onClose} label="Back to lesson" /><ComparisonExamplePicker key={target} target={target} sourceLanguage={language} pins={pinnedTopics} onTogglePin={onTogglePin} selected={other} onSelect={title => setPickedLesson(lessons[target].find(item => item.title === title) ?? null)} /></div><div className="comparison-header-languages"><button className="drawer-toggle comparison-notes-toggle" aria-label="Lesson explanations" title="Lesson explanations" data-active={notesOpen} aria-expanded={notesOpen} aria-controls="comparison-notes-panel" onClick={() => setNotesOpen(!notesOpen)}><LessonSymbol /></button><h2 id="language-comparison-title">Compare code</h2><div className="compare-language-choices"><div role="group" aria-label="Comparison language">{(Object.keys(lessons) as Language[]).filter(item => item !== language && item !== "html" && item !== "css").map(item => <button className={`language-choice language-${item}`} key={item} aria-label={`Compare with ${languageName(item)}`} title={languageName(item)} data-active={target === item} aria-pressed={target === item} onClick={() => setTarget(item)}><img className="comparison-language-logo" src={`/language-logos/${item}.svg`} alt="" width="24" height="24" />{target === item && <span className="comparison-language-name">{languageName(item)}</span>}</button>)}</div></div></div></header>
+    <header className="lesson-nav app-header comparison-topbar"><div className="lesson-brand-group"><BackButton onClick={onClose} label="Back to lesson" /><ComparisonExamplePicker key={target} target={target} sourceLanguage={language} pins={pinnedTopics} pinLimit={pinLimit} onTogglePin={onTogglePin} selected={other} onSelect={title => setPickedLesson(lessons[target].find(item => item.title === title) ?? null)} /></div><div className="comparison-header-languages"><button className="drawer-toggle comparison-notes-toggle" aria-label="Lesson explanations" title="Lesson explanations" data-active={notesOpen} aria-expanded={notesOpen} aria-controls="comparison-notes-panel" onClick={() => setNotesOpen(!notesOpen)}><LessonSymbol /></button><h2 id="language-comparison-title">Compare code</h2><div className="compare-language-choices"><div role="group" aria-label="Comparison language">{(Object.keys(lessons) as Language[]).filter(item => item !== language && item !== "html" && item !== "css").map(item => <button className={`language-choice language-${item}`} key={item} aria-label={`Compare with ${languageName(item)}`} title={languageName(item)} data-active={target === item} aria-pressed={target === item} onClick={() => setTarget(item)}><img className="comparison-language-logo" src={`/language-logos/${item}.svg`} alt="" width="24" height="24" />{target === item && <span className="comparison-language-name">{languageName(item)}</span>}</button>)}</div></div></div></header>
     <div className="language-comparison-controls">
       <p className="comparison-context">{sourceLesson && other ? (other?.title ?? sourceLesson?.title) : "No matching example is available in one of these languages. Choose another topic or language."}</p>
     </div>
@@ -4548,8 +4548,16 @@ export default function Home() {
   useEffect(() => { if (navOpen && lessonListRef.current) lessonListRef.current.scrollTop = 0; }, [navOpen, language]);
   const [pinnedByLanguage, setPinnedByLanguage] = useState<Record<string, string[]>>({});
   const [pinsReady, setPinsReady] = useState(false);
+  const [pinLimit, setPinLimit] = useState(2);
   useEffect(() => {
-    try { setPinnedByLanguage(restoreLessonPins(localStorage.getItem("codestep-pinned-lessons") ?? localStorage.getItem("codestep-pinned-topics"), lessons)); } catch {}
+    const desktop = window.matchMedia("(min-width: 851px)");
+    const update = () => setPinLimit(desktop.matches ? 5 : 2);
+    update();
+    desktop.addEventListener("change", update);
+    return () => desktop.removeEventListener("change", update);
+  }, []);
+  useEffect(() => {
+    try { setPinnedByLanguage(restoreLessonPins(localStorage.getItem("codestep-pinned-lessons") ?? localStorage.getItem("codestep-pinned-topics"), lessons, 5)); } catch {}
     setPinsReady(true);
   }, []);
   useEffect(() => {
@@ -4614,7 +4622,7 @@ export default function Home() {
   const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0, cpp: 0, python: 0, html: 0, css: 0 });
 
   const current = language ? lessons[language][index] : null;
-  const pinnedTopics = language ? pinnedByLanguage[language] ?? [] : [];
+  const pinnedTopics = language ? (pinnedByLanguage[language] ?? []).slice(0, pinLimit) : [];
   const visibleLessons = language ? filterTopicLessons(lessons[language], null) : [];
   const openPinnedTopic = (topic: string) => {
     if (!language) return;
@@ -4626,7 +4634,7 @@ export default function Home() {
   };
   const togglePinnedTopic = (topic: string) => {
     if (!language) return;
-    setPinnedByLanguage(previous => ({ ...previous, [language]: toggleTopicPin(previous[language] ?? [], topic) }));
+    setPinnedByLanguage(previous => ({ ...previous, [language]: toggleTopicPin(previous[language] ?? [], topic, pinLimit) }));
   };
   const ghostSource = current && language ? showComments ? annotatedLessonCode(current, language) : withoutGuideComments(current.answer, language) : "";
   const visibleGhost = ghostSource.slice(0, ghostLength);
@@ -4879,7 +4887,7 @@ export default function Home() {
 
   return (
     <>
-    {comparisonOpen && <LanguageComparison language={language} pinnedTopics={pinnedTopics} onTogglePin={togglePinnedTopic} lesson={current!} editorCode={code} showComments={showComments} onClose={() => setComparisonOpen(false)} />}
+    {comparisonOpen && <LanguageComparison language={language} pinLimit={pinLimit} pinnedTopics={pinnedTopics} onTogglePin={togglePinnedTopic} lesson={current!} editorCode={code} showComments={showComments} onClose={() => setComparisonOpen(false)} />}
     <main className={`lesson-shell mobile-${mobilePane}`}>
       <header className="lesson-nav app-header">
         <div className="lesson-brand-group"><HomeButton onClick={() => { setSettingsOpen(false); setLanguage(null); }} /><button className="drawer-toggle" onClick={() => { setSettingsOpen(false); setNavOpen(open => !open); }} aria-label={navOpen ? "Close lesson list" : "Open lesson list"} data-active={navOpen} aria-expanded={navOpen}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><path d="M5 6h14M5 12h14M5 18h14"/></svg></button></div>
@@ -4895,12 +4903,12 @@ export default function Home() {
           <div className="drawer-head"><span className="drawer-language-logo" aria-hidden="true"><img src={`/language-logos/${language}.svg`} alt="" width="36" height="36" /></span><div><small>LEARNING PATH</small><b>{languageName(language)}</b></div><button className="drawer-close" aria-label="Close learning path" onClick={() => setNavOpen(false)}>×</button></div>
           <div className="drawer-summary"><div><span>{completed[language]} of {lessons[language].length} completed</span><b>{Math.round(completed[language] / lessons[language].length * 100)}%</b></div><div className="drawer-progress"><i style={{width: `${completed[language] / lessons[language].length * 100}%`}} /></div></div>
           {pinnedTopics.length > 0 && <section className="drawer-pins" aria-label="Pinned lessons"><b>Pinned</b><PinnedTopicShortcuts topics={pinnedTopics} activeTopic={current?.title ?? null} onSelect={openPinnedTopic} language={language} showTitles /></section>}
-          <div className="drawer-pin-hint">All topics · Pin up to two · {pinnedTopics.length}/2</div>
+          <div className="drawer-pin-hint">All topics · Pin up to {pinLimit} · {pinnedTopics.length}/{pinLimit}</div>
           <nav ref={lessonListRef} className="drawer-lessons topic-list">
             {visibleLessons.map(({ lesson, index: lessonIndex }) => (
               <div className="lesson-list-row" key={lesson.title}><button data-active={lessonIndex === index} className={`tone-${lessonTone(lesson)} ${lessonIndex === index ? "active" : ""} ${lessonIndex < completed[language] ? "done" : ""}`} onClick={() => { setIndex(lessonIndex); if (window.innerWidth <= 850) setNavOpen(false); }}>
                 <span className="lesson-state">{lessonIndex + 1}</span><span><small>{lesson.eyebrow.split("·")[1]}</small><b>{lesson.title}</b></span><i>›</i>
-              </button><TopicPinButton topic={lesson.title} pins={pinnedTopics} onToggle={togglePinnedTopic} /></div>
+              </button><TopicPinButton limit={pinLimit} topic={lesson.title} pins={pinnedTopics} onToggle={togglePinnedTopic} /></div>
             ))}
           </nav>
         </aside>

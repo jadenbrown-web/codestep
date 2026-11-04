@@ -41,3 +41,11 @@ test('pinning one Time lesson does not pin another Time lesson', () => {
   assert.equal((html.match(/data-pinned="true"/g) ?? []).length, 1);
   assert.equal((html.match(/data-pinned="false"/g) ?? []).length, 1);
 });
+
+test('desktop pin controls allow a fifth shortcut and disable a sixth', () => {
+  const four = ['A', 'B', 'C', 'D'];
+  const fifth = TopicPinButton({ topic: 'E', pins: four, limit: 5, onToggle() {} });
+  assert.equal(fifth.props.disabled, false);
+  const sixth = TopicPinButton({ topic: 'F', pins: [...four, 'E'], limit: 5, onToggle() {} });
+  assert.equal(sixth.props.disabled, true);
+});
