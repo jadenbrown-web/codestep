@@ -828,3 +828,9 @@ html[data-theme="dark"] .lesson-drawer .drawer-lessons button[class*="tone-"] sm
 .lesson-drawer .drawer-lessons button[class*="tone-"] .lesson-state,html[data-theme="dark"] .lesson-drawer .drawer-lessons button[class*="tone-"] .lesson-state{border:1px solid var(--topic-pop);background:var(--topic-pop);color:var(--topic-text);font-weight:850;box-shadow:none}
 .lesson-drawer .drawer-lessons button[class*="tone-"] small,html[data-theme="dark"] .lesson-drawer .drawer-lessons button[class*="tone-"] small{background:var(--topic-pop);color:var(--topic-text);font:850 11px/1.3 var(--sans);letter-spacing:.25px;padding:4px 7px;border-radius:4px}
 .lesson-drawer .drawer-lessons button[class*="tone-"] b{font-weight:800;font-size:14px;line-height:1.4;letter-spacing:0}
+
+/* Give subjects and descriptions the full lesson-list width. */
+.lesson-drawer .drawer-lessons button{grid-template-columns:minmax(0,1fr) 12px;gap:8px;padding:8px}
+.lesson-drawer .drawer-lessons button .lesson-state{display:none}
+.lesson-drawer .drawer-lessons button[class*="tone-"] b{font-weight:400;font-size:14px;line-height:1.4;letter-spacing:0}
+.lesson-drawer .drawer-lessons button>span:nth-child(2){gap:5px;min-width:0}
