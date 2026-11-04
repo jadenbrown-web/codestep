@@ -994,3 +994,14 @@ html[data-theme="dark"] .comparison-example-menu .comparison-topic-head{backgrou
 .comparison-notes-heading b{font-size:14px;line-height:1.3}
 .comparison-notes-close{display:flex;align-items:center;justify-content:center;flex:0 0 44px;width:44px;height:44px;box-sizing:border-box;padding:0;border:1px solid var(--ui-border);border-radius:8px;background:var(--ui-surface);color:var(--ui-text);cursor:pointer}
 @media(max-width:380px){.comparison-header-languages{gap:4px}.comparison-header-languages .compare-language-choices>div{gap:4px}}
+
+/* One selected-state treatment for navigation, views, themes and topic lists. */
+:root{--selection-surface:var(--ui-hover);--selection-border:var(--ui-border);--selection-marker:var(--ui-text)}
+button[data-active="true"],html[data-theme] button[data-active="true"],html[data-theme] .app-header.app-header button[data-active="true"],html[data-theme] .lesson-drawer .drawer-lessons button[data-active="true"],html[data-theme] .comparison-example-menu .example-picker-list button[data-active="true"],html[data-theme] .settings-panel .theme-options button[data-active="true"],html[data-theme] .app-header.lesson-nav>.mobile-pane-tabs button[data-active="true"]{position:relative;background:var(--selection-surface);border:1px solid var(--selection-border);color:var(--ui-text);box-shadow:none}
+button[data-active="true"]:after,html[data-theme] button[data-active="true"]:after,html[data-theme] .app-header .language-choice[data-active="true"]:after{content:"";display:block;position:absolute;width:12px;height:2px;left:calc(50% - 6px);right:auto;bottom:3px;border-radius:2px;background:var(--selection-marker);pointer-events:none}
+.comparison-lesson-label{font:650 10px/1.2 var(--sans);color:inherit}
+.comparison-header-languages .comparison-language-name{line-height:9px}
+.topic-list button:focus-visible,.theme-options button:focus-visible,.settings-panel .switch:focus-visible,.example-picker-panel input:focus-visible{outline:2px solid var(--selection-marker);outline-offset:-3px}
+/* Switches use the same neutral palette; thumb position communicates on/off. */
+.settings-panel .switch.on{background:var(--selection-surface);border:1px solid var(--selection-border)}
+.settings-panel .switch.on i{background:var(--selection-marker)}
