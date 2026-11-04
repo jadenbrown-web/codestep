@@ -618,3 +618,11 @@ html[data-theme] :is(.theme-options button.selected,.compare-language-choices .l
  .editor-panel .panel-actions button:hover{background:var(--ui-hover)}
  .editor-panel .panel-actions .editor-action-label{display:none}
 }
+
+/* Navigation controls keep one size across home, lessons and dialogs. */
+:root{--control-height:44px;--navigation-icon-size:20px}
+.app-header .settings-button,.app-header .drawer-toggle,.comparison-topbar .drawer-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:0 0 var(--control-height);width:var(--control-height);min-width:var(--control-height);max-width:var(--control-height);height:var(--control-height);min-height:var(--control-height);max-height:var(--control-height);padding:0;gap:0;border-radius:var(--control-radius);border-width:1px}
+.app-header .settings-button>span{display:none}
+.app-header .settings-icon,.app-header .drawer-toggle .status-icon{display:block;width:var(--navigation-icon-size);height:var(--navigation-icon-size);flex:none}
+.app-header .app-back{box-sizing:border-box;flex:none;width:76px;min-width:76px;max-width:76px;height:var(--control-height);min-height:var(--control-height);max-height:var(--control-height);padding:0 8px;border-radius:var(--control-radius);font-size:13px;line-height:1.25}
+@media(max-width:850px){.app-header.home-nav,.app-header.lesson-nav,.language-comparison .comparison-topbar{height:52px;min-height:52px}}
