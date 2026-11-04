@@ -641,3 +641,22 @@ html[data-theme] :is(.theme-options button.selected,.compare-language-choices .l
 .comparison-code-actions .copy-code-control{flex:0 0 var(--control-height);width:var(--control-height);min-width:var(--control-height);min-height:var(--control-height)}
 .comparison-code-actions .copy-code-button{width:var(--control-height);height:var(--control-height);min-height:var(--control-height);padding:0;flex:none;border-color:transparent;background:transparent;display:inline-flex;align-items:center;justify-content:center}
 .comparison-code-actions .copy-code-button:hover{background:var(--ui-hover)}
+
+/* A mirrored gutter tracks each source line's actual wrapped height. */
+.code-line-ruler{position:absolute;inset:0;box-sizing:border-box;padding:inherit;font:inherit;letter-spacing:inherit;pointer-events:none;z-index:4;color:#89a293}
+.code-line-ruler-row{display:grid;grid-template-columns:22px minmax(0,1fr);align-items:start;min-height:1lh;font:inherit;letter-spacing:inherit}
+.code-line-number{display:block;text-align:right;padding-right:6px;font:inherit;line-height:inherit;user-select:none;opacity:.8}
+.code-line-ruler .code-line-measure{display:block;min-width:0;margin:0;padding:0;border:0;font:inherit;line-height:inherit;letter-spacing:inherit;white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;color:transparent!important;visibility:hidden}
+.editor-body .code-line-ruler{padding:18px 20px;font:inherit;line-height:var(--editor-line-height);tab-size:4}
+.editor-body .code-line-ruler-row{grid-template-columns:46px minmax(0,1fr)}
+.editor-body .code-line-ruler .code-line-measure{white-space:pre;overflow-wrap:normal}
+.language-comparison-columns .comparison-card>.numbered-comparison-code{position:relative}
+.numbered-comparison-code>code{display:block;margin-left:22px;min-width:0;font:inherit;line-height:inherit;white-space:inherit;overflow-wrap:inherit}
+.numbered-comparison-code .code-line-ruler{font:inherit;line-height:inherit;tab-size:4}
+@media(max-width:850px){
+ .editor-body .code-line-ruler{padding:10px 12px;font-size:16px;line-height:24px}
+ .editor-body .code-line-ruler-row{grid-template-columns:22px minmax(0,1fr)}
+ .editor-body .code-line-ruler .code-line-measure{white-space:pre-wrap;overflow-wrap:anywhere}
+ .editor-body .code-guide,.editor-body .typed-code-layer{box-sizing:border-box;width:calc(100% - 22px);margin-left:22px}
+ .editor-body textarea{left:22px;width:calc(100% - 22px)}
+}
