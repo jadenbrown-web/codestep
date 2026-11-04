@@ -33,6 +33,7 @@ function setup(language = 'python', reveal = code => code) {
   }
   return {
     selectPin(topic) { find(render(), node => node.type === Pins).props.onSelect(topic); },
+    pinSelectorCount() { let count = 0; function visit(node) { if (!React.isValidElement(node)) return; if (node.type === Pins) count += 1; React.Children.forEach(node.props.children, visit); } visit(render()); return count; },
     activePin() { return find(render(), node => node.type === Pins).props.activeTopic; },
     select(title) { find(render(), node => node.type === Picker).props.onSelect(title); },
     switchTo(target) { find(render(), node => node.type === 'button' && node.props.className?.includes(`language-${target}`)).props.onClick(); },
@@ -129,4 +130,15 @@ test('comparison reveals the second file only after the first file completes', (
   const code = comparison.code();
   assert.deepEqual(code, comparison.reservedCode());
   assert.ok(code[1].length > 2);
+});
+
+
+test('comparison has one shared pinned-topic selector', () => {
+  const comparison = setup();
+  assert.equal(comparison.pinSelectorCount(), 1);
+  comparison.selectPin('Functions');
+  assert.equal(comparison.activePin(), 'Functions');
+  comparison.selectPin('Time');
+  assert.equal(comparison.activePin(), 'Time');
+  assert.equal(comparison.pinSelectorCount(), 1);
 });
