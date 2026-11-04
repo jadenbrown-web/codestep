@@ -834,3 +834,10 @@ html[data-theme="dark"] .lesson-drawer .drawer-lessons button[class*="tone-"] sm
 .lesson-drawer .drawer-lessons button .lesson-state{display:none}
 .lesson-drawer .drawer-lessons button[class*="tone-"] b{font-weight:400;font-size:14px;line-height:1.4;letter-spacing:0}
 .lesson-drawer .drawer-lessons button>span:nth-child(2){gap:5px;min-width:0}
+
+/* Put the mobile view switch in the unused header centre. Navigation slots stay fixed. */
+@media(max-width:850px){
+ .app-header.lesson-nav>.mobile-pane-tabs{grid-column:3;grid-row:1;justify-self:start;align-self:center;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;box-sizing:border-box;width:calc(100% - 104px);min-width:0;height:44px;min-height:44px;margin:0;padding:0;border:0;background:transparent}
+ .app-header.lesson-nav>.mobile-pane-tabs button{box-sizing:border-box;display:flex;align-items:center;justify-content:center;min-width:0;width:100%;height:44px;min-height:44px;padding:0 2px;margin:0;border:1px solid var(--ui-border);border-radius:8px;background:var(--ui-surface);color:var(--ui-text);font:650 clamp(10px,2.9vw,12px)/1.2 var(--sans);white-space:nowrap}
+ .app-header.lesson-nav>.mobile-pane-tabs button[aria-pressed="true"]{border-color:var(--green-dark);background:var(--ui-hover);color:var(--ui-text)}
+}
