@@ -33,6 +33,7 @@ function setup(language = 'python', reveal = code => code) {
     switchTo(target) { find(render(), node => node.type === 'button' && node.props.className?.includes(`language-${target}`)).props.onClick(); },
     code() { const tree = render(); const sections = []; function visit(node) { if (!React.isValidElement(node)) return; if (node.type === 'section') sections.push(node); React.Children.forEach(node.props.children, visit); } visit(tree); return sections.map(section => find(section, node => node.type === Code).props.code); },
     toggleNotes() { find(render(), node => node.type === "button" && node.props["aria-label"] === "Lesson explanations").props.onClick(); },
+    reservedCode() { const result = []; function visit(node) { if (!React.isValidElement(node)) return; if (node.type === "code" && node.props.className === "comparison-code-space") result.push(node.props.children); React.Children.forEach(node.props.children, visit); } visit(render()); return result; },
     copies() { const result = []; function visit(node) { if (!React.isValidElement(node)) return; if (node.type === Copy) result.push(node.props.code); React.Children.forEach(node.props.children, visit); } visit(render()); return result; },
     html() { return renderToStaticMarkup(render()); },
   };
@@ -91,4 +92,13 @@ test('copy keeps the full source while comparison typing is still in progress', 
   comparison.select('Make something happen');
   assert.deepEqual(comparison.code(), ['python', 'javascript'].map(language => lessons[language].find(lesson => lesson.title === 'Make something happen').answer.slice(0, 3)));
   assert.deepEqual(comparison.copies(), ['python', 'javascript'].map(language => lessons[language].find(lesson => lesson.title === 'Make something happen').answer));
+});
+
+
+test('complete code reserves panel geometry while only a few characters are visible', () => {
+  const comparison = setup('python', code => code.slice(0, 2));
+  comparison.select('Run code after a delay');
+  const complete = ['python', 'javascript'].map(language => lessons[language].find(lesson => lesson.title === 'Run code after a delay').answer);
+  assert.deepEqual(comparison.reservedCode(), complete);
+  assert.deepEqual(comparison.code(), complete.map(code => code.slice(0, 2)));
 });
