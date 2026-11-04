@@ -1230,3 +1230,14 @@ button[data-active="true"]::after,html[data-theme] button[data-active="true"]::a
 .settings-panel button.switch.on i,html[data-theme] .settings-panel button.switch.on i{background:#fff;transform:translateX(20px)}
 .settings-panel button.switch.on::before{content:"✓";position:absolute;left:6px;top:6px;color:#063a28;font:900 13px/14px var(--sans)}
 .app-header.app-header button[data-active="true"],html[data-theme] .app-header.app-header button[data-active="true"]{color:var(--ui-text);background:var(--selection-surface);border-radius:6px}
+
+/* A continuous shell sits behind the inset editor surfaces. */
+:root{--workspace-rail:#e7eee8;--workspace-filebar:#f3f7f3}
+html[data-theme="dark"]{--workspace-rail:#1c2d24;--workspace-filebar:#18281f}
+.settings-panel button.switch.on::before{content:none;display:none}
+.home-shell,.lesson-shell,html[data-theme="dark"] .home-shell,html[data-theme="dark"] .lesson-shell{background:var(--workspace-rail)}
+.home-shell>.app-header,.lesson-shell>.app-header,.language-comparison>.app-header,html[data-theme] .home-shell>.app-header,html[data-theme] .lesson-shell>.app-header,html[data-theme] .language-comparison>.app-header{background:var(--workspace-rail);border-bottom:0;box-shadow:none}
+.lesson-layout,.lesson-layout .workspace,html[data-theme="dark"] .lesson-layout .workspace,.language-comparison[open],.language-comparison-controls,.home-shell>.hero,html[data-theme="dark"] .home-shell>.hero{background:var(--workspace-rail)}
+.editor-panel .panel-bar,.language-comparison-columns .comparison-card>.comparison-filebar,.home-shell .terminal-top{background:var(--workspace-filebar)}
+.editor-panel,.comparison-card,.home-shell .terminal-card{box-shadow:none}
+.home-shell .terminal-card:before,.home-shell .terminal-card:after{display:none}
