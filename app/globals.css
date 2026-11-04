@@ -675,3 +675,14 @@ html[data-theme] :is(.theme-options button.selected,.compare-language-choices .l
 .comparison-notes .comparison-description>p{font-size:14px;line-height:1.65;margin:0 0 10px}
 .comparison-notes .cpp-setup-guide{margin:10px 0;max-width:100%}
 .comparison-notes pre{white-space:pre;overflow-x:auto;max-width:100%;font-size:12px}
+
+/* Mobile comparison uses full-width files, stacked in reading order. */
+@media(max-width:850px){
+ .language-comparison-columns{display:flex;flex-direction:column;gap:12px;overflow-y:auto;overflow-x:hidden;align-items:stretch}
+ .language-comparison-columns .comparison-card{display:flex;flex-direction:column;flex:none;width:100%;min-width:0;min-height:0;overflow:hidden;border:1px solid var(--ui-border);border-top:2px solid var(--green-dark);border-radius:12px;background:var(--ui-surface)}
+ .language-comparison-columns .comparison-card>header{flex:none;grid-row:auto;grid-column:auto;border:0;border-radius:0;padding:8px 12px}
+ .language-comparison-columns .comparison-language-title{margin:0 0 6px}
+ .language-comparison-columns .comparison-code-actions{flex:none;grid-row:auto;grid-column:auto;border:0;border-top:1px solid var(--ui-border);border-bottom:1px solid var(--ui-border);border-radius:0;min-height:48px;padding:2px 8px 2px 12px}
+ .language-comparison-columns .comparison-card>.numbered-comparison-code{flex:none;grid-row:auto;grid-column:auto;height:auto;min-height:90px;max-height:none;border:0;border-radius:0;padding:10px 12px;font-size:14px;line-height:1.6;overflow:hidden}
+ .numbered-comparison-code>code{padding-bottom:6px}
+}
