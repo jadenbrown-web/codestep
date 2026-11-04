@@ -1139,3 +1139,44 @@ button[data-active="true"]:after,html[data-theme] button[data-active="true"]:aft
 .editor-body :is(.typed-code-layer,.code-guide) [class*="syntax-"]{font-weight:600}
 .language-comparison-columns .comparison-card>.numbered-comparison-code{font-weight:600}
 @media(max-width:850px){.lesson-layout .lesson-drawer{box-sizing:border-box;display:flex;flex-direction:column;top:var(--nav-height);bottom:auto;height:calc(var(--visible-height,100dvh) - var(--nav-height));max-height:calc(var(--visible-height,100dvh) - var(--nav-height));min-height:0}}
+
+/* Symbol-only navigation: visual boxes removed, touch targets remain 44px. */
+.app-header.app-header button[aria-label]:not(:disabled),html[data-theme] .app-header.app-header button[aria-label]:not(:disabled),html[data-theme] .app-header.lesson-nav>.mobile-pane-tabs button,html[data-theme] .app-header.app-header button[data-active="true"],html[data-theme] .app-header.lesson-nav>.mobile-pane-tabs button[data-active="true"]{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;width:44px;min-width:44px;max-width:44px;height:44px;min-height:44px;max-height:44px;padding:0;margin:0;border:0;border-radius:0;background:transparent;color:var(--ui-text);box-shadow:none}
+.app-header.app-header button[data-active="true"]:after,html[data-theme] .app-header.app-header button[data-active="true"]:after{background:#fff;width:16px;height:3px;left:14px;bottom:3px;border-radius:2px}
+.app-header.app-header button:hover{background:transparent;opacity:.85}
+.app-header .status-icon,.app-header .settings-icon{width:20px;height:20px}
+.editor-panel .mobile-editor-copy{display:flex}
+.editor-panel.editor-panel .panel-actions>.editor-reset-button{display:inline-flex}
+/* Strong selection stays on the pin, with a clear white edge and marker. */
+.file-tab .pinned-topic-shortcuts button[data-active="true"] .pinned-topic-label,html[data-theme] .file-tab .pinned-topic-shortcuts button[data-active="true"] .pinned-topic-label,.comparison-file-tab .pinned-topic-shortcuts button[data-active="true"] .pinned-topic-label,html[data-theme] .comparison-file-tab .pinned-topic-shortcuts button[data-active="true"] .pinned-topic-label{border-color:#fff;box-shadow:inset 0 0 0 2px #fff;font-weight:900}
+.file-tab .pinned-topic-shortcuts button[data-active="true"]:after,.comparison-file-tab .pinned-topic-shortcuts button[data-active="true"]:after{background:#fff;width:18px;height:3px;left:calc(50% - 9px);bottom:7px;border-radius:2px}
+.language-comparison-columns .comparison-card>.comparison-filebar{box-sizing:border-box;grid-template-columns:minmax(0,1fr) 44px;height:44px;min-height:44px;max-height:44px;padding:0 2px 0 0;gap:4px;border-radius:0}
+.comparison-filebar>.comparison-file-tab,.comparison-filebar>.comparison-file-tab.has-pinned-topics{box-sizing:border-box;height:44px;min-height:44px;border-top:0;border-radius:0;background:transparent}
+.comparison-filebar>.copy-code-control{width:44px;min-width:44px;max-width:44px;height:44px;inset:auto}
+@media(max-width:850px){
+ .app-header.home-nav,.app-header.lesson-nav,.language-comparison .app-header.comparison-topbar{display:grid;grid-template-columns:repeat(7,44px);grid-template-rows:44px;justify-content:space-between;align-content:center;column-gap:0;padding:0 4px;height:52px;min-height:52px;max-height:52px}
+ .app-header.lesson-nav>.lesson-brand-group{display:contents}
+ .app-header.lesson-nav>.mobile-pane-tabs{display:contents}
+ .app-header.lesson-nav>.mobile-pane-tabs button:first-child{grid-column:3;grid-row:1}
+ .app-header.lesson-nav>.mobile-pane-tabs button:nth-child(2){grid-column:4;grid-row:1}
+ .app-header.lesson-nav>.lesson-actions{display:contents}
+ .lesson-actions>.editor-mode-toggle{grid-column:5;grid-row:1}
+ .lesson-actions>.compare-language-button{grid-column:6;grid-row:1}
+ .lesson-actions>.settings-button{grid-column:7;grid-row:1}
+ .app-header.home-nav>.home-actions{display:contents}
+ .home-actions>.nav-note{display:none}
+ .home-actions>.settings-button{grid-column:7;grid-row:1}
+ .home-nav .brand-wordmark{grid-column:1 / 7;grid-row:1}
+ .comparison-topbar>.comparison-header-languages,.comparison-header-languages>.compare-language-choices,.comparison-header-languages .compare-language-choices>div{display:contents}
+ .comparison-header-languages>.comparison-notes-toggle{grid-column:3;grid-row:1}
+ .comparison-header-languages .language-choice:nth-child(1){grid-column:5;grid-row:1}
+ .comparison-header-languages .language-choice:nth-child(2){grid-column:6;grid-row:1}
+ .comparison-header-languages .language-choice:nth-child(3){grid-column:7;grid-row:1}
+ .comparison-topbar:has(.language-choice:nth-child(4)) .language-choice:nth-child(1){grid-column:4}
+ .comparison-topbar:has(.language-choice:nth-child(4)) .language-choice:nth-child(2){grid-column:5}
+ .comparison-topbar:has(.language-choice:nth-child(4)) .language-choice:nth-child(3){grid-column:6}
+ .comparison-topbar:has(.language-choice:nth-child(4)) .language-choice:nth-child(4){grid-column:7;grid-row:1}
+ .language-comparison-columns .comparison-card{box-sizing:border-box;width:100%;border:1px solid var(--ui-border);border-radius:8px;overflow:hidden;clip-path:none;background:#122019}
+ .language-comparison-columns .comparison-card>.comparison-filebar,.language-comparison-columns .comparison-card>.numbered-comparison-code{border:0;border-radius:0;margin:0;max-width:100%}
+}
+.editor-panel .file-tab,.editor-panel .editor-file-name,.comparison-file-tab,.comparison-file-tab>.comparison-file-name,.comparison-file-tab.has-pinned-topics>.comparison-file-name{font-size:11px;font-weight:650;line-height:1.3}
