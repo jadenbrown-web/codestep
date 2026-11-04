@@ -550,3 +550,17 @@ html[data-theme] :is(.theme-options button.selected,.compare-language-choices .l
  .comparison-description>p{font-size:12px;line-height:1.5}
  .example-picker-panel input{font-size:16px}
 }
+
+/* Lay paired cells directly on shared rows; Safari must size the toolbar
+   from its full contents rather than a clipped nested subgrid. */
+.language-comparison-columns{flex:1 1 0%;height:0;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:max-content max-content minmax(max-content,1fr) max-content;grid-auto-rows:auto;grid-auto-flow:row;align-content:stretch;align-items:stretch;overflow-y:auto;overflow-x:hidden;gap:0 8px;padding-bottom:2px}
+.language-comparison-columns .comparison-card{display:contents}
+.language-comparison-columns .comparison-card:first-child>*{grid-column:1}
+.language-comparison-columns .comparison-card:nth-child(2)>*{grid-column:2}
+.language-comparison-columns .comparison-card>header{grid-row:1;box-sizing:border-box;min-height:0;border:1px solid var(--ui-border);border-top:2px solid var(--green-dark);border-radius:12px 12px 0 0;background:var(--ui-surface)}
+.language-comparison-columns .comparison-code-actions{grid-row:2;box-sizing:border-box;position:static;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:6px;min-height:max-content;height:auto;padding:8px;border:1px solid var(--ui-border);border-top:0;background:var(--ui-surface)}
+.comparison-code-actions .copy-code-control{position:static;display:flex;flex:none;width:100%;min-height:var(--control-height)}
+.comparison-code-actions .copy-code-button{box-sizing:border-box;position:static;flex:1;width:100%;min-width:0;height:var(--control-height);margin:0}
+.language-comparison-columns .comparison-card>pre{grid-row:3;box-sizing:border-box;min-width:0;min-height:150px;height:auto;max-height:none;overflow:visible;border:1px solid var(--ui-border);border-top:0;border-bottom:0;border-radius:0;background:#17241d;white-space:pre-wrap;overflow-wrap:anywhere}
+.language-comparison-columns .comparison-description{grid-row:4;display:block;box-sizing:border-box;min-width:0;min-height:0;overflow:visible;border:1px solid var(--ui-border);border-top:0;border-radius:0 0 12px 12px;background:var(--ui-surface)}
+.language-comparison-columns .comparison-description>p{font-size:12px;line-height:1.5}
