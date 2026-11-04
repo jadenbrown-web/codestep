@@ -809,3 +809,9 @@ html[data-theme] :is(.theme-options button.selected,.compare-language-choices .l
 .lesson-drawer .drawer-head b{font-size:17px}
 .lesson-drawer .drawer-summary{padding:8px 14px}
 .console-panel .console-bar>span{font-weight:800}
+
+/* Restore topic colours with an even border and a vivid subject label. */
+.lesson-drawer .drawer-lessons button[class*="tone-"] .lesson-state,html[data-theme="dark"] .lesson-drawer .drawer-lessons button[class*="tone-"] .lesson-state{border:1px solid var(--tone-strong);border-radius:6px;background:var(--tone-soft);color:var(--tone-ink);box-shadow:none}
+.lesson-drawer .drawer-lessons button[class*="tone-"] small{display:inline-block;width:fit-content;max-width:100%;padding:3px 6px;border-radius:4px;background:var(--tone-soft);color:var(--tone-ink);font-weight:800;letter-spacing:.4px}
+html[data-theme="dark"] .lesson-drawer .drawer-lessons button[class*="tone-"] small{background:var(--tone-dark);color:var(--tone-soft);font-weight:800}
+.lesson-drawer .drawer-lessons button[class*="tone-"] b{font-weight:750}
