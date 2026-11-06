@@ -1328,3 +1328,22 @@ html[data-theme="dark"]{--workspace-rail:#1c2d24;--workspace-filebar:#18281f}
  .editor-panel .file-tab,.comparison-filebar>.comparison-file-tab{width:auto;min-width:0;padding:0 10px}
  .editor-panel .editor-file-name,.comparison-file-tab>.comparison-file-name{max-width:none;font-size:12px;white-space:nowrap}
 }
+
+/* Give source code priority, with an expanded workspace for long examples. */
+.editor-panel .file-tab,.editor-panel .editor-file-name{color:var(--ui-text)}
+.editor-panel .panel-bar{display:grid;grid-template-columns:minmax(0,1fr) 132px}
+.editor-panel .panel-actions{display:flex;width:132px;gap:0;padding:0;margin:0}
+.editor-panel .panel-actions>.editor-expand-button{display:flex;align-items:center;justify-content:center;flex:none;width:44px;min-width:44px;height:44px;padding:0;border:0;background:transparent;color:#a9c3b3;cursor:pointer}
+.lesson-layout .workspace.editor-expanded{position:fixed;inset:52px 0 0;z-index:30;box-sizing:border-box;width:100%;height:calc(var(--visible-height,100dvh) - 52px)!important;padding:8px;display:flex;overflow:hidden}
+.workspace.editor-expanded>.console-panel{flex:0 1 88px;max-height:88px;min-height:70px}
+@media(min-width:851px){
+ .lesson-layout.drawer-open{grid-template-columns:260px minmax(280px,29%) minmax(0,1fr)}
+ .lesson-layout.drawer-closed{grid-template-columns:0 minmax(280px,32%) minmax(0,1fr)}
+ .lesson-layout .workspace>.console-panel{flex:0 1 16%;min-height:80px;max-height:140px}
+ .editor-body{--editor-line-height:var(--fit-line,20px);font-size:var(--fit-font,13px);line-height:var(--fit-line,20px)}
+ .editor-body .editor-surface{min-width:100%!important;width:100%}
+ .editor-body textarea,.editor-body .code-guide,.editor-body .typed-code-layer,.editor-body .code-line-ruler{font-size:var(--fit-font,13px);line-height:var(--fit-line,20px)}
+ .editor-body .code-line-ruler .code-line-measure,.editor-body .code-guide,.editor-body .typed-code-layer{white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal}
+}
+.editor-panel .panel-actions button{color:var(--ui-text)}
+@media(min-width:851px){.editor-body .editor-surface{min-height:max(100%,var(--fit-height,0px))!important}}
