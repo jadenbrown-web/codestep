@@ -1496,3 +1496,8 @@ html[data-theme="dark"]{--scrollbar-thumb:#607a6b}
 .lesson-drawer .drawer-lessons::-webkit-scrollbar,.lesson-study-content::-webkit-scrollbar,.comparison-example-menu .example-picker-list::-webkit-scrollbar,.settings-panel .settings-scroll::-webkit-scrollbar{width:6px;height:6px;background:transparent}
 .lesson-drawer .drawer-lessons::-webkit-scrollbar-thumb,.lesson-study-content::-webkit-scrollbar-thumb,.comparison-example-menu .example-picker-list::-webkit-scrollbar-thumb,.settings-panel .settings-scroll::-webkit-scrollbar-thumb{background:var(--scrollbar-thumb);border:0;border-radius:6px}
 .lesson-drawer .drawer-lessons::-webkit-scrollbar-track,.lesson-study-content::-webkit-scrollbar-track,.comparison-example-menu .example-picker-list::-webkit-scrollbar-track,.settings-panel .settings-scroll::-webkit-scrollbar-track{background:transparent;border:0}
+
+/* One centred identity row: Home, language logo and language name. */
+.lesson-drawer .drawer-head>.drawer-title-group{gap:0;align-self:center}
+.lesson-drawer .drawer-head>.desktop-home-controls{align-self:center}
+@media(min-width:851px){.lesson-shell:not(.reference-mode) .lesson-drawer .drawer-head{height:52px;min-height:52px;padding:4px 8px;align-items:center}}
