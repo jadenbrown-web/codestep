@@ -1347,3 +1347,37 @@ html[data-theme="dark"]{--workspace-rail:#1c2d24;--workspace-filebar:#18281f}
 }
 .editor-panel .panel-actions button{color:var(--ui-text)}
 @media(min-width:851px){.editor-body .editor-surface{min-height:max(100%,var(--fit-height,0px))!important}}
+
+/* Desktop navigation lives in the pane headings instead of a separate row. */
+.desktop-home-controls,.desktop-pane-actions,.desktop-study-toolbar{display:none}
+@media(min-width:851px){
+ .lesson-shell:not(.reference-mode)>.app-header{display:none}
+ .lesson-shell:not(.reference-mode) .lesson-layout{height:100%;min-height:0}
+ .lesson-shell:not(.reference-mode) .desktop-home-controls{display:flex;flex:none}
+ .lesson-shell:not(.reference-mode) .desktop-home-controls .lesson-brand-group{display:flex;align-items:center;gap:0}
+ .desktop-home-controls button[aria-label]{display:flex;align-items:center;justify-content:center;box-sizing:border-box;position:relative;width:40px;min-width:40px;height:44px;margin:0;padding:0;border:0;border-radius:6px;background:transparent;color:var(--ui-text);cursor:pointer}
+ .desktop-home-controls button[data-active="true"]{background:var(--selection-surface)}
+ .desktop-home-controls button[data-active="true"]:after{display:block!important;bottom:3px}
+ .lesson-shell:not(.reference-mode) .lesson-drawer .drawer-head{display:flex;align-items:center;gap:6px;padding:4px 8px;min-height:52px}
+ .lesson-shell:not(.reference-mode) .lesson-drawer .drawer-head>.drawer-language-logo{width:26px;height:26px;flex:none}
+ .lesson-shell:not(.reference-mode) .lesson-drawer .drawer-head img{width:26px;height:26px}
+ .lesson-shell:not(.reference-mode) .lesson-drawer .drawer-head small{font-size:8px;letter-spacing:.5px}
+ .lesson-shell:not(.reference-mode) .lesson-drawer .drawer-head b{font-size:15px}
+ .lesson-shell:not(.reference-mode) .desktop-study-toolbar{display:flex;align-items:center;gap:6px;position:sticky;top:0;z-index:5;min-height:44px;margin:-20px -20px 12px;padding:4px 8px;background:var(--workspace-rail);box-sizing:border-box}
+ .drawer-open .desktop-study-toolbar>.desktop-home-controls{display:none!important}
+ .desktop-study-toolbar>.desktop-header-pins{display:block;min-width:0;flex:1;padding:0}
+ .desktop-study-toolbar>span{font:650 11px var(--mono);color:var(--ui-muted)}
+ .desktop-study-toolbar .pinned-topic-shortcuts button[aria-label]{width:100%;min-width:0;height:44px;display:flex;align-items:center;justify-content:center;margin:0;padding:0;border:0;background:transparent;box-shadow:none}
+ .desktop-study-toolbar .pinned-topic-shortcuts button[data-active="true"]:after{display:none!important}
+ .lesson-shell:not(.reference-mode) .editor-panel .panel-bar{grid-template-columns:minmax(0,1fr) 264px}
+ .lesson-shell:not(.reference-mode) .editor-panel .panel-actions{width:264px;flex-direction:row}
+ .desktop-pane-actions{display:flex;order:2;height:44px}
+ .desktop-pane-actions>.lesson-actions{display:flex;align-items:center;gap:0;margin:0;padding:0}
+ .desktop-pane-actions .settings-button>span{display:none}
+ .desktop-pane-actions button[aria-label]{position:relative;border:0!important;border-radius:6px;background:transparent!important;color:var(--ui-text);box-shadow:none!important}
+ .desktop-pane-actions button[data-active="true"]{background:var(--selection-surface)!important}
+ .desktop-pane-actions button[data-active="true"]:after{display:block!important;bottom:3px}
+ .desktop-pane-actions svg{width:20px;height:20px}
+ .lesson-layout .workspace.editor-expanded{inset:0;height:var(--visible-height,100dvh)!important}
+ .lesson-layout .workspace.reference-workspace.editor-expanded{inset:52px 0 0;height:calc(var(--visible-height,100dvh) - 52px)!important}
+}
