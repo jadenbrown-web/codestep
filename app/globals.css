@@ -1440,3 +1440,27 @@ html[data-theme] .editor-panel .panel-actions button[aria-label]:hover{backgroun
 .file-tab.has-pinned-topics .pinned-topic-shortcuts,.comparison-file-tab.has-pinned-topics .pinned-topic-shortcuts{grid-column:2}
 
 .lesson-breakdown-sections .breakdown-part .prose-code [class*="syntax-"]{font:inherit;color:inherit}
+
+/* Highlight code with ink alone; prose never uses boxed chips. */
+:root{--prose-ink:#156275}
+html[data-theme="dark"]{--prose-ink:#82dcc3}
+.prose-code,.lesson-breakdown-sections .breakdown-part .prose-code,html[data-theme] .prose-code,html[data-theme] .lesson-breakdown-sections .breakdown-part .prose-code{display:inline;padding:0;margin:0;border:0;border-radius:0;background:transparent;box-shadow:none;color:var(--prose-ink);font-family:var(--mono);font-size:.94em;font-weight:700;white-space:pre-wrap;box-decoration-break:slice;-webkit-box-decoration-break:slice}
+.prose-code [class*="syntax-"],.lesson-breakdown-sections .breakdown-part .prose-code [class*="syntax-"]{color:inherit;background:transparent;border:0;font:inherit}
+.lesson-breakdown-sections{gap:12px;margin:12px 0}
+.lesson-breakdown-sections .breakdown-grid{gap:8px}
+.lesson-copy .breakdown-part{padding:10px;gap:8px}
+.lesson-study-content .symbol-guide{margin:10px 0;padding:10px}
+.lesson-study-content .symbol-guide p{margin:8px 0 0}
+/* Remove the old light divider and theme the actual scroll thumb. */
+.lesson-layout .lesson-copy{border-right:0}
+.lesson-study-content{scrollbar-color:var(--ui-border) transparent}
+.lesson-study-content::-webkit-scrollbar{width:6px;background:transparent}
+.lesson-study-content::-webkit-scrollbar-thumb{border-radius:6px;background:var(--ui-border)}
+@media(min-width:851px){
+ .lesson-study-content{padding:12px}
+ .lesson-layout .workspace{padding:6px;gap:6px}
+ .lesson-layout.drawer-open,.lesson-layout.drawer-closed{grid-template-columns:260px minmax(280px,29%) minmax(0,1fr)}
+ .lesson-layout .lesson-drawer{border-right:1px solid var(--ui-border)}
+}
+@media(max-width:850px){.lesson-layout .lesson-copy{padding:12px}}
+@media(min-width:851px){.lesson-layout .workspace.editor-expanded{left:260px;width:calc(100% - 260px)}}

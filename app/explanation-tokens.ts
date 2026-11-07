@@ -2,7 +2,7 @@ export type ExplanationToken = { text: string; kind: 'text' | 'code' | 'file' | 
 
 /** Keep instructions as prose, while marking the exact code and filenames to use. */
 export function explanationTokens(text: string): ExplanationToken[] {
-  const pattern = /g\+\+\s+-std=c\+\+\d+\s+[\w./-]+\s+-o\s+[\w./-]+|\bdotnet (?:new console|run)\b|\b(?:node|python3?|py)\s+[\w./-]+\.(?:mjs|js|py)\b|\.\/[\w-]+(?:\.[\w-]+)*|#include(?:\s*<[^>]+>)?|\b[\w-]+\.(?:cpp|cs|py|mjs|js|html|css|h|hpp)\b|\b[A-Za-z_]\w*(?:(?:::|\.)[A-Za-z_]\w*)+(?:\([^()\n]*\))?|\b[A-Za-z_]\w*\([^()\n]*\)|\\[nrt]|<<|>>|::|===|!==|==|!=|&&|\|\||\b(?:import|from|using|std|cout|cin|main|return|void|int|double|bool|string|const|var|let|nullptr|null|None|True|False|print|input|sleep_for|Join|Path|Console|DateTime|Regex|RegexOptions|Thread|Threading|ThreadPool|Task|System)\b/g;
+  const pattern = /g\+\+\s+-std=c\+\+\d+\s+[\w./-]+\s+-o\s+[\w./-]+|\bdotnet (?:new console|run)\b|\b(?:node|python3?|py)\s+[\w./-]+\.(?:mjs|js|py)\b|\.\/[\w-]+(?:\.[\w-]+)*|#include(?:\s*<[^>]+>)?|\b[\w-]+\.(?:cpp|cs|py|mjs|js|html|css|h|hpp)\b|\b[A-Za-z_]\w*(?:(?:::|\.)[A-Za-z_]\w*)+(?:\([^()\n]*\))?|\b[A-Za-z_]\w*\([^()\n]*\)|\\[nrt]|<<|>>|::|===|!==|==|!=|&&|\|\||\b(?:std|cout|cin|nullptr|None|True|False|Console|DateTime|RegexOptions|ThreadPool|System)\b/g;
   const result: ExplanationToken[] = [];
   let offset = 0;
   for (const match of text.matchAll(pattern)) {

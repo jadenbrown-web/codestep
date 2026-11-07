@@ -29,3 +29,9 @@ test('recognises filenames and commands for the other languages', () => {
 test('leaves ordinary prose untouched', () => {
   assert.deepEqual(explanationTokens('Shows the text in the console.'), [{ text: 'Shows the text in the console.', kind: 'text' }]);
 });
+
+test('does not mistake everyday verbs and prepositions for code', () => {
+  for (const text of ['Makes tools from a library available.', 'Use it again to print a value.', 'You can return a value using this tool.']) {
+    assert.deepEqual(explanationTokens(text), [{ text, kind: 'text' }]);
+  }
+});
