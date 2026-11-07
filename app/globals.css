@@ -1474,3 +1474,25 @@ html[data-theme="dark"] .topic-pin-button.tone-rose{--saved-pin-colour:#ff4f92}h
 .lesson-drawer .drawer-lessons .lesson-list-row>.topic-pin-button[data-pinned="true"],html[data-theme] .lesson-drawer .drawer-lessons .lesson-list-row>.topic-pin-button[data-pinned="true"],.comparison-example-menu .example-picker-list .lesson-list-row>.topic-pin-button[data-pinned="true"],html[data-theme] .comparison-example-menu .example-picker-list .lesson-list-row>.topic-pin-button[data-pinned="true"]{color:var(--saved-pin-colour);background:transparent;border-color:transparent;opacity:1}
 .topic-pin-button[data-pinned="true"] svg{fill:currentColor;stroke:currentColor;stroke-width:2}
 .topic-pin-button[data-pinned="false"] svg{fill:none;stroke:currentColor}
+
+/* Align the language name with its logo, beneath the Learning Path caption. */
+.lesson-drawer .drawer-head>.drawer-title-group{display:flex;flex:1;flex-direction:column;gap:4px;min-width:0}
+.lesson-drawer .drawer-title-group>small{font:750 10px/1.2 var(--sans);letter-spacing:1px}
+.lesson-drawer .drawer-language-identity{display:flex;flex-direction:row;align-items:center;gap:8px;min-width:0}
+.lesson-drawer .drawer-language-identity>.drawer-language-logo{display:flex;align-items:center;justify-content:center;flex:none;width:32px;height:32px;background:transparent;border:0;box-shadow:none}
+.lesson-drawer .drawer-language-identity img{display:block;width:100%;height:100%;object-fit:contain}
+.lesson-drawer .drawer-language-identity>b{font:750 20px/1.2 var(--sans);margin:0}
+@media(min-width:851px){
+ .lesson-shell:not(.reference-mode) .lesson-drawer .drawer-head{min-height:64px;padding:6px 8px;align-items:center}
+ .lesson-shell:not(.reference-mode) .lesson-drawer .drawer-language-identity img{width:28px;height:28px}
+ .lesson-drawer .drawer-language-identity>.drawer-language-logo{width:28px;height:28px}
+ .lesson-shell:not(.reference-mode) .lesson-drawer .drawer-language-identity>b{font-size:18px}
+ .lesson-shell.reference-mode>.app-header .lesson-brand-group>.drawer-toggle:not(.home-button){display:none}
+}
+/* One scrollbar width, thumb colour and track across the scrolling panes. */
+:root{--scrollbar-thumb:#829589}
+html[data-theme="dark"]{--scrollbar-thumb:#607a6b}
+.lesson-drawer .drawer-lessons,.lesson-study-content,.comparison-example-menu .example-picker-list,.settings-panel .settings-scroll{scrollbar-width:thin;scrollbar-color:var(--scrollbar-thumb) transparent;scrollbar-gutter:stable}
+.lesson-drawer .drawer-lessons::-webkit-scrollbar,.lesson-study-content::-webkit-scrollbar,.comparison-example-menu .example-picker-list::-webkit-scrollbar,.settings-panel .settings-scroll::-webkit-scrollbar{width:6px;height:6px;background:transparent}
+.lesson-drawer .drawer-lessons::-webkit-scrollbar-thumb,.lesson-study-content::-webkit-scrollbar-thumb,.comparison-example-menu .example-picker-list::-webkit-scrollbar-thumb,.settings-panel .settings-scroll::-webkit-scrollbar-thumb{background:var(--scrollbar-thumb);border:0;border-radius:6px}
+.lesson-drawer .drawer-lessons::-webkit-scrollbar-track,.lesson-study-content::-webkit-scrollbar-track,.comparison-example-menu .example-picker-list::-webkit-scrollbar-track,.settings-panel .settings-scroll::-webkit-scrollbar-track{background:transparent;border:0}
