@@ -1464,3 +1464,13 @@ html[data-theme="dark"]{--prose-ink:#82dcc3}
 }
 @media(max-width:850px){.lesson-layout .lesson-copy{padding:12px}}
 @media(min-width:851px){.lesson-layout .workspace.editor-expanded{left:260px;width:calc(100% - 260px)}}
+
+/* Pin shortcuts sit directly on their header, without an extra dark panel. */
+.pinned-topic-shortcuts,.desktop-header-pins .pinned-topic-shortcuts,.drawer-pins .pinned-topic-shortcuts{background:transparent;border:0;box-shadow:none;padding:0}
+.file-tab .pinned-topic-shortcuts button:not([data-active="true"]) .pinned-topic-label,html[data-theme] .file-tab .pinned-topic-shortcuts button:not([data-active="true"]) .pinned-topic-label,.comparison-file-tab .pinned-topic-shortcuts button:not([data-active="true"]) .pinned-topic-label,html[data-theme] .comparison-file-tab .pinned-topic-shortcuts button:not([data-active="true"]) .pinned-topic-label{background:transparent}
+/* Saved pin icons use their topic colour; unsaved pins remain muted outlines. */
+.topic-pin-button.tone-rose{--saved-pin-colour:#c72561}.topic-pin-button.tone-gold{--saved-pin-colour:#906600}.topic-pin-button.tone-blue{--saved-pin-colour:#0876ab}.topic-pin-button.tone-green{--saved-pin-colour:#087749}.topic-pin-button.tone-cyan{--saved-pin-colour:#007f78}.topic-pin-button.tone-violet{--saved-pin-colour:#8050c9}.topic-pin-button.tone-orange{--saved-pin-colour:#bc540c}
+html[data-theme="dark"] .topic-pin-button.tone-rose{--saved-pin-colour:#ff4f92}html[data-theme="dark"] .topic-pin-button.tone-gold{--saved-pin-colour:#ffc400}html[data-theme="dark"] .topic-pin-button.tone-blue{--saved-pin-colour:#29b6ff}html[data-theme="dark"] .topic-pin-button.tone-green{--saved-pin-colour:#22cf72}html[data-theme="dark"] .topic-pin-button.tone-cyan{--saved-pin-colour:#00d6c2}html[data-theme="dark"] .topic-pin-button.tone-violet{--saved-pin-colour:#aa70ff}html[data-theme="dark"] .topic-pin-button.tone-orange{--saved-pin-colour:#ff872e}
+.lesson-drawer .drawer-lessons .lesson-list-row>.topic-pin-button[data-pinned="true"],html[data-theme] .lesson-drawer .drawer-lessons .lesson-list-row>.topic-pin-button[data-pinned="true"],.comparison-example-menu .example-picker-list .lesson-list-row>.topic-pin-button[data-pinned="true"],html[data-theme] .comparison-example-menu .example-picker-list .lesson-list-row>.topic-pin-button[data-pinned="true"]{color:var(--saved-pin-colour);background:transparent;border-color:transparent;opacity:1}
+.topic-pin-button[data-pinned="true"] svg{fill:currentColor;stroke:currentColor;stroke-width:2}
+.topic-pin-button[data-pinned="false"] svg{fill:none;stroke:currentColor}

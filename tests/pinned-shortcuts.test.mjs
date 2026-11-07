@@ -31,7 +31,8 @@ test('one shortcut click calls only that topic selection', () => {
 test('saved pins are distinguished from the currently selected shortcut', () => {
   const html = props.topics.map(topic => renderToStaticMarkup(React.createElement(TopicPinButton, { topic, pins: props.topics, onToggle() {} }))).join('');
   assert.equal((html.match(/data-pinned="true"/g) ?? []).length, 2);
-  assert.doesNotMatch(html, /data-active="true"|aria-pressed="true"/);
+  assert.doesNotMatch(html, /data-active="true"/);
+  assert.equal((html.match(/aria-pressed="true"/g) ?? []).length, 2);
 });
 
 
