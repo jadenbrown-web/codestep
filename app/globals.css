@@ -1418,3 +1418,14 @@ html[data-theme] .editor-panel .panel-actions button[aria-label]:hover{backgroun
 }
 .home-shell .success-pill{color:#d6fbe5;background:#193b29}
 .home-shell .success-pill b{color:#d6fbe5}
+
+/* One readable explanation per concept, with imports in a separate group. */
+.lesson-breakdown-sections{display:flex;flex-direction:column;gap:18px;min-width:0;margin:16px 0}
+.lesson-breakdown-sections .code-breakdown{margin:0}
+.lesson-breakdown-sections .breakdown-label{font:800 12px/1.4 var(--sans);letter-spacing:1px;margin:0 0 10px;color:var(--green-dark)}
+.lesson-breakdown-sections .breakdown-intro,.lesson-breakdown-sections .breakdown-name-note{font:400 13px/1.6 var(--sans);margin:0 0 10px;color:var(--ui-muted)}
+.lesson-breakdown-sections .breakdown-name-note{margin:10px 0 0}
+.lesson-breakdown-sections .breakdown-part span{font-size:14px;line-height:1.6}
+.lesson-breakdown-sections .breakdown-part code{overflow-wrap:anywhere;white-space:pre-wrap}
+.comparison-notes .breakdown-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:1100px){.lesson-breakdown-sections .breakdown-grid{grid-template-columns:minmax(0,1fr)}}
