@@ -153,12 +153,72 @@ const patterns: Record<string, BreakdownPart> = {
   'names.Contains(search)': { code: 'list.Contains(value)', name: 'Look for a value', meaning: 'Checks whether this list contains the value you give it. The result is true or false.' },
 };
 
+const keywordDefinitions: Record<string, [string, string]> = {
+  let: ['Make a changeable variable', 'Creates a variable: a name that stores a value. Give it a starting value with =. You can save a different value under that name later.'],
+  const: ['Keep the saved value fixed', 'Creates a variable whose saved value cannot be replaced. If the value is an object or a list, its contents can still change.'],
+  function: ['Define a function', 'Gives a group of instructions a name. Defining the function saves its instructions; calling it runs them.'],
+  if: ['Make a choice', 'Runs the next group of instructions only when its check is true.'],
+  else: ['The other choice', 'Runs this group of instructions when the if check is false.'],
+  while: ['Keep checking and repeating', 'Checks its condition before each turn. If the check is true, it runs the loop’s instructions again.'],
+  true: ['A check that passes', 'Means yes, or “this check passes”. In while (true), the check always passes, so the loop needs something such as break to stop it.'],
+  false: ['A check that does not pass', 'Means no, or “this check does not pass”. An if or while check that is false will not run its body.'],
+  True: ['A check that passes', 'Python’s spelling of true. In while True, the check always passes, so the loop needs something such as break to stop it.'],
+  False: ['A check that does not pass', 'Python’s spelling of false. An if or while check that is False will not run its body.'],
+  return: ['Send a value back', 'Ends this function and gives a value back to the code that called it. It does not print the value.'],
+  break: ['Stop repeating', 'Leaves the nearest loop. The program continues with the instruction after that loop.'],
+  class: ['Define a class', 'Describes a kind of object: the values it can hold and the actions it can perform. You choose the class name.'],
+  new: ['Make a new object', 'Creates an object from a class. The values inside the following parentheses provide its starting information.'],
+  def: ['Define a function', 'Python uses def to give a group of instructions a name. The indented instructions run when you call that function.'],
+  for: ['Visit items in turn', 'Runs a group of instructions repeatedly, usually once for each item in a collection.'],
+  int: ['A whole number', 'A type for whole numbers, such as 0, 12 or -3.'],
+  double: ['A decimal number', 'A type for numbers that can have a decimal part, such as 2.5.'],
+  bool: ['A yes-or-no value', 'A type with two possible values: true and false.'],
+  string: ['Text', 'A type for text, such as a word or sentence.'],
+  void: ['No value sent back', 'This function does its work without giving a value back to the code that called it.'],
+  var: ['Let C# work out the type', 'Creates a variable and lets C# work out its type from its starting value. The variable can change value, but its type stays the same.'],
+  auto: ['Let C++ work out the type', 'Lets C++ work out a value’s type from the code around it, instead of you writing the type yourself.'],
+  await: ['Wait for the result', 'Waits for this task to finish before continuing with the following instruction.'],
+};
+
+function keywordPart(keyword: string, language: string): BreakdownPart {
+  const [name, defaultMeaning] = keywordDefinitions[keyword];
+  const meaning = keyword === 'const' && language === 'cpp' ? 'Marks a value as read-only here. This code can read it, but cannot change it through this name.' : keyword === 'const' && language === 'csharp' ? 'Keeps a starting value fixed. It must be a value C# can work out before the program runs, such as a number or text.' : defaultMeaning;
+  return { code: keyword, name, meaning };
+}
+
+/** Ignore words in messages and comments when finding language syntax. */
+function executableText(answer: string, language: string) {
+  const text = answer.replace(/\/\/[^\n]*|\/\*[\s\S]*?\*\/|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`/g, ' ');
+  return language === 'python' ? text.replace(/#[^\n]*/g, ' ') : text;
+}
+
+function missingKeywordParts(lesson: LessonContent, language: string, existing: BreakdownPart[]): BreakdownPart[] {
+  const supported: Record<string, string[]> = {
+    javascript: ['let', 'const', 'function', 'if', 'else', 'while', 'true', 'false', 'return', 'break', 'class', 'new', 'for'],
+    csharp: ['const', 'var', 'int', 'double', 'bool', 'string', 'void', 'await', 'if', 'else', 'while', 'true', 'false', 'return', 'break', 'class', 'new', 'for'],
+    cpp: ['const', 'auto', 'int', 'double', 'bool', 'void', 'if', 'else', 'while', 'true', 'false', 'return', 'break', 'class', 'for'],
+    python: ['def', 'if', 'else', 'while', 'True', 'False', 'return', 'break', 'class', 'for'],
+  };
+  const code = executableText(lesson.answer, language);
+  const result: BreakdownPart[] = [];
+  for (const keyword of supported[language] ?? []) {
+    const token = new RegExp(`\\b${keyword}\\b`);
+    const alreadyExplained = existing.some(part => new RegExp(`^${keyword}\\b`).test(part.code));
+    if (token.test(code) && !alreadyExplained) {
+      result.push(keywordPart(keyword, language));
+    }
+  }
+  if (['javascript', 'csharp', 'cpp', 'python'].includes(language) && /(^|[^=!<>])=(?!=|>)/m.test(code) && !existing.some(part => part.code === '=')) result.push({ code: '=', name: 'Save a value', meaning: 'Stores the value on the right under the name on the left. One equals sign saves a value; two equals signs compare values.' });
+  return result;
+}
+
 export function syntaxBreakdown(lesson: LessonContent, language: string): BreakdownPart[] {
   const parts = (lesson.parts ?? []).flatMap(part => {
     if (/^(?:#include|import |from |using )/.test(part.code)) return [];
     if (['Name', 'Label', 'Constant convention'].includes(part.name)) return [];
     const replacement = plainParts[part.code];
-    let next = patterns[part.code] ?? (replacement ? { code: replacement[2] ?? part.code, name: replacement[0], meaning: replacement[1] } : { ...part });
+    const keyword = keywordDefinitions[part.code] ? keywordPart(part.code, language) : null;
+    let next = patterns[part.code] ?? keyword ?? (replacement ? { code: replacement[2] ?? part.code, name: replacement[0], meaning: replacement[1] } : { ...part });
     if (/^(?:void |def )?correct\(\)/.test(next.code)) {
       const defining = /^(?:void |def )/.test(next.code);
       next = { code: defining ? (language === 'python' ? 'def functionName():' : 'void functionName()') : (language === 'python' ? 'functionName()' : 'functionName();'), name: defining ? 'Make a function' : 'Run a function', meaning: defining ? 'Gives a group of instructions a name so you can run them later. You choose the name.' : 'Write the function’s name followed by () to run its instructions.' };
@@ -175,7 +235,7 @@ export function syntaxBreakdown(lesson: LessonContent, language: string): Breakd
     if (/std::/.test(lesson.answer)) parts.push({ code: '::', name: 'Find a tool inside a group', meaning: 'In std::cout, std is the group and cout is the tool inside it. The two colons connect the group name to the tool name.' });
     if (/std::cout\s*<</.test(lesson.answer)) parts.push({ code: '<<', name: 'Send a value to the console', meaning: 'With std::cout, << sends the value on its right to the console. You can use it again to print another value on the same line.' });
   }
-  return [...new Map(parts.map(part => [part.code, part])).values()];
+  return [...new Map([...missingKeywordParts(lesson, language, parts), ...parts].map(part => [part.code, part])).values()];
 }
 
 export function setupBreakdown(lesson: LessonContent, language: string): BreakdownPart[] {

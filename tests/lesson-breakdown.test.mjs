@@ -50,3 +50,30 @@ test('chosen function names are examples, not language keywords', () => {
 test('lesson introductions state a goal without repeating symbol definitions', () => {
   assert.doesNotMatch(lessonOverview(lessons.cpp[0]), /<<|::|#include/);
 });
+
+test('let is explained in every JavaScript lesson that uses it, including the input loop', () => {
+  const loops = lessons.javascript.find(lesson => lesson.title === 'Repeat input until the answer is correct');
+  const letCard = syntaxBreakdown(loops, 'javascript').find(part => part.code === 'let');
+  assert.ok(letCard);
+  assert.match(letCard.meaning, /stores a value/);
+  assert.match(letCard.meaning, /different value/);
+  for (const lesson of lessons.javascript) if (/\blet\s+\w+/.test(lesson.answer)) {
+    assert.ok(syntaxBreakdown(lesson, 'javascript').some(part => /^let\b/.test(part.code)), lesson.title);
+  }
+});
+test('const is explained without promising that object contents cannot change', () => {
+  const lesson = { title: 'Save a value', eyebrow: '01 · Variables', answer: 'const values = [];' };
+  const card = syntaxBreakdown(lesson, 'javascript').find(part => part.code === 'const');
+  assert.match(card.meaning, /cannot be replaced/);
+  assert.match(card.meaning, /contents can still change/);
+});
+test('keywords inside comments and text do not create unrelated cards', () => {
+  const lesson = { title: 'Print', eyebrow: '01 · Console output', answer: '// let const function\nconsole.log("let const function");' };
+  assert.ok(!syntaxBreakdown(lesson, 'javascript').some(part => ['let', 'const', 'function'].includes(part.code)));
+});
+test('existing keyword explanations are not duplicated', () => {
+  for(const language of ['javascript','python','csharp','cpp']) for(const lesson of lessons[language]) {
+    const parts = syntaxBreakdown(lesson, language);
+    assert.equal(parts.length, new Set(parts.map(part=>part.code)).size, `${language}: ${lesson.title}`);
+  }
+});
