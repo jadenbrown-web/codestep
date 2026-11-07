@@ -4950,7 +4950,8 @@ export default function Home() {
         </aside>
         {navOpen && <button className="drawer-backdrop" aria-label="Close lesson list" onClick={() => setNavOpen(false)} />}
         <aside className="lesson-copy">
-          {!current!.referenceOnly && <div className="desktop-study-toolbar">{desktopHomeControls}{pinnedTopics.length > 0 ? <div className="desktop-header-pins"><PinnedTopicShortcuts topics={pinnedTopics} activeTopic={current?.title ?? null} onSelect={openPinnedTopic} language={language} /></div> : <span>{languageName(language)} · {index + 1} / {lessons[language].length}</span>}</div>}
+          {!current!.referenceOnly && (pinnedTopics.length > 0 || !navOpen) && <div className="desktop-study-toolbar">{desktopHomeControls}{pinnedTopics.length > 0 && <div className="desktop-header-pins"><PinnedTopicShortcuts topics={pinnedTopics} activeTopic={current?.title ?? null} onSelect={openPinnedTopic} language={language} /></div>}</div>}
+          <div className="lesson-study-content">
           <div className="lesson-number">{String(index + 1).padStart(2, "0")} · {current!.eyebrow.split("·")[1]}</div>
           <h1>{current!.title}</h1>
           <p><LessonExplanation lesson={current!} language={language} /></p>
@@ -5070,6 +5071,7 @@ export default function Home() {
           </div> : <>
             <div className="tip">{blockMode ? "Tap or drag lesson blocks into your code, then choose Check code." : language === "python" ? "Type over the guide, then press Enter to check it. Python uses indentation for blocks; Tab inserts four spaces. Equivalent supported code is accepted." : "Type over the guide in the editor, then press Enter to check it. Capital letters are optional in typing practice."}</div>
           </>}
+          </div>
         </aside>
         <section className={`workspace ${editorExpanded ? "editor-expanded" : ""} ${current!.referenceOnly ? "reference-workspace" : ""} ${blockMode ? "blocks-workspace" : ""}`}>
           {current!.referenceOnly ? current!.referenceKind === "comparisons" ? <div className="comparison-reference-preview">
