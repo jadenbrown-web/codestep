@@ -118,6 +118,8 @@ const plainParts: Record<string, [string, string, string?]> = {
 };
 
 const patterns: Record<string, BreakdownPart> = {
+  'await input.question(...)': { code: 'await reader.question("…")', name: 'Ask and wait for a reply', meaning: 'Shows the question and waits for someone to type a reply and press Enter. await waits for the reply before the next instruction runs. You choose the reader’s name.' },
+  'input.close()': { code: 'reader.close()', name: 'Finish taking input', meaning: 'Tells Node you have finished asking questions. It closes the reader so the program can finish. You choose the reader’s name.' },
   'std::time(nullptr)': { code: 'std::time(nullptr)', name: 'Read the clock', meaning: 'Gets a number that represents the current time. nullptr means no extra place to save a copy is being supplied.' },
   'std::localtime(&now)': { code: 'std::localtime(&value)', name: 'Read local date and time', meaning: 'Turns a saved clock value into local calendar parts, such as the hour and minute. & passes the location of that saved value.' },
   '*std::localtime(&now)': { code: '*std::localtime(&value)', name: 'Copy the clock parts', meaning: 'The * reads the date-and-time details that localtime points to, so the program can save its own copy.' },
@@ -320,6 +322,10 @@ function webParts(lesson: LessonContent, language: string, existing: BreakdownPa
 export function syntaxBreakdown(lesson: LessonContent, language: string): BreakdownPart[] {
   const parts = (lesson.parts ?? []).flatMap(part => {
     if (/^(?:#include|import |from |using )/.test(part.code)) return [];
+    if (part.code === 'process.stdin / process.stdout') return [
+      { code: 'process.stdin', name: 'Read keyboard input', meaning: 'The input stream receives text typed in the terminal. Give it to the reader so your program can receive a reply.' },
+      { code: 'process.stdout', name: 'Write terminal output', meaning: 'The output stream sends text to the terminal. Give it to the reader so your program can show its questions.' },
+    ];
     if (['Name', 'Label', 'Constant convention'].includes(part.name)) return [];
     const replacement = plainParts[part.code];
     const keyword = keywordDefinitions[part.code] ? keywordPart(part.code, language) : null;
@@ -334,7 +340,8 @@ export function syntaxBreakdown(lesson: LessonContent, language: string): Breakd
     if (next.code === 'name' || next.code === 'MAX_SPEED') return [];
     return [next];
   });
-  const interpolation = language === 'python' ? /\bf["']/.test(lesson.answer) : language === 'csharp' ? /\$["']/.test(lesson.answer) : language === 'javascript' ? /`[^`]*\$\{/.test(lesson.answer) : false;
+  if (language === 'javascript' && /\bcreateInterface\s*\(/.test(lesson.answer)) parts.push({ code: 'createInterface({ input: …, output: … })', name: 'Connect to the terminal', meaning: 'Makes a reader for terminal questions. input chooses where replies come from; output chooses where questions are shown.' });
+  const interpolation = language === 'python'  ? /\bf["']/.test(lesson.answer) : language === 'csharp' ? /\$["']/.test(lesson.answer) : language === 'javascript' ? /`[^`]*\$\{/.test(lesson.answer) : false;
   if (interpolation) {
     for (let index = parts.length - 1; index >= 0; index--) if (/^(?:(?:f|\$)["']|\$\{)/.test(parts[index].code)) parts.splice(index, 1);
     parts.push({ code: language === 'python' ? 'f"Hello {value}"' : language === 'csharp' ? '$"Hello {value}"' : '`Hello ${value}`', name: 'Put a value into text', meaning: `${language === 'python' ? 'f before the quote' : language === 'csharp' ? '$ before the quote' : 'Backticks and ${…}'} lets you insert a value into text. The part inside the braces is replaced by its current value. You choose the variable name; it is not a special word you have to copy.` });

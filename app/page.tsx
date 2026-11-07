@@ -4948,21 +4948,13 @@ export default function Home() {
             <p><b>Try it:</b> create a sheet-music folder in your working folder and place an image inside named chopin-nocturne.png. Add practice-notes.txt and a subfolder to see which entries get listed. Listing needs folder access; missing or inaccessible folders can cause errors.</p>
             <p><b>Next step in a program:</b> keep the found path to pass to an image viewer or another function. Looking up a file is separate from opening, reading, or saving it.</p>
           </details>}
-          {current!.compareNode && <section className="runtime-guide" aria-label="Browser and Node input">
-            <h2>The same name question in two places</h2>
-            <h3>Browser · prompt()</h3><pre><code><HighlightedCode language="javascript" code={"let name = prompt(\"What is your name?\");\nconsole.log(`Hello ${name}`);"} /></code></pre>
-            <h3>VS Code terminal · name.mjs</h3><pre><code><HighlightedCode language="javascript" code={"import { createInterface } from \"node:readline/promises\";\n\nconst input = createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\nlet name = await input.question(\"What is your name?\");\nconsole.log(`Hello ${name}`);\n\ninput.close();"} /></code></pre>
-            <p>Node needs a little setup before it can read terminal input. <InlineCode language={language} code={"await input.question()"} /> waits for the answer. <InlineCode language={language} code={"input.close()"} /> tells Node <b>“I’m done taking input.”</b> Call it when you finish asking questions.</p>
-            <p>Save as <InlineCode language={language} code={"name.mjs"} />, open <b>Terminal → New Terminal</b> in VS Code, then enter <InlineCode language={language} code={"node name.mjs"} />. Type a name and press Enter. Use the terminal so you can type a reply.</p>
-            <a href="/examples/name.mjs" download>Download name.mjs</a>
-          </section>}
           {(language === "html" || language === "css") && <details className="symbol-guide" open={index === 0}>
             <summary>Run these examples in a browser</summary>
             <p>HTML describes page content; CSS styles it. Neither prints terminal messages. The result preview describes the page or shows its visible text.</p>
             <p>Save a complete HTML page as <InlineCode language={language} code={"index.html"} /> and open it in a browser. Short HTML examples show one part of that page; the page-structure lessons explain where each part belongs.</p>
             <p>For CSS, save the rules in <InlineCode language={language} code={"styles.css"} /> beside your HTML file. Add <code>{'<link rel="stylesheet" href="styles.css">'}</code> inside the HTML head, and include the element named by the selector in the body. Save your changes and refresh the browser.</p>
           </details>}
-          {current!.runHint && <details className="symbol-guide"><summary>Run this on your computer</summary><p><CodeProse text={current!.runHint} language={language} /></p></details>}
+          {current!.runHint && <details className="symbol-guide"><summary>Run this on your computer</summary><p><CodeProse text={current!.runHint} language={language} /></p>{current!.compareNode && <a href="/examples/name.mjs" download>Download name.mjs</a>}</details>}
           {!current!.referenceOnly && <div className="tip">{blockMode ? "Tap or drag lesson blocks into your code, then choose Check code." : language === "python" ? "Type over the guide in the editor, then press Enter to check it. Python uses indentation for blocks; Tab inserts four spaces. Equivalent supported code is accepted." : "Type over the guide in the editor, then press Enter to check it. Capital letters are optional in typing practice."}</div>}
           </div>
         </aside>

@@ -111,3 +111,12 @@ test('JavaScript variable examples use the shared breakdown rather than duplicat
   const parts = syntaxBreakdown(lesson,'javascript');
   for(const keyword of ['let','const']) assert.equal(parts.filter(part=>part.code===keyword).length,1);
 });
+
+test('terminal-input explanations stay in shared cards without a legacy duplicate panel', () => {
+  assert.doesNotMatch(source,/className="runtime-guide"/);
+  const lesson = lessons.javascript.find(lesson=>lesson.compareNode);
+  const parts = syntaxBreakdown(lesson,'javascript');
+  for(const code of ['let','process.stdin','process.stdout','await reader.question("…")','reader.close()']) assert.ok(parts.some(part=>part.code===code),code);
+  assert.ok(parts.some(part=>part.code.startsWith('createInterface(')));
+  assert.equal(importBreakdown(lesson,'javascript').filter(part=>part.code.includes('createInterface')).length,1);
+});
