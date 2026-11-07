@@ -1425,7 +1425,18 @@ html[data-theme] .editor-panel .panel-actions button[aria-label]:hover{backgroun
 .lesson-breakdown-sections .breakdown-label{font:800 12px/1.4 var(--sans);letter-spacing:1px;margin:0 0 10px;color:var(--green-dark)}
 .lesson-breakdown-sections .breakdown-intro,.lesson-breakdown-sections .breakdown-name-note{font:400 13px/1.6 var(--sans);margin:0 0 10px;color:var(--ui-muted)}
 .lesson-breakdown-sections .breakdown-name-note{margin:10px 0 0}
-.lesson-breakdown-sections .breakdown-part span{font-size:14px;line-height:1.6}
+.lesson-breakdown-sections .breakdown-part>div>span{font-size:14px;line-height:1.6}
 .lesson-breakdown-sections .breakdown-part code{overflow-wrap:anywhere;white-space:pre-wrap}
 .comparison-notes .breakdown-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 @media(max-width:1100px){.lesson-breakdown-sections .breakdown-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* Inline code in an explanation has its own styling, distinct from card titles. */
+.lesson-breakdown-sections .breakdown-part .prose-code,.prose-code{display:inline;width:auto;max-width:100%;height:auto;min-height:0;padding:.08em .3em;border:1px solid var(--ui-border);border-radius:4px;background:var(--ui-hover);color:var(--ui-text);font:700 .92em/1.5 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.lesson-breakdown-sections .breakdown-part .prose-code [class*="syntax-"],.prose-code [class*="syntax-"]{color:inherit;font-weight:700}
+.prose-file,.prose-command{font-weight:800}
+/* The filename is sufficient identification here; the drawer keeps its logo. */
+.editor-panel .file-tab.has-pinned-topics,.comparison-filebar>.comparison-file-tab.has-pinned-topics{grid-template-columns:minmax(0,66px) minmax(0,1fr);gap:4px;padding-left:8px}
+.file-tab.has-pinned-topics>.editor-file-name,.comparison-file-tab.has-pinned-topics>.comparison-file-name{grid-column:1}
+.file-tab.has-pinned-topics .pinned-topic-shortcuts,.comparison-file-tab.has-pinned-topics .pinned-topic-shortcuts{grid-column:2}
+
+.lesson-breakdown-sections .breakdown-part .prose-code [class*="syntax-"]{font:inherit;color:inherit}
