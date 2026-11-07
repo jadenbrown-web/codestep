@@ -4342,7 +4342,7 @@ function LessonBreakdown({ lesson, language, setupOnly = false }: { lesson: Less
   const setup = setupBreakdown(lesson, language);
   const cards = (parts: CodePart[]) => <div className="breakdown-grid">{parts.map((part, index) => <div className="breakdown-part" key={`${part.code}-${index}`}><code><HighlightedCode code={part.code} language={language} /></code><div><b>{part.name}</b><span><CodeProse text={part.meaning} language={language} /></span></div></div>)}</div>;
   return <div className="lesson-breakdown-sections">
-    {!setupOnly && syntax.length > 0 && <section className="code-breakdown" aria-label="Code breakdown"><h2 className="breakdown-label">BREAK IT DOWN</h2>{cards(syntax)}<p className="breakdown-name-note">Names such as value, item and functionName are examples. You can choose your own names; use the same name wherever you mean the same value or function.</p></section>}
+    {!setupOnly && syntax.length > 0 && <section className="code-breakdown" aria-label="Code breakdown"><h2 className="breakdown-label">BREAK IT DOWN</h2>{cards(syntax)}{syntax.some(part => /functionName|ClassName|PropertyName|\bvalue\b|\bitem\b|elementId|className/.test(part.code)) && <p className="breakdown-name-note">Example names are placeholders. Choose your own names and use each one consistently.</p>}</section>}
     {imports.length > 0 && <section className="code-breakdown import-breakdown" aria-label="Import breakdown"><h2 className="breakdown-label">IMPORTS · TOOLS THIS CODE USES</h2><p className="breakdown-intro"><CodeProse language={language} text={language === "cpp" ? "#include makes tools from a library header available before the program is built. A header describes those tools; including it does not install anything." : language === "csharp" ? "using lets you write shorter names for tools in a namespace, which is a group of related names. It does not install or run those tools." : language === "python" ? "import makes tools from a module available. A module is a collection of Python code. from … import … picks a particular tool from that collection." : "import makes named tools from another module available in this file. The modules shown here are built into Node.js."} /></p>{cards(imports)}</section>}
     {setup.length > 0 && <section className="code-breakdown" aria-label="Program setup breakdown"><h2 className="breakdown-label">PROGRAM SETUP</h2>{cards(setup)}</section>}
   </div>;
@@ -4381,7 +4381,7 @@ function matchingLesson(source: Lesson, target: Language) {
 
 function InlineCode({ code, language }: { code: string; language: Language }) {
   const special = /^\\[nrt]$/.test(code) ? "attribute" : /^<[^>]+>$|^#include$/.test(code) ? "header" : /^(main|correct|WriteLine|ReadLine)$/.test(code) ? "function-name" : "";
-  return <code className="explanation-code">{special ? <span className={`syntax-${special}`}>{code}</span> : <HighlightedCode code={code} language={language} />}</code>;
+  return <code className="explanation-code prose-code">{special ? <span className={`syntax-${special}`}>{code}</span> : <HighlightedCode code={code} language={language} />}</code>;
 }
 
 function LessonExplanation({ lesson, language }: { lesson: Lesson; language: Language }) {
@@ -4948,11 +4948,6 @@ export default function Home() {
             <p><b>Try it:</b> create a sheet-music folder in your working folder and place an image inside named chopin-nocturne.png. Add practice-notes.txt and a subfolder to see which entries get listed. Listing needs folder access; missing or inaccessible folders can cause errors.</p>
             <p><b>Next step in a program:</b> keep the found path to pass to an image viewer or another function. Looking up a file is separate from opening, reading, or saving it.</p>
           </details>}
-          {language === "javascript" && current!.title === "Choose let or const" && <section className="variable-examples" aria-label="Changeable and fixed variables">
-            <article className="reference-card"><div className="reference-head"><b>let · can be reassigned</b></div><pre><code><HighlightedCode language="javascript" code={'let name = prompt ("Enter your name: ");\nconsole.log(`hello ${name}`);\n// this variable is changeable'} /></code></pre><p>Later, <InlineCode language={language} code={"name = \"Sam\";"} /> is allowed. Printing name again would use Sam.</p></article>
-            <article className="reference-card"><div className="reference-head"><b>const · cannot be reassigned</b></div><pre><code><HighlightedCode language="javascript" code={'const name = prompt ("Enter your name: ");\nconsole.log(`hello ${name}`);\n// this variable is not changeable'} /></code></pre><p>Later, <InlineCode language={language} code={"name = \"Sam\";"} /> causes an error. const prevents reassignment; arrays and objects can still have their contents changed.</p></article>
-            <p>Run these examples separately. For this exercise, type the let example.</p>
-          </section>}
           {current!.compareNode && <section className="runtime-guide" aria-label="Browser and Node input">
             <h2>The same name question in two places</h2>
             <h3>Browser · prompt()</h3><pre><code><HighlightedCode language="javascript" code={"let name = prompt(\"What is your name?\");\nconsole.log(`Hello ${name}`);"} /></code></pre>
@@ -4968,42 +4963,7 @@ export default function Home() {
             <p>For CSS, save the rules in <InlineCode language={language} code={"styles.css"} /> beside your HTML file. Add <code>{'<link rel="stylesheet" href="styles.css">'}</code> inside the HTML head, and include the element named by the selector in the body. Save your changes and refresh the browser.</p>
           </details>}
           {current!.runHint && <details className="symbol-guide"><summary>Run this on your computer</summary><p><CodeProse text={current!.runHint} language={language} /></p></details>}
-          {current!.referenceOnly ? current!.referenceKind === "comparisons" ? <div className="comparison-guide">
-            <div><code>{language === "javascript" ? "==" : "=="}</code><p><b>Equal value</b><span>{language === "javascript" ? "Converts types before comparing; usually prefer ===." : "Checks whether the two values are equal."}</span></p></div>
-            {language === "javascript" && <div><code>===</code><p><b>Equal value and type</b><span>Strict equality checks the value and its data type.</span></p></div>}
-            <div><code>{language === "javascript" ? "!==" : "!="}</code><p><b>Not equal</b><span>True when the two values are different.</span></p></div>
-            <div><code>&gt; / &lt;</code><p><b>Greater or less than</b><span>The open side faces the larger value; the point faces the smaller value.</span></p></div>
-            <div><code>&gt;= / &lt;=</code><p><b>Greater or less, including equal</b><span>The added equals line means the boundary value also counts.</span></p></div>
-          </div> : current!.referenceKind === "fonts" ? <div className="font-guide-note">
-            <b>How the browser chooses</b>
-            <p><code>font-family: Georgia, serif;</code> means “use Georgia if available; otherwise use the browser’s serif font.” Names containing spaces, such as <code>"Times New Roman"</code>, should be quoted.</p>
-            <span>Commonly installed does not mean guaranteed on every operating system.</span>
-          </div> : current!.referenceKind === "pages" ? <div className="pages-guide">
-            <div><code>href=&quot;page2.html&quot;</code><p><b>Move forward</b><span>The link in index.html opens page2.html from the same folder.</span></p></div>
-            <div><code>href=&quot;index.html&quot;</code><p><b>Go back</b><span>The second page links back to the first file.</span></p></div>
-            <div className="page-flow"><b>index.html</b><span>⇄</span><b>page2.html</b></div>
-          </div> : current!.referenceKind === "css" ? <div className="css-guide">
-            <div><code>p.one</code><p><b>Class selector</b><span>Targets paragraph elements whose class is one.</span></p></div>
-            <div><code>5px solid red</code><p><b>Border shorthand</b><span>Sets width, line style, and colour in one instruction.</span></p></div>
-            <div><code>border-left</code><p><b>One side only</b><span>Styles only the left edge; border-bottom does the same for the bottom.</span></p></div>
-            <div><code>border-radius</code><p><b>Rounded corners</b><span>Rounds the corners of the element's border.</span></p></div>
-            <div><code>rgb(255, 0, 0)</code><p><b>RGB colour</b><span>Sets red, green, and blue amounts from 0 to 255. This example uses red at its maximum.</span></p></div>
-            <div><code>#222222</code><p><b>Hex colour</b><span>Uses a hash followed by red, green, and blue hexadecimal values.</span></p></div>
-            <div><code>rgba(..., 0.4)</code><p><b>Transparent colour</b><span>The fourth number controls opacity from 0 to 1.</span></p></div>
-          </div> : <div className="element-guide">
-            <div><code>&lt;h1&gt;–&lt;h6&gt;</code><p><b>Heading hierarchy</b><span>Six levels, from the main page heading down to the smallest subheading.</span></p></div>
-            <div><code>&lt;strong&gt;</code><p><b>Important bold text</b><span>Adds importance; browsers normally display it in bold.</span></p></div>
-            <div><code>&lt;b&gt; / &lt;i&gt;</code><p><b>Visual bold and italic</b><span>Changes appearance without adding importance or emphasis.</span></p></div>
-            <div><code>&lt;em&gt;</code><p><b>Emphasized text</b><span>Adds verbal emphasis; browsers normally display it in italics.</span></p></div>
-            <div><code>&lt;mark&gt; / &lt;small&gt;</code><p><b>Highlight or reduce</b><span>Marks relevant text or displays a smaller side comment.</span></p></div>
-            <div><code>&lt;del&gt; / &lt;ins&gt;</code><p><b>Deleted or inserted</b><span>Shows removed text with a line through it or added text with an underline.</span></p></div>
-            <div><code>&lt;sub&gt; / &lt;sup&gt;</code><p><b>Subscript or superscript</b><span>Lowers or raises smaller text, useful for H₂O and 2³.</span></p></div>
-            <div><code>&lt;p&gt;</code><p><b>Paragraph</b><span>Groups a normal block of written text.</span></p></div>
-            <div><code>style=&quot;...&quot;</code><p><b>Inline style</b><span>Adds CSS directly to one element, such as a colour or centred alignment.</span></p></div>
-            <div><code>&lt;a href=&quot;...&quot;&gt;</code><p><b>Link</b><span>Creates clickable text and stores its destination in href.</span></p></div>
-          </div> : <>
-            <div className="tip">{blockMode ? "Tap or drag lesson blocks into your code, then choose Check code." : language === "python" ? "Type over the guide, then press Enter to check it. Python uses indentation for blocks; Tab inserts four spaces. Equivalent supported code is accepted." : "Type over the guide in the editor, then press Enter to check it. Capital letters are optional in typing practice."}</div>
-          </>}
+          {!current!.referenceOnly && <div className="tip">{blockMode ? "Tap or drag lesson blocks into your code, then choose Check code." : language === "python" ? "Type over the guide in the editor, then press Enter to check it. Python uses indentation for blocks; Tab inserts four spaces. Equivalent supported code is accepted." : "Type over the guide in the editor, then press Enter to check it. Capital letters are optional in typing practice."}</div>}
           </div>
         </aside>
         <section className={`workspace ${editorExpanded ? "editor-expanded" : ""} ${current!.referenceOnly ? "reference-workspace" : ""} ${blockMode ? "blocks-workspace" : ""}`}>

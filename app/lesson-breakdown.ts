@@ -1,5 +1,5 @@
 export type BreakdownPart = { code: string; name: string; meaning: string };
-type LessonContent = { title: string; eyebrow: string; answer: string; parts?: BreakdownPart[] };
+type LessonContent = { title: string; eyebrow: string; answer: string; parts?: BreakdownPart[]; referenceKind?: string };
 
 const cppTools: Record<string, [string, string]> = {
   iostream: ['Read and print text', 'Makes std::cout and std::cin available. This lesson uses them to print text or read keyboard input.'],
@@ -180,6 +180,25 @@ const keywordDefinitions: Record<string, [string, string]> = {
   await: ['Wait for the result', 'Waits for this task to finish before continuing with the following instruction.'],
 };
 
+const extraKeywords: Record<string, [string, string]> = {
+  async: ['A function that can wait', 'Marks a function that gives back a promise: a value that may be ready later. Inside it, await can wait for a result.'],
+  this: ['The current object', 'Refers to the object this method is working with, so its values can be read or changed.'],
+  constructor: ['Set up a new object', 'Runs when an object is created from this class. Use it to save the object’s starting values.'],
+  public: ['Allow other code to use it', 'Lets code outside this class use this member, such as a property or method.'],
+  static: ['Belongs to the class', 'Belongs to the class itself, rather than one object made from it.'],
+  foreach: ['Visit each item', 'Runs these instructions once for each item in the collection.'],
+  get: ['Read a property', 'Provides the value when other code reads this property.'],
+  set: ['Change a property', 'Accepts a new value when other code changes this property.'],
+  out: ['Get a value back through an argument', 'Lets a method put a result into the variable you pass to it.'],
+  and: ['Both checks must pass', 'Joins two checks. The result is True only when both are True.'],
+  or: ['At least one check must pass', 'Joins two checks. The result is True when at least one is True.'],
+  not: ['Reverse a check', 'Changes True to False, or False to True.'],
+  in: ['Use or find an item', 'In a for loop, connects the loop to the collection it reads. In a check, asks whether a value is in a collection.'],
+  is: ['Check whether it is the same object', 'Checks whether two names refer to the same object. is None checks for no value, rather than comparing text.'],
+  None: ['No value yet', 'Means there is no value here yet. It is different from an empty piece of text.'],
+};
+Object.assign(keywordDefinitions, extraKeywords);
+
 function keywordPart(keyword: string, language: string): BreakdownPart {
   const [name, defaultMeaning] = keywordDefinitions[keyword];
   const meaning = keyword === 'const' && language === 'cpp' ? 'Marks a value as read-only here. This code can read it, but cannot change it through this name.' : keyword === 'const' && language === 'csharp' ? 'Keeps a starting value fixed. It must be a value C# can work out before the program runs, such as a number or text.' : defaultMeaning;
@@ -194,22 +213,108 @@ function executableText(answer: string, language: string) {
 
 function missingKeywordParts(lesson: LessonContent, language: string, existing: BreakdownPart[]): BreakdownPart[] {
   const supported: Record<string, string[]> = {
-    javascript: ['let', 'const', 'function', 'if', 'else', 'while', 'true', 'false', 'return', 'break', 'class', 'new', 'for'],
-    csharp: ['const', 'var', 'int', 'double', 'bool', 'string', 'void', 'await', 'if', 'else', 'while', 'true', 'false', 'return', 'break', 'class', 'new', 'for'],
+    javascript: ['let', 'const', 'async', 'await', 'this', 'constructor', 'function', 'if', 'else', 'while', 'true', 'false', 'return', 'break', 'class', 'new', 'for'],
+    csharp: ['const', 'var', 'public', 'static', 'foreach', 'get', 'set', 'out', 'int', 'double', 'bool', 'string', 'void', 'await', 'if', 'else', 'while', 'true', 'false', 'return', 'break', 'class', 'new', 'for'],
     cpp: ['const', 'auto', 'int', 'double', 'bool', 'void', 'if', 'else', 'while', 'true', 'false', 'return', 'break', 'class', 'for'],
-    python: ['def', 'if', 'else', 'while', 'True', 'False', 'return', 'break', 'class', 'for'],
+    python: ['and', 'or', 'not', 'in', 'is', 'None', 'def', 'if', 'else', 'while', 'True', 'False', 'return', 'break', 'class', 'for'],
   };
-  const code = executableText(lesson.answer, language);
+  const code = language === 'html' ? [...lesson.answer.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)].map(match => executableText(match[1], 'javascript')).join('\n') : executableText(lesson.answer, language);
+  const syntaxLanguage = language === 'html' ? 'javascript' : language;
   const result: BreakdownPart[] = [];
-  for (const keyword of supported[language] ?? []) {
+  for (const keyword of supported[syntaxLanguage] ?? []) {
     const token = new RegExp(`\\b${keyword}\\b`);
     const alreadyExplained = existing.some(part => new RegExp(`^${keyword}\\b`).test(part.code));
     if (token.test(code) && !alreadyExplained) {
       result.push(keywordPart(keyword, language));
     }
   }
-  if (['javascript', 'csharp', 'cpp', 'python'].includes(language) && /(^|[^=!<>])=(?!=|>)/m.test(code) && !existing.some(part => part.code === '=')) result.push({ code: '=', name: 'Save a value', meaning: 'Stores the value on the right under the name on the left. One equals sign saves a value; two equals signs compare values.' });
+  if (['javascript', 'csharp', 'cpp', 'python'].includes(syntaxLanguage) && /(^|[^=!<>])=(?!=|>)/m.test(code) && !existing.some(part => part.code === '=')) result.push({ code: '=', name: 'Save a value', meaning: 'Stores the value on the right under the name on the left. One equals sign saves a value; two equals signs compare values.' });
   return result;
+}
+
+const htmlTags: Record<string, [string, string]> = {
+  html: ['The whole HTML page', 'Wraps the page’s HTML. The opening tag starts it and the closing tag ends it.'],
+  head: ['Information about the page', 'Holds information such as the browser-tab title and links to stylesheets. Its contents are not the main visible page.'],
+  body: ['Visible page content', 'Holds the content people see on the page.'],
+  title: ['Name the browser tab', 'Sets the text shown in the browser tab.'],
+  meta: ['Describe the page', 'Adds page information. charset="UTF-8" tells the browser how to read the text characters.'],
+  div: ['Group page content', 'Groups content into a box that you can style or arrange.'],
+  p: ['Make a paragraph', 'Groups text into a paragraph.'],
+  a: ['Make a link', 'Creates a link. href gives its destination; the text between the tags is what people click.'],
+  img: ['Show an image', 'Displays an image from src. alt describes the image for people who cannot see it. This element has no closing tag.'],
+  video: ['Show a video', 'Adds a video player. controls gives people play, pause and other playback buttons.'],
+  audio: ['Play audio', 'Adds an audio player. controls gives people buttons to play or pause it.'],
+  script: ['Run JavaScript', 'Places JavaScript inside this page. The JavaScript keywords in this lesson have their own cards.'],
+  button: ['Make a button', 'Creates a button people can activate with a mouse, touch, or keyboard.'],
+  style: ['Write CSS for this page', 'Holds CSS rules that change how this page looks.'],
+  b: ['Make text bold', 'Displays bold text without saying it has extra importance.'],
+  strong: ['Mark important text', 'Marks text as important. Browsers usually show it in bold.'],
+  i: ['Change the text style', 'Marks text in a different voice or style. Browsers usually show it in italics.'],
+  em: ['Emphasise text', 'Marks words that should be stressed when read. Browsers usually show them in italics.'],
+  mark: ['Mark text to notice', 'Marks text as relevant, usually with a coloured background.'],
+  small: ['Show a side note', 'Marks a small side note, such as a copyright notice.'],
+  del: ['Mark removed text', 'Marks text as deleted. Browsers usually draw a line through it.'],
+  ins: ['Mark added text', 'Marks text as inserted. Browsers usually underline it.'],
+  sub: ['Lower the text', 'Lowers text below the normal line, as in a chemical formula.'],
+  sup: ['Raise the text', 'Raises text above the normal line, as in a power or a footnote number.'],
+};
+const htmlAttributes: Record<string, [string, string]> = {
+  href: ['Choose a link destination', 'Gives the page or address a link opens. You choose the destination.'],
+  src: ['Choose a media file', 'Gives the path or address of an image, video, or audio file. Use the name of the file you actually saved.'],
+  alt: ['Describe an image', 'Gives an image a text description for people who cannot see it. Describe its meaning, rather than just its filename.'],
+  id: ['Give an element a unique ID', 'Gives one element an ID so CSS or JavaScript can find it. You choose the ID and use it consistently.'],
+  class: ['Put elements in a group', 'Gives elements a class name so the same CSS rule can style them. You choose the class name.'],
+  style: ['Style this element', 'Holds CSS declarations that apply to this element only. Each declaration names a property and its value.'],
+  lang: ['Set the page language', 'Tells the browser and reading tools the language of the text. en means English.'],
+  charset: ['Set the text encoding', 'UTF-8 lets the browser read letters, symbols, and many writing systems correctly.'],
+  controls: ['Show playback buttons', 'Adds the browser’s controls for playing and pausing audio or video.'],
+  onclick: ['Respond to a click', 'Runs the JavaScript you give it when this element is activated. A function call here runs the function when the click happens.'],
+};
+const cssProperties: Record<string, [string, string]> = {
+  'background-color': ['Choose the background colour', 'Sets the colour behind an element’s content.'],
+  color: ['Choose the text colour', 'Sets the colour of text in the selected element.'],
+  'text-align': ['Line up text', 'Chooses how text lines up inside its box, such as left, right, or centre.'],
+  'font-family': ['Choose a font', 'Lists fonts in order of preference. The browser uses the first one available; a final choice such as serif or sans-serif provides a fallback style.'],
+  border: ['Draw a border', 'Combines the border’s width, line style, and colour in one declaration. For example, 5px dotted blue makes a blue dotted border five CSS pixels wide.'],
+  'border-left': ['Style the left border', 'Sets the width, line style, and colour of the left edge only.'],
+  'border-bottom': ['Style the bottom border', 'Sets the width, line style, and colour of the bottom edge only.'],
+  'border-radius': ['Round the corners', 'Chooses how round the corners of an element’s border are. A larger value makes a stronger curve.'],
+};
+
+function webParts(lesson: LessonContent, language: string, existing: BreakdownPart[]): BreakdownPart[] {
+  if (language !== 'html' && language !== 'css') return [];
+  const result: BreakdownPart[] = [];
+  const add = (code: string, definition: [string, string]) => { if (!existing.some(part => part.code === code || part.code.startsWith(code + '=') || part.code.startsWith(code + ':'))) result.push({ code, name: definition[0], meaning: definition[1] }); };
+  const cssSources: string[] = language === 'css' ? [lesson.answer] : [];
+  if (language === 'html') {
+    for (const match of lesson.answer.matchAll(/<([a-z][\w-]*)([^>]*)>/gi)) {
+      const tag = match[1].toLowerCase();
+      if (htmlTags[tag] && !existing.some(part => part.code === tag)) add(`<${tag}>`, htmlTags[tag]);
+      if (/^h[1-6]$/.test(tag) && !existing.some(part => /^h[1-6]$/.test(part.code))) add('<h1> … <h6>', ['Choose a heading level', 'h1 is the main heading. h2 to h6 give smaller levels of headings inside sections. Choose the level for the structure of the page, not just its text size.']);
+      for (const attribute of Object.keys(htmlAttributes)) if (new RegExp(`\\b${attribute}(?:\\s*=|\\s|$)`, 'i').test(match[2])) add(attribute, htmlAttributes[attribute]);
+      for (const inline of match[2].matchAll(/style\s*=\s*["']([^"']*)["']/gi)) cssSources.push(inline[1]);
+    }
+    for (const style of lesson.answer.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)) cssSources.push(style[1]);
+  }
+  for (const css of cssSources) {
+    for (const match of css.matchAll(/(?:^|[;{])\s*([\w-]+)\s*:/g)) {
+      const property = match[1];
+      if (cssProperties[property]) add(property, cssProperties[property]);
+    }
+    if (css.includes(':')) add(':', ['Separate a property and value', 'Write the property before the colon and its value after it.']);
+    if (css.includes(';')) add(';', ['Finish a declaration', 'Separates this CSS declaration from the next one.']);
+    if (css.includes('{') && !existing.some(part => /^\{\s*(?:…|\.\.\.)\s*\}$/.test(part.code))) add('{ … }', ['Group the styles', 'Put declarations inside the braces. The selector before the opening brace chooses which elements they apply to.']);
+    if (/#[-\w]+/.test(css) && !existing.some(part => part.code.startsWith('#'))) add('#elementId', ['Select one element', 'The hash selects the element whose id matches the name after it. You choose the ID and use that same name in your HTML.']);
+    if (/\.[a-z_-][\w-]*\s*\{/i.test(css) && !existing.some(part => /\.[a-z]/i.test(part.code))) add('.className', ['Select a group', 'The dot selects elements with this class. You choose the class name and use that same name in your HTML.']);
+  }
+  if (lesson.referenceKind === 'css') {
+    for (const property of ['border-left', 'border-bottom', 'border-radius']) add(property, cssProperties[property]);
+    add('rgb(255, 0, 0)', ['Mix a colour', 'The three numbers choose the amounts of red, green, and blue. Each amount is from 0 to 255. This example uses full red.']);
+    add('#222222', ['Write a hex colour', 'The six letters or digits after # describe red, green, and blue in three pairs. This example makes a dark grey.']);
+    add('rgba(0, 0, 0, 0.4)', ['Make a colour see-through', 'The first three numbers choose a colour. The last number chooses how solid it is: 0 is invisible and 1 is fully solid.']);
+  }
+  if (lesson.referenceKind === 'fonts') add('serif / sans-serif / monospace', ['Choose a font style', 'Serif letters have small finishing strokes. Sans-serif letters have plain ends. Monospace gives every character the same width. Use one as the last choice if your preferred font is unavailable.']);
+  return [...new Map(result.map(part => [part.code, part])).values()];
 }
 
 export function syntaxBreakdown(lesson: LessonContent, language: string): BreakdownPart[] {
@@ -223,19 +328,22 @@ export function syntaxBreakdown(lesson: LessonContent, language: string): Breakd
       const defining = /^(?:void |def )/.test(next.code);
       next = { code: defining ? (language === 'python' ? 'def functionName():' : 'void functionName()') : (language === 'python' ? 'functionName()' : 'functionName();'), name: defining ? 'Make a function' : 'Run a function', meaning: defining ? 'Gives a group of instructions a name so you can run them later. You choose the name.' : 'Write the function’s name followed by () to run its instructions.' };
     }
+    const declaration = next.code.match(/^(let|const|var|auto)\b/);
+    if (declaration) next = keywordPart(declaration[1], language);
+    if (language === 'css' && next.code === ';') next = { code: ';', name: 'Finish a declaration', meaning: 'Separates this CSS declaration from the next one.' };
     if (next.code === 'name' || next.code === 'MAX_SPEED') return [];
     return [next];
   });
   const interpolation = language === 'python' ? /\bf["']/.test(lesson.answer) : language === 'csharp' ? /\$["']/.test(lesson.answer) : language === 'javascript' ? /`[^`]*\$\{/.test(lesson.answer) : false;
   if (interpolation) {
-    for (let index = parts.length - 1; index >= 0; index--) if (/^(?:f|\$)["']/.test(parts[index].code)) parts.splice(index, 1);
+    for (let index = parts.length - 1; index >= 0; index--) if (/^(?:(?:f|\$)["']|\$\{)/.test(parts[index].code)) parts.splice(index, 1);
     parts.push({ code: language === 'python' ? 'f"Hello {value}"' : language === 'csharp' ? '$"Hello {value}"' : '`Hello ${value}`', name: 'Put a value into text', meaning: `${language === 'python' ? 'f before the quote' : language === 'csharp' ? '$ before the quote' : 'Backticks and ${…}'} lets you insert a value into text. The part inside the braces is replaced by its current value. You choose the variable name; it is not a special word you have to copy.` });
   }
   if (language === 'cpp') {
     if (/std::/.test(lesson.answer)) parts.push({ code: '::', name: 'Find a tool inside a group', meaning: 'In std::cout, std is the group and cout is the tool inside it. The two colons connect the group name to the tool name.' });
     if (/std::cout\s*<</.test(lesson.answer)) parts.push({ code: '<<', name: 'Send a value to the console', meaning: 'With std::cout, << sends the value on its right to the console. You can use it again to print another value on the same line.' });
   }
-  return [...new Map([...missingKeywordParts(lesson, language, parts), ...parts].map(part => [part.code, part])).values()];
+  return [...new Map([...missingKeywordParts(lesson, language, parts), ...parts, ...webParts(lesson, language, parts)].map(part => [part.code, part])).values()];
 }
 
 export function setupBreakdown(lesson: LessonContent, language: string): BreakdownPart[] {

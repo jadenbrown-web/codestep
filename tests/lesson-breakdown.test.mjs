@@ -77,3 +77,37 @@ test('existing keyword explanations are not duplicated', () => {
     assert.equal(parts.length, new Set(parts.map(part=>part.code)).size, `${language}: ${lesson.title}`);
   }
 });
+
+test('every lesson in all six languages has a nonempty shared code breakdown', () => {
+  for(const [language,course] of Object.entries(lessons)) for(const lesson of course) {
+    assert.ok(syntaxBreakdown(lesson,language).length>0, `${language}: ${lesson.title}`);
+  }
+});
+test('language basics are present in C#, C++, Python, and JavaScript inside HTML', () => {
+  const cases = [
+    ['csharp','class Example { public static void Main() { var value = 1; } }',['class','public','static','void','var','=']],
+    ['cpp','int main() { auto value = 1; const int limit = 2; }',['int','auto','const','=']],
+    ['python','def check(value):\n    if value is None or not value:\n        return False',['def','if','is','None','or','not','return','False']],
+    ['html','<script>let value = 1; if (value) { value = 2; }</script>',['let','if','=']],
+  ];
+  for(const [language,answer,expected] of cases) {
+    const parts = syntaxBreakdown({title:'Example',eyebrow:'01 · Basics',answer},language);
+    for(const code of expected) assert.ok(parts.some(part=>part.code===code), `${language}: ${code}`);
+  }
+});
+test('HTML tags and attributes and CSS properties get individual explanations', () => {
+  const html = syntaxBreakdown({title:'Image',eyebrow:'01 · Media',answer:'<img src="photo.png" alt="A landscape">'},'html');
+  for(const code of ['<img>','src','alt']) assert.ok(html.some(part=>part.code===code));
+  const css = syntaxBreakdown({title:'Style',eyebrow:'01 · CSS',answer:'p { color: red; font-family: Arial, sans-serif; }'},'css');
+  for(const code of ['color','font-family',':',';','{ … }']) assert.ok(css.some(part=>part.code===code));
+});
+test('HTML page text does not get mistaken for embedded JavaScript keywords', () => {
+  const parts = syntaxBreakdown({title:'Words',eyebrow:'01 · HTML',answer:'<p>let const function</p>'},'html');
+  assert.ok(!parts.some(part=>['let','const','function'].includes(part.code)));
+});
+test('JavaScript variable examples use the shared breakdown rather than duplicate panels', () => {
+  assert.doesNotMatch(source,/className="variable-examples"/);
+  const lesson = lessons.javascript.find(lesson=>lesson.title==='Choose let or const');
+  const parts = syntaxBreakdown(lesson,'javascript');
+  for(const keyword of ['let','const']) assert.equal(parts.filter(part=>part.code===keyword).length,1);
+});
