@@ -1386,3 +1386,12 @@ html[data-theme="dark"]{--workspace-rail:#1c2d24;--workspace-filebar:#18281f}
 .workspace>.feedback,html[data-theme] .workspace>.feedback{box-sizing:border-box;min-height:54px;padding:4px;border-width:1px;border-style:solid;border-radius:14px;gap:8px;align-items:center}
 .workspace>.feedback>div{padding-left:4px;min-width:0}
 .workspace>.feedback button,html[data-theme] .workspace>.feedback button{box-sizing:border-box;flex:none;height:44px;min-height:44px;margin:0;padding:0 12px;border:0;border-radius:9px;box-shadow:none}
+
+/* File bars follow the page theme instead of inheriting dark-editor ink. */
+:root{--toolbar-ink:#243b2e;--toolbar-hover:#dfe9e2}
+html[data-theme="dark"]{--toolbar-ink:#edf5ef;--toolbar-hover:#2a4033}
+.editor-panel .panel-bar,.comparison-filebar{color:var(--toolbar-ink)}
+html[data-theme] .editor-panel .file-tab .editor-file-name,html[data-theme] .editor-panel .file-language,html[data-theme] .comparison-filebar .comparison-file-name{color:var(--toolbar-ink);opacity:1}
+.editor-panel .panel-actions button[aria-label],html[data-theme] .editor-panel .panel-actions button[aria-label],html[data-theme] .comparison-filebar .copy-code-button{color:var(--toolbar-ink);opacity:1;filter:none;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;align-self:center;width:44px;min-width:44px;max-width:44px;height:44px;min-height:44px;max-height:44px;margin:0;padding:0;transform:none;line-height:1}
+.editor-panel .panel-actions button[aria-label] svg,.comparison-filebar .copy-code-button svg{display:block;flex:none;width:20px;height:20px;margin:0;transform:none;opacity:1;stroke-width:2}
+html[data-theme] .editor-panel .panel-actions button[aria-label]:hover{background:var(--toolbar-hover)!important}
