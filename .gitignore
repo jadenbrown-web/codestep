@@ -40,3 +40,9 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+
+# generated source-control artifacts
+*.tsbuildinfo
+/site.tar.gz
+/playwright-report/
+/test-results/

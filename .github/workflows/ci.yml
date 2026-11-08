@@ -1,0 +1,39 @@
+name: CodeStep checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Build and run regression tests
+        run: npm test
+      - name: Install browser for responsive checks
+        run: npx playwright install --with-deps chromium
+      - name: Check desktop and phone layouts
+        run: npm run test:browser
+      - name: Save the production build
+        uses: actions/upload-artifact@v4
+        with:
+          name: codestep-production
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7

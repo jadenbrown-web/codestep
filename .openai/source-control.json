@@ -1,0 +1,8 @@
+{
+  "provider": "github",
+  "repository": "jadenbrown-web/codestep",
+  "branch": "main",
+  "remote": "github",
+  "deployment_mirror_remote": "origin",
+  "require_source_push_before_publish": true
+}
