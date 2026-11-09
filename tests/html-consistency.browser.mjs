@@ -36,6 +36,22 @@ try{
    assert.ok(Math.max(...centers)-Math.min(...centers)<1,'toolbar controls share a center line');
   }
   const root=page.locator('.reference-workspace');
+  assert.equal(await root.locator('.lesson-actions .copy-code-button').count(),0,'no example copy control among navigation icons');
+  const misplaced=await root.locator('.copy-code-button').evaluateAll(es=>es.filter(e=>!e.closest('.visual-example-code,.tag-card-heading,.file-example-code')).map(e=>e.getAttribute('aria-label')));
+  assert.deepEqual(misplaced,[],'each copy button is beside the code it copies');
+  if(width>850){
+   const offsets=await root.evaluate(el=>{
+    const pane=el.firstElementChild;const rect=pane.getBoundingClientRect();
+    const shell=document.createElement('main');shell.className='lesson-shell';shell.style.cssText=`position:fixed;left:-10000px;top:0;width:${rect.width}px;height:100px`;
+    const editor=document.createElement('div');editor.className='editor-panel';
+    editor.innerHTML='<div class="panel-bar"><div class="file-tab">main.js</div><div class="panel-actions"><button class="copy-code-button" aria-label="Copy code"></button><button class="editor-expand-button" aria-label="Expand"></button><button class="editor-reset-button" aria-label="Reset"></button><div class="desktop-pane-actions"><div class="lesson-actions"><button class="drawer-toggle editor-mode-toggle" aria-label="Use blocks"></button><button class="compare-language-button" aria-label="Compare"></button><button class="settings-button" aria-label="Settings"></button></div></div></div></div>';
+    shell.append(editor);document.body.append(shell);
+    const baseline=editor.getBoundingClientRect();
+    const result=['.editor-mode-toggle','.settings-button'].map(selector=>{const actual=pane.querySelector(selector).getBoundingClientRect();const expected=editor.querySelector(selector).getBoundingClientRect();return {x:(rect.right-actual.x-actual.width/2)-(baseline.right-expected.x-expected.width/2),y:(actual.y+actual.height/2-rect.y)-(expected.y+expected.height/2-baseline.y)};});
+    shell.remove();return result;
+   });
+   for(const offset of offsets){assert.ok(Math.abs(offset.x)<1,'navigation matches the editor right-hand positions');assert.ok(Math.abs(offset.y)<1,'navigation matches the editor top positions');}
+  }
   if(kind==='css'||kind==='colours'){
    const clipped=await root.locator('.html-tag-example').evaluateAll(es=>es.filter(e=>e.scrollWidth>e.clientWidth+1||e.scrollHeight>e.clientHeight+1).map(e=>e.outerHTML));
    assert.deepEqual(clipped,[],'visual cards do not clip their labels or previews');
@@ -45,14 +61,20 @@ try{
    if(width===1400&&theme==='light') await root.screenshot({path:`/tmp/codestep-${kind}-reference.png`});
   }
   if(kind==='fonts'){
-   await root.getByRole('button',{name:'Copy Courier New code',exact:true}).click();
+   await root.getByRole('button',{name:'Show Lucida Console code',exact:true}).click();
+   await root.getByRole('button',{name:'Copy font example code',exact:true}).click();
+   assert.equal(await page.evaluate(()=>window.copied.at(-1)),`<p style="font-family: 'Lucida Console';">Lucida Console</p>`);
+   assert.equal(await root.locator('[data-font] button[aria-pressed="true"]').count(),1,'one font drives the displayed example');
+   await root.getByRole('button',{name:'Show Courier New code',exact:true}).click();
+   await root.getByRole('button',{name:'Copy font example code',exact:true}).click();
    assert.equal(await page.evaluate(()=>window.copied.at(-1)),`<p style="font-family: 'Courier New';">Courier New</p>`);
   }else if(kind==='text'){
    await root.getByRole('button',{name:'Copy mark code',exact:true}).click();
    assert.equal(await page.evaluate(()=>window.copied.at(-1)),'<mark>Marked text</mark>');
   }else if(kind==='css'){
-   await root.getByRole('button',{name:'Copy Rounded dotted border code',exact:true}).click();
-   assert.equal(await page.evaluate(()=>window.copied.at(-1)),'p.notice { border: 5px dotted blue; border-radius: 12px; }');
+   await root.getByRole('button',{name:'Show Solid border code',exact:true}).click();
+   await root.getByRole('button',{name:'Copy border example code',exact:true}).click();
+   assert.equal(await page.evaluate(()=>window.copied.at(-1)),'p.notice {\n  border: 5px solid red;\n}');
   }else if(kind==='colours'){
    await root.getByRole('button',{name:'Copy Blue hex code',exact:true}).click();
    assert.equal(await page.evaluate(()=>window.copied.at(-1)),'#0000FF');
