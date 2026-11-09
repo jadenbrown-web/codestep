@@ -1,3 +1,4 @@
+import CopyCodeButton from "./CopyCodeButton";
 import React, { createElement } from 'react';
 
 type ExampleTag = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'b' | 'strong' | 'i' | 'em' | 'mark' | 'small' | 'del' | 'ins' | 'sub' | 'sup' | 'a';
@@ -19,12 +20,12 @@ export const HTML_TEXT_EXAMPLES: TagExample[] = [
   { tag: 'a', text: 'Open a page', code: '<a href="page.html">Open a page</a>' },
 ];
 
-export default function HtmlTextReference({ onNext }: { onNext: () => void }) {
+export default function HtmlTextReference({ onNext, actions }: { onNext: () => void; actions?: React.ReactNode }) {
   return <section className="text-reference-preview html-text-reference" aria-label="HTML text examples">
-    <header className="html-reference-header"><b>HTML text elements</b><span>{HTML_TEXT_EXAMPLES.length} separate examples</span></header>
+    <header className="html-reference-header"><b>HTML text elements</b><div className="desktop-pane-actions">{actions}</div></header>
     <div className="html-tag-grid">
       {HTML_TEXT_EXAMPLES.map(example => <article className="html-tag-example" data-html-tag={example.tag} aria-label={`<${example.tag}> example`} key={example.tag}>
-        <code className="html-tag-code">{example.code}</code>
+        <div className="tag-card-heading"><code className="html-tag-code">{example.code}</code><CopyCodeButton iconOnly code={example.code} label={example.tag} /></div>
         <div className="html-tag-sample"><div className="html-tag-rendered">{example.before}{example.tag === 'a' ? <a href="page.html" onClick={event => event.preventDefault()}>{example.text}</a> : createElement(example.tag, null, example.text)}{example.after}</div></div>
       </article>)}
     </div>

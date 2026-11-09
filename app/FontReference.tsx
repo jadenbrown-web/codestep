@@ -1,3 +1,4 @@
+import CopyCodeButton from "./CopyCodeButton";
 import React from 'react';
 
 export const FONT_FAMILIES = ['Arial', 'Helvetica', 'Verdana', 'Tahoma', 'Trebuchet MS', 'Times New Roman', 'Georgia', 'Garamond', 'Courier New', 'Lucida Console', 'Comic Sans MS', 'Impact', 'Palatino Linotype', 'Brush Script MT', 'serif', 'sans-serif', 'monospace', 'cursive', 'fantasy', 'system-ui'];
@@ -12,7 +13,7 @@ export default function FontReference({language, onNext, actions}: {language: st
       const family = font.includes(' ') ? `'${font}'` : font;
       const label = font === 'system-ui' ? 'System UI' : font.charAt(0).toUpperCase() + font.slice(1);
       return <article className="html-tag-example" data-font={font} data-example={font === 'Courier New' || undefined} key={font}>
-        <b className="font-example-label">{label}{font === 'Courier New' && <small>Example above</small>}</b>
+        <div className="font-card-heading"><b className="font-example-label">{label}{font === 'Courier New' && <small>Example above</small>}</b><CopyCodeButton iconOnly code={language === 'html' ? `<p style="font-family: ${family};">${label}</p>` : `p { font-family: ${family}; }`} label={label} /></div>
         <p className="font-example-sample" style={{fontFamily:family}}>{label}</p>
       </article>;
     })}</div>

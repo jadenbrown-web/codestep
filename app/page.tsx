@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 
 import CodeBlocks from "./CodeBlocks";
+import CopyCodeButton from "./CopyCodeButton";
 import HtmlTextReference from "./HtmlTextReference";
 import FontReference from "./FontReference";
 import CodeLineNumbers from "./CodeLineNumbers";
@@ -4455,36 +4456,6 @@ function ComparisonExamplePicker({ target, selected, onSelect, sourceLanguage, p
   </div>;
 }
 
-async function copyCodeText(value: string) {
-  try {
-    if (navigator.clipboard?.writeText) { await navigator.clipboard.writeText(value); return true; }
-  } catch { /* Try the browser's selection-based copy below. */ }
-  const previous = document.activeElement as HTMLElement | null;
-  const field = document.createElement("textarea");
-  field.value = value;
-  field.setAttribute("readonly", "");
-  field.style.cssText = "position:fixed;left:0;top:0;opacity:0;pointer-events:none";
-  // A modal dialog makes elements outside it inert.
-  (document.querySelector("dialog[open]") ?? document.body).appendChild(field);
-  field.select();
-  let copied = false;
-  try { copied = document.execCommand("copy"); } catch {}
-  field.remove();
-  previous?.focus();
-  return copied;
-}
-
-function CopyCodeButton({ code, label, text = "Copy code", iconOnly = false }: { code: string; label: string; text?: string; iconOnly?: boolean }) {
-  const [status, setStatus] = useState<"idle" | "copied" | "failed">("idle");
-  useEffect(() => { setStatus("idle"); }, [code]);
-  useEffect(() => {
-    if (status === "idle") return;
-    const timer = setTimeout(() => setStatus("idle"), 2400);
-    return () => clearTimeout(timer);
-  }, [status]);
-  return <span className="copy-code-control"><button className="copy-code-button" title={status === "failed" ? "Select the code and copy it manually." : "Copy code with its indentation and line breaks"} aria-label={`Copy ${label} code`} disabled={!code.trim()} onClick={async () => setStatus(await copyCodeText(code) ? "copied" : "failed")}>{iconOnly ? <svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{status === "copied" ? <path d="m5 12 4 4L19 6"/> : status === "failed" ? <path d="M12 4v10m0 4v2"/> : <><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></>}</svg> : status === "copied" ? "Copied" : status === "failed" ? "Copy blocked" : text}</button><span className="copy-code-status" role="status">{status === "copied" ? "Code copied." : status === "failed" ? "Copy was blocked. Select the code and copy it manually." : ""}</span></span>;
-}
-
 function LanguageComparison({ language, lesson, editorCode, showComments, onClose, pinnedTopics = [], onTogglePin = () => {}, pinLimit = 2 }: { language: Language; lesson: Lesson; editorCode: string; showComments: boolean; onClose: () => void; pinnedTopics?: string[]; onTogglePin?: (topic: string) => void; pinLimit?: number }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [target, setTarget] = useState<Language>(language === "javascript" ? "cpp" : "javascript");
@@ -4928,7 +4899,7 @@ export default function Home() {
     );
   }
 
-  const lessonActions = <div className="lesson-actions"><button className="drawer-toggle editor-mode-toggle" data-active={blockMode} aria-pressed={blockMode} aria-label={blockMode ? "Use keyboard" : "Use blocks"} title={blockMode ? "Use keyboard" : "Use blocks"} onClick={() => changeBlockMode(!blockMode)}><EditorModeSymbol blockMode={blockMode} /></button><button className="compare-language-button" title="Compare languages" aria-label="Compare with another language" onClick={() => setComparisonOpen(true)}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4"/></svg></button><button className="settings-button" data-active={settingsOpen} aria-expanded={settingsOpen} aria-controls="settings-drawer" onClick={() => { if (window.innerWidth <= 850) setNavOpen(false); setSettingsOpen(open => !open); }} aria-label="Settings"><svg className="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 3-.7 2.5-2.4 1L3.6 6 2 9l1.8 1.8v2.4L2 15l1.6 3 2.3-.5 2.4 1L9 21h6l.7-2.5 2.4-1 2.3.5 1.6-3-1.8-1.8v-2.4L22 9l-1.6-3-2.3.5-2.4-1L15 3Z"/><circle cx="12" cy="12" r="3"/></svg><span>Settings</span></button></div>;
+  const lessonActions = <div className="lesson-actions">{current!.referenceOnly && language === "html" && current!.referenceKind !== "pages" && <CopyCodeButton iconOnly code={lessonExample(current!, language, showComments)} label="full reference example" />}<button className="drawer-toggle editor-mode-toggle" data-active={blockMode} aria-pressed={blockMode} aria-label={blockMode ? "Use keyboard" : "Use blocks"} title={blockMode ? "Use keyboard" : "Use blocks"} onClick={() => changeBlockMode(!blockMode)}><EditorModeSymbol blockMode={blockMode} /></button>{language !== "html" && <button className="compare-language-button" title="Compare languages" aria-label="Compare with another language" onClick={() => setComparisonOpen(true)}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4"/></svg></button>}<button className="settings-button" data-active={settingsOpen} aria-expanded={settingsOpen} aria-controls="settings-drawer" onClick={() => { if (window.innerWidth <= 850) setNavOpen(false); setSettingsOpen(open => !open); }} aria-label="Settings"><svg className="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 3-.7 2.5-2.4 1L3.6 6 2 9l1.8 1.8v2.4L2 15l1.6 3 2.3-.5 2.4 1L9 21h6l.7-2.5 2.4-1 2.3.5 1.6-3-1.8-1.8v-2.4L22 9l-1.6-3-2.3.5-2.4-1L15 3Z"/><circle cx="12" cy="12" r="3"/></svg><span>Settings</span></button></div>;
   const desktopHomeControls = <div className="desktop-home-controls"><div className="lesson-brand-group"><HomeButton onClick={() => { setSettingsOpen(false); setLanguage(null); }} /></div></div>;
   return (
     <>
@@ -4975,19 +4946,17 @@ export default function Home() {
             <p><b>Try it:</b> create a sheet-music folder in your working folder and place an image inside named chopin-nocturne.png. Add practice-notes.txt and a subfolder to see which entries get listed. Listing needs folder access; missing or inaccessible folders can cause errors.</p>
             <p><b>Next step in a program:</b> keep the found path to pass to an image viewer or another function. Looking up a file is separate from opening, reading, or saving it.</p>
           </details>}
-          {(language === "html" || language === "css") && <details className="symbol-guide" open={index === 0}>
-            <summary>Run these examples in a browser</summary>
-            <p>HTML describes page content; CSS styles it. Neither prints terminal messages. The result preview describes the page or shows its visible text.</p>
-            <p>Save a complete HTML page as <InlineCode language={language} code={"index.html"} /> and open it in a browser. Short HTML examples show one part of that page; the page-structure lessons explain where each part belongs.</p>
-            <p>For CSS, save the rules in <InlineCode language={language} code={"styles.css"} /> beside your HTML file. Add <code>{'<link rel="stylesheet" href="styles.css">'}</code> inside the HTML head, and include the element named by the selector in the body. Save your changes and refresh the browser.</p>
-          </details>}
+          {(language === "html" || language === "css") && <section className="browser-run-guide" aria-label="Run in a browser">
+            <h2>Run in a browser</h2>
+            {current!.referenceKind === "pages" ? <p>Save the two examples as <InlineCode language="html" code="index.html" /> and <InlineCode language="html" code="page2.html" /> in the same folder. Open <InlineCode language="html" code="index.html" /> in your browser, then follow the links between the pages.</p> : language === "html" ? <p>Save your page as <InlineCode language="html" code="index.html" /> and open it in a browser. Short examples belong inside a complete HTML page. Save your changes and refresh the browser to see the result.</p> : <p>Save your CSS as <InlineCode language="css" code="styles.css" /> beside your HTML file. Add <code>{'<link rel="stylesheet" href="styles.css">'}</code> inside the HTML head. Save your changes and refresh the browser.</p>}
+          </section>}
           {current!.runHint && <details className="symbol-guide"><summary>Run this on your computer</summary><p><CodeProse text={current!.runHint} language={language} /></p>{current!.compareNode && <a href="/examples/name.mjs" download>Download name.mjs</a>}</details>}
           {!current!.referenceOnly && <div className="tip">{blockMode ? "Tap or drag lesson blocks into your code, then choose Check code." : language === "python" ? "Type over the guide in the editor, then press Enter to check it. Python uses indentation for blocks; Tab inserts four spaces. Equivalent supported code is accepted." : "Type over the guide in the editor, then press Enter to check it. Capital letters are optional in typing practice."}</div>}
           </div>
         </aside>
         <section className={`workspace ${editorExpanded ? "editor-expanded" : ""} ${current!.referenceOnly ? "reference-workspace" : ""} ${blockMode ? "blocks-workspace" : ""}`}>
-          {current!.referenceOnly ? <>{current!.referenceKind !== "fonts" && <div className="reference-pane-toolbar"><b>{current!.eyebrow.replace(/^\d+\s*·\s*/, "")}</b><div className="desktop-pane-actions">{lessonActions}</div></div>}{current!.referenceKind === "comparisons" ? <div className="comparison-reference-preview">
-            <div className="preview-bar"><span>◆</span> {language === "javascript" ? "JAVASCRIPT" : "C SHARP"} COMPARISON REFERENCE</div>
+          {current!.referenceOnly ? <>{current!.referenceKind === "comparisons" ? <div className="comparison-reference-preview">
+            <header className="reference-pane-heading"><b>Comparison operators</b><div className="desktop-pane-actions">{lessonActions}</div></header>
             <div className="comparison-start"><code>{language === "javascript" ? "let x = 5;" : "int x = 5;"}</code><span>Each row below asks a different question about the same value.</span></div>
             <div className="comparison-table" role="table" aria-label="Comparison operators">
               <div className="comparison-row comparison-header" role="row"><b>Operator</b><b>Meaning</b><b>Example</b><b>Result</b></div>
@@ -5008,15 +4977,15 @@ export default function Home() {
             <div className="comparison-reminder"><b>Remember the “arrow” shapes</b><span><code>&gt;</code> points away from the greater value; <code>&lt;</code> points towards the smaller value. They are called greater-than and less-than signs.</span></div>
             <button className="reference-next" onClick={nextLesson}>Continue to names beginning with J →</button>
           </div> : current!.referenceKind === "fonts" ? <FontReference language={language} onNext={nextLesson} actions={lessonActions} /> : current!.referenceKind === "pages" ? <div className="pages-reference-preview">
-            <div className="preview-bar"><span>◆</span> TWO HTML FILES</div>
+            <header className="reference-pane-heading"><b>Two HTML files</b><div className="desktop-pane-actions">{lessonActions}</div></header>
             <div className="file-pair">
-              <article><header><span>1</span><b>index.html</b></header><pre><code><HighlightedCode language="html" code={'<!DOCTYPE html>\n<html>\n<body>\n\n  <h1>First Page</h1>\n\n  <a href="page2.html">Go to Page 2</a>\n\n</body>\n</html>'} /></code></pre></article>
-              <article><header><span>2</span><b>page2.html</b></header><pre><code><HighlightedCode language="html" code={'<!DOCTYPE html>\n<html>\n<body>\n\n  <h1>Page 2</h1>\n\n  <a href="index.html">Go back</a>\n\n</body>\n</html>'} /></code></pre></article>
+              <article><header><span>1</span><b>index.html</b><CopyCodeButton iconOnly code={'<!DOCTYPE html>\n<html>\n<body>\n\n  <h1>First Page</h1>\n\n  <a href="page2.html">Go to Page 2</a>\n\n</body>\n</html>'} label="index.html" /></header><pre><code><HighlightedCode language="html" code={'<!DOCTYPE html>\n<html>\n<body>\n\n  <h1>First Page</h1>\n\n  <a href="page2.html">Go to Page 2</a>\n\n</body>\n</html>'} /></code></pre></article>
+              <article><header><span>2</span><b>page2.html</b><CopyCodeButton iconOnly code={'<!DOCTYPE html>\n<html>\n<body>\n\n  <h1>Page 2</h1>\n\n  <a href="index.html">Go back</a>\n\n</body>\n</html>'} label="page2.html" /></header><pre><code><HighlightedCode language="html" code={'<!DOCTYPE html>\n<html>\n<body>\n\n  <h1>Page 2</h1>\n\n  <a href="index.html">Go back</a>\n\n</body>\n</html>'} /></code></pre></article>
             </div>
             <div className="link-journey"><b>First Page</b><span>Go to Page 2 →</span><b>Page 2</b><span>← Go back</span></div>
             <button className="reference-next" onClick={nextLesson}>Continue to images →</button>
           </div> : current!.referenceKind === "css" ? <div className="css-reference-preview">
-            <div className="preview-bar"><span>◆</span> CSS BORDERS AND COLOURS</div>
+            <header className="reference-pane-heading"><b>Borders and colours</b><div className="desktop-pane-actions">{lessonActions}</div></header>
             <div className="colour-samples"><div className="solid-colour">Solid rgb colour</div><div className="transparent-colour">Transparent rgba colour</div></div>
             <div className="border-samples">
               <p className="css-border red-solid">Solid red border <code>5px solid red</code></p>
@@ -5028,7 +4997,7 @@ export default function Home() {
             </div>
             <div className="hex-note"><code>#222222</code><span>Hex colours start with #. Each pair controls red, green, and blue.</span></div>
             <button className="reference-next" onClick={nextLesson}>Try the border quiz →</button>
-          </div> : <HtmlTextReference onNext={nextLesson} />}</> : <>
+          </div> : <HtmlTextReference onNext={nextLesson} actions={lessonActions} />}</> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className={`file-tab ${pinnedTopics.length && pinLimit <= 2 ? "has-pinned-topics" : ""}`} data-topic-tone={lessonTone(current!)} title={current!.fileName || challengeFile(language)}><span className="editor-file-name">{current!.fileName || challengeFile(language)}</span>{pinnedTopics.length && pinLimit <= 2 ? <PinnedTopicShortcuts topics={pinnedTopics} activeTopic={current?.title ?? null} onSelect={openPinnedTopic} language={language} /> : null}</div><div className="panel-actions"><div className="desktop-pane-actions">{lessonActions}</div><span className="mobile-editor-copy"><CopyCodeButton iconOnly code={lessonExample(current!, language, showComments)} label="full lesson example for VS Code" /></span><button className="editor-expand-button" aria-label={editorExpanded ? "Restore editor" : "Expand editor"} title={editorExpanded ? "Restore editor" : "Expand editor"} aria-pressed={editorExpanded} onClick={() => setEditorExpanded(expanded => !expanded)}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{editorExpanded ? <path d="M8 3v5H3m13-5v5h5M3 16h5v5m13-5h-5v5"/> : <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>}</svg></button><button className="editor-reset-button" onClick={() => changeBlockCode(commentPrefix + (current!.starter || ""))} title="Reset code" aria-label="Reset code"><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></svg><span className="editor-action-label">Reset</span></button></div></div>
               {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={commentPrefix + ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div ref={codeEditorRef} className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="editor-surface" style={{ minHeight: `max(100%, calc(${lineNumbers.length} * var(--editor-line-height) + var(--editor-padding)))`, minWidth: `max(100%, calc(${Math.max(...(code + guideCode).split("\n").map(line => line.length), 1)}ch + var(--editor-gutter) + var(--editor-inline-padding) + var(--editor-inline-padding)))` }}><CodeLineNumbers text={code + (showGuide ? guideCode : "")} minimumLines={8} />{showGuide && <pre className={`code-guide ${current!.title === "Check an answer with if and else" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{current!.title === "Check an answer with if and else" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{<pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Check an answer with if and else"} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" wrap="soft" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div></div>}
