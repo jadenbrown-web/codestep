@@ -22,16 +22,18 @@ const browser=await chromium.launch({headless:true,...(fs.existsSync('/usr/bin/c
 try {
   const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
   const css=fs.readFileSync('app/globals.css','utf8');
-  for(const theme of ['light','dark']) for(const [language,course] of Object.entries(lessons)) {
+  for(const width of [390,1440]) for(const theme of ['light','dark']) for(const [language,course] of Object.entries(lessons)) {
     const lesson=language==='javascript'?course.find(item=>item.compareNode):course.reduce((longest,item)=>item.answer.length>longest.answer.length?item:longest,course[0]);
+    await page.setViewportSize({width,height:844});
     const markup=renderToStaticMarkup(React.createElement(Component,{lesson,language}));
     await page.setContent(`<html data-theme="${theme}"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${css}</style><body><main class="lesson-shell mobile-lesson"><div class="lesson-layout drawer-closed"><aside class="lesson-copy"><div class="lesson-study-content">${markup}</div></aside></div></main></body></html>`);
     assert.ok(await page.locator('.code-breakdown').count()>0);
     assert.equal(await page.locator('.runtime-guide,.variable-examples').count(),0);
     const columns=await page.locator('.breakdown-grid').first().evaluate(element=>getComputedStyle(element).gridTemplateColumns);
-    assert.equal(columns.split(' ').length,1,`${theme} ${language}: one-column mobile cards`);
+    if(width===390) assert.equal(columns.split(' ').length,1,`${theme} ${language}: one-column mobile cards`);
     const overflow=await page.locator('.breakdown-part').evaluateAll(elements=>elements.filter(element=>element.scrollWidth>element.clientWidth+1).length);
     assert.equal(overflow,0,`${theme} ${language}: no overflowing cards`);
+    if(['javascript','python','csharp','cpp'].includes(language)) assert.ok(await page.locator('.prose-code').count()>0,`${theme} ${language}: code in explanations is highlighted`);
     const backgrounds=await page.locator('.prose-code').evaluateAll(elements=>elements.map(element=>getComputedStyle(element).backgroundColor));
     assert.ok(backgrounds.every(value=>value==='rgba(0, 0, 0, 0)'),`${theme} ${language}: text-only code highlights`);
     if(language==='javascript') {
@@ -39,6 +41,6 @@ try {
       for(const label of ['Read keyboard input','Write terminal output','Ask and wait for a reply','Finish taking input','Connect to the terminal']) assert.ok(text.includes(label),label);
       assert.equal(await page.locator('[aria-label="Import breakdown"]').count(),1);
     }
-    console.log(`PASS phone ${theme} ${language}: shared cards, readable single-column layout, no overflow or boxed prose`);
+    console.log(`PASS ${width} ${theme} ${language}: shared cards, readable single-column layout, no overflow or boxed prose`);
   }
 } finally {await browser.close();}

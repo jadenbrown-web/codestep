@@ -746,7 +746,7 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "name + \"...\"",
           "name": "Join text",
-          "meaning": "When used with text, + joins the name and message into one string."
+          "meaning": "When used with text, `+` joins the name and message into one string."
         },
         {
           "code": "/ ... /",
@@ -2941,7 +2941,7 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "\"[\" + ... + \"]\"",
           "name": "Add display brackets",
-          "meaning": "+ joins the printed brackets with the combined names. These brackets are text for display, not a new list."
+          "meaning": "`+` joins the printed brackets with the combined names. These brackets are text for display, not a new list."
         }
       ],
       "runHint": "Save as main.py and run python3 main.py in the VS Code terminal.",
@@ -3785,7 +3785,7 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "for (const auto& name : uniqueNames)",
           "name": "Visit each unique name",
-          "meaning": "Runs once for each set value. auto infers its type; & reads the existing value without copying it; const prevents changing it through name."
+          "meaning": "Runs once for each set value. auto infers its type; `&` reads the existing value without copying it; const prevents changing it through name."
         },
         {
           "code": "if (!firstItem)",
@@ -4370,18 +4370,18 @@ function SettingsPanel({ open, themeMode, showGuide, showComments, onCommentsCha
   </div>;
 }
 
-function CodeProse({ text, language }: { text: string; language: Language }) {
-  return <>{explanationTokens(text).map((token, index) => token.kind === "text" ? token.text : <code key={index} className={`explanation-code prose-code prose-${token.kind}`}>{token.kind === "code" ? <HighlightedCode code={token.text} language={language} /> : token.text}</code>)}</>;
+function CodeProse({ text, language, contextCode = "" }: { text: string; language: Language; contextCode?: string }) {
+  return <>{explanationTokens(text, { code: contextCode, language }).map((token, index) => token.kind === "text" ? token.text : <code key={index} className={`explanation-code prose-code prose-${token.kind}`}>{token.kind === "code" ? <HighlightedCode code={token.text} language={language} /> : token.text}</code>)}</>;
 }
 
 function LessonBreakdown({ lesson, language, setupOnly = false }: { lesson: Lesson; language: Language; setupOnly?: boolean }) {
   const syntax = syntaxBreakdown(lesson, language);
   const imports = importBreakdown(lesson, language);
   const setup = setupBreakdown(lesson, language);
-  const cards = (parts: CodePart[]) => <div className="breakdown-grid">{parts.map((part, index) => <div className="breakdown-part" key={`${part.code}-${index}`}><code><HighlightedCode code={part.code} language={language} /></code><div><b>{part.name}</b><span><CodeProse text={part.meaning} language={language} /></span></div></div>)}</div>;
+  const cards = (parts: CodePart[]) => <div className="breakdown-grid">{parts.map((part, index) => <div className="breakdown-part" key={`${part.code}-${index}`}><code><HighlightedCode code={part.code} language={language} /></code><div><b>{part.name}</b><span><CodeProse text={part.meaning} language={language} contextCode={lesson.answer + "\n" + part.code} /></span></div></div>)}</div>;
   return <div className="lesson-breakdown-sections">
     {!setupOnly && syntax.length > 0 && <section className="code-breakdown" aria-label="Code breakdown"><h2 className="breakdown-label">BREAK IT DOWN</h2>{cards(syntax)}{syntax.some(part => /functionName|ClassName|PropertyName|\bvalue\b|\bitem\b|elementId|className/.test(part.code)) && <p className="breakdown-name-note">Example names are placeholders. Choose your own names and use each one consistently.</p>}</section>}
-    {imports.length > 0 && <section className="code-breakdown import-breakdown" aria-label="Import breakdown"><h2 className="breakdown-label">IMPORTS · TOOLS THIS CODE USES</h2><p className="breakdown-intro"><CodeProse language={language} text={language === "cpp" ? "#include makes tools from a library header available before the program is built. A header describes those tools; including it does not install anything." : language === "csharp" ? "using lets you write shorter names for tools in a namespace, which is a group of related names. It does not install or run those tools." : language === "python" ? "import makes tools from a module available. A module is a collection of Python code. from … import … picks a particular tool from that collection." : "import makes named tools from another module available in this file. The modules shown here are built into Node.js."} /></p>{cards(imports)}</section>}
+    {imports.length > 0 && <section className="code-breakdown import-breakdown" aria-label="Import breakdown"><h2 className="breakdown-label">IMPORTS · TOOLS THIS CODE USES</h2><p className="breakdown-intro"><CodeProse language={language} contextCode={lesson.answer} text={language === "cpp" ? "`#include` makes tools from a library header available before the program is built. A header describes those tools; including it does not install anything." : language === "csharp" ? "`using` lets you write shorter names for tools in a namespace, which is a group of related names. It does not install or run those tools." : language === "python" ? "`import` makes tools from a module available. A module is a collection of Python code. `from … import …` picks a particular tool from that collection." : "`import` makes named tools from another module available in this file. The modules shown here are built into Node.js."} /></p>{cards(imports)}</section>}
     {setup.length > 0 && <section className="code-breakdown" aria-label="Program setup breakdown"><h2 className="breakdown-label">PROGRAM SETUP</h2>{cards(setup)}</section>}
   </div>;
 }
