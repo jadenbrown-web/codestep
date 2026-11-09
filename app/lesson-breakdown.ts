@@ -260,6 +260,10 @@ const htmlTags: Record<string, [string, string]> = {
   sub: ['Lower the text', 'Lowers text below the normal line, as in a chemical formula.'],
   sup: ['Raise the text', 'Raises text above the normal line, as in a power or a footnote number.'],
 };
+for (let level = 1; level <= 6; level++) htmlTags[`h${level}`] = [
+  `Heading level ${level}`,
+  level === 1 ? 'The main heading for the page. Use it to describe what this page is about.' : `A level-${level} heading for a section within the level above it. Choose heading levels to organise the page, rather than just to change text size.`,
+];
 const htmlAttributes: Record<string, [string, string]> = {
   href: ['Choose a link destination', 'Gives the page or address a link opens. You choose the destination.'],
   src: ['Choose a media file', 'Gives the path or address of an image, video, or audio file. Use the name of the file you actually saved.'],
@@ -292,7 +296,6 @@ function webParts(lesson: LessonContent, language: string, existing: BreakdownPa
     for (const match of lesson.answer.matchAll(/<([a-z][\w-]*)([^>]*)>/gi)) {
       const tag = match[1].toLowerCase();
       if (htmlTags[tag] && !existing.some(part => part.code === tag)) add(`<${tag}>`, htmlTags[tag]);
-      if (/^h[1-6]$/.test(tag) && !existing.some(part => /^h[1-6]$/.test(part.code))) add('<h1> … <h6>', ['Choose a heading level', 'h1 is the main heading. h2 to h6 give smaller levels of headings inside sections. Choose the level for the structure of the page, not just its text size.']);
       for (const attribute of Object.keys(htmlAttributes)) if (new RegExp(`\\b${attribute}(?:\\s*=|\\s|$)`, 'i').test(match[2])) add(attribute, htmlAttributes[attribute]);
       for (const inline of match[2].matchAll(/style\s*=\s*["']([^"']*)["']/gi)) cssSources.push(inline[1]);
     }
