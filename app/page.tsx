@@ -295,7 +295,7 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "setInterval",
           "name": "Repeat checks",
-          "meaning": "Runs the callback repeatedly with a delay between checks."
+          "meaning": "Runs the same function again after each delay. Here, that function checks whether it is time to continue."
         },
         {
           "code": "clearInterval(timer)",
@@ -363,7 +363,7 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "new Car(\"Ford\", 2014)",
           "name": "Create an instance",
-          "meaning": "Calls the constructor and creates one Car object."
+          "meaning": "Makes one object from the Car class. Its setup function uses the starting values inside the parentheses."
         }
       ]
     },
@@ -816,7 +816,7 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "readdirSync",
           "name": "List the folder",
-          "meaning": "Reads directory entries synchronously. Simple for this small terminal example; it blocks until finished."
+          "meaning": "Reads the names of files and folders. Here, the program waits for that list before moving on."
         },
         {
           "code": "withFileTypes: true",
@@ -1066,7 +1066,7 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "await",
           "name": "Wait here",
-          "meaning": "Continues this flow after the asynchronous wait finishes."
+          "meaning": "Waits for this task to finish, then continues with the next instruction here."
         },
         {
           "code": "2000",
@@ -1201,7 +1201,7 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "public",
           "name": "Allow outside access",
-          "meaning": "Lets code outside Car use this constructor or property."
+          "meaning": "Allows other code to use this object’s setup function or saved value."
         },
         {
           "code": "{ get; set; }",
@@ -1211,7 +1211,7 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "this.Name = name",
           "name": "Store the starting value",
-          "meaning": "this.Name is this car object's property; name is the input received by its constructor."
+          "meaning": "this.Name is a value saved on this object. Here, the value passed into the setup function is saved there so the object can use it later."
         },
         {
           "code": "static void Main()",
@@ -2278,12 +2278,12 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": ";",
           "name": "Rule ending",
-          "meaning": "Ends this CSS declaration so another can follow."
+          "meaning": "Ends one CSS setting so another can follow."
         },
         {
           "code": "{ ... }",
           "name": "Group the declarations",
-          "meaning": "Groups the declarations applied to this selector."
+          "meaning": "Keeps the style settings together. Here, they apply to the elements named before the opening brace."
         }
       ]
     },
@@ -2443,7 +2443,7 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "def correct():",
           "name": "Define a function",
-          "meaning": "Names a function with no parameters."
+          "meaning": "Makes a function that needs no starting values. Use its name followed by () to run its instructions."
         },
         {
           "code": "correct()",
@@ -3453,7 +3453,7 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "Car myCar1(\"Ford\", 2014)",
           "name": "Create an object",
-          "meaning": "Creates myCar1 by calling the Car constructor with Ford and 2014. This form does not need new."
+          "meaning": "Makes a Car object with its starting name and year. The setup function receives Ford and 2014. In this C++ form, you do not write new."
         }
       ],
       "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
@@ -3700,7 +3700,7 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "std::random_device{}()",
           "name": "Seed the generator",
-          "meaning": "Creates a seed source and asks it for a value used to initialise the generator."
+          "meaning": "Gets an unpredictable starting value for the random-number tool. This helps different runs produce different choices."
         },
         {
           "code": "std::mt19937 generator(...)",
@@ -3873,7 +3873,7 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "#include <filesystem>",
           "name": "Use filesystem tools",
-          "meaning": "Makes C++17 filesystem declarations available."
+          "meaning": "Makes the C++ file-and-folder tools available. These examples need a compiler that supports C++17 or newer."
         },
         {
           "code": "std::filesystem::path",
@@ -4019,7 +4019,7 @@ const lessons: Record<Language, Lesson[]> = {
         {
           "code": "std::random_device{}()",
           "name": "Seed the generator",
-          "meaning": "Creates a seed source and asks it for a value used to initialise the generator."
+          "meaning": "Gets an unpredictable starting value for the random-number tool. This helps different runs produce different choices."
         },
         {
           "code": "std::mt19937 generator(...)",

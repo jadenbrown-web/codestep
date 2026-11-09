@@ -1632,3 +1632,11 @@ html[data-theme="dark"]{--scrollbar-thumb:#607a6b}
 .file-example-code{position:relative;min-width:0}
 .file-example-code>.copy-code-control{position:absolute;top:8px;right:8px}
 .file-pair .file-example-code>pre{padding-right:56px;white-space:pre-wrap;overflow-wrap:anywhere}
+
+/* Align the visible copy icon with the first code line while retaining its hit area. */
+.visual-example-code>.copy-code-control .copy-code-button,.tag-card-heading>.copy-code-control .copy-code-button{align-items:flex-start;padding-top:0}
+.reference-workspace .tag-card-heading .copy-code-button svg{height:calc(clamp(10px,1.3cqw,12px)*1.2)}
+.file-example-code>.copy-code-control{top:14px}
+.file-example-code .copy-code-button{align-items:flex-start}
+.colour-code-row{align-items:flex-start}
+.colour-code-row>code{font-size:12px;line-height:1.3}

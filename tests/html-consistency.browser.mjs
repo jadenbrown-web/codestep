@@ -39,6 +39,12 @@ try{
   assert.equal(await root.locator('.lesson-actions .copy-code-button').count(),0,'no example copy control among navigation icons');
   const misplaced=await root.locator('.copy-code-button').evaluateAll(es=>es.filter(e=>!e.closest('.visual-example-code,.tag-card-heading,.file-example-code')).map(e=>e.getAttribute('aria-label')));
   assert.deepEqual(misplaced,[],'each copy button is beside the code it copies');
+  const alignment=await root.locator('.visual-example-code,.tag-card-heading,.file-example-code').evaluateAll(es=>es.map(e=>{
+   const code=e.querySelector('code'),icon=e.querySelector('.copy-code-button svg');
+   if(!code||!icon)return null;const c=code.getBoundingClientRect(),i=icon.getBoundingClientRect();
+   return {text:code.textContent.slice(0,30),icon:i.y+i.height/2,first:c.y+parseFloat(getComputedStyle(code).lineHeight)/2,difference:Math.abs((i.y+i.height/2)-(c.y+parseFloat(getComputedStyle(code).lineHeight)/2))};
+  }).filter(Boolean));
+  for(const item of alignment)assert.ok(item.difference<1,`${kind}: copy icon aligns with the first code line (${JSON.stringify(item)})`);
   if(width>850){
    const offsets=await root.evaluate(el=>{
     const pane=el.firstElementChild;const rect=pane.getBoundingClientRect();

@@ -71,7 +71,7 @@ export function importBreakdown(lesson: LessonContent, language: string): Breakd
       [/\b(?:List|Dictionary|HashSet)</, 'System.Collections.Generic', 'Use collections'],
     ] as const;
     for (const [pattern, namespace, name] of implicit) {
-      if (pattern.test(lesson.answer) && !result.some(part => part.code === `using ${namespace};`)) result.push({ code: `using ${namespace};`, name: `${name} · often automatic`, meaning: `New .NET console projects commonly include this using automatically, so you may not see this line in the example. It makes names from ${namespace} available without their full prefix.` });
+      if (pattern.test(lesson.answer) && !result.some(part => part.code === `using ${namespace};`)) result.push({ code: `using ${namespace};`, name: `${name} · often automatic`, meaning: `New .NET console projects commonly include this using automatically, so you may not see this line in the example. It lets you use tools from ${namespace} without writing that long group name before each tool.` });
     }
   }
   return [...new Map(result.map(part => [part.code, part])).values()];
@@ -120,7 +120,7 @@ const plainParts: Record<string, [string, string, string?]> = {
 const patterns: Record<string, BreakdownPart> = {
   'await input.question(...)': { code: 'await reader.question("…")', name: 'Ask and wait for a reply', meaning: 'Shows the question and waits for someone to type a reply and press Enter. await waits for the reply before the next instruction runs. You choose the reader’s name.' },
   'input.close()': { code: 'reader.close()', name: 'Finish taking input', meaning: 'Tells Node you have finished asking questions. It closes the reader so the program can finish. You choose the reader’s name.' },
-  'std::time(nullptr)': { code: 'std::time(nullptr)', name: 'Read the clock', meaning: 'Gets a number that represents the current time. nullptr means no extra place to save a copy is being supplied.' },
+  'std::time(nullptr)': { code: 'std::time(nullptr)', name: 'Read the clock', meaning: 'Reads the computer’s clock. Here, the result is a number the next line can turn into a date and time. nullptr means no extra copy needs to be saved.' },
   'std::localtime(&now)': { code: 'std::localtime(&value)', name: 'Read local date and time', meaning: 'Turns a saved clock value into local calendar parts, such as the hour and minute. `&` passes the location of that saved value.' },
   '*std::localtime(&now)': { code: '*std::localtime(&value)', name: 'Copy the clock parts', meaning: 'The `*` reads the date-and-time details that localtime points to, so the program can save its own copy.' },
   'tm_hour / tm_min': { code: 'tm_hour / tm_min', name: 'Read the hour and minute', meaning: 'tm_hour holds the hour from 0 to 23. tm_min holds the minute from 0 to 59. The slash here means “or”; it is not a line to type.' },
@@ -129,14 +129,14 @@ const patterns: Record<string, BreakdownPart> = {
   'time.Minute': { code: 'value.Minute', name: 'Read the minute', meaning: 'The dot selects `Minute` from the saved time. Its value is from 0 to 59.' },
   'for name in names:': { code: 'for item in items:', name: 'Use each item', meaning: 'Repeats the indented instructions once for each item in the collection. You choose the item and collection names.' },
   'for (const auto& entry : words)': { code: 'for (const auto& item : collection)', name: 'Use each item', meaning: 'Repeats the instructions once for each item in the collection. auto works out the item’s type, `&` uses the existing item, and const prevents this loop from changing it.' },
-  'Car(std::string name, int year)': { code: 'ClassName(std::string text, int number)', name: 'Set up a new object', meaning: 'This constructor runs when a new object is made. Its name matches the class name. The values inside the parentheses provide its starting information.' },
-  'Car(string name, int year)': { code: 'ClassName(string text, int number)', name: 'Set up a new object', meaning: 'This constructor runs when a new object is made. Its name matches the class name. The values inside the parentheses provide its starting information.' },
-  'new Car("Ford", 2014)': { code: 'new ClassName("text", 123)', name: 'Make a new object', meaning: '`new` creates an object from this class. The values inside the parentheses are passed to its constructor. You choose the class name and starting values.' },
-  'public string Name': { code: 'public string PropertyName', name: 'Allow access to text', meaning: 'public lets other code use this property. `string` says it holds text. You choose the property name.' },
+  'Car(std::string name, int year)': { code: 'ClassName(std::string text, int number)', name: 'Set up a new object', meaning: 'This setup function runs when a new object is made. Its name matches the class name. The values inside the parentheses provide its starting information.' },
+  'Car(string name, int year)': { code: 'ClassName(string text, int number)', name: 'Set up a new object', meaning: 'This setup function runs when a new object is made. Its name matches the class name. The values inside the parentheses provide its starting information.' },
+  'new Car("Ford", 2014)': { code: 'new ClassName("text", 123)', name: 'Make a new object', meaning: '`new` creates an object from this class. The values inside the parentheses are passed to its setup function. You choose the class name and starting values.' },
+  'public string Name': { code: 'public string PropertyName', name: 'Allow access to text', meaning: 'public lets other code use this saved value. `string` says it holds text. You choose the value’s name.' },
   'this.Name = name': { code: 'this.PropertyName = value', name: 'Save an object’s value', meaning: '`this` means the current object. The equals sign stores the value on the right in its property on the left.' },
   'string? answer': { code: 'string? value', name: 'Allow text or no value', meaning: '`string` holds text. The question mark also allows null, meaning there may be no text value yet.' },
-  'self.name': { code: 'self.attribute', name: 'Use this object’s value', meaning: '`self` means the object this method is working with. The dot selects one of its saved values. You choose the attribute name.' },
-  'this->name': { code: 'this->member', name: 'Use this object’s value', meaning: '`this` points to the current object. The arrow selects a value that belongs to that object. You choose the member name.' },
+  'self.name': { code: 'self.attribute', name: 'Use this object’s value', meaning: '`self` means the object this function is working with. Here, the dot chooses one value saved on that object. You choose the value’s name.' },
+  'this->name': { code: 'this->member', name: 'Use this object’s value', meaning: '`this` points to the current object. The arrow selects a value that belongs to that object. You choose the saved value’s name.' },
   'class Car': { code: 'class ClassName', name: 'Make a class', meaning: '`class` starts a plan for a kind of object. You choose the class name. Its body describes the values and actions its objects have.' },
   'print(getMessage())': { code: 'print(functionName())', name: 'Use a function’s result', meaning: 'The inner function runs first. Its returned value is passed to `print` so it can be shown in the console.' },
   'Console.WriteLine(getMessage())': { code: 'Console.WriteLine(functionName())', name: 'Use a function’s result', meaning: 'The inner function runs first. Its returned value is passed to Console.WriteLine so it can be printed.' },
@@ -320,6 +320,128 @@ function webParts(lesson: LessonContent, language: string, existing: BreakdownPa
   return [...new Map(result.map(part => [part.code, part])).values()];
 }
 
+/** Explain the job first, then connect it to the code in this lesson. */
+function beginnerPart(part: BreakdownPart, lesson: LessonContent, language: string): BreakdownPart {
+  const source = lesson.answer;
+  const code = part.code;
+  const withMeaning = (meaning: string, name = part.name) => ({ ...part, name, meaning });
+  if (language === 'html' && /^<!DOCTYPE/i.test(code)) return withMeaning('Tells the browser to use modern HTML rules for this page. Here, it belongs at the very top of the file, before `<html>`.', 'Choose modern HTML rules');
+  if (language === 'css' && /^#[A-Za-z_][\w-]*$/.test(code) && source.includes(code + ' ')) return withMeaning(`Chooses one HTML element with a matching id. Here, \`${code}\` applies these styles to the element with \`id="${code.slice(1)}"\`. You can choose your own label, but the two names must match.`, 'Style one specific element');
+  const tag = language === 'html' ? code.match(/^<([a-z][a-z0-9]*)\b/i)?.[1].toLowerCase() : undefined;
+  if (tag && htmlTags[tag]) {
+    if (/^h[1-6]$/.test(tag)) {
+      const level=Number(tag[1]);
+      return withMeaning(level===1 ? 'Makes the main heading for the page. Here, the text between `<h1>` and `</h1>` introduces what the page is about.' : `Makes a heading for a section at level ${level}. Use it for a smaller section under a \`<h${level-1}>\` heading. Here, the heading levels show how the page’s sections fit together.`, htmlTags[tag][0]);
+    }
+    if (tag === 'html') return withMeaning('Contains the page’s HTML. Put the page’s other elements between `<html>` and `</html>`.', 'The whole HTML page');
+    if (tag === 'body') return withMeaning('Contains the content people can see, such as text, links and images. Here, `<body>` and `</body>` mark where that visible content belongs.', 'Visible page content');
+    if (tag === 'div') return withMeaning('Groups content together so you can style or arrange it as one section. ' + ((source.match(/<div\b/g) ?? []).length > 1 ? 'Here, each `<div>` creates a separate area of content.' : 'Here, it keeps this section’s content together.'), 'Group page content');
+    if (tag === 'head') return withMeaning('Contains information about the page, such as the browser-tab title and the CSS file to use. Put the visible page content in `<body>` instead.', 'Information about the page');
+    if (tag === 'title') return withMeaning('Names the browser tab. Here, the text between `<title>` and `</title>` appears on the tab, rather than as a heading inside the page.', 'Name the browser tab');
+    if (tag === 'p') return withMeaning('Groups text into a paragraph. Here, the browser shows the text between `<p>` and `</p>` as one paragraph, with space before and after it.', 'Make a paragraph');
+    if (tag === 'a') return withMeaning('Makes a clickable link. Here, the text between `<a>` and `</a>` is what people click; `href` chooses the page or address to open.', 'Make a link');
+    return withMeaning(htmlTags[tag][1], htmlTags[tag][0]);
+  }
+  const attribute = language === 'html' ? code.match(/^(href|src|alt|id|class|style|lang|charset|controls|onclick)(?:\s|=|$)/)?.[1] : undefined;
+  if (attribute && new RegExp(`<[^>]*\\b${attribute}(?:\\s*=|\\s|>)`).test(source)) {
+    if (attribute === 'style') {
+      const rules = [...source.matchAll(/\bstyle\s*=\s*(?:"([^"]*)"|'([^']*)')/g)].map(match => match[1] ?? match[2]).join(';');
+      const appearance: Record<string,string> = {'background-color':'the background colour',color:'the text colour','font-family':'the font','text-align':'how the text lines up',border:'the border','border-radius':'the rounded corners'};
+      const jobs = [...new Set([...rules.matchAll(/([\w-]+)\s*:/g)].map(match => appearance[match[1]] ?? 'the element’s appearance'))];
+      return withMeaning('Controls how this element looks. ' + (jobs.length ? `Here, it sets ${jobs.join(' and ')}.` : 'Write CSS rules inside its quotes to change this element’s appearance.'), 'Style this element');
+    }
+    const value = source.match(new RegExp(`\\b${attribute}\\s*=\\s*(?:"([^"]*)"|'([^']*)')`));
+    const actual = value?.[1] ?? value?.[2];
+    if (attribute === 'href') return withMeaning('Chooses the page or address a link opens. ' + (actual ? `Here, clicking the link opens \`${actual}\`.` : 'Put the destination inside its quotes.'), 'Choose a link destination');
+    if (attribute === 'src') return withMeaning('Tells the browser which image, video or audio file to load. ' + (actual ? `Here, it loads \`${actual}\`. Save that file where this path points.` : 'Use the filename or address of the file you want to show.'), 'Choose a media file');
+    if (attribute === 'alt') return withMeaning('Describes an image in words for people who cannot see it. Here, the description can be read aloud by a screen reader or shown if the image cannot load.', 'Describe an image');
+    if (attribute === 'class') return withMeaning('Gives elements a shared label so the same CSS rule can style them. Here, the label in the HTML must match the name after the dot in the CSS. You can choose your own label.', 'Group elements for styling');
+    if (attribute === 'id') return withMeaning('Gives one element a unique label so CSS or JavaScript can find it. Here, use the same label in the HTML and the code that looks for it.', 'Find one specific element');
+    return withMeaning(htmlAttributes[attribute][1], htmlAttributes[attribute][0]);
+  }
+  const property = (language === 'html' || language === 'css') ? code.match(/^(background-color|color|text-align|font-family|border-radius|border-left|border-bottom|border)(?=\s*[:=]|$)/)?.[1] : undefined;
+  if (property) {
+    const value = source.match(new RegExp(`(?:^|[;{\\s"'])${property}\\s*:\\s*([^;}"']+)`))?.[1].trim();
+    if (property === 'background-color') return withMeaning('Sets the colour behind the content. ' + (value ? `Here, \`${value}\` ${/^[a-z]+$/i.test(value) ? `makes the background ${value}` : "chooses the background colour"}.` : 'Choose a colour name or a hex value for the background.'), 'Choose the background colour');
+    if (property === 'color') return withMeaning('Sets the colour of the text. ' + (value ? `Here, \`${value}\` ${/^[a-z]+$/i.test(value) ? `makes the text ${value}` : "chooses the text colour"}.` : 'Use a colour name or hex value after the colon.'), 'Choose the text colour');
+    if (property === 'text-align') return withMeaning('Lines up text inside its area. ' + (value ? `Here, \`${value}\` ${value === "center" ? "puts the text in the middle of its area" : `lines up the text to the ${value}`}.` : 'Use left, right or center to choose its position.'), 'Line up text');
+    if (property === 'font-family') return withMeaning('Chooses the font: the shape of the letters. Here, each font preview shows a different choice. A named font works when it is available on the device; a general choice such as `sans-serif` tells the browser what kind of font to use if the named one is unavailable.', 'Choose a font');
+    if (property === 'border') {
+      const pieces = value?.match(/^(\S+)\s+(\S+)\s+(.+)$/);
+      return withMeaning('Draws a line around the content. The three parts choose its thickness, line style and colour. ' + (pieces ? `Here, \`${pieces[1]}\` sets the thickness, \`${pieces[2]}\` chooses the kind of line, and \`${pieces[3]}\` chooses the colour.` : 'For example, `5px dotted blue` gives a blue dotted line five pixels thick.'), 'Draw a border');
+    }
+    if (property === 'border-radius') return withMeaning('Rounds the corners of the box. Here, a larger number makes the corners more curved; it does not make the border thicker.', 'Round the corners');
+    return withMeaning(property === 'border-left' ? 'Draws a line along the left edge only. The other three edges are left unchanged by this rule.' : 'Draws a line along the bottom edge only. The other three edges are left unchanged by this rule.');
+  }
+  const basics: Record<string, string> = {
+    let: 'Creates a variable: a name that stores a value so you can use it again. Give it a starting value with `=`. You can save a different value under that name later.',
+    function: 'Makes a function: a group of instructions you can run by name. Defining it keeps the instructions ready; calling its name followed by `()` runs them.',
+    def: 'Makes a function: a group of instructions you can run by name. Here, the indented lines belong to the function. They run when you call its name followed by `()`.',
+    if: 'Makes a decision. It runs the next group of instructions only when the check is true, meaning yes.',
+    else: 'Provides the other choice after `if`. Here, these instructions run when the `if` check does not pass.',
+    while: 'Repeats a group of instructions while its check is true. Here, the program checks again before starting each repeat.',
+    break: 'Stops the nearest loop straight away. Here, the program continues with the instruction after the loop.',
+    'break;': 'Stops the nearest loop straight away. Here, the program continues with the instruction after the loop.',
+    return: 'Finishes this function and sends a value back to the line that called it. That line can save the result, print it, or use it in another calculation.',
+    '=': 'Saves the value on the right under the name on the left. Reading that name later gets the saved value. One equals sign saves a value; `==` compares two values.',
+    '==': 'Compares two values without changing them. It gives true, meaning yes, when they match, and false, meaning no, when they differ.',
+    '&&': 'Combines two checks. Both must be true for the combined check to pass.',
+    and: 'Combines two checks. Both must be True for the combined check to pass.',
+    or: 'Combines two checks. At least one must be True for the combined check to pass.',
+    not: 'Reverses a yes-or-no result. Here, True becomes False and False becomes True.',
+    int: 'Tells the program this value is a whole number, such as 0, 12 or -3.',
+    double: 'Tells the program this value can include decimal places, such as 2.5.',
+    bool: 'Tells the program this value is a yes-or-no answer: true or false.',
+    string: 'Tells the program this value is text, such as a word or a sentence.',
+    'std::string': 'Stores text, such as a word or a sentence. Here, it lets the program keep text under a name and use it later.',
+    void: 'Says this function finishes without sending a value back to the line that called it. The function can still do work, such as showing a message.',
+    var: 'Asks C# to work out the kind of value from its starting value. Here, the variable can hold a different value later, but it must stay the same kind of value.',
+    auto: 'Asks C++ to work out the kind of value from the code on the right. Here, you can give the value a name without writing its type yourself.',
+    await: 'Waits for a result before continuing with the next instruction here. For example, the program may need to wait for a reply or a delay to finish.',
+    async: 'Marks a function that can wait for work to finish. It gives back a promise: a result that may arrive later. Inside it, `await` can wait for that result.',
+    class: 'Makes a plan for creating objects. An object keeps related values and actions together; each object made from the plan can have its own saved values.',
+    new: 'Creates a new object from a class. Here, the values inside the parentheses give the new object its starting information.',
+    constructor: 'Sets up an object when it is created. Here, it uses the values in parentheses to fill in the object’s starting information.',
+    this: 'Means the object this function is working with. Here, it lets the function read or change values saved on that object.',
+    public: 'Allows other code to use this part of an object. Here, it makes the named value or function available from outside the class.',
+    static: 'Belongs to the class itself. Here, you can use this part without first creating a separate object.',
+    ';': language === 'css' ? 'Ends one CSS rule setting so another can follow. Here, it separates a property and its value from the next setting.' : 'Marks the end of an instruction. Here, it tells the language where this instruction finishes.',
+    'process.stdin': 'Receives text typed in the terminal. Here, it connects the reader to the person’s reply.',
+    'process.stdout': 'Sends text to the terminal. Here, it lets the reader show a question before the person types a reply.',
+  };
+  if (code === 'const' && (language === 'javascript' || language === 'html')) return withMeaning('Creates a variable whose saved value cannot be replaced. If the value is a list or an object, its contents can still change. Here, use `let` instead if you need to save a different value under the same name.');
+  if (code === 'const' && language === 'cpp') return withMeaning('Makes this value read-only through this name. Here, the code can use the value but cannot replace it through that name.');
+  if (code === 'const' && language === 'csharp') return withMeaning('Gives a fixed value a name. Its value must be known before the program starts, such as a number or a piece of text. Here, the code can read it but cannot replace it.');
+  if (code === 'for' || code === 'foreach') return withMeaning('Repeats a group of instructions. ' + (/\b(?:of|in)\b|foreach|for\s*\([^;]*:/.test(executableText(source, language)) ? 'Here, it uses one item at a time from a collection, such as a list or dictionary.' : 'Here, it checks the loop’s condition before each repeat and stops when that check does not pass.'));
+  if (code === 'new' && /new\s+\w+(?:<[^>]+>)?\(\s*\)/.test(source)) return withMeaning('Creates a new object from a class. Here, the parentheses are empty, so no starting values are passed in.');
+  if (language === 'css' && /^\{\s*(?:…|\.\.\.)?\s*\}$/.test(code)) return withMeaning('Keeps the style settings together. Here, the part before { chooses what to style. Put the settings between { and }.', 'Group the style settings');
+  if (basics[code]) return withMeaning(basics[code], code === ';' && language === 'css' ? 'Finish a style setting' : part.name);
+  if (code === 'setTimeout' || code === 'setInterval') {
+    const delay=source.match(/},\s*(\d+)\s*\)/)?.[1];
+    const seconds=delay ? Number(delay)/1000 : undefined;
+    return withMeaning(code==='setTimeout' ? `Sets a timer to run a function once later. ${seconds ? `Here, ${delay} milliseconds is ${seconds} second${seconds===1?'':'s'}.` : 'Here, the number after the function chooses the delay.'} Other instructions can continue while the timer waits.` : `Sets a timer that runs the same function again and again. ${seconds ? `Here, it aims to run about once every ${seconds} second${seconds===1?'':'s'}.` : 'Here, the number after the function chooses the time between runs.'} It keeps repeating until you stop it.`);
+  }
+  if (code === '()' && /\(\)\s*=>/.test(source)) return withMeaning('The parentheses list the starting values a function receives. Here, they are empty, so this timer function needs no starting values.', 'No starting values');
+  if (code === '=>') return withMeaning('Makes a short function. The left side lists any starting values it receives; the right side gives the instructions or value it produces.', 'Make a short function');
+  if (code === '() => { ... }') return withMeaning('Makes a function for the timer to run. Here, the instructions between { and } run whenever the timer calls this function.', 'Code for the timer');
+  if (/^def functionName/.test(code)) return withMeaning('Makes a function: a group of instructions you can run by name. Here, the lines indented underneath belong to it. Choose the function’s name yourself.', 'Make a function');
+  if (/^time\.sleep\(\d+(?:\.\d+)?\)$/.test(code)) return withMeaning(`Pauses the program for the number of seconds in parentheses. Here, \`${code.match(/\(([^)]+)\)/)![1]}\` is the wait in seconds before the next instruction can run.`, 'Wait before continuing');
+  if (['print','console.log','Console.WriteLine'].includes(code)) {
+    const literal = source.match(/(?:print|console\.log|Console\.WriteLine)\(\s*("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/);
+    const message = literal?.[1].slice(1,-1);
+    return withMeaning('Shows text or a value in the console, the program’s text output area. ' + (message && !/[\\\n`]/.test(message) && message.length < 70 ? `Here, it displays “${message}”.` : 'Here, the values inside the parentheses are what the program shows.'));
+  }
+  if (code === 'std::cout') return withMeaning('Names the console output tool. The console is the program’s text output area. Here, messages are sent to this tool so you can read them.', 'Print text');
+  if (code === '<<') return withMeaning('Sends the value on its right to the output tool on its left. Here, `std::cout` receives the text or value so it can appear in the console.');
+  if (/^(?:console\.log|Console\.WriteLine|print)\(.*\(\)/.test(code)) return withMeaning('First runs the function inside the parentheses. Here, the value it sends back goes to the print tool, which shows it in the console.', 'Print a function’s result');
+  if (/^ClassName\(/.test(code)) return withMeaning('Sets up a new object when it is created. Here, the values inside the parentheses provide its starting information. You choose the class name and the values to use.');
+  if (/^(?:std::vector|List<|(?:string|int)\[\])/.test(code)) return withMeaning('Keeps several values in order so the program can use them as a collection. Here, each value has a position; position 0 is the first item.');
+  if (/^(?:std::map|Dictionary<)/.test(code)) return withMeaning('Keeps pairs of labels and values. The label is called a key: use it to find its matching value. Here, a word can be the key and its translation the value.');
+  if (/^(?:std::set|HashSet<|new Set\(|set\()/.test(code)) return withMeaning('Keeps only one copy of each value. Here, adding the same value again does not create another copy, so repeated names are removed.');
+  if (code === '{}' && language === 'python') return withMeaning('Makes an empty dictionary: a collection of labels paired with values. Here, add word-and-translation pairs so the program can look up a translation.');
+  return part;
+}
+
 export function syntaxBreakdown(lesson: LessonContent, language: string): BreakdownPart[] {
   const parts = (lesson.parts ?? []).flatMap(part => {
     if (/^(?:#include|import |from |using )/.test(part.code)) return [];
@@ -351,12 +473,12 @@ export function syntaxBreakdown(lesson: LessonContent, language: string): Breakd
     if (/std::/.test(lesson.answer)) parts.push({ code: '::', name: 'Find a tool inside a group', meaning: 'In std::cout, std is the group and cout is the tool inside it. The two colons connect the group name to the tool name.' });
     if (/std::cout\s*<</.test(lesson.answer)) parts.push({ code: '<<', name: 'Send a value to the console', meaning: 'With std::cout, << sends the value on its right to the console. You can use it again to print another value on the same line.' });
   }
-  return [...new Map([...missingKeywordParts(lesson, language, parts), ...parts, ...webParts(lesson, language, parts)].map(part => [part.code, part])).values()];
+  return [...new Map([...missingKeywordParts(lesson, language, parts), ...parts, ...webParts(lesson, language, parts)].map(part => [part.code, part])).values()].map(part => beginnerPart(part, lesson, language));
 }
 
 export function setupBreakdown(lesson: LessonContent, language: string): BreakdownPart[] {
   if (language !== 'cpp' || !/\bint\s+main\s*\(/.test(lesson.answer)) return [];
-  const parts = [{ code: 'int main() { … }', name: 'Start the program', meaning: 'C++ starts this program inside main. Put the program’s starting instructions between its braces.' }];
+  const parts = [{ code: 'int main() { … }', name: 'Start the program', meaning: 'This is where the C++ program starts. Here, the instructions between the opening { and closing } run when you start the program.' }];
   if (/return\s+0\s*;/.test(lesson.answer)) parts.push({ code: 'return 0;', name: 'Finish successfully', meaning: 'Ends `main` and tells the computer the program finished successfully. It does not print 0. At the end of `main`, C++ can do this automatically.' });
   return parts;
 }

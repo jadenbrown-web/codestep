@@ -120,3 +120,43 @@ test('terminal-input explanations stay in shared cards without a legacy duplicat
   assert.ok(parts.some(part=>part.code.startsWith('createInterface(')));
   assert.equal(importBreakdown(lesson,'javascript').filter(part=>part.code.includes('createInterface')).length,1);
 });
+
+test('beginner HTML descriptions connect the part to the displayed example',()=>{
+ const lesson={title:'Colour two areas',eyebrow:'01 · Div sections',answer:'<html><body><div style="background-color: red;">First</div><div style="background-color: blue;">Second</div></body></html>'};
+ const cards=syntaxBreakdown(lesson,'html');
+ const meaning=code=>cards.find(p=>p.code===code)?.meaning;
+ assert.match(meaning('<html>'),/Contains the page’s HTML/);
+ assert.match(meaning('<body>'),/content people can see/);
+ assert.match(meaning('<div>'),/each `<div>` creates a separate area/);
+ assert.match(meaning('style'),/Here, it sets the background colour/);
+ assert.match(meaning('background-color'),/`red` makes the background red/);
+});
+test('background and text colour explanations use their own actual values',()=>{
+ const lesson={title:'Style text',eyebrow:'01 · Text styling',answer:'p { background-color: red; color: blue; text-align: center; }'};
+ const cards=syntaxBreakdown(lesson,'css');
+ assert.match(cards.find(p=>p.code==='background-color').meaning,/background red/);
+ assert.match(cards.find(p=>p.code==='color').meaning,/text blue/);
+ assert.match(cards.find(p=>p.code==='text-align').meaning,/middle of its area/);
+});
+test('border explanation breaks down the values used by the current rule',()=>{
+ const cards=syntaxBreakdown({title:'A border',eyebrow:'01 · Borders',answer:'p { border: 2px solid green; }'},'css');
+ const text=cards.find(p=>p.code==='border').meaning;
+ for(const term of ['`2px`','`solid`','`green`'])assert.ok(text.includes(term));
+ assert.doesNotMatch(text,/5px dotted blue/);
+});
+test('JavaScript classes inside HTML keep their programming explanation',()=>{
+ const cards=syntaxBreakdown({title:'A class',eyebrow:'01 · JavaScript in HTML',answer:'<script>class Example {}</script>'},'html');
+ assert.match(cards.find(p=>p.code==='class').meaning,/objects/);
+ assert.doesNotMatch(cards.find(p=>p.code==='class').meaning,/CSS rule/);
+});
+test('shared programming basics explain the action before specialised terminology',()=>{
+ for(const [language,answer,term,phrase] of [
+  ['javascript','function greet() { return "Hi"; }','function','group of instructions'],
+  ['python','def greet():\n    return "Hi"','def','indented lines'],
+  ['csharp','public class Example { public static void Run() {} }','void','without sending a value back'],
+  ['cpp','int main() { auto value = 1; }','auto','work out the kind of value'],
+ ]){
+  const card=syntaxBreakdown({title:'Basics',eyebrow:'01 · Basics',answer},language).find(p=>p.code===term);
+  assert.ok(card.meaning.includes(phrase),language);
+ }
+});
