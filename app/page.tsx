@@ -3,6 +3,9 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 
 import CodeBlocks from "./CodeBlocks";
+import InputRuntimeExamples from "./InputRuntimeExamples";
+import RunCommands from "./RunCommands";
+import {browserInputPatch, type InputRuntime} from "./input-runtimes";
 import CopyCodeButton from "./CopyCodeButton";
 import HtmlTextReference from "./HtmlTextReference";
 import FontReference from "./FontReference";
@@ -3492,7 +3495,7 @@ const lessons: Record<Language, Lesson[]> = {
       "title": "Ask for a name in VS Code",
       "explanation": "std::cout displays the question. std::string name declares a text variable. std::getline(std::cin, name) waits for a whole line and saves it in name. std::cout then prints Hello followed by that answer.",
       "note": "// Ask for a name and greet the user",
-      "prompt": "Create a name variable, then print Hello with a template string.",
+      "prompt": "Ask for a name with std::getline, then print Hello and that name.",
       "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  std::cout << \"What is your name?\";\n  std::string name;\n  std::getline(std::cin, name);\n  std::cout << \"Hello \" << name << \"\\n\";\n}",
       "output": [
         "What is your name?",
@@ -4646,7 +4649,9 @@ export default function Home() {
 
   const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0, cpp: 0, python: 0, html: 0, css: 0 });
 
-  const current = language ? lessons[language][index] : null;
+  const [inputRuntime, setInputRuntime] = useState<InputRuntime>("node");
+  const baseCurrent = language ? lessons[language][index] : null;
+  const current = useMemo(() => baseCurrent && language === "javascript" && baseCurrent.compareNode && inputRuntime === "browser" ? { ...baseCurrent, ...browserInputPatch() } : baseCurrent, [baseCurrent, language, inputRuntime]);
   const pinnedTopics = language ? (pinnedByLanguage[language] ?? []).slice(0, pinLimit) : [];
   const visibleLessons = language ? filterTopicLessons(lessons[language], null) : [];
   const openPinnedTopic = (topic: string) => {
@@ -4975,6 +4980,7 @@ export default function Home() {
           <div className="lesson-number">{String(index + 1).padStart(2, "0")} · {current!.eyebrow.split("·")[1]}</div>
           <h1>{current!.title}</h1>
           <p className="lesson-overview">{lessonOverview(current!)}</p>
+          {language === "javascript" && baseCurrent!.compareNode && <InputRuntimeExamples nodeCode={baseCurrent!.answer} selected={inputRuntime} onSelect={setInputRuntime} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax} />} />}
           <LessonBreakdown lesson={current!} language={language} />
           {current!.eyebrow.includes("Files and paths") && <details className="symbol-guide" open>
             <summary>Filename, file contents, and image text</summary>
@@ -4989,7 +4995,7 @@ export default function Home() {
             <h2>Run in a browser</h2>
             {current!.referenceKind === "pages" ? <p>Save the two examples as <InlineCode language="html" code="index.html" /> and <InlineCode language="html" code="page2.html" /> in the same folder. Open <InlineCode language="html" code="index.html" /> in your browser, then follow the links between the pages.</p> : language === "html" ? <p>Save your page as <InlineCode language="html" code="index.html" /> and open it in a browser. Short examples belong inside a complete HTML page. Save your changes and refresh the browser to see the result.</p> : <p>Save your CSS as <InlineCode language="css" code="styles.css" /> beside your HTML file. Add <code>{'<link rel="stylesheet" href="styles.css">'}</code> inside the HTML head. Save your changes and refresh the browser.</p>}
           </section>}
-          {current!.runHint && <section className="symbol-guide computer-run-guide" aria-label="Run this on your computer"><h2>Run this on your computer</h2><p><CodeProse text={current!.runHint} language={language} /></p>{current!.compareNode && <a href="examples/name.mjs" download>Download name.mjs</a>}</section>}
+          {current!.runHint && <section className="symbol-guide computer-run-guide" aria-label="Run this on your computer"><h2>Run this on your computer</h2><p><CodeProse text={current!.runHint} language={language} /></p>{current!.eyebrow.includes("Terminal input") && <RunCommands language={language} fileName={current!.fileName || challengeFile(language)} answer={current!.answer} />}{current!.compareNode && inputRuntime === "node" && <a href="examples/name.mjs" download>Download name.mjs</a>}</section>}
           {!current!.referenceOnly && <div className="tip">{blockMode ? "Tap or drag lesson blocks into your code, then choose Check code." : language === "python" ? "Type over the guide in the editor, then press Enter to check it. Python uses indentation for blocks; Tab inserts four spaces. Equivalent supported code is accepted." : "Type over the guide in the editor, then press Enter to check it. Capital letters are optional in typing practice."}</div>}
           </div>
         </aside>
