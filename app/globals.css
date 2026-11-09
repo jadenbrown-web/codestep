@@ -1680,3 +1680,18 @@ html[data-theme="dark"] .breakdown-section-kind,html[data-theme="dark"] .lesson-
 html[data-theme="dark"] .breakdown-section-heading{border-bottom-color:#bca15370}
 html[data-theme="dark"] .lesson-breakdown-sections .setup-breakdown{background:#172732;border-color:#70b7df}
 html[data-theme="dark"] .lesson-breakdown-sections .setup-breakdown>.breakdown-label{color:#93d3f4}
+
+/* Comparison drawers must not inherit the compact header-button dimensions. */
+.language-comparison .app-header .example-picker-list .lesson-list-row{display:flex;align-items:flex-start;width:100%;min-width:0}
+.language-comparison .app-header .example-picker-list .lesson-list-row>button:not(.topic-pin-button),html[data-theme] .language-comparison .app-header .example-picker-list .lesson-list-row>button:not(.topic-pin-button){position:relative;display:grid;grid-template-columns:minmax(0,1fr) 12px;flex:1 1 0%;width:auto;min-width:0;max-width:none;height:auto;min-height:70px;max-height:none;padding:10px 8px;gap:8px;white-space:normal;transform:none;text-align:left;line-height:1.4}
+.language-comparison .example-label{display:flex;flex-direction:column;align-items:flex-start;min-width:0;white-space:normal}
+.comparison-topic-unavailable{display:block;font:500 12px/1.45 var(--sans);color:var(--ui-muted);white-space:normal}
+.language-comparison-columns .comparison-card>.comparison-filebar{display:grid;grid-template-columns:minmax(0,1fr) 44px;grid-template-rows:44px;align-items:center;height:44px;min-height:44px;max-height:44px;padding:0 4px;overflow:hidden}
+.language-comparison .comparison-filebar>.comparison-file-tab{grid-column:1;grid-row:1;align-self:center;height:44px;min-height:44px;display:flex;align-items:center}
+.language-comparison .comparison-filebar>.copy-code-control{grid-column:2;grid-row:1;align-self:center;justify-self:end;position:relative;inset:auto;display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:0;padding:0}
+.language-comparison .comparison-filebar .copy-code-button{position:static;align-self:center;display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:0;padding:0;transform:none}
+.comparison-unavailable{margin:16px;padding:16px;border:1px solid var(--ui-border);border-left:4px solid #d9a52e;border-radius:8px;background:var(--ui-surface);color:var(--ui-text);font:500 15px/1.65 var(--sans);white-space:normal}
+@media(min-width:851px){
+ .language-comparison[open]:has(.example-picker-panel){padding-left:var(--side-drawer-width)}
+ .language-comparison:has(.example-picker-panel) .comparison-menu-backdrop{display:none}
+}

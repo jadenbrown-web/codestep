@@ -9,7 +9,7 @@ const source = fs.readFileSync('app/page.tsx', 'utf8');
 const ast = ts.createSourceFile('page.tsx', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
 const start = source.indexOf('{', source.indexOf('const lessons:'));
 const lessons = JSON.parse(source.slice(start, source.indexOf('\n};', start) + 2));
-const functions = ast.statements.filter(node => ts.isFunctionDeclaration(node) && ['matchingLesson', 'LanguageComparison'].includes(node.name?.text)).map(node => node.getText(ast)).join('\n');
+const functions = ast.statements.filter(node => ts.isFunctionDeclaration(node) && ['matchingLesson', 'comparisonUnavailable', 'LanguageComparison'].includes(node.name?.text)).map(node => node.getText(ast)).join('\n');
 const compiled = ts.transpileModule(functions, { compilerOptions: { jsx: ts.JsxEmit.React, target: ts.ScriptTarget.ES2022 } }).outputText;
 const pinModule = ts.transpileModule(fs.readFileSync("app/topic-pins.ts", "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
 const { firstTopicLessonIndex, pinnedLessonIndex, lessonTopic } = await import("data:text/javascript;base64," + Buffer.from(pinModule).toString("base64"));
@@ -158,7 +158,8 @@ test('a pin without an equivalent never substitutes another lesson in that topic
   assert.equal(comparison.activePin(), 'Repeat code every second');
   assert.equal(comparison.copies()[0], lessons.javascript.find(lesson => lesson.title === 'Repeat code every second').answer);
   assert.equal(comparison.copies()[1], '');
-  assert.match(comparison.html(), /No matching example is available/);
+  assert.match(comparison.html(), /cpp does not have JavaScript&#x27;s setInterval/);
+  assert.match(comparison.html(), /loop with a delay or a timer library/);
 });
 
 
