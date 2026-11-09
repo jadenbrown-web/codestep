@@ -33,3 +33,12 @@ test('headings also have individual breakdown cards',async()=>{
   for(let level=1;level<=6;level++) assert.equal(cards.filter(card=>card.code===`<h${level}>`).length,1);
   assert.ok(!cards.some(card=>card.code==='<h1> … <h6>'));
 });
+
+test('text elements keeps a separate copyable code example above the previews',()=>{
+ const html=renderToStaticMarkup(React.createElement(Component,{onNext(){}}));
+ assert.match(html,/Text elements code example/);
+ assert.ok(html.includes('&lt;h1&gt;Main heading&lt;/h1&gt;'));
+ assert.ok(html.includes('&lt;h2&gt;Main sections&lt;/h2&gt;'));
+ assert.ok(html.includes('Copy text elements example code'));
+ assert.ok(html.indexOf('Text elements code example')<html.indexOf('data-html-tag='));
+});

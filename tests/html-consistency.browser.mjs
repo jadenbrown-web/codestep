@@ -75,6 +75,8 @@ try{
    await root.getByRole('button',{name:'Copy font example code',exact:true}).click();
    assert.equal(await page.evaluate(()=>window.copied.at(-1)),`<p style="font-family: 'Courier New';">Courier New</p>`);
   }else if(kind==='text'){
+   await root.getByRole('button',{name:'Copy text elements example code',exact:true}).click();
+   assert.equal(await page.evaluate(()=>window.copied.at(-1)),'<h1>Main heading</h1>\n<h2>Main sections</h2>');
    await root.getByRole('button',{name:'Copy mark code',exact:true}).click();
    assert.equal(await page.evaluate(()=>window.copied.at(-1)),'<mark>Marked text</mark>');
   }else if(kind==='css'){

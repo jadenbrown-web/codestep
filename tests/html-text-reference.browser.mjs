@@ -19,6 +19,10 @@ try {
     await page.setViewportSize(viewport);
     await page.setContent(`<html data-theme="${theme}"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${css}</style><body><main class="lesson-shell reference-mode mobile-practice"><header class="app-header lesson-nav"></header><div class="lesson-layout drawer-closed"><aside class="lesson-drawer"></aside><aside class="lesson-copy"></aside><section class="workspace reference-workspace">${markup}</section></div></main></body></html>`);
     assert.equal(await page.locator('[data-html-tag]').count(),18);
+    const example=page.getByRole('region',{name:'HTML text examples'}).locator('[aria-label="Text elements code example"]');
+    assert.equal(await example.locator('.visual-example-code code').textContent(),'<h1>Main heading</h1>\n<h2>Main sections</h2>');
+    const position=await example.boundingBox();
+    assert.ok(position.y>=0&&position.y+position.height<viewport.height,'main example stays visible at the top');
     assert.equal(await page.locator('[data-html-tag] .copy-code-button').count(),18);
     assert.equal(await page.locator('.reference-pane-toolbar').count(),0);
     if(viewport.width>850) {
