@@ -46,9 +46,9 @@ There are two builds from the same React components and lessons:
 - `npm run build`: the existing Sites Worker app.
 - `npm run build:pages`: an independent static browser app in `pages-dist/`. It needs no Sites server or ChatGPT login. Language logos, examples, and WebAssembly code-checking grammars are bundled locally. Progress stays in the browser on each origin.
 
-The GitHub Actions workflow checks the app and builds both outputs. After checks pass on `main`, it publishes the standalone build to GitHub Pages. The website may be public while this source repository stays private. Visitors can inspect the browser JavaScript, HTML and CSS, but cannot edit the repository or deployed app without repository access. Never put secrets in browser code.
+The GitHub Actions workflow checks the app and builds both outputs. After checks pass on `main`, it publishes the standalone build to GitHub Pages. The user has authorized making both this source repository and the website public for free GitHub Pages hosting. Visitors can inspect the browser JavaScript, HTML and CSS, but cannot edit the repository or deployed app without repository access. Never put secrets in browser code.
 
-To activate hosting, open repository **Settings → Pages** and select **GitHub Actions** as the source. GitHub requires an eligible plan to publish Pages from a private repository. Do not make the repository public to bypass that restriction. After activation, rerun the CodeStep checks workflow. The expected URL is `https://jadenbrown-web.github.io/codestep/`; it is live only after a successful Pages deployment and URL verification.
+To activate hosting, open repository **Settings → Pages** and select **GitHub Actions** as the source. For free hosting, first make the repository public in **Settings → General → Danger Zone → Change repository visibility**, as authorized by the owner. This exposes source code and commit history. The connected integration cannot change visibility or activate Pages (HTTP 403); the owner must do this in GitHub settings. After activation, rerun the CodeStep checks workflow. The expected URL is `https://jadenbrown-web.github.io/codestep/`; it is live only after a successful Pages deployment and URL verification.
 
 The existing Sites audience stays unchanged. Progress is stored separately in each browser/origin.
 
