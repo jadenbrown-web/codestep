@@ -6,6 +6,7 @@ import CodeBlocks from "./CodeBlocks";
 import CopyCodeButton from "./CopyCodeButton";
 import HtmlTextReference from "./HtmlTextReference";
 import FontReference from "./FontReference";
+import CssVisualReference from "./CssVisualReference";
 import CodeLineNumbers from "./CodeLineNumbers";
 import { fitEditorCode } from "./editor-fit";
 import { explanationTokens } from "./explanation-tokens";
@@ -35,7 +36,7 @@ type Lesson = {
   runHint?: string;
   compareNode?: boolean;
   referenceOnly?: boolean;
-  referenceKind?: "text" | "fonts" | "pages" | "css" | "comparisons";
+  referenceKind?: "text" | "fonts" | "pages" | "css" | "colours" | "comparisons";
 };
 
 const lessons: Record<Language, Lesson[]> = {
@@ -2346,48 +2347,57 @@ const lessons: Record<Language, Lesson[]> = {
       "referenceKind": "fonts"
     },
     {
-      "eyebrow": "05 · Borders and colours",
-      "title": "Explore borders and colour formats",
-      "explanation": "This visual reference shows how CSS selectors target elements and how border, RGB, RGBA, and hexadecimal colour values change their appearance.",
-      "note": "/* Compare borders, rounded corners, RGB, RGBA, and hex colours */",
-      "prompt": "Explore the rendered CSS examples and their explanations.",
-      "answer": "p.one { border: 5px solid red; }",
+      "eyebrow": "05 · Borders",
+      "title": "Explore CSS borders",
+      "explanation": "Compare border styles and edges. The border rule sets the width, line style and colour. border-radius rounds the corners.",
+      "note": "/* Choose a border style */",
+      "prompt": "Explore the border previews and copy a style to try.",
+      "answer": "p.notice {\n  border: 5px dotted blue;\n  border-radius: 12px;\n}",
       "output": [
         "CSS reference explored."
       ],
       "referenceOnly": true,
-      "referenceKind": "css"
-    },
-    {
-      "eyebrow": "06 · Border practice",
-      "title": "Create a rounded dotted border",
-      "explanation": "A class selector targets elements carrying that class. The border shorthand sets width, style, and colour, while border-radius rounds the corners.",
-      "note": "/* Give notice paragraphs a dotted blue rounded border */",
-      "prompt": "Create the notice class with a dotted blue rounded border.",
-      "answer": "p.notice {\n  border: 5px dotted blue;\n  border-radius: 5px;\n}",
-      "output": [
-        "Notice paragraphs have a dotted blue border with rounded corners."
-      ],
+      "referenceKind": "css",
       "parts": [
         {
-          "code": "p.notice",
-          "name": "Choose notice paragraphs",
-          "meaning": "Selects paragraphs with class=\"notice\" in the HTML. The dot introduces a class name."
+          "code": "border",
+          "name": "Draw an edge",
+          "meaning": "Sets the thickness, line style and colour of the edge around an element."
         },
         {
-          "code": "border: 5px dotted blue",
-          "name": "Set the border",
-          "meaning": "Sets its width, dotted line style, and colour in one declaration."
-        },
-        {
-          "code": "px",
-          "name": "CSS pixels",
-          "meaning": "A CSS pixel is the unit used for this border's width and corner radius."
-        },
-        {
-          "code": "border-radius: 5px",
+          "code": "border-radius",
           "name": "Round the corners",
-          "meaning": "Rounds the corners of the element's border."
+          "meaning": "Rounds the corners. A bigger value makes a stronger curve."
+        }
+      ]
+    },
+    {
+      "eyebrow": "06 · Hex colours",
+      "title": "Explore hex colours",
+      "explanation": "Choose a colour using a six-digit hex value. The first pair sets red, the next green, and the last blue. Put it after color: to colour text or background-color: to colour the background.",
+      "note": "/* Choose a hex colour */",
+      "prompt": "Compare the colour swatches and copy a hex value to try.",
+      "answer": "p {\n  color: #FF0000;\n}",
+      "output": [
+        "Red text"
+      ],
+      "referenceOnly": true,
+      "referenceKind": "colours",
+      "parts": [
+        {
+          "code": "#FF0000",
+          "name": "Choose red with a hex value",
+          "meaning": "The # introduces a colour value. FF gives full red; the two 00 pairs add no green or blue. Each pair ranges from 00 to FF."
+        },
+        {
+          "code": "color",
+          "name": "Colour the text",
+          "meaning": "Changes the colour of letters. Write the hex value after the colon."
+        },
+        {
+          "code": "background-color",
+          "name": "Colour the background",
+          "meaning": "Changes the area behind the text. It accepts the same hex values."
         }
       ]
     }
@@ -4899,7 +4909,7 @@ export default function Home() {
     );
   }
 
-  const lessonActions = <div className="lesson-actions">{current!.referenceOnly && language === "html" && current!.referenceKind !== "pages" && <CopyCodeButton iconOnly code={lessonExample(current!, language, showComments)} label="full reference example" />}<button className="drawer-toggle editor-mode-toggle" data-active={blockMode} aria-pressed={blockMode} aria-label={blockMode ? "Use keyboard" : "Use blocks"} title={blockMode ? "Use keyboard" : "Use blocks"} onClick={() => changeBlockMode(!blockMode)}><EditorModeSymbol blockMode={blockMode} /></button>{language !== "html" && <button className="compare-language-button" title="Compare languages" aria-label="Compare with another language" onClick={() => setComparisonOpen(true)}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4"/></svg></button>}<button className="settings-button" data-active={settingsOpen} aria-expanded={settingsOpen} aria-controls="settings-drawer" onClick={() => { if (window.innerWidth <= 850) setNavOpen(false); setSettingsOpen(open => !open); }} aria-label="Settings"><svg className="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 3-.7 2.5-2.4 1L3.6 6 2 9l1.8 1.8v2.4L2 15l1.6 3 2.3-.5 2.4 1L9 21h6l.7-2.5 2.4-1 2.3.5 1.6-3-1.8-1.8v-2.4L22 9l-1.6-3-2.3.5-2.4-1L15 3Z"/><circle cx="12" cy="12" r="3"/></svg><span>Settings</span></button></div>;
+  const lessonActions = <div className="lesson-actions">{current!.referenceOnly && (language === "html" || language === "css") && current!.referenceKind !== "pages" && <CopyCodeButton iconOnly code={lessonExample(current!, language, showComments)} label="full reference example" />}<button className="drawer-toggle editor-mode-toggle" data-active={blockMode} aria-pressed={blockMode} aria-label={blockMode ? "Use keyboard" : "Use blocks"} title={blockMode ? "Use keyboard" : "Use blocks"} onClick={() => changeBlockMode(!blockMode)}><EditorModeSymbol blockMode={blockMode} /></button>{language !== "html" && language !== "css" && <button className="compare-language-button" title="Compare languages" aria-label="Compare with another language" onClick={() => setComparisonOpen(true)}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4"/></svg></button>}<button className="settings-button" data-active={settingsOpen} aria-expanded={settingsOpen} aria-controls="settings-drawer" onClick={() => { if (window.innerWidth <= 850) setNavOpen(false); setSettingsOpen(open => !open); }} aria-label="Settings"><svg className="settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m9 3-.7 2.5-2.4 1L3.6 6 2 9l1.8 1.8v2.4L2 15l1.6 3 2.3-.5 2.4 1L9 21h6l.7-2.5 2.4-1 2.3.5 1.6-3-1.8-1.8v-2.4L22 9l-1.6-3-2.3.5-2.4-1L15 3Z"/><circle cx="12" cy="12" r="3"/></svg><span>Settings</span></button></div>;
   const desktopHomeControls = <div className="desktop-home-controls"><div className="lesson-brand-group"><HomeButton onClick={() => { setSettingsOpen(false); setLanguage(null); }} /></div></div>;
   return (
     <>
@@ -4984,20 +4994,7 @@ export default function Home() {
             </div>
             <div className="link-journey"><b>First Page</b><span>Go to Page 2 →</span><b>Page 2</b><span>← Go back</span></div>
             <button className="reference-next" onClick={nextLesson}>Continue to images →</button>
-          </div> : current!.referenceKind === "css" ? <div className="css-reference-preview">
-            <header className="reference-pane-heading"><b>Borders and colours</b><div className="desktop-pane-actions">{lessonActions}</div></header>
-            <div className="colour-samples"><div className="solid-colour">Solid rgb colour</div><div className="transparent-colour">Transparent rgba colour</div></div>
-            <div className="border-samples">
-              <p className="css-border red-solid">Solid red border <code>5px solid red</code></p>
-              <p className="css-border green-solid">Solid green border <code>5px solid green</code></p>
-              <p className="css-border blue-dotted">Dotted blue border <code>5px dotted blue</code></p>
-              <p className="css-border left-only">Left border <code>border-left</code></p>
-              <p className="css-border bottom-only">Bottom border <code>border-bottom</code></p>
-              <p className="css-border rounded">Rounded border <code>border-radius: 5px</code></p>
-            </div>
-            <div className="hex-note"><code>#222222</code><span>Hex colours start with #. Each pair controls red, green, and blue.</span></div>
-            <button className="reference-next" onClick={nextLesson}>Try the border quiz →</button>
-          </div> : <HtmlTextReference onNext={nextLesson} actions={lessonActions} />}</> : <>
+          </div> : (current!.referenceKind === "css" || current!.referenceKind === "colours") ? <CssVisualReference kind={current!.referenceKind === "colours" ? "colours" : "borders"} onNext={nextLesson} actions={lessonActions} /> : <HtmlTextReference onNext={nextLesson} actions={lessonActions} />}</> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className={`file-tab ${pinnedTopics.length && pinLimit <= 2 ? "has-pinned-topics" : ""}`} data-topic-tone={lessonTone(current!)} title={current!.fileName || challengeFile(language)}><span className="editor-file-name">{current!.fileName || challengeFile(language)}</span>{pinnedTopics.length && pinLimit <= 2 ? <PinnedTopicShortcuts topics={pinnedTopics} activeTopic={current?.title ?? null} onSelect={openPinnedTopic} language={language} /> : null}</div><div className="panel-actions"><div className="desktop-pane-actions">{lessonActions}</div><span className="mobile-editor-copy"><CopyCodeButton iconOnly code={lessonExample(current!, language, showComments)} label="full lesson example for VS Code" /></span><button className="editor-expand-button" aria-label={editorExpanded ? "Restore editor" : "Expand editor"} title={editorExpanded ? "Restore editor" : "Expand editor"} aria-pressed={editorExpanded} onClick={() => setEditorExpanded(expanded => !expanded)}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{editorExpanded ? <path d="M8 3v5H3m13-5v5h5M3 16h5v5m13-5h-5v5"/> : <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>}</svg></button><button className="editor-reset-button" onClick={() => changeBlockCode(commentPrefix + (current!.starter || ""))} title="Reset code" aria-label="Reset code"><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></svg><span className="editor-action-label">Reset</span></button></div></div>
               {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={commentPrefix + ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div ref={codeEditorRef} className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="editor-surface" style={{ minHeight: `max(100%, calc(${lineNumbers.length} * var(--editor-line-height) + var(--editor-padding)))`, minWidth: `max(100%, calc(${Math.max(...(code + guideCode).split("\n").map(line => line.length), 1)}ch + var(--editor-gutter) + var(--editor-inline-padding) + var(--editor-inline-padding)))` }}><CodeLineNumbers text={code + (showGuide ? guideCode : "")} minimumLines={8} />{showGuide && <pre className={`code-guide ${current!.title === "Check an answer with if and else" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{current!.title === "Check an answer with if and else" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{<pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Check an answer with if and else"} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" wrap="soft" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div></div>}

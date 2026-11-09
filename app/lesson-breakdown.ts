@@ -309,14 +309,12 @@ function webParts(lesson: LessonContent, language: string, existing: BreakdownPa
     if (css.includes(':')) add(':', ['Separate a property and value', 'Write the property before the colon and its value after it.']);
     if (css.includes(';')) add(';', ['Finish a declaration', 'Separates this CSS declaration from the next one.']);
     if (css.includes('{') && !existing.some(part => /^\{\s*(?:…|\.\.\.)\s*\}$/.test(part.code))) add('{ … }', ['Group the styles', 'Put declarations inside the braces. The selector before the opening brace chooses which elements they apply to.']);
-    if (/#[-\w]+/.test(css) && !existing.some(part => part.code.startsWith('#'))) add('#elementId', ['Select one element', 'The hash selects the element whose id matches the name after it. You choose the ID and use that same name in your HTML.']);
+    if (/#[-\w]+\s*\{/.test(css) && !existing.some(part => part.code.startsWith('#'))) add('#elementId', ['Select one element', 'The hash selects the element whose id matches the name after it. You choose the ID and use that same name in your HTML.']);
     if (/\.[a-z_-][\w-]*\s*\{/i.test(css) && !existing.some(part => /\.[a-z]/i.test(part.code))) add('.className', ['Select a group', 'The dot selects elements with this class. You choose the class name and use that same name in your HTML.']);
   }
   if (lesson.referenceKind === 'css') {
     for (const property of ['border-left', 'border-bottom', 'border-radius']) add(property, cssProperties[property]);
-    add('rgb(255, 0, 0)', ['Mix a colour', 'The three numbers choose the amounts of red, green, and blue. Each amount is from 0 to 255. This example uses full red.']);
-    add('#222222', ['Write a hex colour', 'The six letters or digits after # describe red, green, and blue in three pairs. This example makes a dark grey.']);
-    add('rgba(0, 0, 0, 0.4)', ['Make a colour see-through', 'The first three numbers choose a colour. The last number chooses how solid it is: 0 is invisible and 1 is fully solid.']);
+
   }
   if (lesson.referenceKind === 'fonts') add('serif / sans-serif / monospace', ['Choose a font style', 'Serif letters have small finishing strokes. Sans-serif letters have plain ends. Monospace gives every character the same width. Use one as the last choice if your preferred font is unavailable.']);
   return [...new Map(result.map(part => [part.code, part])).values()];
@@ -366,6 +364,8 @@ export function setupBreakdown(lesson: LessonContent, language: string): Breakdo
 export function lessonOverview(lesson: LessonContent) {
   const topic = lesson.eyebrow.split('·').slice(1).join('·').trim().toLowerCase();
   const summaries: Record<string, string> = {
+    'borders': 'Compare border styles, then copy one to try on your page.',
+    'hex colours': 'Choose a colour and use its hex value in your HTML or CSS.',
     'console output': 'Show text in the console and choose where each new line begins.',
     functions: 'Give instructions a name so you can run them when you need them.',
     'ansi colours': 'Use colour codes to change how text looks in the console.',

@@ -8,7 +8,7 @@ const refStart=source.indexOf('{current!.referenceOnly ? <>');
 const reference=source.slice(refStart+1,source.indexOf(' : <>\n          <div className="editor-panel">',refStart))+' : null';
 const guideStart=source.indexOf('{(language === "html" || language === "css") && <section className="browser-run-guide"');
 const guide=source.slice(guideStart,source.indexOf('          {current!.runHint',guideStart));
-const entry=`import React from 'react';import {createRoot} from 'react-dom/client';import FontReference from './app/FontReference';import HtmlTextReference from './app/HtmlTextReference';import CopyCodeButton from './app/CopyCodeButton';
+const entry=`import React from 'react';import {createRoot} from 'react-dom/client';import FontReference from './app/FontReference';import HtmlTextReference from './app/HtmlTextReference';import CopyCodeButton from './app/CopyCodeButton';import CssVisualReference from './app/CssVisualReference';
 const language=window.fixtureLanguage||'html',blockMode=false,settingsOpen=false,showComments=false;
 const current={referenceOnly:true,referenceKind:window.fixtureKind,answer:'<p>Full reference</p>'};
 const lessonExample=(lesson)=>lesson.answer;const EditorModeSymbol=()=> <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18"/></svg>;
@@ -20,7 +20,7 @@ const css=fs.readFileSync('app/globals.css','utf8');
 const browser=await chromium.launch({headless:true,...(fs.existsSync('/usr/bin/chromium')?{executablePath:'/usr/bin/chromium'}:{})});
 try{
  const page=await browser.newPage();
- for(const width of [1400,390]) for(const theme of ['light','dark']) for(const [language,kind] of [['html','text'],['html','fonts'],['html','pages'],['css','css']]){
+ for(const width of [1400,390]) for(const theme of ['light','dark']) for(const [language,kind] of [['html','text'],['html','fonts'],['html','pages'],['css','css'],['css','colours']]){
   await page.setViewportSize({width,height:900});
   await page.setContent(`<html data-theme="${theme}"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${css}</style><body><div id="root"></div></body></html>`);
   await page.evaluate(({language,kind})=>{window.fixtureLanguage=language;window.fixtureKind=kind;window.copied=[];Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async text=>window.copied.push(text)}});},{language,kind});
@@ -29,19 +29,35 @@ try{
   assert.equal(await page.locator('.reference-pane-toolbar').count(),0,'no detached reference heading');
   assert.equal(await page.locator('.browser-run-guide details,.browser-run-guide summary').count(),0,'browser instructions are direct text');
   if(width>850) assert.ok(await page.locator('.browser-run-guide').isVisible());
-  if(language==='html') assert.equal(await page.getByRole('button',{name:'Compare with another language',includeHidden:true}).count(),0,'HTML never offers language comparison');
-  else {
+  if(language==='html'||language==='css') assert.equal(await page.getByRole('button',{name:'Compare with another language',includeHidden:true}).count(),0,'HTML and CSS never offer language comparison');
+  {
    const selector=width>850?'.reference-workspace .desktop-pane-actions':'.app-header';
    const centers=await page.locator(selector+' button').evaluateAll(es=>es.filter(e=>e.getBoundingClientRect().height).map(e=>{const r=e.getBoundingClientRect();return r.y+r.height/2;}));
    assert.ok(Math.max(...centers)-Math.min(...centers)<1,'toolbar controls share a center line');
   }
   const root=page.locator('.reference-workspace');
+  if(kind==='css'||kind==='colours'){
+   const clipped=await root.locator('.html-tag-example').evaluateAll(es=>es.filter(e=>e.scrollWidth>e.clientWidth+1||e.scrollHeight>e.clientHeight+1).map(e=>e.outerHTML));
+   assert.deepEqual(clipped,[],'visual cards do not clip their labels or previews');
+   const heading=await root.locator('.font-example-heading').boundingBox();
+   const pane=await root.locator('.css-visual-reference').boundingBox();
+   assert.ok(heading.y>=pane.y&&heading.x>=pane.x,'featured heading stays inside the pane');
+   if(width===1400&&theme==='light') await root.screenshot({path:`/tmp/codestep-${kind}-reference.png`});
+  }
   if(kind==='fonts'){
    await root.getByRole('button',{name:'Copy Courier New code',exact:true}).click();
    assert.equal(await page.evaluate(()=>window.copied.at(-1)),`<p style="font-family: 'Courier New';">Courier New</p>`);
   }else if(kind==='text'){
    await root.getByRole('button',{name:'Copy mark code',exact:true}).click();
    assert.equal(await page.evaluate(()=>window.copied.at(-1)),'<mark>Marked text</mark>');
+  }else if(kind==='css'){
+   await root.getByRole('button',{name:'Copy Rounded dotted border code',exact:true}).click();
+   assert.equal(await page.evaluate(()=>window.copied.at(-1)),'p.notice { border: 5px dotted blue; border-radius: 12px; }');
+  }else if(kind==='colours'){
+   await root.getByRole('button',{name:'Copy Blue hex code',exact:true}).click();
+   assert.equal(await page.evaluate(()=>window.copied.at(-1)),'#0000FF');
+   await root.getByRole('button',{name:'Copy red HTML tag code',exact:true}).click();
+   assert.equal(await page.evaluate(()=>window.copied.at(-1)),'<p style="color: #FF0000;">Red text</p>');
   }else if(kind==='pages'){
    for(const file of ['index.html','page2.html']){
     const article=root.locator('.file-pair article').filter({has:page.locator('header>b',{hasText:file})});
