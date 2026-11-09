@@ -36,6 +36,15 @@ try {
     if(['javascript','python','csharp','cpp'].includes(language)) assert.ok(await page.locator('.prose-code').count()>0,`${theme} ${language}: code in explanations is highlighted`);
     const backgrounds=await page.locator('.prose-code').evaluateAll(elements=>elements.map(element=>getComputedStyle(element).backgroundColor));
     assert.ok(backgrounds.every(value=>value==='rgba(0, 0, 0, 0)'),`${theme} ${language}: text-only code highlights`);
+    if(await page.locator('.import-breakdown').count()) {
+      const tools=page.locator('.import-breakdown');
+      assert.equal(await tools.locator('.breakdown-label').innerText(),'Imports');
+      assert.ok((await tools.innerText()).includes('The program steps are explained above.'));
+      const toolsColour=await tools.locator('.breakdown-label').evaluate(el=>getComputedStyle(el).color);
+      const programColour=await page.locator('[aria-label="Code breakdown"]>.breakdown-label').evaluate(el=>getComputedStyle(el).color);
+      assert.notEqual(toolsColour,programColour,'Imports and program headings must be visually distinct');
+      assert.equal(await tools.evaluate(el=>getComputedStyle(el).borderLeftWidth),'4px');
+    }
     if(language==='javascript') {
       const text=await page.locator('.lesson-copy').innerText();
       for(const label of ['Read keyboard input','Write terminal output','Ask and wait for a reply','Finish taking input','Connect to the terminal']) assert.ok(text.includes(label),label);

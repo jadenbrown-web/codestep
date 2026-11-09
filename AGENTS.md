@@ -11,5 +11,5 @@ The user requires all future updates to be stored on GitHub as well as running o
 - Use the connected GitHub tools or the authenticated GitHub CLI for GitHub operations. Never use a Sites credential for a GitHub push.
 - Run `npm test` and the relevant browser checks with `npm run test:browser`. GitHub Actions must pass for the pushed commit.
 - Preserve the Sites app and also build the standalone browser app for GitHub Pages with `npm run build:pages`. GitHub Pages must use the standalone static artifact, not the Worker build.
-- The user explicitly authorized making both the GitHub repository and standalone website public to use free GitHub Pages. Repository visibility and Pages activation are currently blocked by integration permissions (HTTP 403); the owner must change those settings. Do not claim visibility or hosting changed without verification.
+- The user explicitly authorized making both the GitHub repository and standalone website public to use free GitHub Pages. The repository is public and Pages is enabled with GitHub Actions at `https://jadenbrown-web.github.io/codestep/`. Verify deployment and the live URL after every update.
 - GitHub CI validates both builds and deploys the standalone app through Pages after checks pass. Sites hosting remains separate; preserve its current audience. Verify the live URL before claiming Pages is running.
