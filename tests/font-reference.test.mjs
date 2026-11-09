@@ -21,5 +21,8 @@ test('HTML font reference follows text elements and includes all twenty supplied
  const html=renderToStaticMarkup(React.createElement(Component,{language:'html',onNext(){}}));
  assert.equal((html.match(/data-font=/g)??[]).length,20);
  assert.match(html,/&lt;p style=/);
- assert.match(html,/font-family:&#x27;Times New Roman&#x27;|font-family:&#39;Times New Roman&#39;|font-family:'Times New Roman'/);
+ assert.equal((html.match(/&lt;p style=/g)??[]).length,1);
+ assert.doesNotMatch(html,/Font families|20 separate examples/);
+ assert.match(html,/Example · Courier New/);
+ assert.equal((html.match(/class="font-example-label"/g)??[]).length,20);
 });
