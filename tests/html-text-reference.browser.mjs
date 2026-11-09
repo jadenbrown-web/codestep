@@ -17,8 +17,12 @@ try {
   const page=await browser.newPage();
   for(const viewport of [{width:1952,height:1000},{width:1440,height:900},{width:1280,height:720},{width:1024,height:600},{width:390,height:844}]) for(const theme of ['light','dark']) {
     await page.setViewportSize(viewport);
-    await page.setContent(`<html data-theme="${theme}"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${css}</style><body><main class="lesson-shell reference-mode mobile-practice"><header class="app-header lesson-nav"></header><div class="lesson-layout drawer-closed"><aside class="lesson-drawer"></aside><aside class="lesson-copy"></aside><section class="workspace reference-workspace">${markup}</section></div></main></body></html>`);
+    await page.setContent(`<html data-theme="${theme}"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${css}</style><body><main class="lesson-shell reference-mode mobile-practice"><header class="app-header lesson-nav"></header><div class="lesson-layout drawer-closed"><aside class="lesson-drawer"></aside><aside class="lesson-copy"></aside><section class="workspace reference-workspace"><div class="reference-pane-toolbar"><b>Text elements</b><div class="desktop-pane-actions"><button aria-label="Settings">⚙</button></div></div>${markup}</section></div></main></body></html>`);
     assert.equal(await page.locator('[data-html-tag]').count(),18);
+    if(viewport.width>850) {
+      assert.equal(await page.locator('.app-header').isVisible(),false,'reference page has no extra desktop navbar');
+      assert.equal(await page.getByRole('button',{name:'Settings'}).isVisible(),true,'reference actions stay available');
+    }
     const dimensions=await page.locator('.html-tag-grid').evaluate(element=>({width:element.clientWidth,scrollWidth:element.scrollWidth,height:element.clientHeight,scrollHeight:element.scrollHeight}));
     assert.ok(dimensions.scrollWidth<=dimensions.width+1,`${theme} ${viewport.width}: no sideways scrolling`);
     assert.ok(dimensions.scrollHeight<=dimensions.height+1,`${theme} ${viewport.width}x${viewport.height}: all examples fit vertically (${JSON.stringify(dimensions)})`);

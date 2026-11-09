@@ -13,7 +13,7 @@
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate",
     "test:unit": "node --test tests/*.test.mjs",
-    "test:browser": "node tests/prose-highlights.browser.mjs && node tests/pin-styles.browser.mjs && node tests/sidebar-layout.browser.mjs && node tests/mobile-breakdowns.browser.mjs && node tests/html-text-reference.browser.mjs"
+    "test:browser": "node tests/prose-highlights.browser.mjs && node tests/pin-styles.browser.mjs && node tests/sidebar-layout.browser.mjs && node tests/mobile-breakdowns.browser.mjs && node tests/html-text-reference.browser.mjs && node tests/font-reference.browser.mjs"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",

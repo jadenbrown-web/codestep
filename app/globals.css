@@ -1363,7 +1363,7 @@ html[data-theme="dark"]{--workspace-rail:#1c2d24;--workspace-filebar:#18281f}
  .lesson-shell:not(.reference-mode) .lesson-drawer .drawer-head img{width:26px;height:26px}
  .lesson-shell:not(.reference-mode) .lesson-drawer .drawer-head small{font-size:8px;letter-spacing:.5px}
  .lesson-shell:not(.reference-mode) .lesson-drawer .drawer-head b{font-size:15px}
- .lesson-shell:not(.reference-mode) .desktop-study-toolbar{display:flex;align-items:center;gap:6px;position:sticky;top:0;z-index:5;min-height:44px;margin:-20px -20px 12px;padding:4px 8px;background:var(--workspace-rail);box-sizing:border-box}
+ .lesson-shell .desktop-study-toolbar{display:flex;align-items:center;gap:6px;position:sticky;top:0;z-index:5;min-height:44px;margin:-20px -20px 12px;padding:4px 8px;background:var(--workspace-rail);box-sizing:border-box}
  .drawer-open .desktop-study-toolbar>.desktop-home-controls{display:none!important}
  .desktop-study-toolbar>.desktop-header-pins{display:block;min-width:0;flex:1;padding:0}
  .desktop-study-toolbar>span{font:650 11px var(--mono);color:var(--ui-muted)}
@@ -1401,7 +1401,7 @@ html[data-theme] .editor-panel .panel-actions button[aria-label]:hover{backgroun
 @media(min-width:851px){
  .lesson-layout .lesson-copy{display:flex;flex-direction:column;padding:0;overflow:hidden}
  .lesson-study-content{display:block;flex:1;min-height:0;min-width:0;overflow-y:auto;overflow-x:hidden;padding:20px;overscroll-behavior:contain;scrollbar-width:thin}
- .lesson-shell:not(.reference-mode) .desktop-study-toolbar{position:static;flex:none;width:100%;margin:0;padding:4px 8px;border-bottom:1px solid var(--ui-border);background:var(--workspace-rail)}
+ .lesson-shell .desktop-study-toolbar{position:static;flex:none;width:100%;margin:0;padding:4px 8px;border-bottom:1px solid var(--ui-border);background:var(--workspace-rail)}
  .desktop-home-controls .lesson-brand-group button[aria-label],html[data-theme] .desktop-home-controls .lesson-brand-group button[aria-label]{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;flex:none;width:40px;min-width:40px;height:44px;margin:0;padding:0;border:0;border-radius:0;background:transparent;color:var(--toolbar-ink);box-shadow:none;transform:none}
  .desktop-home-controls .lesson-brand-group button[aria-label]:hover,html[data-theme] .desktop-home-controls .lesson-brand-group button[aria-label]:hover{background:var(--toolbar-hover);border-radius:6px}
  .desktop-home-controls svg{display:block;width:20px;height:20px;flex:none;stroke-width:2}
@@ -1543,3 +1543,24 @@ html[data-theme="dark"]{--scrollbar-thumb:#607a6b}
  .lesson-shell.reference-mode .lesson-drawer .drawer-head{height:52px;min-height:52px;padding:4px 8px;align-items:center;gap:6px}
  .lesson-shell.reference-mode .lesson-drawer .drawer-language-identity>b{font-size:18px}
 }
+
+/* Reference lessons share the editor's desktop shell and pane actions. */
+.reference-pane-toolbar{display:none}
+@media(min-width:851px){
+ html[data-theme] .lesson-shell.reference-mode>.app-header{display:none}
+ .lesson-shell.reference-mode .lesson-layout{height:100%;min-height:0}
+ .reference-pane-toolbar{display:flex;align-items:center;justify-content:space-between;flex:none;height:44px;min-height:44px;padding:0 8px;border:1px solid var(--ui-border);border-bottom:0;border-radius:12px 12px 0 0;background:var(--workspace-filebar);color:var(--ui-text)}
+ .reference-pane-toolbar>b{font:700 13px var(--sans)}
+ .reference-pane-toolbar+.html-text-reference{border-top-left-radius:0;border-top-right-radius:0}
+ .reference-workspace>.html-text-reference{flex:1;min-height:0}
+}
+.font-example-grid{overflow:auto;grid-auto-rows:minmax(110px,1fr);grid-template-rows:repeat(5,minmax(110px,1fr))}
+.font-example-sample{margin:0;min-height:0;font-size:22px;line-height:1.2;color:var(--ui-text)}
+.font-examples-reference .html-tag-code{font-size:11px;line-height:1.25;overflow-wrap:anywhere}
+@media(min-width:851px){
+ .font-example-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:5px}
+ .font-examples-reference .html-tag-example{padding:5px;gap:3px}
+ .font-examples-reference .font-example-sample{font-size:18px}
+}
+@media(max-width:850px){.font-example-grid{grid-template-rows:repeat(10,minmax(110px,1fr))}}
+@container html-reference (max-width:550px){.font-example-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(10,minmax(110px,1fr))}}

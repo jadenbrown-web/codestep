@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboa
 
 import CodeBlocks from "./CodeBlocks";
 import HtmlTextReference from "./HtmlTextReference";
+import FontReference from "./FontReference";
 import CodeLineNumbers from "./CodeLineNumbers";
 import { fitEditorCode } from "./editor-fit";
 import { explanationTokens } from "./explanation-tokens";
@@ -1989,7 +1990,32 @@ const lessons: Record<Language, Lesson[]> = {
       "referenceKind": "text"
     },
     {
-      "eyebrow": "09 · JavaScript in HTML",
+      "eyebrow": "09 · Fonts",
+      "title": "Explore HTML fonts",
+      "explanation": "Use font-family inside the style attribute to choose how text looks. Each example shows the HTML and its result. A named font must be available on your device; otherwise the browser uses a fallback.",
+      "note": "<!-- Choose a font for a paragraph -->",
+      "prompt": "Compare each font and its HTML.",
+      "answer": "<p style=\"font-family: Arial;\">Arial</p>\n<p style=\"font-family: Helvetica;\">Helvetica</p>\n<p style=\"font-family: Verdana;\">Verdana</p>\n<p style=\"font-family: Tahoma;\">Tahoma</p>\n<p style=\"font-family: 'Trebuchet MS';\">Trebuchet MS</p>\n<p style=\"font-family: 'Times New Roman';\">Times New Roman</p>\n<p style=\"font-family: Georgia;\">Georgia</p>\n<p style=\"font-family: Garamond;\">Garamond</p>\n<p style=\"font-family: 'Courier New';\">Courier New</p>\n<p style=\"font-family: 'Lucida Console';\">Lucida Console</p>\n<p style=\"font-family: 'Comic Sans MS';\">Comic Sans MS</p>\n<p style=\"font-family: Impact;\">Impact</p>\n<p style=\"font-family: 'Palatino Linotype';\">Palatino Linotype</p>\n<p style=\"font-family: 'Brush Script MT';\">Brush Script MT</p>\n<p style=\"font-family: serif;\">Serif</p>\n<p style=\"font-family: sans-serif;\">Sans-serif</p>\n<p style=\"font-family: monospace;\">Monospace</p>\n<p style=\"font-family: cursive;\">Cursive</p>\n<p style=\"font-family: fantasy;\">Fantasy</p>\n<p style=\"font-family: system-ui;\">System UI</p>",
+      "output": [
+        "Font examples explored."
+      ],
+      "referenceOnly": true,
+      "referenceKind": "fonts",
+      "parts": [
+        {
+          "code": "style",
+          "name": "Change how an element looks",
+          "meaning": "Adds CSS appearance rules to this element."
+        },
+        {
+          "code": "font-family",
+          "name": "Choose a font",
+          "meaning": "Chooses the typeface used to draw the text. Put names containing spaces in quotes. Generic families such as serif work on every device."
+        }
+      ]
+    },
+    {
+      "eyebrow": "10 · JavaScript in HTML",
       "title": "Show the current date and time",
       "explanation": "The script element lets an HTML page run JavaScript. new Date() creates the current date and time, and console.log displays it in the browser's developer console.",
       "note": "<!-- Run JavaScript from inside the HTML page -->",
@@ -2022,7 +2048,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "10 · Multiple pages",
+      "eyebrow": "11 · Multiple pages",
       "title": "Link two HTML pages",
       "explanation": "This is a two-file reference rather than a quiz. When both files are in the same folder, each href can use the other file's name as a relative path.",
       "note": "<!-- Link index.html and page2.html in both directions -->",
@@ -2035,7 +2061,7 @@ const lessons: Record<Language, Lesson[]> = {
       "referenceKind": "pages"
     },
     {
-      "eyebrow": "11 · Images",
+      "eyebrow": "12 · Images",
       "title": "Place an image on the page",
       "explanation": "The img element displays an image. src tells the browser which file to load, while alt describes the image if it cannot be seen or loaded. If car.png is beside index.html, its filename is enough for src.",
       "note": "<!-- Display car.png from the same folder as this HTML file -->",
@@ -2064,7 +2090,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "12 · Videos",
+      "eyebrow": "13 · Videos",
       "title": "Place a video on the page",
       "explanation": "The video element places a video on the page, much like img places a picture. src tells the browser to load my-video.mp4, and controls adds the built-in play, pause, volume, and timeline controls. Keep the MP4 file beside the HTML file when using only its filename.",
       "note": "<!-- Display my-video.mp4 with playback controls -->",
@@ -2088,7 +2114,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "13 · Audio",
+      "eyebrow": "14 · Audio",
       "title": "Place audio on the page",
       "explanation": "The audio element works much like video, but it plays sound without a picture area. src tells the browser to load my-audio.mp3, and controls adds play, pause, volume, and timeline controls. Keep the MP3 file beside the HTML file when using only its filename.",
       "note": "<!-- Play my-audio.mp3 with playback controls -->",
@@ -2107,7 +2133,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "14 · IDs for CSS",
+      "eyebrow": "15 · IDs for CSS",
       "title": "Give one element a unique name",
       "explanation": "The id attribute gives one HTML element a unique name. CSS can then select that exact element with a hash followed by the same name, such as #p1.",
       "note": "<!-- Give this particular paragraph the ID p1 -->",
@@ -2131,7 +2157,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "15 · Browser-safe repetition",
+      "eyebrow": "16 · Browser-safe repetition",
       "title": "Use a button instead of while (true)",
       "explanation": "while (true) is JavaScript, not HTML. Even inside a script element, an endless loop can freeze the page. A button is safer for an HTML page: each click runs checkAnswer once, then the page waits for another click.",
       "note": "<!-- A click safely runs one answer check at a time -->",
@@ -2188,7 +2214,7 @@ const lessons: Record<Language, Lesson[]> = {
       "outputNote": "Example page result after clicking the button and entering 2. The dialog input and click are actions, not printed output. The page then waits for another click."
     },
     {
-      "eyebrow": "16 · Return values",
+      "eyebrow": "17 · Return values",
       "title": "Send a value back with return",
       "explanation": "return sends a value back to the place where a function was called, and the function ends immediately. Here, getMessage() returns the text Hello. That returned text is then placed in the paragraph.",
       "note": "<!-- Return a value from a function and show it on the page -->",
@@ -4934,7 +4960,7 @@ export default function Home() {
         </aside>
         {navOpen && <button className="drawer-backdrop" aria-label="Close lesson list" onClick={() => setNavOpen(false)} />}
         <aside className="lesson-copy">
-          {!current!.referenceOnly && (pinnedTopics.length > 0 || !navOpen) && <div className="desktop-study-toolbar">{desktopHomeControls}{pinnedTopics.length > 0 && <div className="desktop-header-pins"><PinnedTopicShortcuts topics={pinnedTopics} activeTopic={current?.title ?? null} onSelect={openPinnedTopic} language={language} /></div>}</div>}
+          {(pinnedTopics.length > 0 || !navOpen) && <div className="desktop-study-toolbar">{desktopHomeControls}{pinnedTopics.length > 0 && <div className="desktop-header-pins"><PinnedTopicShortcuts topics={pinnedTopics} activeTopic={current?.title ?? null} onSelect={openPinnedTopic} language={language} /></div>}</div>}
           <div className="lesson-study-content">
           <div className="lesson-number">{String(index + 1).padStart(2, "0")} · {current!.eyebrow.split("·")[1]}</div>
           <h1>{current!.title}</h1>
@@ -4960,7 +4986,7 @@ export default function Home() {
           </div>
         </aside>
         <section className={`workspace ${editorExpanded ? "editor-expanded" : ""} ${current!.referenceOnly ? "reference-workspace" : ""} ${blockMode ? "blocks-workspace" : ""}`}>
-          {current!.referenceOnly ? current!.referenceKind === "comparisons" ? <div className="comparison-reference-preview">
+          {current!.referenceOnly ? <><div className="reference-pane-toolbar"><b>{current!.eyebrow.replace(/^\d+\s*·\s*/, "")}</b><div className="desktop-pane-actions">{lessonActions}</div></div>{current!.referenceKind === "comparisons" ? <div className="comparison-reference-preview">
             <div className="preview-bar"><span>◆</span> {language === "javascript" ? "JAVASCRIPT" : "C SHARP"} COMPARISON REFERENCE</div>
             <div className="comparison-start"><code>{language === "javascript" ? "let x = 5;" : "int x = 5;"}</code><span>Each row below asks a different question about the same value.</span></div>
             <div className="comparison-table" role="table" aria-label="Comparison operators">
@@ -4981,21 +5007,7 @@ export default function Home() {
             </div>
             <div className="comparison-reminder"><b>Remember the “arrow” shapes</b><span><code>&gt;</code> points away from the greater value; <code>&lt;</code> points towards the smaller value. They are called greater-than and less-than signs.</span></div>
             <button className="reference-next" onClick={nextLesson}>Continue to names beginning with J →</button>
-          </div> : current!.referenceKind === "fonts" ? <div className="font-reference-preview">
-            <div className="preview-bar"><span>◆</span> CSS FONT REFERENCE</div>
-            <div className="font-samples">
-              <div style={{fontFamily:"Arial, sans-serif"}}><b>Arial</b><span>The quick brown fox jumps over the lazy dog.</span><code>Arial, sans-serif</code></div>
-              <div style={{fontFamily:"Verdana, sans-serif"}}><b>Verdana</b><span>The quick brown fox jumps over the lazy dog.</span><code>Verdana, sans-serif</code></div>
-              <div style={{fontFamily:"Tahoma, sans-serif"}}><b>Tahoma</b><span>The quick brown fox jumps over the lazy dog.</span><code>Tahoma, sans-serif</code></div>
-              <div style={{fontFamily:"'Trebuchet MS', sans-serif"}}><b>Trebuchet MS</b><span>The quick brown fox jumps over the lazy dog.</span><code>&quot;Trebuchet MS&quot;, sans-serif</code></div>
-              <div style={{fontFamily:"'Times New Roman', serif"}}><b>Times New Roman</b><span>The quick brown fox jumps over the lazy dog.</span><code>&quot;Times New Roman&quot;, serif</code></div>
-              <div style={{fontFamily:"Georgia, serif"}}><b>Georgia</b><span>The quick brown fox jumps over the lazy dog.</span><code>Georgia, serif</code></div>
-              <div style={{fontFamily:"Garamond, serif"}}><b>Garamond</b><span>The quick brown fox jumps over the lazy dog.</span><code>Garamond, serif</code></div>
-              <div style={{fontFamily:"'Courier New', monospace"}}><b>Courier New</b><span>The quick brown fox jumps over the lazy dog.</span><code>&quot;Courier New&quot;, monospace</code></div>
-              <div style={{fontFamily:"'Brush Script MT', cursive"}}><b>Brush Script MT</b><span>The quick brown fox jumps over the lazy dog.</span><code>&quot;Brush Script MT&quot;, cursive</code></div>
-            </div>
-            <button className="reference-next" onClick={nextLesson}>Continue to borders →</button>
-          </div> : current!.referenceKind === "pages" ? <div className="pages-reference-preview">
+          </div> : current!.referenceKind === "fonts" ? <FontReference language={language} onNext={nextLesson} /> : current!.referenceKind === "pages" ? <div className="pages-reference-preview">
             <div className="preview-bar"><span>◆</span> TWO HTML FILES</div>
             <div className="file-pair">
               <article><header><span>1</span><b>index.html</b></header><pre><code><HighlightedCode language="html" code={'<!DOCTYPE html>\n<html>\n<body>\n\n  <h1>First Page</h1>\n\n  <a href="page2.html">Go to Page 2</a>\n\n</body>\n</html>'} /></code></pre></article>
@@ -5016,7 +5028,7 @@ export default function Home() {
             </div>
             <div className="hex-note"><code>#222222</code><span>Hex colours start with #. Each pair controls red, green, and blue.</span></div>
             <button className="reference-next" onClick={nextLesson}>Try the border quiz →</button>
-          </div> : <HtmlTextReference onNext={nextLesson} /> : <>
+          </div> : <HtmlTextReference onNext={nextLesson} />}</> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className={`file-tab ${pinnedTopics.length && pinLimit <= 2 ? "has-pinned-topics" : ""}`} data-topic-tone={lessonTone(current!)} title={current!.fileName || challengeFile(language)}><span className="editor-file-name">{current!.fileName || challengeFile(language)}</span>{pinnedTopics.length && pinLimit <= 2 ? <PinnedTopicShortcuts topics={pinnedTopics} activeTopic={current?.title ?? null} onSelect={openPinnedTopic} language={language} /> : null}</div><div className="panel-actions"><div className="desktop-pane-actions">{lessonActions}</div><span className="mobile-editor-copy"><CopyCodeButton iconOnly code={lessonExample(current!, language, showComments)} label="full lesson example for VS Code" /></span><button className="editor-expand-button" aria-label={editorExpanded ? "Restore editor" : "Expand editor"} title={editorExpanded ? "Restore editor" : "Expand editor"} aria-pressed={editorExpanded} onClick={() => setEditorExpanded(expanded => !expanded)}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{editorExpanded ? <path d="M8 3v5H3m13-5v5h5M3 16h5v5m13-5h-5v5"/> : <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>}</svg></button><button className="editor-reset-button" onClick={() => changeBlockCode(commentPrefix + (current!.starter || ""))} title="Reset code" aria-label="Reset code"><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></svg><span className="editor-action-label">Reset</span></button></div></div>
               {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={commentPrefix + ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div ref={codeEditorRef} className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="editor-surface" style={{ minHeight: `max(100%, calc(${lineNumbers.length} * var(--editor-line-height) + var(--editor-padding)))`, minWidth: `max(100%, calc(${Math.max(...(code + guideCode).split("\n").map(line => line.length), 1)}ch + var(--editor-gutter) + var(--editor-inline-padding) + var(--editor-inline-padding)))` }}><CodeLineNumbers text={code + (showGuide ? guideCode : "")} minimumLines={8} />{showGuide && <pre className={`code-guide ${current!.title === "Check an answer with if and else" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{current!.title === "Check an answer with if and else" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} language={language} />}</code></pre>}{<pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Check an answer with if and else"} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" wrap="soft" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div></div>}

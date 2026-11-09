@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import test from 'node:test';
+import React from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+import {build} from 'esbuild';
+import {createRequire} from 'node:module';
+const built=await build({entryPoints:['app/FontReference.tsx'],bundle:true,platform:'node',format:'cjs',packages:'external',write:false});
+const module={exports:{}};
+new Function('require','module','exports',built.outputFiles[0].text)(createRequire(import.meta.url),module,module.exports);
+const {default:Component,FONT_FAMILIES}=module.exports;
+const source=fs.readFileSync('app/page.tsx','utf8');
+const start=source.indexOf('{',source.indexOf('const lessons:'));
+const lessons=JSON.parse(source.slice(start,source.indexOf('\n};',start)+2));
+test('HTML font reference follows text elements and includes all twenty supplied families',()=>{
+ const index=lessons.html.findIndex(lesson=>lesson.referenceKind==='text');
+ const fonts=lessons.html[index+1];
+ assert.equal(fonts.referenceKind,'fonts');
+ assert.equal(FONT_FAMILIES.length,20);
+ for(const font of FONT_FAMILIES) assert.ok(fonts.answer.includes(font));
+ const html=renderToStaticMarkup(React.createElement(Component,{language:'html',onNext(){}}));
+ assert.equal((html.match(/data-font=/g)??[]).length,20);
+ assert.match(html,/&lt;p style=/);
+ assert.match(html,/font-family:&#x27;Times New Roman&#x27;|font-family:&#39;Times New Roman&#39;|font-family:'Times New Roman'/);
+});
