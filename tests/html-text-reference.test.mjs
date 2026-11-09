@@ -38,7 +38,9 @@ test('text elements keeps a separate copyable code example above the previews',(
  const html=renderToStaticMarkup(React.createElement(Component,{onNext(){}}));
  assert.match(html,/Text elements code example/);
  assert.ok(html.includes('&lt;h1&gt;Main heading&lt;/h1&gt;'));
- assert.ok(html.includes('&lt;h2&gt;Main sections&lt;/h2&gt;'));
+ assert.ok(!html.includes('Main sections'));
+ assert.equal((html.match(/data-example="true"/g)??[]).length,1);
+ assert.match(html,/Show h1 code/);
  assert.ok(html.includes('Copy text elements example code'));
  assert.ok(html.indexOf('Text elements code example')<html.indexOf('data-html-tag='));
 });

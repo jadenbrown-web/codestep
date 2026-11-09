@@ -16,14 +16,14 @@ export const BORDER_EXAMPLES = [
  {name:'Bottom border',css:'border-bottom: 5px solid red;',style:{borderBottom:'5px solid red'}},
  {name:'Rounded dotted border',css:'border: 5px dotted blue; border-radius: 12px;',style:{border:'5px dotted blue',borderRadius:'12px'}},
 ];
-export default function CssVisualReference({kind,onNext,actions}:{kind:'borders'|'colours';onNext:()=>void;actions?:React.ReactNode}){
+export default function CssVisualReference({kind,onNext,actions,renderCode}:{kind:'borders'|'colours';onNext:()=>void;actions?:React.ReactNode;renderCode?:(code:string)=>React.ReactNode}){
  const colours=kind==='colours';
  const [selected,setSelected]=useState(BORDER_EXAMPLES[5]);
  const example=colours?'<p style="color: #FF0000;">Red text</p>':`p.notice {\n  ${selected.css.replace('; ', ';\n  ')}\n}`;
  return <section className={`html-text-reference css-visual-reference ${colours?'colour-reference':'border-reference'}`} aria-label={colours?'Hex colour examples':'Border examples'}>
   <div className="font-featured-example">
    <div className="font-example-heading"><b>{colours?'Example · Red text':`Example · ${selected.name}`}</b><div className="desktop-pane-actions">{actions}</div></div>
-   <div className="visual-example-code"><code>{example}</code><CopyCodeButton iconOnly code={example} label={colours?'red HTML tag':'border example'} /></div>
+   <div className="visual-example-code"><code className="example-syntax-code">{renderCode ? renderCode(example) : example}</code><CopyCodeButton iconOnly code={example} label={colours?'red HTML tag':'border example'} /></div>
    {colours?<><p className="featured-red-text">Red text</p><span>Put the hex value after <strong>color:</strong> inside the tag’s <strong>style</strong> attribute. In a CSS file, use <code>p {'{'} color: #FF0000; {'}'}</code>. Change the hex value to try another colour.</span></>:<span>Use <code>&lt;p class="notice"&gt;Border text&lt;/p&gt;</code> in your HTML. Change the border style to try the examples below.</span>}
   </div>
   <div className={`html-tag-grid ${colours?'colour-example-grid':'border-example-grid'}`}>

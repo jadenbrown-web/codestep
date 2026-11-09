@@ -1647,3 +1647,20 @@ html[data-theme="dark"]{--scrollbar-thumb:#607a6b}
 .text-tag-reference .visual-example-code .syntax-keyword{color:#2475a8}
 html[data-theme="dark"] .text-tag-reference .visual-example-code .syntax-keyword{color:#7bbcff}
 .text-tag-reference .visual-example-code .syntax-plain{color:var(--ui-text)}
+
+/* Reference examples use the same syntax palette while content remains normal text. */
+.example-syntax-code .syntax-plain,.example-syntax-code .syntax-punctuation{color:var(--ui-text)}
+.example-syntax-code .syntax-keyword,.example-syntax-code .syntax-api{color:#2475a8}
+.example-syntax-code .syntax-attribute,.example-syntax-code .syntax-number{color:#956300}
+.example-syntax-code .syntax-string{color:#3d6b31}
+.example-syntax-code .syntax-comment{color:var(--ui-muted)}
+html[data-theme="dark"] .example-syntax-code .syntax-keyword,html[data-theme="dark"] .example-syntax-code .syntax-api{color:#7bbcff}
+html[data-theme="dark"] .example-syntax-code .syntax-attribute,html[data-theme="dark"] .example-syntax-code .syntax-number{color:#f2c75a}
+html[data-theme="dark"] .example-syntax-code .syntax-string{color:#a7d48b}
+.text-tag-reference .html-tag-example{position:relative}
+.tag-example-choice{position:absolute;inset:0;z-index:1;width:100%;height:100%;margin:0;padding:0;border:0;border-radius:6px;background:transparent;cursor:pointer}
+.tag-example-choice:focus-visible{outline:2px solid var(--green);outline-offset:-2px}
+.text-tag-reference .tag-card-heading .copy-code-control{z-index:2}
+.text-tag-reference .html-tag-example[data-example]{border-color:var(--green);background:var(--selection-surface)}
+.example-syntax-code .syntax-function-name{color:#2475a8}
+html[data-theme="dark"] .example-syntax-code .syntax-function-name{color:#d9e7de}

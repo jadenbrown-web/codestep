@@ -36,3 +36,35 @@ test('embedded code and the typing caret still render normally',()=>{
  const heading=renderToStaticMarkup(React.createElement(Component,{code:'<h2>Main section',language:'html',caretIndex:16}));
  assert.equal((heading.match(/class="editor-caret"/g)??[]).length,1);
 });
+
+test('animated code keeps its completed syntax colour from the first character',()=>{
+ const samples={
+  javascript:'function getMessage() { return "Hello"; }\nconsole.log(getMessage());',
+  python:'def get_message():\n    return "Hello"\nprint(get_message())',
+  csharp:'string GetMessage() { return "Hello"; }\nConsole.WriteLine(GetMessage());',
+  cpp:'#include <iostream>\nint main() { std::cout << "Hello"; }',
+  html:'<h2>Main section</h2><script>const value = 1;</script>',
+  css:'p { font-family: "Courier New"; border: 5px dotted blue; }',
+ };
+ const decode=text=>text.replace(/&(lt|gt|amp|quot|#x27|#39);/g,(_,name)=>({lt:'<',gt:'>',amp:'&',quot:'"','#x27':"'",'#39':"'"})[name]);
+ const render=(code,language,fullCode)=>{
+  const html=renderToStaticMarkup(React.createElement(Component,{code,language,fullCode}));
+  return [...html.matchAll(/<span class="(syntax-[^"]+)">([^<]*)<\/span>/g)].flatMap(m=>[...decode(m[2])].map(character=>({character,kind:m[1]})));
+ };
+ for(const [language,full] of Object.entries(samples)){
+  const completed=render(full,language);
+  assert.equal(completed.map(p=>p.character).join(''),full);
+  for(let length=1;length<full.length;length++){
+   const visible=render(full.slice(0,length),language,full);
+   assert.deepEqual(visible,completed.slice(0,length),`${language}: first ${length} characters keep their syntax colours`);
+  }
+ }
+});
+
+test('CSS examples colour complete property names, numbers and font strings',()=>{
+ const tree=Component({code:'p { border-radius: 12px; border-left: 5px solid blue; font-family: "Courier New"; }',language:'css'});
+ const spans=React.Children.toArray(tree.props.children).filter(React.isValidElement);
+ for(const property of ['border-radius','border-left','font-family']) assert.ok(spans.some(n=>n.props.children===property&&n.props.className==='syntax-api'),property);
+ assert.ok(spans.some(n=>n.props.children==='12px'&&n.props.className==='syntax-number'));
+ assert.ok(spans.some(n=>n.props.children==='"Courier New"'&&n.props.className==='syntax-string'));
+});

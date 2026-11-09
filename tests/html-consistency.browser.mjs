@@ -38,6 +38,10 @@ try{
    assert.ok(Math.max(...centers)-Math.min(...centers)<1,'toolbar controls share a center line');
   }
   const root=page.locator('.reference-workspace');
+  if(kind!=='pages'){
+   const syntax=await root.locator('.example-syntax-code').evaluate(el=>({base:getComputedStyle(el).color,colours:[...el.querySelectorAll('span')].map(e=>getComputedStyle(e).color)}));
+   assert.ok(syntax.colours.some(c=>c!==syntax.base),`${language}/${kind}: example has syntax colours`);
+  }
   assert.equal(await root.locator('.lesson-actions .copy-code-button').count(),0,'no example copy control among navigation icons');
   const misplaced=await root.locator('.copy-code-button').evaluateAll(es=>es.filter(e=>!e.closest('.visual-example-code,.tag-card-heading,.file-example-code')).map(e=>e.getAttribute('aria-label')));
   assert.deepEqual(misplaced,[],'each copy button is beside the code it copies');
@@ -85,7 +89,16 @@ try{
    assert.ok(colours.text.length>0&&colours.text.every(c=>c===colours.normal),'text between the tags uses the normal text colour');
    assert.ok(colours.tags.length>0&&colours.tags.every(c=>c!==colours.normal),'actual tags retain their syntax colour');
    await root.getByRole('button',{name:'Copy text elements example code',exact:true}).click();
-   assert.equal(await page.evaluate(()=>window.copied.at(-1)),'<h1>Main heading</h1>\n<h2>Main sections</h2>');
+   assert.equal(await page.evaluate(()=>window.copied.at(-1)),'<h1>Main heading</h1>');
+   assert.equal(await root.locator('[data-html-tag] button[aria-pressed="true"]').count(),1);
+   await root.getByRole('button',{name:'Show b code',exact:true}).click();
+   assert.equal(await root.locator('.font-featured-example .visual-example-code>code').textContent(),'<b>Bold text</b>');
+   assert.equal(await root.locator('[data-html-tag="b"]').getAttribute('data-example'),'true');
+   assert.equal(await root.locator('[data-html-tag="h1"]').getAttribute('data-example'),null);
+   await root.getByRole('button',{name:'Copy text elements example code',exact:true}).click();
+   assert.equal(await page.evaluate(()=>window.copied.at(-1)),'<b>Bold text</b>');
+   await root.getByRole('button',{name:'Show p code',exact:true}).click();
+   assert.equal(await root.locator('.font-featured-example .visual-example-code>code').textContent(),'<p>A paragraph.</p>');
    await root.getByRole('button',{name:'Copy mark code',exact:true}).click();
    assert.equal(await page.evaluate(()=>window.copied.at(-1)),'<mark>Marked text</mark>');
   }else if(kind==='css'){

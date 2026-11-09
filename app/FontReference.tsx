@@ -2,7 +2,7 @@ import CopyCodeButton from "./CopyCodeButton";
 import React, {useState} from 'react';
 
 export const FONT_FAMILIES = ['Arial', 'Helvetica', 'Verdana', 'Tahoma', 'Trebuchet MS', 'Times New Roman', 'Georgia', 'Garamond', 'Courier New', 'Lucida Console', 'Comic Sans MS', 'Impact', 'Palatino Linotype', 'Brush Script MT', 'serif', 'sans-serif', 'monospace', 'cursive', 'fantasy', 'system-ui'];
-export default function FontReference({language, onNext, actions}: {language: string; onNext: () => void; actions?: React.ReactNode}) {
+export default function FontReference({language, onNext, actions, renderCode}: {language: string; onNext: () => void; actions?: React.ReactNode; renderCode?: (code: string) => React.ReactNode}) {
   const [selected, setSelected] = useState('Courier New');
   const selectedFamily = selected.includes(' ') ? `'${selected}'` : selected;
   const selectedLabel = selected === 'system-ui' ? 'System UI' : selected.charAt(0).toUpperCase() + selected.slice(1);
@@ -10,7 +10,7 @@ export default function FontReference({language, onNext, actions}: {language: st
   return <section className="html-text-reference font-examples-reference" aria-label="Font examples">
     <div className="font-featured-example" aria-label="Font code example">
       <div className="font-example-heading"><b>Example · {selectedLabel}</b>{actions && <div className="desktop-pane-actions">{actions}</div>}</div>
-      <div className="visual-example-code"><code>{exampleCode}</code><CopyCodeButton iconOnly code={exampleCode} label="font example" /></div>
+      <div className="visual-example-code"><code className="example-syntax-code">{renderCode ? renderCode(exampleCode) : exampleCode}</code><CopyCodeButton iconOnly code={exampleCode} label="font example" /></div>
       <span>Choose a font below to see its code here. Copy the example to use it in your page.</span>
     </div>
     <div className="html-tag-grid font-example-grid">{FONT_FAMILIES.map(font => {
