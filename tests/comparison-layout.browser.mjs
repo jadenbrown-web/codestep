@@ -15,7 +15,10 @@ try {
    const h=await header.boundingBox(),b=await header.locator('.copy-code-button').boundingBox();
    assert.ok(Math.abs(h.y+h.height/2-b.y-b.height/2)<=1,`Copy vertical alignment ${width} ${theme}`);
   }
-  await page.getByRole('button',{name:'Open comparison examples',exact:true}).click();
+  if(width<=850) await page.getByRole('button',{name:'Open comparison examples',exact:true}).click();
+  else await page.locator('.example-picker-panel').waitFor();
+  assert.ok((await page.locator('.comparison-panel-identity').first().innerText()).includes('Python'));
+  assert.ok((await page.locator('.comparison-panel-identity').first().innerText()).includes('Your language'));
   const drawer=await page.locator('.example-picker-panel').boundingBox();
   const choice=page.locator('.example-picker-list .lesson-list-row>button').filter({hasText:'Repeat code every second'});
   await choice.scrollIntoViewIfNeeded();
@@ -27,9 +30,16 @@ try {
    assert.ok(code.x>=drawer.x+drawer.width-1,'Drawer must not cover either code panel');
   }
   await choice.click();
+  if(width>850) assert.equal(await page.locator('.example-picker-panel').isVisible(),true,'Desktop topics stay open after selection');
   assert.match(await page.locator('.comparison-card').first().innerText(),/Python does not have JavaScript's setInterval/);
   assert.match(await page.locator('.comparison-unavailable').innerText(),/loop with a delay or a timer library/);
   assert.equal(await page.locator('.comparison-card').first().locator('.copy-code-button').isDisabled(),true);
+  await page.getByRole('button',{name:'Compare with C#',exact:true}).click();
+  if(width>850) await page.locator('.example-picker-panel').waitFor();
+  const identities=await page.locator('.comparison-panel-identity').allInnerTexts();
+  assert.match(identities[0],/Python[\s\S]*Your language/);
+  assert.match(identities[1],/C#[\s\S]*Comparing with/);
+  assert.equal(await page.locator('.comparison-language-name').count(),3);
   await page.close();
   console.log(`PASS ${width} ${theme}: drawer geometry, clear unsupported topic and aligned copy buttons`);
  }

@@ -83,12 +83,12 @@ test('toolbar notes toggle opens and closes the explanations panel', () => {
   assert.match(comparison.html(), /<aside[^>]*id="comparison-notes-panel"[^>]*hidden=""/);
 });
 
-test('only the selected comparison language has a visible name in the toolbar', () => {
+test('all comparison languages have visible names in the toolbar', () => {
   const comparison = setup();
-  assert.equal((comparison.html().match(/class="comparison-language-name"/g) ?? []).length, 1);
+  assert.equal((comparison.html().match(/class="comparison-language-name"/g) ?? []).length, 3);
   assert.match(comparison.html(), /class="comparison-language-name">javascript<\/span>/);
   comparison.switchTo('cpp');
-  assert.equal((comparison.html().match(/class="comparison-language-name"/g) ?? []).length, 1);
+  assert.equal((comparison.html().match(/class="comparison-language-name"/g) ?? []).length, 3);
   assert.match(comparison.html(), /class="comparison-language-name">cpp<\/span>/);
 });
 

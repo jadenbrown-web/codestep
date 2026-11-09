@@ -1668,12 +1668,12 @@ html[data-theme="dark"] .example-syntax-code .syntax-function-name{color:#d9e7de
 /* Keep local run instructions visible and distinguish supporting tools from program steps. */
 .computer-run-guide>h2{font:700 15px/1.5 var(--sans);margin:0 0 10px;color:var(--ui-text)}
 .computer-run-guide>p{margin:0;line-height:1.6}
-.lesson-breakdown-sections .import-breakdown{padding:16px;border:1px solid #b68626;border-left:4px solid #b68626;border-radius:12px;background:#fff8e8;margin-top:12px}
-.breakdown-section-heading{padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid #b6862660}
+.lesson-breakdown-sections .import-breakdown{padding:8px;border:1px solid #b68626;border-radius:12px;background:#fff8e8;margin-top:12px}
+.breakdown-section-heading{padding-bottom:6px;margin-bottom:6px;border-bottom:1px solid #b6862660}
 .breakdown-section-kind{display:block;font:800 11px/1.5 var(--sans);letter-spacing:1px;color:#76520e;margin-bottom:4px}
 .lesson-breakdown-sections .import-breakdown .breakdown-label{font:800 19px/1.4 var(--sans);letter-spacing:0;color:#76520e;margin:0 0 6px}
 .breakdown-section-heading>p{font:400 13px/1.6 var(--sans);color:var(--ui-text);margin:0}
-.lesson-breakdown-sections .setup-breakdown{padding:16px;border:1px solid #3983af;border-left:4px solid #3983af;border-radius:12px;background:#eef7fd;margin-top:12px}
+.lesson-breakdown-sections .setup-breakdown{padding:8px;border:1px solid #3983af;border-radius:12px;background:#eef7fd;margin-top:12px}
 .lesson-breakdown-sections .setup-breakdown>.breakdown-label{color:#215f86}
 html[data-theme="dark"] .lesson-breakdown-sections .import-breakdown{background:#292417;border-color:#bca153}
 html[data-theme="dark"] .breakdown-section-kind,html[data-theme="dark"] .lesson-breakdown-sections .import-breakdown .breakdown-label{color:#f0ce7b}
@@ -1694,4 +1694,30 @@ html[data-theme="dark"] .lesson-breakdown-sections .setup-breakdown>.breakdown-l
 @media(min-width:851px){
  .language-comparison[open]:has(.example-picker-panel){padding-left:var(--side-drawer-width)}
  .language-comparison:has(.example-picker-panel) .comparison-menu-backdrop{display:none}
+}
+
+/* Keep supporting sections compact, with equal borders rather than a heavy edge. */
+.lesson-breakdown-sections :is(.import-breakdown,.setup-breakdown){margin-top:4px;border-radius:8px}
+.lesson-breakdown-sections :is(.import-breakdown,.setup-breakdown) .breakdown-part{padding:8px}
+.lesson-breakdown-sections :is(.import-breakdown,.setup-breakdown) .breakdown-grid{gap:6px}
+.lesson-breakdown-sections .import-breakdown .breakdown-label{font-size:16px;margin-bottom:3px}
+.breakdown-section-heading>p{font-size:12px;line-height:1.5}
+.breakdown-section-kind{font-size:10px;margin-bottom:2px}
+.language-comparison .comparison-panel-identity{display:flex;align-items:center;gap:7px;flex:none;color:var(--ui-text);font-family:var(--sans)}
+.comparison-panel-identity>span{display:flex;flex-direction:column;gap:1px}
+.comparison-panel-identity strong{font:750 14px/1.2 var(--sans)}
+.comparison-panel-identity small{font:500 10px/1.2 var(--sans);color:var(--ui-muted)}
+.language-comparison .comparison-file-tab{gap:12px}
+.language-comparison .comparison-file-name{margin-left:auto;font-size:11px;opacity:.8}
+html[data-theme] .language-comparison .comparison-header-languages .language-choice{border:1px solid transparent;border-radius:7px;box-shadow:none;background:transparent;color:var(--ui-text);min-height:44px}
+html[data-theme] .language-comparison .comparison-header-languages .language-choice[data-active="true"]{border:1px solid var(--green-dark);background:var(--selection-surface);box-shadow:none}
+html[data-theme] .language-comparison .comparison-header-languages .language-choice:after{display:none;content:none}
+.language-comparison .comparison-header-languages .comparison-language-name{display:block;font:650 10px/1.2 var(--sans);color:inherit}
+@media(min-width:851px){
+ .comparison-example-menu>.drawer-toggle,.comparison-topic-head>.drawer-close{display:none}
+}
+@media(max-width:600px){
+ .language-comparison .comparison-file-name{display:none}
+ .language-comparison .comparison-panel-identity{gap:5px}
+ .comparison-panel-identity img{width:22px;height:22px}
 }
