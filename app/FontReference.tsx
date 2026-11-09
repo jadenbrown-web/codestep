@@ -10,7 +10,7 @@ export default function FontReference({language, onNext, actions, renderCode}: {
   return <section className="html-text-reference font-examples-reference" aria-label="Font examples">
     <div className="font-featured-example" aria-label="Font code example">
       <div className="font-example-heading"><b>Example · {selectedLabel}</b>{actions && <div className="desktop-pane-actions">{actions}</div>}</div>
-      <div className="visual-example-code"><code className="example-syntax-code">{renderCode ? renderCode(exampleCode) : exampleCode}</code><CopyCodeButton iconOnly code={exampleCode} label="font example" /></div>
+      <div className={`visual-example-code${language === 'css' ? ' css-featured-code' : ''}`}><code className="example-syntax-code">{renderCode ? renderCode(exampleCode) : exampleCode}</code><CopyCodeButton iconOnly code={exampleCode} label="font example" /></div>
       <span>Choose a font below to see its code here. Copy the example to use it in your page.</span>
     </div>
     <div className="html-tag-grid font-example-grid">{FONT_FAMILIES.map(font => {

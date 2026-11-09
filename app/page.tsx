@@ -4439,6 +4439,12 @@ function comparisonUnavailable(topic: Lesson, missing: Language) {
   return `This course has no matching ${name} example for “${topic.title}”. This does not mean ${name} cannot do it. Choose another topic or language to compare.`;
 }
 
+function javascriptInputLesson(lesson: Lesson | undefined, language: Language, runtime: InputRuntime) {
+  if (!lesson || language !== "javascript" || !lesson.compareNode) return lesson;
+  const nodeLesson = lessons.javascript.find(item => item.title === lesson.title && item.compareNode) ?? lesson;
+  return runtime === "browser" ? { ...nodeLesson, ...browserInputPatch() } : nodeLesson;
+}
+
 function InlineCode({ code, language }: { code: string; language: Language }) {
   const special = /^\\[nrt]$/.test(code) ? "attribute" : /^<[^>]+>$|^#include$/.test(code) ? "header" : /^(main|correct|WriteLine|ReadLine)$/.test(code) ? "function-name" : "";
   return <code className="explanation-code prose-code">{special ? <span className={`syntax-${special}`}>{code}</span> : <HighlightedCode code={code} language={language} />}</code>;
@@ -4495,7 +4501,7 @@ function ComparisonExamplePicker({ target, selected, onSelect, sourceLanguage, p
   return <div className="comparison-example-menu" ref={root} onKeyDown={event => { if (event.key === "Escape" && open && window.innerWidth <= 850) { event.preventDefault(); event.stopPropagation(); setOpen(false); trigger.current?.focus(); } }}>
     <button ref={trigger} className="drawer-toggle" aria-label={open ? "Comparison topics" : "Open comparison examples"} data-active={open} aria-expanded={open} aria-controls="comparison-examples" onClick={() => { setOpen(window.innerWidth > 850 || !open); setQuery(""); if (window.innerWidth > 850) search.current?.focus(); }}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><path d="M5 6h14M5 12h14M5 18h14"/></svg></button>
     {open && <button className="comparison-menu-backdrop" aria-label="Close comparison examples" onClick={() => setOpen(false)} />}
-    {open && <div className="example-picker-panel" id="comparison-examples"><div className="drawer-head comparison-topic-head"><span className="drawer-language-logo" aria-hidden="true"><img src={`language-logos/${target}.svg`} alt="" width="30" height="30" /></span><div><small>COMPARE TOPICS</small><b>{languageName(target)}</b></div><button className="drawer-close" aria-label="Close comparison topics" onClick={() => { setOpen(false); trigger.current?.focus({ preventScroll: true }); }}>×</button></div>{pins.length > 0 && <section className="drawer-pins" aria-label="Pinned comparison lessons"><b>Pinned · Tap to remove</b><PinnedTopicShortcuts topics={pins} activeTopic={selected ? matchingLesson(selected, sourceLanguage)?.title ?? null : null} language={sourceLanguage} showTitles removeOnSelect onSelect={onTogglePin} /></section>}<div className="drawer-pin-hint">All topics · Pin up to {pinLimit} · {pins.length}/{pinLimit}</div><input ref={search} aria-label="Search comparison examples" placeholder="Search examples…" value={query} onChange={event => setQuery(event.target.value)} /><div className="example-picker-list topic-list">{choices.map(item => { const matching = matchingLesson(item, sourceLanguage); return <TopicLessonRow key={item.title} title={item.title} category={item.eyebrow.replace(/^\d+\s*[·.]\s*/, "")} tone={lessonTone(item)} active={selected === item} onSelect={() => { search.current?.blur(); onSelect(item.title); setOpen(window.innerWidth > 850); trigger.current?.focus({ preventScroll: true }); }} unavailable={!matching ? `No matching ${languageName(sourceLanguage)} example` : undefined} pin={<TopicPinButton limit={pinLimit} topic={matching?.title ?? null} pins={pins} onToggle={onTogglePin} />} />; })}{!choices.length && <p>No matching examples.</p>}</div></div>}
+    {open && <div className="example-picker-panel" id="comparison-examples"><div className="drawer-head comparison-topic-head"><span className="drawer-language-logo" aria-hidden="true"><img src={`language-logos/${target}.svg`} alt="" width="30" height="30" /></span><div><small>COMPARE TOPICS</small><b>{languageName(target)}</b></div><button className="drawer-close" aria-label="Close comparison topics" onClick={() => { setOpen(false); trigger.current?.focus({ preventScroll: true }); }}>×</button></div>{pins.length > 0 && <section className="drawer-pins" aria-label="Pinned comparison lessons"><b>Pinned · Tap to remove</b><PinnedTopicShortcuts topics={pins} activeTopic={selected ? matchingLesson(selected, sourceLanguage)?.title ?? null : null} language={sourceLanguage} showTitles removeOnSelect onSelect={onTogglePin} /></section>}<div className="drawer-pin-hint">All topics · Pin up to {pinLimit} · {pins.length}/{pinLimit}</div><input ref={search} aria-label="Search comparison examples" placeholder="Search examples…" value={query} onChange={event => setQuery(event.target.value)} /><div className="example-picker-list topic-list">{choices.map(item => { const matching = matchingLesson(item, sourceLanguage); return <TopicLessonRow key={item.title} title={item.title} category={item.eyebrow.replace(/^\d+\s*[·.]\s*/, "")} tone={lessonTone(item)} active={selected?.title === item.title} onSelect={() => { search.current?.blur(); onSelect(item.title); setOpen(window.innerWidth > 850); trigger.current?.focus({ preventScroll: true }); }} unavailable={!matching ? `No matching ${languageName(sourceLanguage)} example` : undefined} pin={<TopicPinButton limit={pinLimit} topic={matching?.title ?? null} pins={pins} onToggle={onTogglePin} />} />; })}{!choices.length && <p>No matching examples.</p>}</div></div>}
   </div>;
 }
 
@@ -4504,19 +4510,21 @@ function LanguageComparison({ language, lesson, editorCode, showComments, onClos
   const [target, setTarget] = useState<Language>(language === "javascript" ? "cpp" : "javascript");
   const [pickedLesson, setPickedLesson] = useState<Lesson | null>(null);
   const [notesOpen, setNotesOpen] = useState(false);
-  const sourceLesson = pickedLesson ? matchingLesson(pickedLesson, language) : lesson;
+  const [comparisonRuntime, setComparisonRuntime] = useState<InputRuntime>(language === "javascript" && lesson.compareNode && /createInterface/.test(lesson.answer) ? "node" : "browser");
+  const [runtimeChanged, setRuntimeChanged] = useState(false);
+  const sourceLesson = javascriptInputLesson(pickedLesson ? matchingLesson(pickedLesson, language) : lesson, language, comparisonRuntime);
   const prefix = lessonComment(lesson, language);
   const editedBody = editorCode.startsWith(prefix) ? editorCode.slice(prefix.length) : editorCode;
-  const hasEditorCode = !pickedLesson && !lesson.referenceOnly && !!editedBody.trim();
+  const hasEditorCode = !pickedLesson && !(language === "javascript" && runtimeChanged) && !lesson.referenceOnly && !!editedBody.trim();
   const sourceCode = hasEditorCode ? editorCode : sourceLesson ? lessonExample(sourceLesson, language, showComments) : "";
-  const other = matchingLesson(pickedLesson ?? lesson, target);
+  const other = javascriptInputLesson(matchingLesson(pickedLesson ?? lesson, target), target, comparisonRuntime);
   const selectPinnedTopic = (topic: string) => {
     const nextIndex = pinnedLessonIndex(lessons[language], topic);
     if (nextIndex >= 0) setPickedLesson(lessons[language][nextIndex]);
   };
   const activeTopic = sourceLesson?.title ?? null;
   const targetCode = other ? lessonExample(other, target, showComments) : "";
-  const replayKey = `${language}-${target}-${pickedLesson?.title ?? lesson.title}`;
+  const replayKey = `${language}-${target}-${pickedLesson?.title ?? lesson.title}-${comparisonRuntime}`;
   const sourceReveal = useQuickCodeReveal(sourceCode, replayKey);
   const targetReveal = useQuickCodeReveal(targetCode, replayKey);
   useEffect(() => {
@@ -4531,6 +4539,7 @@ function LanguageComparison({ language, lesson, editorCode, showComments, onClos
     <header className="lesson-nav app-header comparison-topbar"><div className="lesson-brand-group"><BackButton onClick={onClose} label="Back to lesson" /><button className="drawer-toggle comparison-notes-toggle" aria-label="Lesson explanations" title="Lesson explanations" data-active={notesOpen} aria-expanded={notesOpen} aria-controls="comparison-notes-panel" onClick={() => setNotesOpen(!notesOpen)}><LessonSymbol /></button><ComparisonExamplePicker key={target} target={target} sourceLanguage={language} pins={pinnedTopics} pinLimit={pinLimit} onTogglePin={onTogglePin} selected={other} onSelect={title => setPickedLesson(lessons[target].find(item => item.title === title) ?? null)} /></div>{pinLimit > 2 && pinnedTopics.length > 0 && <div className="desktop-header-pins"><PinnedTopicShortcuts topics={pinnedTopics} activeTopic={activeTopic} onSelect={selectPinnedTopic} language={language} /></div>}<div className="comparison-header-languages"><h2 id="language-comparison-title">Compare code</h2><div className="compare-language-choices"><div role="group" aria-label="Comparison language">{(Object.keys(lessons) as Language[]).filter(item => item !== language && item !== "html" && item !== "css").map(item => <button className={`language-choice language-${item}`} key={item} aria-label={`Compare with ${languageName(item)}`} title={languageName(item)} data-active={target === item} aria-pressed={target === item} onClick={() => setTarget(item)}><img className="comparison-language-logo" src={`language-logos/${item}.svg`} alt="" width="24" height="24" /><span className="comparison-language-name">{languageName(item)}</span></button>)}</div></div></div></header>
     <div className="language-comparison-controls">
       <p className="comparison-context">{(pickedLesson ?? lesson).title}</p>
+      {((language === "javascript" && sourceLesson?.compareNode) || (target === "javascript" && other?.compareNode)) && <div className="comparison-input-runtime runtime-picker" role="group" aria-label="JavaScript input environment"><span>JavaScript input:</span><button data-active={comparisonRuntime === "browser"} aria-pressed={comparisonRuntime === "browser"} onClick={() => { setComparisonRuntime("browser"); setRuntimeChanged(true); }}>Browser prompt()</button><button data-active={comparisonRuntime === "node"} aria-pressed={comparisonRuntime === "node"} onClick={() => { setComparisonRuntime("node"); setRuntimeChanged(true); }}>Node.js terminal</button><small>Changes the comparison example; your practice code stays unchanged.</small></div>}
     </div>
     <div className="language-comparison-columns">
       <section className={`comparison-card ${sourceLesson ? `tone-${lessonTone(sourceLesson)}` : ""}`}><header className="comparison-filebar"><div className={`comparison-file-tab ${pinnedTopics.length && pinLimit <= 2 ? "has-pinned-topics" : ""}`} data-topic-tone={sourceLesson ? lessonTone(sourceLesson) : "green"} title={languageName(language)}><span className="comparison-panel-identity"><img src={`language-logos/${language}.svg`} alt="" width="26" height="26"/><span><strong>{languageName(language)}</strong><small>Your language</small></span></span><span className="comparison-file-name">{sourceLesson ? sourceLesson.fileName || challengeFile(language) : languageName(language)}</span>{pinLimit <= 2 && <PinnedTopicShortcuts topics={pinnedTopics} activeTopic={activeTopic} onSelect={selectPinnedTopic} language={language} />}</div><CopyCodeButton iconOnly code={sourceCode} label={languageName(language)} /></header>{!sourceLesson && <p className="comparison-unavailable" role="status">{comparisonUnavailable(pickedLesson ?? lesson, language)}</p>}<pre className="numbered-comparison-code" aria-label={`${languageName(language)} code for comparison`}><CodeLineNumbers text={sourceCode} /><code className="comparison-code-space" aria-hidden="true">{sourceCode}</code><code className="comparison-code-reveal"><HighlightedCode code={sourceReveal} fullCode={sourceCode} language={language} /></code></pre></section>
@@ -4649,7 +4658,7 @@ export default function Home() {
 
   const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0, cpp: 0, python: 0, html: 0, css: 0 });
 
-  const [inputRuntime, setInputRuntime] = useState<InputRuntime>("node");
+  const [inputRuntime, setInputRuntime] = useState<InputRuntime>("browser");
   const baseCurrent = language ? lessons[language][index] : null;
   const current = useMemo(() => baseCurrent && language === "javascript" && baseCurrent.compareNode && inputRuntime === "browser" ? { ...baseCurrent, ...browserInputPatch() } : baseCurrent, [baseCurrent, language, inputRuntime]);
   const pinnedTopics = language ? (pinnedByLanguage[language] ?? []).slice(0, pinLimit) : [];

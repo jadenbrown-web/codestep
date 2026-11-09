@@ -1808,3 +1808,16 @@ html[data-theme] .lesson-drawer .drawer-lessons,html[data-theme] .comparison-exa
 .runtime-command>.copy-code-control{flex:none}
 .input-runtime-examples .copy-code-button,.run-commands .copy-code-button{width:44px;height:44px;display:flex;align-items:center;justify-content:center;margin:0;padding:0;border:0;border-radius:8px;background:transparent;color:var(--ui-text)}
 .input-runtime-examples .copy-code-button svg,.run-commands .copy-code-button svg{width:20px;height:20px}
+
+/* JavaScript input selection is available whichever comparison pane contains it. */
+.language-comparison-controls:has(.comparison-input-runtime){display:flex;flex-wrap:wrap;align-items:center;height:auto;min-height:0;max-height:none;gap:4px 12px;padding:4px 8px}
+.comparison-input-runtime{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:0}
+.comparison-input-runtime>span{font:650 12px var(--sans);color:var(--ui-text)}
+.comparison-input-runtime>small{font:400 11px/1.4 var(--sans);color:var(--ui-muted)}
+/* Only CSS Fonts, Borders and Hex Colours: centre the hit area on the first code line. */
+.reference-workspace .css-featured-code{align-items:flex-start;padding:12px 0;gap:8px;min-height:44px}
+.reference-workspace .css-featured-code>code{font:700 13px/20px var(--mono);margin:0;min-width:0}
+.reference-workspace .css-featured-code>.copy-code-control{align-self:flex-start;margin-top:-12px;flex:none}
+.reference-workspace .css-featured-code>.copy-code-control .copy-code-button{display:flex;align-items:center;justify-content:center;padding:0;width:44px;height:44px;border:0;border-radius:8px;background:transparent}
+.reference-workspace .css-featured-code .copy-code-button svg{display:block;width:20px;height:20px;margin:0}
+html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:hover,:focus-visible){background:var(--selection-surface)!important;border-radius:8px;box-shadow:none}

@@ -22,7 +22,9 @@ try{
   await page.locator('.drawer-lessons .topic-lesson-button').filter({hasText:'Ask for a name in VS Code'}).click();
   if(width<=850) await page.getByRole('button',{name:'Lesson',exact:true}).click();
   await page.locator('.input-runtime-examples').waitFor();
-  assert.equal(await page.locator('.input-runtime-editor').count(),2);
+  assert.equal(await page.locator('.input-runtime-editor').count(),1);
+  assert.equal(await page.locator('.input-runtime-editor').getAttribute('data-runtime'),'node');
+  assert.match(await page.locator('.editor-panel .file-tab').innerText(),/name.js/);
   await page.getByRole('button',{name:'Copy Node.js run command code',exact:true}).click();
   assert.equal(await page.evaluate(()=>window.copiedCode),'node name.mjs');
   await page.getByRole('button',{name:'Copy Node.js · terminal input code',exact:true}).click();
@@ -31,7 +33,17 @@ try{
   if(width<=850) await page.getByRole('button',{name:'Use keyboard',exact:true}).click();
   await page.getByRole('textbox',{name:'Code editor',exact:true}).fill('old attempt');
   if(width<=850) await page.getByRole('button',{name:'Lesson',exact:true}).click();
+  await page.getByRole('button',{name:'Node.js terminal',exact:true}).click();
+  assert.equal(await page.locator('.input-runtime-editor').getAttribute('data-runtime'),'browser');
+  await page.getByRole('button',{name:'Copy Browser · prompt dialog code',exact:true}).click();
+  assert.match(await page.evaluate(()=>window.copiedCode),/let name = prompt/);
+  if(width<=850) await page.getByRole('button',{name:'Practice',exact:true}).click();
+  await page.waitForFunction(()=>document.querySelector('textarea[aria-label="Code editor"]').value==='');
+  assert.match(await page.locator('.editor-panel .file-tab').innerText(),/name.mjs/);
+  await page.getByRole('textbox',{name:'Code editor',exact:true}).fill('old Node attempt');
+  if(width<=850) await page.getByRole('button',{name:'Lesson',exact:true}).click();
   await page.getByRole('button',{name:'Browser prompt()',exact:true}).click();
+  assert.equal(await page.locator('.input-runtime-editor').getAttribute('data-runtime'),'node');
   if(width<=850) await page.getByRole('button',{name:'Practice',exact:true}).click();
   await page.waitForFunction(()=>document.querySelector('textarea[aria-label="Code editor"]').value==='');
   assert.match(await page.locator('.editor-panel .file-tab').innerText(),/name.js/);
@@ -41,8 +53,19 @@ try{
   if(width<=850) await page.getByRole('button',{name:'Lesson',exact:true}).click();
   await page.getByRole('button',{name:'Copy browser HTML launcher code',exact:true}).click();
   assert.match(await page.evaluate(()=>window.copiedCode),/<script src="name.js"><\/script>/);
-  assert.equal(await page.locator('.input-runtime-editor').evaluateAll(elements=>elements.some(el=>el.scrollWidth>el.clientWidth+1)),false,'Both code cards fit');
+  assert.equal(await page.locator('.input-runtime-editor').evaluateAll(elements=>elements.some(el=>el.scrollWidth>el.clientWidth+1)),false,'Alternative code card fits');
+  await page.getByRole('button',{name:'Compare with another language',exact:true}).click();
+  const dialog=page.locator('dialog[open]');
+  await dialog.getByRole('button',{name:'Compare with C#',exact:true}).click();
+  assert.match(await dialog.locator('.comparison-code-space').first().textContent(),/let name = prompt/);
+  await dialog.getByRole('button',{name:'Node.js terminal',exact:true}).click();
+  assert.match(await dialog.locator('.comparison-code-space').first().textContent(),/createInterface/);
+  assert.match(await dialog.locator('.comparison-code-space').last().textContent(),/Console.ReadLine/);
+  await dialog.getByRole('button',{name:'Browser prompt()',exact:true}).click();
+  assert.match(await dialog.locator('.comparison-code-space').first().textContent(),/let name = prompt/);
+  await dialog.getByRole('button',{name:'Back to lesson',exact:true}).click();
+  assert.match(await page.locator('textarea[aria-label="Code editor"]').inputValue(),/let name = prompt/,'Compare switches leave practice code unchanged');
   await page.close();
-  console.log(`PASS ${width}: stacked examples, exact copies, runtime switching clears attempt and browser practice validates`);
+  console.log(`PASS ${width}: opposite examples swap correctly, exact copies, switching clears attempts and browser practice validates`);
  }
 }finally{await browser.close();}

@@ -23,7 +23,7 @@ export default function CssVisualReference({kind,onNext,actions,renderCode}:{kin
  return <section className={`html-text-reference css-visual-reference ${colours?'colour-reference':'border-reference'}`} aria-label={colours?'Hex colour examples':'Border examples'}>
   <div className="font-featured-example">
    <div className="font-example-heading"><b>{colours?'Example · Red text':`Example · ${selected.name}`}</b><div className="desktop-pane-actions">{actions}</div></div>
-   <div className="visual-example-code"><code className="example-syntax-code">{renderCode ? renderCode(example) : example}</code><CopyCodeButton iconOnly code={example} label={colours?'red HTML tag':'border example'} /></div>
+   <div className="visual-example-code css-featured-code"><code className="example-syntax-code">{renderCode ? renderCode(example) : example}</code><CopyCodeButton iconOnly code={example} label={colours?'red HTML tag':'border example'} /></div>
    {colours?<><p className="featured-red-text">Red text</p><span>Put the hex value after <strong>color:</strong> inside the tag’s <strong>style</strong> attribute. In a CSS file, use <code>p {'{'} color: #FF0000; {'}'}</code>. Change the hex value to try another colour.</span></>:<span>Use <code>&lt;p class="notice"&gt;Border text&lt;/p&gt;</code> in your HTML. Change the border style to try the examples below.</span>}
   </div>
   <div className={`html-tag-grid ${colours?'colour-example-grid':'border-example-grid'}`}>

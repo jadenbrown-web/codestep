@@ -22,7 +22,8 @@ const css=fs.readFileSync('app/globals.css','utf8');
 const browser=await chromium.launch({headless:true,...(fs.existsSync('/usr/bin/chromium')?{executablePath:'/usr/bin/chromium'}:{})});
 try{
  const page=await browser.newPage();
- for(const width of [1400,390]) for(const theme of ['light','dark']) for(const [language,kind] of [['html','text'],['html','fonts'],['html','pages'],['css','css'],['css','colours']]){
+ const cases=process.env.CSS_REFERENCE_ONLY ? [['css','fonts'],['css','css'],['css','colours']] : [['html','text'],['html','fonts'],['html','pages'],['css','fonts'],['css','css'],['css','colours']];
+ for(const width of [1400,390]) for(const theme of ['light','dark']) for(const [language,kind] of cases){
   await page.setViewportSize({width,height:900});
   await page.setContent(`<html data-theme="${theme}"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${css}</style><body><div id="root"></div></body></html>`);
   await page.evaluate(({language,kind})=>{window.fixtureLanguage=language;window.fixtureKind=kind;window.copied=[];Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async text=>window.copied.push(text)}});},{language,kind});
@@ -43,6 +44,17 @@ try{
    assert.ok(syntax.colours.some(c=>c!==syntax.base),`${language}/${kind}: example has syntax colours`);
   }
   assert.equal(await root.locator('.lesson-actions .copy-code-button').count(),0,'no example copy control among navigation icons');
+  if(language==='css'){
+   const codeRow=root.locator('.css-featured-code');
+   const copy=codeRow.locator('.copy-code-button');
+   await copy.hover();
+   const state=await copy.evaluate(el=>{const s=getComputedStyle(el);return {background:s.backgroundColor,radius:s.borderRadius};});
+   assert.notEqual(state.background,'rgba(0, 0, 0, 0)','CSS copy hover has visible fill');
+   assert.equal(state.radius,'8px');
+   const firstLine=await codeRow.locator('code').evaluate(el=>{const r=el.getBoundingClientRect();return r.y+parseFloat(getComputedStyle(el).lineHeight)/2;});
+   const box=await copy.boundingBox();
+   assert.ok(Math.abs(box.y+box.height/2-firstLine)<1,'CSS copy highlight centres on the first code line');
+  }
   const misplaced=await root.locator('.copy-code-button').evaluateAll(es=>es.filter(e=>!e.closest('.visual-example-code,.tag-card-heading,.file-example-code')).map(e=>e.getAttribute('aria-label')));
   assert.deepEqual(misplaced,[],'each copy button is beside the code it copies');
   const alignment=await root.locator('.visual-example-code,.tag-card-heading,.file-example-code').evaluateAll(es=>es.map(e=>{
@@ -75,11 +87,11 @@ try{
   if(kind==='fonts'){
    await root.getByRole('button',{name:'Show Lucida Console code',exact:true}).click();
    await root.getByRole('button',{name:'Copy font example code',exact:true}).click();
-   assert.equal(await page.evaluate(()=>window.copied.at(-1)),`<p style="font-family: 'Lucida Console';">Lucida Console</p>`);
+   assert.equal(await page.evaluate(()=>window.copied.at(-1)),(language==='css'?"p { font-family: 'Lucida Console'; }":`<p style="font-family: 'Lucida Console';">Lucida Console</p>`));
    assert.equal(await root.locator('[data-font] button[aria-pressed="true"]').count(),1,'one font drives the displayed example');
    await root.getByRole('button',{name:'Show Courier New code',exact:true}).click();
    await root.getByRole('button',{name:'Copy font example code',exact:true}).click();
-   assert.equal(await page.evaluate(()=>window.copied.at(-1)),`<p style="font-family: 'Courier New';">Courier New</p>`);
+   assert.equal(await page.evaluate(()=>window.copied.at(-1)),(language==='css'?"p { font-family: 'Courier New'; }":`<p style="font-family: 'Courier New';">Courier New</p>`));
   }else if(kind==='text'){
    const colours=await root.locator('.font-featured-example .visual-example-code>code').evaluate(el=>({
     normal:getComputedStyle(el).color,

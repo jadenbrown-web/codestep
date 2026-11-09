@@ -9,10 +9,13 @@ const source = fs.readFileSync('app/page.tsx', 'utf8');
 const ast = ts.createSourceFile('page.tsx', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
 const start = source.indexOf('{', source.indexOf('const lessons:'));
 const lessons = JSON.parse(source.slice(start, source.indexOf('\n};', start) + 2));
-const functions = ast.statements.filter(node => ts.isFunctionDeclaration(node) && ['matchingLesson', 'comparisonUnavailable', 'LanguageComparison'].includes(node.name?.text)).map(node => node.getText(ast)).join('\n');
+const functions = ast.statements.filter(node => ts.isFunctionDeclaration(node) && ['matchingLesson', 'comparisonUnavailable', 'javascriptInputLesson', 'LanguageComparison'].includes(node.name?.text)).map(node => node.getText(ast)).join('\n');
 const compiled = ts.transpileModule(functions, { compilerOptions: { jsx: ts.JsxEmit.React, target: ts.ScriptTarget.ES2022 } }).outputText;
 const pinModule = ts.transpileModule(fs.readFileSync("app/topic-pins.ts", "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
 const { firstTopicLessonIndex, pinnedLessonIndex, lessonTopic } = await import("data:text/javascript;base64," + Buffer.from(pinModule).toString("base64"));
+
+const inputModule=ts.transpileModule(fs.readFileSync('app/input-runtimes.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
+const {browserInputPatch}=await import('data:text/javascript;base64,'+Buffer.from(inputModule).toString('base64'));
 
 function setup(language = 'python', reveal = code => code, pinLimit = 2) {
   const states = [];
@@ -21,8 +24,8 @@ function setup(language = 'python', reveal = code => code, pinLimit = 2) {
   const Copy = () => null;
   const Pins = () => null;
   const Code = ({ code }) => React.createElement(React.Fragment, null, code);
-  const names = ['React', 'useState', 'useRef', 'useEffect', 'lessons', 'lessonComment', 'lessonExample', 'languageName', 'lessonTone', 'challengeFile', 'MenuHeader', 'ComparisonExamplePicker', 'CopyCodeButton', 'HighlightedCode', 'LessonExplanation', 'CppSetupGuide', 'BackButton', 'CodeLineNumbers', 'useQuickCodeReveal', 'PinnedTopicShortcuts', 'pinnedLessonIndex', 'lessonTopic', 'LessonSymbol', 'LessonBreakdown', 'lessonOverview', 'CodeProse'];
-  const values = [React, initial => { const index = cursor++; if (!(index in states)) states[index] = initial; return [states[index], next => { states[index] = next; }]; }, () => ({ current: null }), () => {}, lessons, () => '', lesson => lesson.answer, value => value, () => 'blue', () => 'code', () => null, Picker, Copy, Code, ({ lesson }) => lesson.explanation, () => null, () => null, () => null, (code, key, enabled = true) => enabled ? reveal(code, key) : "", Pins, pinnedLessonIndex, lessonTopic, () => null, () => null, lesson => lesson.title, () => null];
+  const names = ['React', 'useState', 'useRef', 'useEffect', 'lessons', 'lessonComment', 'lessonExample', 'languageName', 'lessonTone', 'challengeFile', 'MenuHeader', 'ComparisonExamplePicker', 'CopyCodeButton', 'HighlightedCode', 'LessonExplanation', 'CppSetupGuide', 'BackButton', 'CodeLineNumbers', 'useQuickCodeReveal', 'PinnedTopicShortcuts', 'pinnedLessonIndex', 'lessonTopic', 'LessonSymbol', 'LessonBreakdown', 'lessonOverview', 'CodeProse', 'browserInputPatch'];
+  const values = [React, initial => { const index = cursor++; if (!(index in states)) states[index] = initial; return [states[index], next => { states[index] = next; }]; }, () => ({ current: null }), () => {}, lessons, () => '', lesson => lesson.answer, value => value, () => 'blue', () => 'code', () => null, Picker, Copy, Code, ({ lesson }) => lesson.explanation, () => null, () => null, () => null, (code, key, enabled = true) => enabled ? reveal(code, key) : "", Pins, pinnedLessonIndex, lessonTopic, () => null, () => null, lesson => lesson.title, () => null, browserInputPatch];
   const Component = new Function(...names, compiled + '\nreturn LanguageComparison;')(...values);
   const props = { language, pinLimit, lesson: lessons[language][0], editorCode: 'original editor code', showComments: false, pinnedTopics: ['Functions', 'Time'].map(topic => lessons[language].find(lesson => lessonTopic(lesson) === topic).title), onClose() {} };
   function render() { cursor = 0; return Component(props); }
@@ -36,6 +39,7 @@ function setup(language = 'python', reveal = code => code, pinLimit = 2) {
     pinSelectorCount() { let count = 0; function visit(node) { if (!React.isValidElement(node)) return; if (node.type === Pins) count += 1; React.Children.forEach(node.props.children, visit); } visit(render()); return count; },
     activePin() { return find(render(), node => node.type === Pins).props.activeTopic; },
     select(title) { find(render(), node => node.type === Picker).props.onSelect(title); },
+    selectRuntime(runtime) { find(render(), node => node.type === 'button' && node.props.children === (runtime === 'browser' ? 'Browser prompt()' : 'Node.js terminal')).props.onClick(); },
     switchTo(target) { find(render(), node => node.type === 'button' && node.props.className?.includes(`language-${target}`)).props.onClick(); },
     code() { const tree = render(); const sections = []; function visit(node) { if (!React.isValidElement(node)) return; if (node.type === 'section') sections.push(node); React.Children.forEach(node.props.children, visit); } visit(tree); return sections.map(section => find(section, node => node.type === Code).props.code); },
     toggleNotes() { find(render(), node => node.type === "button" && node.props["aria-label"] === "Lesson explanations").props.onClick(); },
@@ -170,4 +174,25 @@ test('desktop comparison moves its single pin selector into the navigation bar',
   assert.doesNotMatch(comparison.html(), /comparison-file-tab has-pinned-topics/);
   comparison.selectPin('Time');
   assert.equal(comparison.activePin(), 'Run code after a delay');
+});
+
+test('JavaScript comparison defaults to browser input and can switch to Node opposite C#',()=>{
+ const comparison=setup('csharp');
+ comparison.select('Ask for a name in VS Code');
+ assert.match(comparison.code()[0],/Console.ReadLine/);
+ assert.match(comparison.code()[1],/let name = prompt/);
+ comparison.selectRuntime('node');
+ assert.match(comparison.code()[1],/createInterface/);
+ assert.match(comparison.code()[0],/Console.ReadLine/);
+ comparison.selectRuntime('browser');
+ assert.match(comparison.code()[1],/let name = prompt/);
+});
+test('JavaScript source can swap input environment while the compared C++ sample stays intact',()=>{
+ const comparison=setup('javascript');
+ comparison.select('Ask for a name in VS Code');
+ assert.match(comparison.code()[0],/let name = prompt/);
+ const cpp=comparison.code()[1];
+ comparison.selectRuntime('node');
+ assert.match(comparison.code()[0],/createInterface/);
+ assert.equal(comparison.code()[1],cpp);
 });
