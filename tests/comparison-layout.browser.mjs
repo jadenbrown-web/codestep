@@ -40,6 +40,20 @@ try {
   assert.match(identities[0],/Python[\s\S]*Your language/);
   assert.match(identities[1],/C#[\s\S]*Comparing with/);
   assert.equal(await page.locator('.comparison-language-name').count(),3);
+  const active=page.locator('.language-choice[data-active="true"]');
+  const style=await active.evaluate(el=>{const s=getComputedStyle(el),a=getComputedStyle(el,'::after');return {radius:s.borderRadius,background:s.backgroundColor,after:a.display};});
+  assert.equal(style.radius,'8px');
+  assert.equal(style.after,'none','No underline beneath the selected language');
+  const copy=page.locator('.comparison-card').last().locator('.copy-code-button');
+  await copy.hover();
+  assert.notEqual(await copy.evaluate(el=>getComputedStyle(el).backgroundColor),'rgba(0, 0, 0, 0)','Copy hover uses a filled highlight');
+  assert.equal(await copy.evaluate(el=>getComputedStyle(el).borderRadius),'8px');
+  if(width>850) {
+    assert.equal(await active.locator('img').evaluate(el=>getComputedStyle(el).width),'32px');
+    const header=await page.locator('.comparison-topbar').boundingBox(),group=await page.locator('.comparison-header-languages').boundingBox();
+    assert.ok(Math.abs(header.y+header.height/2-group.y-group.height/2)<=1,'Language controls are vertically centred in header '+JSON.stringify({header,group,styles:await page.locator('.comparison-header-languages').evaluate(el=>{const s=getComputedStyle(el);return {position:s.position,top:s.top,left:s.left,transform:s.transform}})}));
+    assert.ok(Math.abs(header.x+header.width/2-group.x-group.width/2)<=1,'Language controls are horizontally centred in header');
+  }
   await page.close();
   console.log(`PASS ${width} ${theme}: drawer geometry, clear unsupported topic and aligned copy buttons`);
  }
