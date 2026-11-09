@@ -1644,3 +1644,6 @@ html[data-theme="dark"]{--scrollbar-thumb:#607a6b}
 /* Keep the main Text Elements example above the complete set of previews. */
 .text-tag-reference .html-tag-grid{gap:4px;padding:6px}
 .text-tag-reference .html-tag-example{gap:2px;padding:4px}
+.text-tag-reference .visual-example-code .syntax-keyword{color:#2475a8}
+html[data-theme="dark"] .text-tag-reference .visual-example-code .syntax-keyword{color:#7bbcff}
+.text-tag-reference .visual-example-code .syntax-plain{color:var(--ui-text)}

@@ -7,12 +7,14 @@ const actions=source.slice(source.indexOf('  const lessonActions ='),source.inde
 const refStart=source.indexOf('{current!.referenceOnly ? <>');
 const reference=source.slice(refStart+1,source.indexOf(' : <>\n          <div className="editor-panel">',refStart))+' : null';
 const guideStart=source.indexOf('{(language === "html" || language === "css") && <section className="browser-run-guide"');
+const highlighter=source.slice(source.indexOf('function HighlightedCode('),source.indexOf('\nfunction LearningCode('));
 const guide=source.slice(guideStart,source.indexOf('          {current!.runHint',guideStart));
 const entry=`import React from 'react';import {createRoot} from 'react-dom/client';import FontReference from './app/FontReference';import HtmlTextReference from './app/HtmlTextReference';import CopyCodeButton from './app/CopyCodeButton';import CssVisualReference from './app/CssVisualReference';
 const language=window.fixtureLanguage||'html',blockMode=false,settingsOpen=false,showComments=false;
 const current={referenceOnly:true,referenceKind:window.fixtureKind,answer:'<p>Full reference</p>'};
 const lessonExample=(lesson)=>lesson.answer;const EditorModeSymbol=()=> <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18"/></svg>;
-const HighlightedCode=({code})=><>{code}</>;const InlineCode=({code})=><code>{code}</code>;const nextLesson=()=>{};
+${highlighter}
+const InlineCode=({code})=><code>{code}</code>;const nextLesson=()=>{};
 ${actions}
 createRoot(document.getElementById('root')).render(<main className="lesson-shell reference-mode mobile-practice"><header className="app-header lesson-nav">{lessonActions}</header><div className={window.innerWidth>850?"lesson-layout drawer-open":"lesson-layout drawer-closed"}><aside className="lesson-drawer"/><aside className="lesson-copy">${guide}</aside><section className="workspace reference-workspace">{${reference}}</section></div></main>);`;
 const bundle=await build({stdin:{contents:entry,loader:'tsx',resolveDir:process.cwd()},bundle:true,platform:'browser',format:'iife',write:false,define:{'process.env.NODE_ENV':'"production"'}});
@@ -75,6 +77,13 @@ try{
    await root.getByRole('button',{name:'Copy font example code',exact:true}).click();
    assert.equal(await page.evaluate(()=>window.copied.at(-1)),`<p style="font-family: 'Courier New';">Courier New</p>`);
   }else if(kind==='text'){
+   const colours=await root.locator('.font-featured-example .visual-example-code>code').evaluate(el=>({
+    normal:getComputedStyle(el).color,
+    text:[...el.querySelectorAll('.syntax-plain')].map(e=>getComputedStyle(e).color),
+    tags:[...el.querySelectorAll('.syntax-keyword')].map(e=>getComputedStyle(e).color)
+   }));
+   assert.ok(colours.text.length>0&&colours.text.every(c=>c===colours.normal),'text between the tags uses the normal text colour');
+   assert.ok(colours.tags.length>0&&colours.tags.every(c=>c!==colours.normal),'actual tags retain their syntax colour');
    await root.getByRole('button',{name:'Copy text elements example code',exact:true}).click();
    assert.equal(await page.evaluate(()=>window.copied.at(-1)),'<h1>Main heading</h1>\n<h2>Main sections</h2>');
    await root.getByRole('button',{name:'Copy mark code',exact:true}).click();

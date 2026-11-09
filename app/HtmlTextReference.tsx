@@ -22,11 +22,11 @@ export const HTML_TEXT_EXAMPLES: TagExample[] = [
 
 export const HTML_TOP_EXAMPLE = '<h1>Main heading</h1>\n<h2>Main sections</h2>';
 
-export default function HtmlTextReference({ onNext, actions }: { onNext: () => void; actions?: React.ReactNode }) {
+export default function HtmlTextReference({ onNext, actions, renderCode }: { onNext: () => void; actions?: React.ReactNode; renderCode?: (code: string) => React.ReactNode }) {
   return <section className="text-reference-preview html-text-reference text-tag-reference" aria-label="HTML text examples">
     <div className="font-featured-example" aria-label="Text elements code example">
       <div className="font-example-heading"><b>Example · Headings</b><div className="desktop-pane-actions">{actions}</div></div>
-      <div className="visual-example-code"><code>{HTML_TOP_EXAMPLE}</code><CopyCodeButton iconOnly code={HTML_TOP_EXAMPLE} label="text elements example" /></div>
+      <div className="visual-example-code"><code>{renderCode ? renderCode(HTML_TOP_EXAMPLE) : HTML_TOP_EXAMPLE}</code><CopyCodeButton iconOnly code={HTML_TOP_EXAMPLE} label="text elements example" /></div>
     </div>
     <div className="html-tag-grid">
       {HTML_TEXT_EXAMPLES.map(example => <article className="html-tag-example" data-html-tag={example.tag} aria-label={`<${example.tag}> example`} key={example.tag}>
