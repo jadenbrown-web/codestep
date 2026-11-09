@@ -46,3 +46,5 @@ next-env.d.ts
 /site.tar.gz
 /playwright-report/
 /test-results/
+
+/pages-dist/

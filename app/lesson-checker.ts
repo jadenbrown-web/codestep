@@ -15,13 +15,13 @@ async function browserParser(): Promise<typeof Parser> {
     const host = window as unknown as { TreeSitter?: typeof Parser };
     if (!host.TreeSitter) await new Promise<void>((resolve, reject) => {
       const script = document.createElement('script');
-      script.src = '/checker/tree-sitter.js';
+      script.src = 'checker/tree-sitter.js';
       script.onload = () => resolve();
       script.onerror = () => { script.remove(); reject(new Error('The code checker could not load. Please try again.')); };
       document.head.appendChild(script);
     });
     const Constructor = host.TreeSitter!;
-    await Constructor.init({ locateFile: (file: string) => `/checker/${file}` });
+    await Constructor.init({ locateFile: (file: string) => `checker/${file}` });
     return Constructor;
   })().catch(error => { loading = undefined; throw error; });
   return loading;
@@ -30,7 +30,7 @@ export async function prepareChecker(language: CourseLanguage) {
   if (!languageLoads.has(language)) languageLoads.set(language, (async () => {
     const Constructor = await browserParser();
     const parser = new Constructor();
-    parser.setLanguage(await Constructor.Language.load(`/checker/tree-sitter-${language === 'csharp' ? 'c_sharp' : language}.wasm`));
+    parser.setLanguage(await Constructor.Language.load(`checker/tree-sitter-${language === 'csharp' ? 'c_sharp' : language}.wasm`));
     parsers.set(language, parser);
     return parser;
   })().catch(error => { languageLoads.delete(language); throw error; }));

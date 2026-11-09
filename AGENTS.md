@@ -10,5 +10,5 @@ The user requires all future updates to be stored on GitHub as well as running o
 - Read existing changes before editing. Never commit credentials, `.env` files, generated build archives, or TypeScript build caches.
 - Use the connected GitHub tools or the authenticated GitHub CLI for GitHub operations. Never use a Sites credential for a GitHub push.
 - Run `npm test` and the relevant browser checks with `npm run test:browser`. GitHub Actions must pass for the pushed commit.
-- Package and publish through the Sites workflow; do not replace hosting with GitHub Pages, which cannot run this Worker app.
-- GitHub CI validates and builds the app; Sites publishing remains a separate step. Do not claim a GitHub push automatically deployed the website.
+- Preserve the Sites app and also build the standalone browser app for GitHub Pages with `npm run build:pages`. GitHub Pages must use the standalone static artifact, not the Worker build.
+- GitHub CI validates both builds. The Pages deployment job publishes the standalone build when Pages is enabled; verify its result. Sites publishing remains a separate step. Verify the actual live build before claiming an update is visible.
