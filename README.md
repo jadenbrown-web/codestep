@@ -46,9 +46,11 @@ There are two builds from the same React components and lessons:
 - `npm run build`: the existing Sites Worker app.
 - `npm run build:pages`: an independent static browser app in `pages-dist/`. It needs no Sites server or ChatGPT login. Language logos, examples, and WebAssembly code-checking grammars are bundled locally. Progress stays in the browser on each origin.
 
-The GitHub Actions workflow checks the app and builds both outputs. It stores build artifacts in this private repository; it does not publish a public website. A private repository does not make GitHub Pages private.
+The GitHub Actions workflow checks the app and builds both outputs. After checks pass on `main`, it publishes the standalone build to GitHub Pages. The website may be public while this source repository stays private. Visitors can inspect the browser JavaScript, HTML and CSS, but cannot edit the repository or deployed app without repository access. Never put secrets in browser code.
 
-The user requires private hosting with controlled sharing. The existing Sites audience remains unchanged. Independent hosting must enforce access controls (for example, approved email sign-in or password protection) before publication. A URL alone is not access control. Local development runs on the developer's computer; sharing it remotely requires a protected hosting service or tunnel.
+To activate hosting, open repository **Settings → Pages** and select **GitHub Actions** as the source. GitHub requires an eligible plan to publish Pages from a private repository. Do not make the repository public to bypass that restriction. After activation, rerun the CodeStep checks workflow. The expected URL is `https://jadenbrown-web.github.io/codestep/`; it is live only after a successful Pages deployment and URL verification.
+
+The existing Sites audience stays unchanged. Progress is stored separately in each browser/origin.
 
 For another project path, set `CODESTEP_BASE_PATH` when building; its default is `/codestep/`.
 

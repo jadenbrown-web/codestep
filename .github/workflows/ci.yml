@@ -46,3 +46,29 @@ jobs:
           path: dist/
           if-no-files-found: error
           retention-days: 7
+
+  deploy-pages:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: codestep-pages
+          path: pages-dist
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: pages-dist
+      - name: Deploy the independent app
+        id: deployment
+        uses: actions/deploy-pages@v4
