@@ -11,6 +11,11 @@ try {
   await page.setContent(`<html data-theme="${theme}"><style>${fs.readFileSync('app/globals.css','utf8')}</style><body><div id="root"></div></body></html>`);
   await page.addScriptTag({content:bundle.outputFiles[0].text});
   await page.locator('dialog[open]').waitFor();
+  const book=await page.getByRole('button',{name:'Lesson explanations',exact:true}).boundingBox();
+  const menu=await page.locator('.comparison-example-menu>.drawer-toggle').boundingBox();
+  assert.ok(book.x<menu.x,'Book sits to the left of the topic menu');
+  assert.ok(Math.abs(book.y+book.height/2-menu.y-menu.height/2)<=1,'Book and menu share their vertical centre');
+
   for(const header of await page.locator('.comparison-filebar').all()){
    const h=await header.boundingBox(),b=await header.locator('.copy-code-button').boundingBox();
    assert.ok(Math.abs(h.y+h.height/2-b.y-b.height/2)<=1,`Copy vertical alignment ${width} ${theme}`);
@@ -49,10 +54,10 @@ try {
   assert.notEqual(await copy.evaluate(el=>getComputedStyle(el).backgroundColor),'rgba(0, 0, 0, 0)','Copy hover uses a filled highlight');
   assert.equal(await copy.evaluate(el=>getComputedStyle(el).borderRadius),'8px');
   if(width>850) {
-    assert.equal(await active.locator('img').evaluate(el=>getComputedStyle(el).width),'32px');
+    assert.equal(await active.locator('img').evaluate(el=>getComputedStyle(el).width),'30px');
     const header=await page.locator('.comparison-topbar').boundingBox(),group=await page.locator('.comparison-header-languages').boundingBox();
     assert.ok(Math.abs(header.y+header.height/2-group.y-group.height/2)<=1,'Language controls are vertically centred in header '+JSON.stringify({header,group,styles:await page.locator('.comparison-header-languages').evaluate(el=>{const s=getComputedStyle(el);return {position:s.position,top:s.top,left:s.left,transform:s.transform}})}));
-    assert.ok(Math.abs(header.x+header.width/2-group.x-group.width/2)<=1,'Language controls are horizontally centred in header');
+    assert.ok(header.x+header.width-group.x-group.width>=12 && header.x+header.width-group.x-group.width<=32,'Language controls align near the right panel edge');
   }
   await page.close();
   console.log(`PASS ${width} ${theme}: drawer geometry, clear unsupported topic and aligned copy buttons`);

@@ -1738,3 +1738,26 @@ html[data-theme] .language-comparison .comparison-header-languages .language-cho
  .language-comparison .comparison-header-languages .comparison-language-name{font-size:11px}
 }
 @media(max-width:850px){html[data-theme] .language-comparison .app-header .language-choice img{width:28px;height:28px;max-width:28px;max-height:28px}}
+
+/* Shared, unboxed language identities and sidebar selection across both modes. */
+html[data-theme] :is(.lesson-drawer,.comparison-example-menu) .drawer-language-logo,
+html[data-theme] :is(.lesson-drawer,.comparison-example-menu) .drawer-language-logo img{border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0}
+html[data-theme] :is(.lesson-drawer,.comparison-example-menu) .drawer-language-logo{width:32px;height:32px;min-width:32px;display:flex;align-items:center;justify-content:center}
+html[data-theme] :is(.lesson-drawer,.comparison-example-menu) .drawer-language-logo img{width:30px;height:30px;max-width:30px;max-height:30px;object-fit:contain}
+html[data-theme] .lesson-drawer .drawer-lessons .lesson-list-row>button[data-active="true"],html[data-theme] .comparison-example-menu .example-picker-list .lesson-list-row>button[data-active="true"]{background:var(--selection-surface)!important;border:1px solid transparent!important;border-radius:8px;box-shadow:none}
+.lesson-drawer .drawer-lessons .lesson-list-row>button:not(.topic-pin-button){position:relative;padding-right:26px}
+.lesson-selected-mark{position:absolute;right:8px;top:calc(50% - 6px);width:12px;height:12px;color:var(--ui-muted)}
+.app-back>.status-icon{display:block;width:22px;height:22px;flex:none}
+.language-comparison .lesson-brand-group>.comparison-notes-toggle{width:44px;height:44px;min-width:44px;padding:0}
+.language-comparison .lesson-brand-group>.comparison-notes-toggle svg{width:22px;height:22px}
+@media(min-width:851px){
+ .language-comparison .app-header.comparison-topbar>.comparison-header-languages{justify-self:end;margin-right:16px}
+ html[data-theme] .language-comparison .app-header .language-choice img{width:30px;height:30px;max-width:30px;max-height:30px}
+}
+
+html[data-theme] :is(.lesson-drawer,.comparison-example-menu) .drawer-head{box-sizing:border-box;min-height:64px;height:64px;padding:8px 14px;align-items:center;gap:10px;background:var(--drawer-surface);border-bottom:1px solid var(--drawer-edge)}
+html[data-theme] :is(.lesson-drawer,.comparison-example-menu) .drawer-head b{font:750 18px/1.25 var(--sans);margin:0}
+@media(min-width:851px){
+ .language-comparison .app-header.comparison-topbar>.lesson-brand-group{grid-column:1 / 3;grid-row:1;display:flex;align-items:center;gap:8px;width:max-content}
+ .language-comparison .comparison-example-menu>.drawer-toggle{display:flex}
+}
