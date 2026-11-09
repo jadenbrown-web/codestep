@@ -18,6 +18,18 @@ try {
     assert.deepEqual(styles[0],styles[1],`${theme}: scrollbar styles must match`);
     console.log(`PASS ${theme}: language sits beside logo and both pane scrollbars match`);
   }
+  for (const width of [1400,390]) for (const reference of [false,true]) for (const theme of ['light','dark']) {
+    await page.setViewportSize({width,height:844});
+    await page.setContent(`<html data-theme="${theme}"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${css}</style><body><main class="lesson-shell ${reference?'reference-mode':''} mobile-lesson"><header class="app-header lesson-nav"><div class="lesson-brand-group"><button class="home-button drawer-toggle" aria-label="Go home">⌂</button></div></header><div class="lesson-layout drawer-open"><aside class="lesson-drawer"><div class="drawer-head"><div class="desktop-home-controls"><div class="lesson-brand-group"><button class="home-button" aria-label="Go home">⌂</button></div></div><div class="drawer-title-group"><div class="drawer-language-identity"><span class="drawer-language-logo"><img width="32" height="32" alt=""/></span><b>HTML</b></div></div></div></aside><aside class="lesson-copy"></aside></div></main></body></html>`);
+    const homes=page.getByRole('button',{name:'Go home'});
+    assert.equal(await homes.count(),1,`${theme} ${width} ${reference?'reference':'editor'}: one visible Home button`);
+    if(width>850) {
+      const home=await page.locator('.lesson-drawer .home-button').boundingBox();
+      const logo=await page.locator('.drawer-language-logo').boundingBox();
+      assert.ok(Math.abs((home.y+home.height/2)-(logo.y+logo.height/2))<1,'desktop Home stays aligned in the sidebar');
+    }
+    console.log(`PASS ${theme} ${width} ${reference?'reference':'editor'}: one Home control`);
+  }
   const source = fs.readFileSync('app/page.tsx','utf8');
   const desktopControls = source.match(/const desktopHomeControls = ([^\n]+)/)[1];
   assert.ok(desktopControls.includes('<HomeButton'));

@@ -1533,3 +1533,13 @@ html[data-theme="dark"]{--scrollbar-thumb:#607a6b}
  .html-reference-next{height:44px}
  .html-reference-footer{min-height:52px}
 }
+
+/* A single Home control per view, including desktop reference pages. */
+.lesson-drawer .desktop-home-controls{display:none}
+@media(min-width:851px){
+ .lesson-shell .lesson-drawer .desktop-home-controls{display:flex;flex:none;align-self:center}
+ html[data-theme] .lesson-shell.reference-mode>.app-header .lesson-brand-group>.home-button{display:none}
+ .lesson-shell.reference-mode .desktop-home-controls .lesson-brand-group{display:flex;flex-direction:row;align-items:center;gap:0}
+ .lesson-shell.reference-mode .lesson-drawer .drawer-head{height:52px;min-height:52px;padding:4px 8px;align-items:center;gap:6px}
+ .lesson-shell.reference-mode .lesson-drawer .drawer-language-identity>b{font-size:18px}
+}
