@@ -4986,7 +4986,7 @@ export default function Home() {
           </div>
         </aside>
         <section className={`workspace ${editorExpanded ? "editor-expanded" : ""} ${current!.referenceOnly ? "reference-workspace" : ""} ${blockMode ? "blocks-workspace" : ""}`}>
-          {current!.referenceOnly ? <><div className="reference-pane-toolbar"><b>{current!.eyebrow.replace(/^\d+\s*·\s*/, "")}</b><div className="desktop-pane-actions">{lessonActions}</div></div>{current!.referenceKind === "comparisons" ? <div className="comparison-reference-preview">
+          {current!.referenceOnly ? <>{current!.referenceKind !== "fonts" && <div className="reference-pane-toolbar"><b>{current!.eyebrow.replace(/^\d+\s*·\s*/, "")}</b><div className="desktop-pane-actions">{lessonActions}</div></div>}{current!.referenceKind === "comparisons" ? <div className="comparison-reference-preview">
             <div className="preview-bar"><span>◆</span> {language === "javascript" ? "JAVASCRIPT" : "C SHARP"} COMPARISON REFERENCE</div>
             <div className="comparison-start"><code>{language === "javascript" ? "let x = 5;" : "int x = 5;"}</code><span>Each row below asks a different question about the same value.</span></div>
             <div className="comparison-table" role="table" aria-label="Comparison operators">
@@ -5007,7 +5007,7 @@ export default function Home() {
             </div>
             <div className="comparison-reminder"><b>Remember the “arrow” shapes</b><span><code>&gt;</code> points away from the greater value; <code>&lt;</code> points towards the smaller value. They are called greater-than and less-than signs.</span></div>
             <button className="reference-next" onClick={nextLesson}>Continue to names beginning with J →</button>
-          </div> : current!.referenceKind === "fonts" ? <FontReference language={language} onNext={nextLesson} /> : current!.referenceKind === "pages" ? <div className="pages-reference-preview">
+          </div> : current!.referenceKind === "fonts" ? <FontReference language={language} onNext={nextLesson} actions={lessonActions} /> : current!.referenceKind === "pages" ? <div className="pages-reference-preview">
             <div className="preview-bar"><span>◆</span> TWO HTML FILES</div>
             <div className="file-pair">
               <article><header><span>1</span><b>index.html</b></header><pre><code><HighlightedCode language="html" code={'<!DOCTYPE html>\n<html>\n<body>\n\n  <h1>First Page</h1>\n\n  <a href="page2.html">Go to Page 2</a>\n\n</body>\n</html>'} /></code></pre></article>

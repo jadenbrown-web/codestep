@@ -10,15 +10,17 @@ const compiled=await build({entryPoints:['app/FontReference.tsx'],bundle:true,pl
 const module={exports:{}};
 new Function('require','module','exports',compiled.outputFiles[0].text)(require,module,module.exports);
 const {default:Component}=module.exports;
-const markup=renderToStaticMarkup(React.createElement(Component,{language:"html",onNext(){}}));
+const markup=renderToStaticMarkup(React.createElement(Component,{language:"html",onNext(){},actions:React.createElement("button",{"aria-label":"Settings"},"⚙")}));
 const css=fs.readFileSync('app/globals.css','utf8');
 const browser=await chromium.launch({headless:true,...(fs.existsSync('/usr/bin/chromium')?{executablePath:'/usr/bin/chromium'}:{})});
 try {
   const page=await browser.newPage();
   for(const viewport of [{width:1952,height:1000},{width:1440,height:900},{width:1280,height:720},{width:1024,height:600},{width:390,height:844}]) for(const theme of ['light','dark']) {
     await page.setViewportSize(viewport);
-    await page.setContent(`<html data-theme="${theme}"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${css}</style><body><main class="lesson-shell reference-mode mobile-practice"><header class="app-header lesson-nav"></header><div class="lesson-layout drawer-closed"><aside class="lesson-drawer"></aside><aside class="lesson-copy"></aside><section class="workspace reference-workspace"><div class="reference-pane-toolbar"><b>Fonts</b><div class="desktop-pane-actions"><button aria-label="Settings">⚙</button></div></div>${markup}</section></div></main></body></html>`);
+    await page.setContent(`<html data-theme="${theme}"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${css}</style><body><main class="lesson-shell reference-mode mobile-practice"><header class="app-header lesson-nav"></header><div class="lesson-layout drawer-closed"><aside class="lesson-drawer"></aside><aside class="lesson-copy"></aside><section class="workspace reference-workspace">${markup}</section></div></main></body></html>`);
     assert.equal(await page.locator('[data-font]').count(),20);
+    assert.equal(await page.locator('.reference-pane-toolbar').count(),0,'no detached Fonts header');
+    assert.equal(await page.locator('.font-example-heading .desktop-pane-actions').count(),1,'controls are inside the example pane');
     assert.equal(await page.locator('.font-featured-example code').count(),1);
     assert.equal(await page.locator('[data-font] code').count(),0);
     assert.equal(await page.locator('.font-example-label').count(),20);

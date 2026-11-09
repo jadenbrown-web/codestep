@@ -1,10 +1,10 @@
 import React from 'react';
 
 export const FONT_FAMILIES = ['Arial', 'Helvetica', 'Verdana', 'Tahoma', 'Trebuchet MS', 'Times New Roman', 'Georgia', 'Garamond', 'Courier New', 'Lucida Console', 'Comic Sans MS', 'Impact', 'Palatino Linotype', 'Brush Script MT', 'serif', 'sans-serif', 'monospace', 'cursive', 'fantasy', 'system-ui'];
-export default function FontReference({language, onNext}: {language: string; onNext: () => void}) {
+export default function FontReference({language, onNext, actions}: {language: string; onNext: () => void; actions?: React.ReactNode}) {
   return <section className="html-text-reference font-examples-reference" aria-label="Font examples">
     <div className="font-featured-example" aria-label="Font code example">
-      <b>Example · Courier New</b>
+      <div className="font-example-heading"><b>Example · Courier New</b>{actions && <div className="desktop-pane-actions">{actions}</div>}</div>
       <code>{language === 'html' ? `<p style="font-family: 'Courier New';">Courier New</p>` : `p { font-family: 'Courier New'; }`}</code>
       <span>Replace <strong>Courier New</strong> with a font name below to try it.</span>
     </div>
