@@ -1761,3 +1761,28 @@ html[data-theme] :is(.lesson-drawer,.comparison-example-menu) .drawer-head b{fon
  .language-comparison .app-header.comparison-topbar>.lesson-brand-group{grid-column:1 / 3;grid-row:1;display:flex;align-items:center;gap:8px;width:max-content}
  .language-comparison .comparison-example-menu>.drawer-toggle{display:flex}
 }
+
+/* Both learning paths render the same topic-row component and geometry. */
+html[data-theme] :is(.lesson-drawer,.comparison-example-menu) .topic-list .lesson-list-row.topic-lesson-row{display:grid;grid-template-columns:minmax(0,1fr) 44px;align-items:center;gap:4px;width:100%;min-width:0;margin:0}
+html[data-theme] :is(.lesson-drawer,.comparison-example-menu) .topic-list .lesson-list-row.topic-lesson-row>button.topic-lesson-button{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 12px;align-items:center;gap:8px;width:100%;min-width:0;max-width:none;height:auto;min-height:70px;max-height:none;margin:1px 0;padding:10px 8px;border:1px solid transparent;border-radius:8px;box-shadow:none;transform:none;white-space:normal;text-align:left;background:transparent}
+html[data-theme] :is(.lesson-drawer,.comparison-example-menu) .topic-list .topic-lesson-button:is(:hover,[data-active="true"]){background:var(--selection-surface)!important;border-color:transparent!important}
+html[data-theme] :is(.lesson-drawer,.comparison-example-menu) .topic-lesson-button .example-label{display:flex;flex-direction:column;align-items:flex-start;gap:5px;min-width:0}
+html[data-theme] :is(.lesson-drawer,.comparison-example-menu) .topic-lesson-button .example-label strong{font:400 14px/1.4 var(--sans);color:var(--ui-text);white-space:normal}
+html[data-theme] :is(.lesson-drawer,.comparison-example-menu) .topic-lesson-button .example-label small{display:block;width:fit-content;max-width:100%;margin:0;padding:4px 7px;border-radius:4px;background:var(--topic-pop);color:#101813;font:850 11px/1.3 var(--sans);letter-spacing:.25px}
+html[data-theme] .topic-lesson-button .example-choice-mark{position:static;display:flex;align-items:center;justify-content:center;width:12px;min-width:12px;color:var(--ui-muted)}
+html[data-theme] .topic-lesson-button .example-choice-mark svg{width:12px;height:12px;margin:0}
+/* Keep every language name inside its selected tile. */
+html[data-theme] .language-comparison .app-header .language-choice{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;overflow:hidden;box-sizing:border-box;line-height:1.2}
+html[data-theme] .language-comparison .app-header .language-choice .comparison-language-name{max-width:100%;font:650 10px/1.2 var(--sans);white-space:nowrap;margin:0;padding:0;flex:none}
+/* Book mode compares both languages in parallel, with neutral card edges. */
+.comparison-notes:not([hidden]){display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);overflow:hidden}
+.comparison-notes-heading{grid-column:1 / -1}
+.comparison-notes .comparison-notes-language{min-width:0;min-height:0;overflow:auto;margin:0;padding:12px;border:0}
+.comparison-notes .comparison-notes-language:last-child{border-left:1px solid var(--ui-border)}
+.comparison-notes .comparison-notes-language>h3{position:sticky;top:-12px;z-index:1;display:flex;align-items:center;gap:8px;margin:-12px -12px 10px;padding:12px;background:var(--ui-surface);font:750 16px/1.4 var(--sans)}
+.comparison-notes .breakdown-grid{grid-template-columns:minmax(0,1fr)}
+html[data-theme] .comparison-notes .lesson-breakdown-sections .breakdown-part:nth-child(n){border:1px solid var(--ui-border)!important;box-shadow:none;transform:none}
+html[data-theme] .comparison-notes .comparison-notes-close{display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:0;padding:0;border:0;border-radius:8px;background:transparent;box-shadow:none;color:var(--ui-text)}
+.comparison-notes-close svg{width:22px;height:22px}
+@media(max-width:600px){.comparison-notes:not([hidden]){grid-template-columns:minmax(0,1fr);grid-template-rows:auto;overflow:auto}.comparison-notes .comparison-notes-language{overflow:visible}.comparison-notes .comparison-notes-language:last-child{border-left:0;border-top:1px solid var(--ui-border)}}
+html[data-theme] .lesson-drawer .drawer-lessons,html[data-theme] .comparison-example-menu .example-picker-list{padding:4px 6px 8px}

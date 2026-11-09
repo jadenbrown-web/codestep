@@ -45,7 +45,25 @@ try {
   assert.match(identities[0],/Python[\s\S]*Your language/);
   assert.match(identities[1],/C#[\s\S]*Comparing with/);
   assert.equal(await page.locator('.comparison-language-name').count(),3);
+  await page.getByRole('button',{name:'Lesson explanations',exact:true}).click();
+  const notes=page.locator('.comparison-notes');
+  await notes.waitFor();
+  const columns=await notes.locator('.comparison-notes-language').all();
+  assert.equal(columns.length,2);
+  if(width>850){
+    const left=await columns[0].boundingBox(),right=await columns[1].boundingBox();
+    assert.ok(right.x>=left.x+left.width-1 && Math.abs(right.y-left.y)<=1,'Book compares languages side by side');
+  }
+  for(const card of await notes.locator('.breakdown-part').all()){
+    assert.equal(await card.evaluate(el=>{const s=getComputedStyle(el);return s.borderLeftColor===s.borderRightColor&&s.borderLeftWidth===s.borderRightWidth;}),true,'Book cards have neutral even borders');
+  }
+  assert.equal(await notes.locator('.comparison-notes-close').evaluate(el=>getComputedStyle(el).borderTopWidth),'0px');
+  await notes.locator('.comparison-notes-close').click();
   const active=page.locator('.language-choice[data-active="true"]');
+  for(const tile of await page.locator('.language-choice').all()){
+    const button=await tile.boundingBox(),name=await tile.locator('.comparison-language-name').boundingBox();
+    assert.ok(name.x>=button.x-1 && name.x+name.width<=button.x+button.width+1 && name.y+name.height<=button.y+button.height+1,'Language name fits inside highlight');
+  }
   const style=await active.evaluate(el=>{const s=getComputedStyle(el),a=getComputedStyle(el,'::after');return {radius:s.borderRadius,background:s.backgroundColor,after:a.display};});
   assert.equal(style.radius,'8px');
   assert.equal(style.after,'none','No underline beneath the selected language');
