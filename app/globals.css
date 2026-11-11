@@ -1821,3 +1821,17 @@ html[data-theme] .lesson-drawer .drawer-lessons,html[data-theme] .comparison-exa
 .reference-workspace .css-featured-code>.copy-code-control .copy-code-button{display:flex;align-items:center;justify-content:center;padding:0;width:44px;height:44px;border:0;border-radius:8px;background:transparent}
 .reference-workspace .css-featured-code .copy-code-button svg{display:block;width:20px;height:20px;margin:0}
 html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:hover,:focus-visible){background:var(--selection-surface)!important;border-radius:8px;box-shadow:none}
+
+/* Compact reference examples without shrinking the code or copy hit areas. */
+.text-tag-reference .html-tag-code{color:var(--ui-text)}
+:is(.text-tag-reference,.font-examples-reference)>.font-featured-example{padding:6px 10px;gap:2px}
+.font-examples-reference .html-tag-example{padding:6px;gap:4px}
+.font-examples-reference .visual-example-choice{gap:4px;justify-content:center}
+.font-examples-reference .font-example-sample{font-size:20px;line-height:1.25}
+.font-examples-reference .font-example-grid{grid-template-rows:none;grid-auto-rows:minmax(76px,max-content);align-content:start;gap:5px;padding:6px}
+@media(min-width:851px){:is(.text-tag-reference,.font-examples-reference) .font-example-heading{margin:-6px -10px 0;padding-left:10px}}
+@media(max-width:850px){
+ :is(.text-tag-reference,.font-examples-reference)>.font-featured-example{padding:5px 8px;gap:2px}
+ .font-examples-reference .font-example-grid{grid-template-rows:none;grid-auto-rows:minmax(76px,max-content)}
+}
+@container html-reference (max-width:550px){.font-examples-reference .font-example-grid{grid-template-rows:none;grid-auto-rows:minmax(76px,max-content)}}

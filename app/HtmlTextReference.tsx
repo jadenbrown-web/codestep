@@ -17,7 +17,7 @@ export const HTML_TEXT_EXAMPLES: TagExample[] = [
   { tag: 'ins', text: 'Inserted text', code: '<ins>Inserted text</ins>' },
   { tag: 'sub', before: 'H', text: '2', after: 'O', code: 'H<sub>2</sub>O' },
   { tag: 'sup', before: '2', text: '3', after: ' = 8', code: '2<sup>3</sup> = 8' },
-  { tag: 'a', text: 'Open a page', code: '<a tabIndex={-1} href="page.html">Open a page</a>' },
+  { tag: 'a', text: 'Open a page', code: '<a href="page.html">Open a page</a>' },
 ];
 
 export const HTML_TOP_EXAMPLE = '<h1>Main heading</h1>';
@@ -34,7 +34,7 @@ export default function HtmlTextReference({ onNext, actions, renderCode }: { onN
     <div className="html-tag-grid">
       {HTML_TEXT_EXAMPLES.map(example => <article className="html-tag-example" data-html-tag={example.tag} data-example={example.tag === selectedTag || undefined} aria-label={`<${example.tag}> example`} key={example.tag}>
         <button className="tag-example-choice" aria-label={`Show ${example.tag} code`} aria-pressed={example.tag === selectedTag} onClick={() => setSelectedTag(example.tag)} />
-        <div className="tag-card-heading"><code className="html-tag-code">{example.code}</code><CopyCodeButton iconOnly code={example.code} label={example.tag} /></div>
+        <div className="tag-card-heading"><code className="html-tag-code example-syntax-code">{renderCode ? renderCode(example.code) : example.code}</code><CopyCodeButton iconOnly code={example.code} label={example.tag} /></div>
         <div className="html-tag-sample" aria-hidden="true"><div className="html-tag-rendered">{example.before}{example.tag === 'a' ? <a tabIndex={-1} href="page.html" onClick={event => event.preventDefault()}>{example.text}</a> : createElement(example.tag, null, example.text)}{example.after}</div></div>
       </article>)}
     </div>

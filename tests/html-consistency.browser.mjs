@@ -39,8 +39,17 @@ try{
    assert.ok(Math.max(...centers)-Math.min(...centers)<1,'toolbar controls share a center line');
   }
   const root=page.locator('.reference-workspace');
+  if(kind==='text'){
+    const cards=await root.locator('.html-tag-code').evaluateAll(es=>es.map(el=>({base:getComputedStyle(el).color,colours:[...el.querySelectorAll('span')].map(span=>getComputedStyle(span).color)})));
+    assert.equal(cards.length,18);
+    assert.ok(cards.every(card=>card.colours.some(colour=>colour!==card.base)),'Every HTML card uses syntax colours');
+    if(width===390) assert.ok((await root.locator('.font-featured-example').boundingBox()).height<=84,'Phone featured heading stays compact');
+  }
+  if(kind==='fonts'){
+    assert.ok(await root.locator('[data-font]').evaluateAll(es=>es.every(el=>el.getBoundingClientRect().height<=84)),'Font cards are compact');
+  }
   if(kind!=='pages'){
-   const syntax=await root.locator('.example-syntax-code').evaluate(el=>({base:getComputedStyle(el).color,colours:[...el.querySelectorAll('span')].map(e=>getComputedStyle(e).color)}));
+   const syntax=await root.locator('.font-featured-example .example-syntax-code').evaluate(el=>({base:getComputedStyle(el).color,colours:[...el.querySelectorAll('span')].map(e=>getComputedStyle(e).color)}));
    assert.ok(syntax.colours.some(c=>c!==syntax.base),`${language}/${kind}: example has syntax colours`);
   }
   assert.equal(await root.locator('.lesson-actions .copy-code-button').count(),0,'no example copy control among navigation icons');
