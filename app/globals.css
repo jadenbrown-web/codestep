@@ -1851,3 +1851,23 @@ html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:h
 .named-text-colour-preview h1{font:700 20px/1.3 var(--sans);margin:0;overflow-wrap:anywhere}
 .colour-lesson-link{align-self:flex-start;min-height:44px;padding:8px 10px;border:1px solid var(--ui-border);border-radius:8px;background:var(--selection-surface);color:var(--ui-text);font:650 13px/1.4 var(--sans);text-align:left;cursor:pointer}
 .colour-example>.visual-example-choice{gap:4px;min-height:44px}
+
+/* Compact colour references share rounded, contained preview surfaces. */
+:is(.named-text-colour-reference,.colour-reference)>.font-featured-example{padding:6px 10px;gap:4px;min-height:0}
+:is(.named-text-colour-reference,.colour-reference) .colour-lesson-link{padding:4px 8px;min-height:36px;font-size:12px}
+.named-text-colour-reference .named-text-colour-grid,.colour-reference .colour-example-grid{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:none;grid-auto-rows:minmax(70px,max-content);align-content:start;gap:5px;padding:6px}
+.named-text-colour-reference .html-tag-example,.colour-reference .html-tag-example{padding:6px;gap:2px;min-height:0}
+.named-text-colour-reference .visual-example-choice{padding:0;min-height:44px;justify-content:center;gap:0}
+.named-text-colour-preview{box-sizing:border-box;width:100%;padding:8px;border-radius:7px;overflow:hidden;display:grid;place-items:center;min-height:44px;flex:none}
+.named-text-colour-preview p{font:600 17px/1.3 var(--sans);margin:0}
+.colour-reference .font-featured-example>.featured-red-text{display:inline-block;flex:none;align-self:flex-start;box-sizing:border-box;max-width:100%;margin:0;padding:5px 10px!important;border-radius:7px!important;overflow:hidden;font-size:17px}
+.colour-reference .colour-swatch{min-height:18px;flex:none;width:100%;box-sizing:border-box}
+.colour-reference .visual-example-choice{padding:0;gap:3px;min-height:38px}
+.colour-lesson-explanation{font:400 14px/1.6 var(--sans);color:var(--ui-muted)}
+@media(max-width:850px){.named-text-colour-reference .named-text-colour-grid,.colour-reference .colour-example-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none;grid-auto-rows:minmax(68px,max-content)}:is(.named-text-colour-reference,.colour-reference)>.font-featured-example{padding:5px 8px;gap:2px}}
+@container html-reference (max-width:550px){.named-text-colour-reference .named-text-colour-grid,.colour-reference .colour-example-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none}}
+.named-text-colour-preview p{font-size:14px;line-height:1.3}
+@media(min-width:851px){:is(.named-text-colour-reference,.colour-reference) .font-example-heading{margin:-6px -10px 0;padding-left:10px}}
+.colour-reference .colour-example-grid{grid-auto-rows:minmax(84px,max-content)}
+.colour-reference .html-tag-example{min-height:84px}
+.reference-workspace :is(.named-text-colour-reference,.colour-reference) .css-featured-code{min-height:20px}

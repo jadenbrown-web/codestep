@@ -9,7 +9,7 @@ import {browserInputPatch, type InputRuntime} from "./input-runtimes";
 import CopyCodeButton from "./CopyCodeButton";
 import HtmlTextReference from "./HtmlTextReference";
 import FontReference from "./FontReference";
-import CssVisualReference from "./CssVisualReference";
+import CssVisualReference, { WEB_COLOURS } from "./CssVisualReference";
 import TextColourReference from "./TextColourReference";
 import CodeLineNumbers from "./CodeLineNumbers";
 import { fitEditorCode } from "./editor-fit";
@@ -1961,21 +1961,21 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "07 · Text colour",
-      "title": "Colour headings and paragraphs",
-      "explanation": "Use a named colour to change the letters in a heading or paragraph. The CSS Hex colours lesson shows the same colour written as a hex value.",
+      "title": "Colour paragraph text",
+      "explanation": "Use a named colour to change the letters in a paragraph. The CSS Hex colours lesson shows the same colour written as a hex value.",
       "note": "<!-- Use a named colour for text -->",
       "prompt": "Choose a text colour, then copy the paragraph into your HTML page.",
-      "answer": "<h1 style=\"color: red;\">This heading is red.</h1>",
+      "answer": "<p style=\"color: red;\">This color is red</p>",
       "output": [
-        "This heading is red."
+        "This color is red"
       ],
       "referenceOnly": true,
       "referenceKind": "named-colours",
       "parts": [
         {
-          "code": "<h1>",
-          "name": "Create a heading",
-          "meaning": "Creates the main heading. Choose the paragraph example to use <p> instead. Put your own words between the opening and closing tags."
+          "code": "<p>",
+          "name": "Create a paragraph",
+          "meaning": "Creates a paragraph. Put your own words between <p> and </p>."
         },
         {
           "code": "style",
@@ -1993,7 +1993,7 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "The chosen colour. Replace red with blue or green to change the paragraph’s text colour."
         },
         {
-          "code": "This heading is red.",
+          "code": "This color is red",
           "name": "Write your own text",
           "meaning": "These are the words displayed on the page. Change the words between the opening and closing tags."
         }
@@ -4700,13 +4700,13 @@ export default function Home() {
   const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0, cpp: 0, python: 0, html: 0, css: 0 });
 
   const [textColour, setTextColour] = useState("Red");
-  const [textColourTag, setTextColourTag] = useState<"h1" | "p">("h1");
+  const textColourTag = "p";
   const [inputRuntime, setInputRuntime] = useState<InputRuntime>("browser");
   const baseCurrent = language ? lessons[language][index] : null;
   const current = useMemo(() => {
     if (baseCurrent?.referenceKind === "named-colours") {
-      const colour = textColour.toLowerCase(), noun = textColourTag === "h1" ? "heading" : "paragraph";
-      const text = `This ${noun} is ${colour}.`;
+      const colour = textColour.toLowerCase(), noun = "paragraph";
+      const text = `This color is ${colour}`;
       return { ...baseCurrent, answer: `<${textColourTag} style="color: ${colour};">${text}</${textColourTag}>`, output: [text], parts: [
         { code: `<${textColourTag}>`, name: `Create a ${noun}`, meaning: `Creates a ${noun}. Put your own words between <${textColourTag}> and </${textColourTag}>.` },
         { code: "style", name: `Style this ${noun}`, meaning: `Adds CSS appearance settings to this element. Here, it sets the ${noun}’s text colour.` },
@@ -5054,6 +5054,11 @@ export default function Home() {
           <p className="lesson-overview">{lessonOverview(current!)}</p>
           {language === "javascript" && baseCurrent!.compareNode && <InputRuntimeExamples nodeCode={baseCurrent!.answer} selected={inputRuntime} onSelect={setInputRuntime} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax} />} />}
           <LessonBreakdown lesson={current!} language={language} />
+          {(current!.referenceKind === "named-colours" || current!.referenceKind === "colours") && <section className="colour-lesson-explanation">
+            <p>Choose a colour to update the example. Change the words between <InlineCode language="html" code="<p>" /> and <InlineCode language="html" code="</p>" /> to write your own paragraph.</p>
+            <p>HTML’s example uses a name: <InlineCode language="html" code={`<p style="color: ${textColour.toLowerCase()};">This color is ${textColour.toLowerCase()}</p>`} />. The same colour in a CSS file is <InlineCode language="css" code={`p { color: ${WEB_COLOURS.find(([name]) => name === textColour)?.[1] ?? "#FF0000"}; }`} />.</p>
+            <p>Colour names and hex values work in both HTML and CSS. The links keep your chosen colour when you move between lessons. <InlineCode language="css" code="color" /> changes the letters; <InlineCode language="css" code="background-color" /> changes the area behind them.</p>
+          </section>}
           {current!.eyebrow.includes("Files and paths") && <details className="symbol-guide" open>
             <summary>Filename, file contents, and image text</summary>
             <p><b>Filename:</b> chopin-nocturne.png is the name stored in the folder listing. The program can list or compare it without opening the picture.</p>
@@ -5065,7 +5070,7 @@ export default function Home() {
           </details>}
           {(language === "html" || language === "css") && <section className="browser-run-guide" aria-label="Run in a browser">
             <h2>Run in a browser</h2>
-            {current!.referenceKind === "named-colours" ? <p>Copy the example into the body of an HTML page, save it as <InlineCode language="html" code="index.html" />, and open it in a browser. Save changes and refresh to try another colour.</p> : current!.referenceKind === "pages" ? <p>Save the two examples as <InlineCode language="html" code="index.html" /> and <InlineCode language="html" code="page2.html" /> in the same folder. Open <InlineCode language="html" code="index.html" /> in your browser, then follow the links between the pages.</p> : language === "html" ? <p>Save your page as <InlineCode language="html" code="index.html" /> and open it in a browser. Short examples belong inside a complete HTML page. Save your changes and refresh the browser to see the result.</p> : <p>Save your CSS as <InlineCode language="css" code="styles.css" /> beside your HTML file. Add <code>{'<link rel="stylesheet" href="styles.css">'}</code> inside the HTML head. Save your changes and refresh the browser.</p>}
+            {current!.referenceKind === "named-colours" ? <p>Copy the example into the body of an HTML page, save it as <InlineCode language="html" code="index.html" />, and open it in a browser. Save changes and refresh to try another colour.</p> : current!.referenceKind === "pages" ? <p>Save the two examples as <InlineCode language="html" code="index.html" /> and <InlineCode language="html" code="page2.html" /> in the same folder. Open <InlineCode language="html" code="index.html" /> in your browser, then follow the links between the pages.</p> : language === "html" ? <p>Save your page as <InlineCode language="html" code="index.html" /> and open it in a browser. Short examples belong inside a complete HTML page. Save your changes and refresh the browser to see the result.</p> : <p>Save your CSS as <InlineCode language="css" code="styles.css" /> beside your HTML file. Add <InlineCode language="html" code={'<link rel="stylesheet" href="styles.css">'} /> inside the HTML head. Save your changes and refresh the browser.</p>}
           </section>}
           {current!.runHint && <section className="symbol-guide computer-run-guide" aria-label="Run this on your computer"><h2>Run this on your computer</h2><p><CodeProse text={current!.runHint} language={language} /></p>{current!.eyebrow.includes("Terminal input") && <RunCommands language={language} fileName={current!.fileName || challengeFile(language)} answer={current!.answer} />}{current!.compareNode && inputRuntime === "node" && <a href="examples/name.mjs" download>Download name.mjs</a>}</section>}
           {!current!.referenceOnly && <div className="tip">{blockMode ? "Tap or drag lesson blocks into your code, then choose Check code." : language === "python" ? "Type over the guide in the editor, then press Enter to check it. Python uses indentation for blocks; Tab inserts four spaces. Equivalent supported code is accepted." : "Type over the guide in the editor, then press Enter to check it. Capital letters are optional in typing practice."}</div>}
@@ -5101,7 +5106,7 @@ export default function Home() {
             </div>
             <div className="link-journey"><b>First Page</b><span>Go to Page 2 →</span><b>Page 2</b><span>← Go back</span></div>
             <button className="reference-next" onClick={nextLesson}>Continue to images →</button>
-          </div> : current!.referenceKind === "named-colours" ? <TextColourReference colourName={textColour} onColourChange={setTextColour} element={textColourTag} onElementChange={setTextColourTag} onOpenHex={() => openReferenceLesson("css", "colours")} onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} /> : (current!.referenceKind === "css" || current!.referenceKind === "colours") ? <CssVisualReference colourName={textColour} onColourChange={setTextColour} onOpenTextColour={() => openReferenceLesson("html", "named-colours")} kind={current!.referenceKind === "colours" ? "colours" : "borders"} onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language={current!.referenceKind === "colours" ? "html" : "css"} />} /> : <HtmlTextReference onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} />}</> : <>
+          </div> : current!.referenceKind === "named-colours" ? <TextColourReference colourName={textColour} onColourChange={setTextColour} onOpenHex={() => openReferenceLesson("css", "colours")} onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} /> : (current!.referenceKind === "css" || current!.referenceKind === "colours") ? <CssVisualReference colourName={textColour} onColourChange={setTextColour} onOpenTextColour={() => openReferenceLesson("html", "named-colours")} kind={current!.referenceKind === "colours" ? "colours" : "borders"} onNext={nextLesson} actions={lessonActions} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax ?? (current!.referenceKind === "colours" ? "html" : "css")} />} /> : <HtmlTextReference onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} />}</> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className={`file-tab ${pinnedTopics.length && pinLimit <= 2 ? "has-pinned-topics" : ""}`} data-topic-tone={lessonTone(current!)} title={current!.fileName || challengeFile(language)}><span className="editor-file-name">{current!.fileName || challengeFile(language)}</span>{pinnedTopics.length && pinLimit <= 2 ? <PinnedTopicShortcuts topics={pinnedTopics} activeTopic={current?.title ?? null} onSelect={openPinnedTopic} language={language} /> : null}</div><div className="panel-actions"><div className="desktop-pane-actions">{lessonActions}</div><span className="mobile-editor-copy"><CopyCodeButton iconOnly code={lessonExample(current!, language, showComments)} label="full lesson example for VS Code" /></span><button className="editor-expand-button" aria-label={editorExpanded ? "Restore editor" : "Expand editor"} title={editorExpanded ? "Restore editor" : "Expand editor"} aria-pressed={editorExpanded} onClick={() => setEditorExpanded(expanded => !expanded)}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{editorExpanded ? <path d="M8 3v5H3m13-5v5h5M3 16h5v5m13-5h-5v5"/> : <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>}</svg></button><button className="editor-reset-button" onClick={() => changeBlockCode(commentPrefix + (current!.starter || ""))} title="Reset code" aria-label="Reset code"><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></svg><span className="editor-action-label">Reset</span></button></div></div>
               {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={commentPrefix + ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div ref={codeEditorRef} className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="editor-surface" style={{ minHeight: `max(100%, calc(${lineNumbers.length} * var(--editor-line-height) + var(--editor-padding)))`, minWidth: `max(100%, calc(${Math.max(...(code + guideCode).split("\n").map(line => line.length), 1)}ch + var(--editor-gutter) + var(--editor-inline-padding) + var(--editor-inline-padding)))` }}><CodeLineNumbers text={code + (showGuide ? guideCode : "")} minimumLines={8} />{showGuide && <pre className={`code-guide ${current!.title === "Check an answer with if and else" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{current!.title === "Check an answer with if and else" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} fullCode={fullGuideCode} language={language} />}</code></pre>}{<pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Check an answer with if and else"} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" wrap="soft" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div></div>}

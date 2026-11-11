@@ -16,7 +16,7 @@ export const BORDER_EXAMPLES = [
  {name:'Bottom border',css:'border-bottom: 5px solid red;',style:{borderBottom:'5px solid red'}},
  {name:'Rounded dotted border',css:'border: 5px dotted blue; border-radius: 12px;',style:{border:'5px dotted blue',borderRadius:'12px'}},
 ];
-export default function CssVisualReference({kind,onNext,actions,renderCode,colourName="Red",onColourChange,onOpenTextColour}:{colourName?:string;onColourChange?:(name:string)=>void;onOpenTextColour?:()=>void;kind:'borders'|'colours';onNext:()=>void;actions?:React.ReactNode;renderCode?:(code:string)=>React.ReactNode}){
+export default function CssVisualReference({kind,onNext,actions,renderCode,colourName="Red",onColourChange,onOpenTextColour}:{colourName?:string;onColourChange?:(name:string)=>void;onOpenTextColour?:()=>void;kind:'borders'|'colours';onNext:()=>void;actions?:React.ReactNode;renderCode?:(code:string,syntax?:"html"|"css")=>React.ReactNode}){
  const colours=kind==='colours';
  const [selected,setSelected]=useState(BORDER_EXAMPLES[5]);
  const [localColour,setLocalColour]=useState(colourName);
@@ -26,13 +26,13 @@ export default function CssVisualReference({kind,onNext,actions,renderCode,colou
   <div className="font-featured-example">
    <div className="font-example-heading"><b>{colours?`Example · ${name} text`:`Example · ${selected.name}`}</b><div className="desktop-pane-actions">{actions}</div></div>
    <div className="visual-example-code css-featured-code"><code className="example-syntax-code">{renderCode ? renderCode(example) : example}</code><CopyCodeButton iconOnly code={example} label={colours?`${name.toLowerCase()} HTML tag`:'border example'} /></div>
-   {colours?<><p className="featured-red-text" style={{color:hex,backgroundColor:["White","Yellow","Pink","Silver","Lime","Aqua"].includes(name)?"#17251f":"#fff",padding:"6px 10px",borderRadius:6,alignSelf:"flex-start"}}>{name} text</p><span>Put the hex value after <strong>color:</strong> inside the tag’s <strong>style</strong> attribute. In a CSS file, use <code>p {'{'} color: {hex}; {'}'}</code>. Choose a colour below to update this example. Colour names and hex values work in both HTML and CSS.</span>{onOpenTextColour&&<button className="colour-lesson-link" onClick={onOpenTextColour}>See {name} as a named colour in HTML →</button>}</>:<span>Use <code>&lt;p class="notice"&gt;Border text&lt;/p&gt;</code> in your HTML. Change the border style to try the examples below.</span>}
+   {colours?<><p className="featured-red-text" style={{color:hex,backgroundColor:["White","Yellow","Pink","Silver","Lime","Aqua"].includes(name)?"#17251f":"#fff",padding:"6px 10px",borderRadius:6,alignSelf:"flex-start"}}>{name} text</p>{onOpenTextColour&&<button className="colour-lesson-link" onClick={onOpenTextColour}>See {name} as a named colour in HTML →</button>}</>:<span>Use <code>{renderCode ? renderCode('<p class="notice">Border text</p>',"html") : '<p class="notice">Border text</p>'}</code> in your HTML. Change the border style to try the examples below.</span>}
   </div>
   <div className={`html-tag-grid ${colours?'colour-example-grid':'border-example-grid'}`}>
    {colours?WEB_COLOURS.map(([name,hex])=><article className="html-tag-example colour-example" data-colour={name} data-example={hex===(WEB_COLOURS.find(([n])=>n===(onColourChange?colourName:localColour))?.[1])||undefined} key={name}>
     <button className="visual-example-choice" aria-label={`Use ${name} hex colour`} aria-pressed={name===(onColourChange?colourName:localColour)} onClick={()=>{setLocalColour(name);onColourChange?.(name);}}><b className="font-example-label">{name}</b>
     <div className="colour-swatch" style={{backgroundColor:hex}} aria-label={`${name} colour swatch`} /></button>
-    <div className="visual-example-code colour-code-row"><code className="colour-hex">{hex}</code><CopyCodeButton iconOnly code={hex} label={`${name} hex`} /></div>
+    <div className="visual-example-code colour-code-row"><code className="colour-hex">{renderCode ? renderCode(hex,"css") : hex}</code><CopyCodeButton iconOnly code={hex} label={`${name} hex`} /></div>
    </article>):BORDER_EXAMPLES.map(item=><article className="html-tag-example" data-border={item.name} data-example={selected.name === item.name || undefined} key={item.name}>
     <button className="visual-example-choice" aria-label={`Show ${item.name} code`} aria-pressed={selected.name === item.name} onClick={() => setSelected(item)}>
      <b className="font-example-label">{item.name}</b>
