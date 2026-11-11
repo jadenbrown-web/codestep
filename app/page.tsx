@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 
 import CodeBlocks from "./CodeBlocks";
+import BrowserResultPreview from "./BrowserResultPreview";
 import InputRuntimeExamples from "./InputRuntimeExamples";
 import RunCommands from "./RunCommands";
 import {browserInputPatch, type InputRuntime} from "./input-runtimes";
@@ -40,6 +41,7 @@ type Lesson = {
   runHint?: string;
   compareNode?: boolean;
   referenceOnly?: boolean;
+  browserPreview?: boolean;
   referenceKind?: "text" | "fonts" | "pages" | "css" | "colours" | "named-colours" | "comparisons";
 };
 
@@ -1909,6 +1911,7 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "05 · Div sections",
       "title": "Separate content into boxes",
+      "browserPreview": true,
       "explanation": "A div is a box or section used to group content inside the body. Each div starts a separate block. Here, the style attribute gives the first box a red background and the second box a blue background.",
       "note": "<!-- Put two separate coloured div boxes inside the body -->",
       "prompt": "Create the red and blue div sections inside the body.",
@@ -4791,7 +4794,7 @@ export default function Home() {
   }, [current, ghostSource, showGuide]);
 
   useEffect(() => {
-    if (status !== "correct" || !current) { setTypedOutput(""); return; }
+    if (status !== "correct" || !current || current.browserPreview) { setTypedOutput(""); return; }
     const completeOutput = (previewOutput ?? current.output).join("\n");
     let position = 0;
     let typingTimer: ReturnType<typeof setTimeout> | undefined;
@@ -5118,7 +5121,7 @@ export default function Home() {
             <div className="console-body">
               {status === "idle" && <span className="console-muted">{language === "html" || language === "css" ? "Your page result preview will appear here..." : "Your program output will appear here..."}</span>}
               {status === "wrong" && <><SyntaxDiagnostic parts={diagnostic} /><div className="console-muted diagnostic-hint">Hover over or focus each underlined part to see what it means.</div></>}
-              {status === "correct" && <><div className="run-line"><span><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Code accepted — {language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div><div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div></>}
+              {status === "correct" && <><div className="run-line"><span><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Code accepted — {language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div>{current?.browserPreview && language === "html" ? <BrowserResultPreview code={practiceCode} /> : <div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div>}</>}
             </div>
           </div>
           <div className={`feedback ${status}`}>

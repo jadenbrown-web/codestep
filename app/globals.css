@@ -1881,3 +1881,7 @@ html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:h
 /* A little space between the colour sample and the related lesson link. */
 .colour-reference .font-featured-example>.featured-red-text{margin:4px 0 8px;padding:8px 14px!important;border:1px solid var(--ui-border);border-radius:8px!important;font-size:18px;line-height:1.4}
 :is(.named-text-colour-reference,.colour-reference) .font-featured-example>.colour-lesson-link{margin:2px 0 5px;min-height:44px;padding:8px 12px;font-size:13px}
+/* Show the submitted div page as a web page rather than console descriptions. */
+.console-body:has(.browser-result-preview){display:flex;flex-direction:column;gap:8px;white-space:normal}
+.browser-result-preview{display:block;box-sizing:border-box;width:100%;flex:1 0 80px;min-height:80px;border:0;border-radius:6px;background:#fff;color-scheme:light}
+.workspace:not(.editor-expanded)>.console-panel:has(.browser-result-preview){flex:0 0 168px;min-height:168px;max-height:220px}
