@@ -70,8 +70,8 @@ test('CSS examples colour complete property names, numbers and font strings',()=
 });
 
 
-test('all generic CSS font families receive the same value highlighting as quoted font names',()=>{
- for(const family of ['serif','sans-serif','monospace','cursive','fantasy','system-ui']){
+test('unquoted CSS font families receive the same value highlighting as quoted font names',()=>{
+ for(const family of ['Arial','Helvetica','Verdana','Tahoma','Georgia','Garamond','Impact','serif','sans-serif','monospace','cursive','fantasy','system-ui']){
   const code=`p { font-family: ${family}; }`;
   const tree=Component({code,language:'css'});
   const spans=React.Children.toArray(tree.props.children).filter(React.isValidElement);

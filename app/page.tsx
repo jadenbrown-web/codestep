@@ -4267,13 +4267,14 @@ function HighlightedCode({ code, language, caretIndex, fullCode }: { code: strin
   let pattern = language === "html"
     ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|div|section|script|img|video|audio|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|src|alt|controls|id|lang|charset)\b|\b(?:background-color)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:#])/g
     : language === "css"
-    ? /(\/\*[\s\S]*?\*\/|"[^"\n]*"|'[^'\n]*'|#[0-9a-fA-F]{3,8}\b|#[A-Za-z_]\w*|\b(?:body|p|background-color|color|text-align|font-family|border-radius|border-bottom|border-left|border|solid|dotted|dashed|double|none|center|left|right|lightblue|red|green|blue|tomato|sans-serif|serif|monospace|cursive|fantasy|system-ui)\b|\d+(?:px)?|[{}();:.,])/g
+    ? /(\/\*[\s\S]*?\*\/|"[^"\n]*"|'[^'\n]*'|#[0-9a-fA-F]{3,8}\b|#[A-Za-z_]\w*|\b(?:body|p|background-color|color|text-align|font-family|border-radius|border-bottom|border-left|border|solid|dotted|dashed|double|none|center|left|right|lightblue|red|green|blue|tomato|sans-serif|serif|monospace|cursive|fantasy|system-ui)\b|\b[A-Za-z_][\w-]*\b|\d+(?:px)?|[{}();:.,])/g
     : language === "python"
     ? /(#.*|f?"[^"\n]*"|f?'[^'\n]*'|\b(?:def|class|self|return|import|from|if|elif|else|for|in|while|True|False|None|break|and|or|not|is)\b|\b(?:print|input|datetime|random|re|time|set|list|sorted|__init__)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|[{}()[\];=.:<>+*%/-])/g
     : /(\/\/[^\n]*|\/\^[A-Za-z]+\/[gimsuy]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:def|self|import|from|True|False|None|and|or|not|is|using|static_cast|function|class|constructor|this|let|const|double|bool|out|auto|include|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:Math|Object|process|fs|path|console|Console|Task|Date|DateTime|List|Set|HashSet|Dictionary|Random|std|cout|cin|vector|map|optional|print|input|datetime|random|re|time|Regex|RegexOptions|mt19937|uniform_int_distribution|random_device)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|===|!==|==|!=|&&|\|\||!|>=|<=|\+\+|--|[{}()[\];=.:<>?^/])/g;
   if (language === "csharp" || language === "javascript") pattern = new RegExp(String.raw`\b(?:WriteLine|ReadLine|log)\b|` + pattern.source, "g");
   if (language === "cpp") pattern = new RegExp(String.raw`#[ \t]*include[ \t]+(?:<[^>\n]+>|"[^"\n]+")|` + pattern.source, "g");
   const htmlTagRanges = language === "html" ? [...code.matchAll(/<!--[\s\S]*?(?:-->|$)|<![^>]*(?:>|$)|<\/?[A-Za-z][\w:-]*(?:[^"'<>]|"[^"]*(?:"|$)|'[^']*(?:'|$))*(?:>|$)/g)].map(match => ({ start: match.index!, end: match.index! + match[0].length })) : [];
+  const fontFamilyRanges = language === "css" ? [...code.matchAll(/\bfont-family\s*:\s*([^;}]+)/g)].map(match => ({ start: match.index! + match[0].indexOf(":") + 1, end: match.index! + match[0].length })) : [];
   const parts: { text: string; kind: string }[] = [];
   let lastIndex = 0;
   for (const match of code.matchAll(pattern)) {
@@ -4284,6 +4285,7 @@ function HighlightedCode({ code, language, caretIndex, fullCode }: { code: strin
     else if (language === "cpp" && /^#[ \t]*include/.test(text)) kind = "header";
     else if (/^(\/\/|\/\*|<!--)/.test(text) || (language === "python" && text.startsWith("#"))) kind = "comment";
     else if (/^f?["'`]/.test(text) || /^\/\^/.test(text)) kind = "string";
+    else if (language === "css" && /^[A-Za-z_]/.test(text) && fontFamilyRanges.some(range => match.index! >= range.start && match.index! < range.end)) kind = "string";
     else if ((language === "python" || language === "cpp") && languageApis[language].test(text)) kind = "api";
     else if (/^(def|self|True|False|None|elif|and|or|not|is|import|from|using|auto|static_cast|function|class|constructor|this|let|const|double|bool|out|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await|<\/?|\/?>|html|head|meta|title|body|div|section|script|img|video|audio|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)$/.test(text)) kind = "keyword";
     else if (languageApis[language].test(text)) kind = "api";
