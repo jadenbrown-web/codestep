@@ -1835,3 +1835,10 @@ html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:h
  .font-examples-reference .font-example-grid{grid-template-rows:none;grid-auto-rows:minmax(76px,max-content)}
 }
 @container html-reference (max-width:550px){.font-examples-reference .font-example-grid{grid-template-rows:none;grid-auto-rows:minmax(76px,max-content)}}
+
+/* Centre the glyph in every copy highlight; align its containing row separately. */
+.copy-code-button{display:inline-flex;align-items:center!important;justify-content:center!important;padding:0!important}
+.reference-workspace .tag-card-heading,.reference-workspace .colour-code-row{align-items:center}
+.reference-workspace .tag-card-heading .copy-code-button svg{width:16px;height:16px}
+.reference-workspace .font-featured-example .visual-example-code:not(.css-featured-code)>code{padding-top:12.25px}
+.reference-workspace .file-example-code>.copy-code-control{top:2px}

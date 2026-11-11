@@ -66,10 +66,16 @@ try{
   }
   const misplaced=await root.locator('.copy-code-button').evaluateAll(es=>es.filter(e=>!e.closest('.visual-example-code,.tag-card-heading,.file-example-code')).map(e=>e.getAttribute('aria-label')));
   assert.deepEqual(misplaced,[],'each copy button is beside the code it copies');
+  const offCentre=await root.locator('.copy-code-button').evaluateAll(buttons=>buttons.filter(button=>{
+    const svg=button.querySelector('svg');if(!svg)return false;
+    const b=button.getBoundingClientRect(),i=svg.getBoundingClientRect();
+    return Math.abs(b.x+b.width/2-i.x-i.width/2)>1||Math.abs(b.y+b.height/2-i.y-i.height/2)>1;
+  }).map(button=>button.getAttribute('aria-label')));
+  assert.deepEqual(offCentre,[],'Every copy glyph is centred in its highlight');
   const alignment=await root.locator('.visual-example-code,.tag-card-heading,.file-example-code').evaluateAll(es=>es.map(e=>{
    const code=e.querySelector('code'),icon=e.querySelector('.copy-code-button svg');
    if(!code||!icon)return null;const c=code.getBoundingClientRect(),i=icon.getBoundingClientRect();
-   return {text:code.textContent.slice(0,30),icon:i.y+i.height/2,first:c.y+parseFloat(getComputedStyle(code).lineHeight)/2,difference:Math.abs((i.y+i.height/2)-(c.y+parseFloat(getComputedStyle(code).lineHeight)/2))};
+   return {text:code.textContent.slice(0,30),icon:i.y+i.height/2,first:e.matches('.tag-card-heading,.colour-code-row')?c.y+c.height/2:c.y+parseFloat(getComputedStyle(code).paddingTop)+parseFloat(getComputedStyle(code).lineHeight)/2,difference:Math.abs((i.y+i.height/2)-(e.matches('.tag-card-heading,.colour-code-row')?c.y+c.height/2:c.y+parseFloat(getComputedStyle(code).paddingTop)+parseFloat(getComputedStyle(code).lineHeight)/2))};
   }).filter(Boolean));
   for(const item of alignment)assert.ok(item.difference<1,`${kind}: copy icon aligns with the first code line (${JSON.stringify(item)})`);
   if(width>850){
