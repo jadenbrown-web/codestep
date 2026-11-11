@@ -42,6 +42,7 @@ type Lesson = {
   compareNode?: boolean;
   referenceOnly?: boolean;
   browserPreview?: boolean;
+  idLesson?: "html" | "css";
   referenceKind?: "text" | "fonts" | "pages" | "css" | "colours" | "named-colours" | "comparisons";
 };
 
@@ -2184,10 +2185,12 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "16 · IDs for CSS",
       "title": "Give one element a unique name",
+      "idLesson": "html",
+      "browserPreview": true,
       "explanation": "The id attribute gives one HTML element a unique name. CSS can then select that exact element with a hash followed by the same name, such as #p1.",
       "note": "<!-- Give this particular paragraph the ID p1 -->",
       "prompt": "Add the p1 ID to the paragraph so CSS can target it.",
-      "answer": "<p id=\"p1\">This paragraph has its own ID.</p>",
+      "answer": "<p id=\"p1\">CSS turns this paragraph blue.</p>",
       "output": [
         "Paragraph identified as p1.",
         "CSS can select it with #p1."
@@ -2365,12 +2368,14 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "03 · ID selectors",
       "title": "Style one unique element",
+      "idLesson": "css",
+      "browserPreview": true,
       "explanation": "An ID selector begins with #. The selector #p1 matches the HTML element carrying id=\"p1\", so this rule changes only that particular element.",
       "note": "/* Select the HTML element whose ID is p1 */",
-      "prompt": "Use its ID to make only p1 tomato coloured.",
-      "answer": "#p1 {\n  color: tomato;\n}",
+      "prompt": "Use #p1 to turn the matching paragraph blue.",
+      "answer": "#p1 {\n  color: blue;\n}",
       "output": [
-        "Only the element with id=\"p1\" turns tomato."
+        "CSS turns this paragraph blue."
       ],
       "parts": [
         {
@@ -4704,6 +4709,7 @@ export default function Home() {
 
   const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0, cpp: 0, python: 0, html: 0, css: 0 });
 
+  const idDrafts = useRef<Partial<Record<"html" | "css", { code: string; accepted: boolean }>>>({});
   const [textColour, setTextColour] = useState("Red");
   const textColourTag = "p";
   const [inputRuntime, setInputRuntime] = useState<InputRuntime>("browser");
@@ -4764,14 +4770,17 @@ export default function Home() {
   const diagnostic: DiagnosticPart[] = [{ text: checkerError || lessonCheck?.message || "The checker is loading. Try Check code again.", help: "Equivalent supported syntax is accepted. An unverified answer may still be valid; a syntax warning means the parser found incomplete or malformed code.", kind: "message" }];
   const previewOutput = lessonCheck?.accepted && lessonCheck.output ? lessonCheck.output : current?.output;
   const previewColours = lessonCheck?.accepted && lessonCheck.colours ? lessonCheck.colours : current?.outputColors;
+  const linkedIdHtml = idDrafts.current.html?.accepted ? idDrafts.current.html.code : lessons.html.find(item => item.idLesson === "html")!.answer;
 
   useEffect(() => {
     if (current) {
       const prefix = showComments && language ? lessonComment(current, language) : "";
       insertedComment.current = prefix;
-      setCode(prefix + (current.starter || ""));
-      setCaretIndex((prefix + (current.starter || "")).length);
-      setStatus("idle");
+      const saved = current.idLesson ? idDrafts.current[current.idLesson] : undefined;
+      const initialCode = prefix + (saved?.code ?? current.starter ?? "");
+      setCode(initialCode);
+      setCaretIndex(initialCode.length);
+      setStatus(saved?.accepted ? "correct" : "idle");
       setTypedOutput("");
     }
   }, [current]);
@@ -4889,6 +4898,14 @@ export default function Home() {
     return () => window.removeEventListener("keydown", close);
   }, [editorExpanded]);
 
+
+  function openIdLesson(next: "html" | "css") {
+    if (current?.idLesson) idDrafts.current[current.idLesson] = { code: practiceCode, accepted: status === "correct" };
+    const targetIndex = lessons[next].findIndex(item => item.idLesson === next);
+    if (targetIndex < 0) return;
+    openCourse(next);
+    setIndex(targetIndex);
+  }
 
   function openReferenceLesson(next: Language, kind: NonNullable<Lesson["referenceKind"]>) {
     const nextIndex = lessons[next].findIndex(item => item.referenceKind === kind);
@@ -5059,6 +5076,12 @@ export default function Home() {
           <p className="lesson-overview">{lessonOverview(current!)}</p>
           {language === "javascript" && baseCurrent!.compareNode && <InputRuntimeExamples nodeCode={baseCurrent!.answer} selected={inputRuntime} onSelect={setInputRuntime} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax} />} />}
           <LessonBreakdown lesson={current!} language={language} />
+          {current!.idLesson && <section className="linked-id-guide">
+            <h2>One paragraph, two languages</h2>
+            <p><InlineCode language="html" code="<p>" /> is the paragraph element. <InlineCode language="html" code={'id="p1"'} /> is its identifying attribute. <InlineCode language="css" code="#p1" /> is the CSS selector that finds it. The ID alone does not change its colour.</p>
+            {language === "css" && <><p>{idDrafts.current.html?.accepted ? "Your paragraph from the HTML ID lesson:" : "This rule styles the paragraph below. Use the HTML ID lesson to create it yourself."}</p><InlineCode language="html" code={linkedIdHtml} /></>}
+          </section>}
+
           {(current!.referenceKind === "named-colours" || current!.referenceKind === "colours") && <section className="colour-lesson-explanation">
             <p>Choose a colour to update the example. Change the words between <InlineCode language="html" code="<p>" /> and <InlineCode language="html" code="</p>" /> to write your own paragraph.</p>
             <p>HTML’s example uses a name: <InlineCode language="html" code={`<p style="color: ${textColour.toLowerCase()};">This color is ${textColour.toLowerCase()}</p>`} />. The same colour in a CSS file is <InlineCode language="css" code={`p { color: ${WEB_COLOURS.find(([name]) => name === textColour)?.[1] ?? "#FF0000"}; }`} />.</p>
@@ -5121,12 +5144,16 @@ export default function Home() {
             <div className="console-body">
               {status === "idle" && <span className="console-muted">{language === "html" || language === "css" ? "Your page result preview will appear here..." : "Your program output will appear here..."}</span>}
               {status === "wrong" && <><SyntaxDiagnostic parts={diagnostic} /><div className="console-muted diagnostic-hint">Hover over or focus each underlined part to see what it means.</div></>}
-              {status === "correct" && <><div className="run-line"><span><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Code accepted — {language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div>{current?.browserPreview && language === "html" ? <BrowserResultPreview code={practiceCode} /> : <div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div>}</>}
+              {status === "correct" && <><div className="run-line"><span><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Code accepted — {language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div>{current?.browserPreview ? <BrowserResultPreview code={current.idLesson === "css" ? linkedIdHtml : practiceCode} css={current.idLesson === "css" ? practiceCode : undefined} /> : <div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div>}</>}
             </div>
           </div>
           <div className={`feedback ${status}`}>
             <div>{status === "correct" ? <><span className="feedback-icon"><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span><p><b>That’s correct!</b><small>{blockMode ? "Choose the next lesson when you’re ready." : "Press Enter again or choose the next lesson."}</small></p></> : status === "wrong" ? <><span className="feedback-icon">!</span><p><b>{lessonCheck?.kind === "syntax" ? "Check the syntax" : "Not verified yet"}</b><small>{lessonCheck?.kind === "syntax" ? "Review the parser’s message above." : "Check the lesson requirements. This checker may not recognise every valid approach."}</small></p></> : <p><b>Ready to run?</b><small>{blockMode ? "Arrange your blocks, then choose Check code." : "Use your own approach, then choose Check code."}</small></p>}</div>
+            <div className="lesson-feedback-actions">
+              {current!.idLesson === "html" && status === "correct" && <button className="linked-id-action" onClick={() => openIdLesson("css")}>Style this paragraph in CSS →</button>}
+              {current!.idLesson === "css" && <button className="linked-id-action" onClick={() => openIdLesson("html")}>← HTML ID lesson</button>}
             {status === "correct" ? <button onClick={nextLesson}>{index === lessons[language].length - 1 ? "Finish path" : "Next lesson"} →</button> : <button onClick={checkCode} disabled={!practiceCode.trim() || checking}>{checking ? "Checking…" : "Check code"}</button>}
+            </div>
           </div>
           </>}
         </section>

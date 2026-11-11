@@ -1885,3 +1885,13 @@ html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:h
 .console-body:has(.browser-result-preview){display:flex;flex-direction:column;gap:8px;white-space:normal}
 .browser-result-preview{display:block;box-sizing:border-box;width:100%;flex:1 0 80px;min-height:80px;border:0;border-radius:6px;background:#fff;color-scheme:light}
 .workspace:not(.editor-expanded)>.console-panel:has(.browser-result-preview){flex:0 0 168px;min-height:168px;max-height:220px}
+.linked-id-guide{margin-top:16px;color:var(--ui-muted);font:400 14px/1.6 var(--sans)}
+.linked-id-guide h2{font:700 15px/1.4 var(--sans);color:var(--ui-text);margin:0 0 6px}
+.workspace>.feedback>.lesson-feedback-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px;padding:0;flex:none}
+.feedback .linked-id-action,html[data-theme] .feedback .linked-id-action{background:var(--selection-surface);color:var(--ui-text);white-space:normal;line-height:1.3;max-width:230px}
+@media(max-width:850px){
+ .workspace>.feedback:has(.linked-id-action){flex-wrap:wrap;padding:8px;gap:8px}
+ .workspace>.feedback:has(.linked-id-action)>div:first-child{width:100%}
+ .workspace>.feedback:has(.linked-id-action)>.lesson-feedback-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);width:100%;align-items:stretch}
+ .workspace>.feedback:has(.linked-id-action) .lesson-feedback-actions>button{min-height:48px;height:auto;padding:6px 8px}
+}
