@@ -9,20 +9,20 @@ const reference=source.slice(refStart+1,source.indexOf(' : <>\n          <div cl
 const guideStart=source.indexOf('{(language === "html" || language === "css") && <section className="browser-run-guide"');
 const highlighter=source.slice(source.indexOf('function HighlightedCode('),source.indexOf('\nfunction LearningCode('));
 const guide=source.slice(guideStart,source.indexOf('          {current!.runHint',guideStart));
-const entry=`import React from 'react';import {createRoot} from 'react-dom/client';import FontReference from './app/FontReference';import HtmlTextReference from './app/HtmlTextReference';import CopyCodeButton from './app/CopyCodeButton';import CssVisualReference from './app/CssVisualReference';
+const entry=`import React from 'react';import {createRoot} from 'react-dom/client';import FontReference from './app/FontReference';import HtmlTextReference from './app/HtmlTextReference';import CopyCodeButton from './app/CopyCodeButton';import CssVisualReference from './app/CssVisualReference';import TextColourReference from './app/TextColourReference';
 const language=window.fixtureLanguage||'html',blockMode=false,settingsOpen=false,showComments=false;
 const current={referenceOnly:true,referenceKind:window.fixtureKind,answer:'<p>Full reference</p>'};
 const lessonExample=(lesson)=>lesson.answer;const EditorModeSymbol=()=> <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18"/></svg>;
 ${highlighter}
 const InlineCode=({code})=><code>{code}</code>;const nextLesson=()=>{};
 ${actions}
-createRoot(document.getElementById('root')).render(<main className="lesson-shell reference-mode mobile-practice"><header className="app-header lesson-nav">{lessonActions}</header><div className={window.innerWidth>850?"lesson-layout drawer-open":"lesson-layout drawer-closed"}><aside className="lesson-drawer"/><aside className="lesson-copy">${guide}</aside><section className="workspace reference-workspace">{${reference}}</section></div></main>);`;
+function Fixture(){const [textColour,setTextColour]=React.useState('Red');const [textColourTag,setTextColourTag]=React.useState('h1');const openReferenceLesson=()=>{};return <main className="lesson-shell reference-mode mobile-practice"><header className="app-header lesson-nav">{lessonActions}</header><div className={window.innerWidth>850?"lesson-layout drawer-open":"lesson-layout drawer-closed"}><aside className="lesson-drawer"/><aside className="lesson-copy">${guide}</aside><section className="workspace reference-workspace">{${reference}}</section></div></main>;}createRoot(document.getElementById('root')).render(<Fixture/>);`;
 const bundle=await build({stdin:{contents:entry,loader:'tsx',resolveDir:process.cwd()},bundle:true,platform:'browser',format:'iife',write:false,define:{'process.env.NODE_ENV':'"production"'}});
 const css=fs.readFileSync('app/globals.css','utf8');
 const browser=await chromium.launch({headless:true,...(fs.existsSync('/usr/bin/chromium')?{executablePath:'/usr/bin/chromium'}:{})});
 try{
  const page=await browser.newPage();
- const cases=process.env.CSS_REFERENCE_ONLY ? [['css','fonts'],['css','css'],['css','colours']] : [['html','text'],['html','fonts'],['html','pages'],['css','fonts'],['css','css'],['css','colours']];
+ const cases=process.env.CSS_REFERENCE_ONLY ? [['css','fonts'],['css','css'],['css','colours']] : [['html','text'],['html','named-colours'],['html','fonts'],['html','pages'],['css','fonts'],['css','css'],['css','colours']];
  for(const width of [1400,390]) for(const theme of ['light','dark']) for(const [language,kind] of cases){
   await page.setViewportSize({width,height:900});
   await page.setContent(`<html data-theme="${theme}"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${css}</style><body><div id="root"></div></body></html>`);

@@ -10,6 +10,7 @@ import CopyCodeButton from "./CopyCodeButton";
 import HtmlTextReference from "./HtmlTextReference";
 import FontReference from "./FontReference";
 import CssVisualReference from "./CssVisualReference";
+import TextColourReference from "./TextColourReference";
 import CodeLineNumbers from "./CodeLineNumbers";
 import { fitEditorCode } from "./editor-fit";
 import { explanationTokens } from "./explanation-tokens";
@@ -39,7 +40,7 @@ type Lesson = {
   runHint?: string;
   compareNode?: boolean;
   referenceOnly?: boolean;
-  referenceKind?: "text" | "fonts" | "pages" | "css" | "colours" | "comparisons";
+  referenceKind?: "text" | "fonts" | "pages" | "css" | "colours" | "named-colours" | "comparisons";
 };
 
 const lessons: Record<Language, Lesson[]> = {
@@ -1959,7 +1960,47 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "07 · Links",
+      "eyebrow": "07 · Text colour",
+      "title": "Colour headings and paragraphs",
+      "explanation": "Use a named colour to change the letters in a heading or paragraph. The CSS Hex colours lesson shows the same colour written as a hex value.",
+      "note": "<!-- Use a named colour for text -->",
+      "prompt": "Choose a text colour, then copy the paragraph into your HTML page.",
+      "answer": "<h1 style=\"color: red;\">This heading is red.</h1>",
+      "output": [
+        "This heading is red."
+      ],
+      "referenceOnly": true,
+      "referenceKind": "named-colours",
+      "parts": [
+        {
+          "code": "<h1>",
+          "name": "Create a heading",
+          "meaning": "Creates the main heading. Choose the paragraph example to use <p> instead. Put your own words between the opening and closing tags."
+        },
+        {
+          "code": "style",
+          "name": "Style this paragraph",
+          "meaning": "Adds CSS appearance settings to this element. Here, it sets the paragraph’s text colour."
+        },
+        {
+          "code": "color",
+          "name": "Choose the text colour",
+          "meaning": "Sets the colour of the letters. It does not change the background."
+        },
+        {
+          "code": "red",
+          "name": "Use a named colour",
+          "meaning": "The chosen colour. Replace red with blue or green to change the paragraph’s text colour."
+        },
+        {
+          "code": "This heading is red.",
+          "name": "Write your own text",
+          "meaning": "These are the words displayed on the page. Change the words between the opening and closing tags."
+        }
+      ]
+    },
+    {
+      "eyebrow": "08 · Links",
       "title": "Open another page",
       "explanation": "The a element creates a link. Its href attribute stores the destination, while the text between the tags is what the visitor clicks.",
       "note": "<!-- Link to a second HTML page -->",
@@ -1982,7 +2023,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "08 · Text elements",
+      "eyebrow": "09 · Text elements",
       "title": "Explore HTML text elements",
       "explanation": "This is a reference page rather than a quiz. Compare headings, paragraphs, text-formatting elements, inline colour and alignment styles, and a link to another page.",
       "note": "<!-- A visual guide to HTML text elements -->",
@@ -1995,7 +2036,7 @@ const lessons: Record<Language, Lesson[]> = {
       "referenceKind": "text"
     },
     {
-      "eyebrow": "09 · Fonts",
+      "eyebrow": "10 · Fonts",
       "title": "Explore HTML fonts",
       "explanation": "Use font-family inside the style attribute to choose how text looks. Each example shows the HTML and its result. A named font must be available on your device; otherwise the browser uses a fallback.",
       "note": "<!-- Choose a font for a paragraph -->",
@@ -2020,7 +2061,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "10 · JavaScript in HTML",
+      "eyebrow": "11 · JavaScript in HTML",
       "title": "Show the current date and time",
       "explanation": "The script element lets an HTML page run JavaScript. new Date() creates the current date and time, and console.log displays it in the browser's developer console.",
       "note": "<!-- Run JavaScript from inside the HTML page -->",
@@ -2053,7 +2094,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "11 · Multiple pages",
+      "eyebrow": "12 · Multiple pages",
       "title": "Link two HTML pages",
       "explanation": "This is a two-file reference rather than a quiz. When both files are in the same folder, each href can use the other file's name as a relative path.",
       "note": "<!-- Link index.html and page2.html in both directions -->",
@@ -2066,7 +2107,7 @@ const lessons: Record<Language, Lesson[]> = {
       "referenceKind": "pages"
     },
     {
-      "eyebrow": "12 · Images",
+      "eyebrow": "13 · Images",
       "title": "Place an image on the page",
       "explanation": "The img element displays an image. src tells the browser which file to load, while alt describes the image if it cannot be seen or loaded. If car.png is beside index.html, its filename is enough for src.",
       "note": "<!-- Display car.png from the same folder as this HTML file -->",
@@ -2095,7 +2136,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "13 · Videos",
+      "eyebrow": "14 · Videos",
       "title": "Place a video on the page",
       "explanation": "The video element places a video on the page, much like img places a picture. src tells the browser to load my-video.mp4, and controls adds the built-in play, pause, volume, and timeline controls. Keep the MP4 file beside the HTML file when using only its filename.",
       "note": "<!-- Display my-video.mp4 with playback controls -->",
@@ -2119,7 +2160,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "14 · Audio",
+      "eyebrow": "15 · Audio",
       "title": "Place audio on the page",
       "explanation": "The audio element works much like video, but it plays sound without a picture area. src tells the browser to load my-audio.mp3, and controls adds play, pause, volume, and timeline controls. Keep the MP3 file beside the HTML file when using only its filename.",
       "note": "<!-- Play my-audio.mp3 with playback controls -->",
@@ -2138,7 +2179,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "15 · IDs for CSS",
+      "eyebrow": "16 · IDs for CSS",
       "title": "Give one element a unique name",
       "explanation": "The id attribute gives one HTML element a unique name. CSS can then select that exact element with a hash followed by the same name, such as #p1.",
       "note": "<!-- Give this particular paragraph the ID p1 -->",
@@ -2162,7 +2203,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "16 · Browser-safe repetition",
+      "eyebrow": "17 · Browser-safe repetition",
       "title": "Use a button instead of while (true)",
       "explanation": "while (true) is JavaScript, not HTML. Even inside a script element, an endless loop can freeze the page. A button is safer for an HTML page: each click runs checkAnswer once, then the page waits for another click.",
       "note": "<!-- A click safely runs one answer check at a time -->",
@@ -2219,7 +2260,7 @@ const lessons: Record<Language, Lesson[]> = {
       "outputNote": "Example page result after clicking the button and entering 2. The dialog input and click are actions, not printed output. The page then waits for another click."
     },
     {
-      "eyebrow": "17 · Return values",
+      "eyebrow": "18 · Return values",
       "title": "Send a value back with return",
       "explanation": "return sends a value back to the place where a function was called, and the function ends immediately. Here, getMessage() returns the text Hello. That returned text is then placed in the paragraph.",
       "note": "<!-- Return a value from a function and show it on the page -->",
@@ -4658,9 +4699,24 @@ export default function Home() {
 
   const [completed, setCompleted] = useState<Record<Language, number>>({ javascript: 0, csharp: 0, cpp: 0, python: 0, html: 0, css: 0 });
 
+  const [textColour, setTextColour] = useState("Red");
+  const [textColourTag, setTextColourTag] = useState<"h1" | "p">("h1");
   const [inputRuntime, setInputRuntime] = useState<InputRuntime>("browser");
   const baseCurrent = language ? lessons[language][index] : null;
-  const current = useMemo(() => baseCurrent && language === "javascript" && baseCurrent.compareNode && inputRuntime === "browser" ? { ...baseCurrent, ...browserInputPatch() } : baseCurrent, [baseCurrent, language, inputRuntime]);
+  const current = useMemo(() => {
+    if (baseCurrent?.referenceKind === "named-colours") {
+      const colour = textColour.toLowerCase(), noun = textColourTag === "h1" ? "heading" : "paragraph";
+      const text = `This ${noun} is ${colour}.`;
+      return { ...baseCurrent, answer: `<${textColourTag} style="color: ${colour};">${text}</${textColourTag}>`, output: [text], parts: [
+        { code: `<${textColourTag}>`, name: `Create a ${noun}`, meaning: `Creates a ${noun}. Put your own words between <${textColourTag}> and </${textColourTag}>.` },
+        { code: "style", name: `Style this ${noun}`, meaning: `Adds CSS appearance settings to this element. Here, it sets the ${noun}’s text colour.` },
+        { code: "color", name: "Choose the text colour", meaning: "Sets the colour of the letters, not the background. Write the property before the colon and the colour after it." },
+        { code: colour, name: "Use a named colour", meaning: `The chosen colour is ${colour}. Choose another name below, or see the same colour written as a hex value in the CSS lesson.` },
+        { code: text, name: "Write your own text", meaning: "These words are displayed on the page. Change the words between the opening and closing tags." },
+      ] };
+    }
+    return baseCurrent && language === "javascript" && baseCurrent.compareNode && inputRuntime === "browser" ? { ...baseCurrent, ...browserInputPatch() } : baseCurrent;
+  }, [baseCurrent, language, inputRuntime, textColour, textColourTag]);
   const pinnedTopics = language ? (pinnedByLanguage[language] ?? []).slice(0, pinLimit) : [];
   const visibleLessons = language ? filterTopicLessons(lessons[language], null) : [];
   const openPinnedTopic = (topic: string) => {
@@ -4828,6 +4884,13 @@ export default function Home() {
     return () => window.removeEventListener("keydown", close);
   }, [editorExpanded]);
 
+
+  function openReferenceLesson(next: Language, kind: NonNullable<Lesson["referenceKind"]>) {
+    const nextIndex = lessons[next].findIndex(item => item.referenceKind === kind);
+    if (nextIndex < 0) return;
+    openCourse(next);
+    setIndex(nextIndex);
+  }
 
   function openCourse(next: Language) {
     setLanguage(next);
@@ -5002,7 +5065,7 @@ export default function Home() {
           </details>}
           {(language === "html" || language === "css") && <section className="browser-run-guide" aria-label="Run in a browser">
             <h2>Run in a browser</h2>
-            {current!.referenceKind === "pages" ? <p>Save the two examples as <InlineCode language="html" code="index.html" /> and <InlineCode language="html" code="page2.html" /> in the same folder. Open <InlineCode language="html" code="index.html" /> in your browser, then follow the links between the pages.</p> : language === "html" ? <p>Save your page as <InlineCode language="html" code="index.html" /> and open it in a browser. Short examples belong inside a complete HTML page. Save your changes and refresh the browser to see the result.</p> : <p>Save your CSS as <InlineCode language="css" code="styles.css" /> beside your HTML file. Add <code>{'<link rel="stylesheet" href="styles.css">'}</code> inside the HTML head. Save your changes and refresh the browser.</p>}
+            {current!.referenceKind === "named-colours" ? <p>Copy the example into the body of an HTML page, save it as <InlineCode language="html" code="index.html" />, and open it in a browser. Save changes and refresh to try another colour.</p> : current!.referenceKind === "pages" ? <p>Save the two examples as <InlineCode language="html" code="index.html" /> and <InlineCode language="html" code="page2.html" /> in the same folder. Open <InlineCode language="html" code="index.html" /> in your browser, then follow the links between the pages.</p> : language === "html" ? <p>Save your page as <InlineCode language="html" code="index.html" /> and open it in a browser. Short examples belong inside a complete HTML page. Save your changes and refresh the browser to see the result.</p> : <p>Save your CSS as <InlineCode language="css" code="styles.css" /> beside your HTML file. Add <code>{'<link rel="stylesheet" href="styles.css">'}</code> inside the HTML head. Save your changes and refresh the browser.</p>}
           </section>}
           {current!.runHint && <section className="symbol-guide computer-run-guide" aria-label="Run this on your computer"><h2>Run this on your computer</h2><p><CodeProse text={current!.runHint} language={language} /></p>{current!.eyebrow.includes("Terminal input") && <RunCommands language={language} fileName={current!.fileName || challengeFile(language)} answer={current!.answer} />}{current!.compareNode && inputRuntime === "node" && <a href="examples/name.mjs" download>Download name.mjs</a>}</section>}
           {!current!.referenceOnly && <div className="tip">{blockMode ? "Tap or drag lesson blocks into your code, then choose Check code." : language === "python" ? "Type over the guide in the editor, then press Enter to check it. Python uses indentation for blocks; Tab inserts four spaces. Equivalent supported code is accepted." : "Type over the guide in the editor, then press Enter to check it. Capital letters are optional in typing practice."}</div>}
@@ -5038,7 +5101,7 @@ export default function Home() {
             </div>
             <div className="link-journey"><b>First Page</b><span>Go to Page 2 →</span><b>Page 2</b><span>← Go back</span></div>
             <button className="reference-next" onClick={nextLesson}>Continue to images →</button>
-          </div> : (current!.referenceKind === "css" || current!.referenceKind === "colours") ? <CssVisualReference kind={current!.referenceKind === "colours" ? "colours" : "borders"} onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language={current!.referenceKind === "colours" ? "html" : "css"} />} /> : <HtmlTextReference onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} />}</> : <>
+          </div> : current!.referenceKind === "named-colours" ? <TextColourReference colourName={textColour} onColourChange={setTextColour} element={textColourTag} onElementChange={setTextColourTag} onOpenHex={() => openReferenceLesson("css", "colours")} onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} /> : (current!.referenceKind === "css" || current!.referenceKind === "colours") ? <CssVisualReference colourName={textColour} onColourChange={setTextColour} onOpenTextColour={() => openReferenceLesson("html", "named-colours")} kind={current!.referenceKind === "colours" ? "colours" : "borders"} onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language={current!.referenceKind === "colours" ? "html" : "css"} />} /> : <HtmlTextReference onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} />}</> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className={`file-tab ${pinnedTopics.length && pinLimit <= 2 ? "has-pinned-topics" : ""}`} data-topic-tone={lessonTone(current!)} title={current!.fileName || challengeFile(language)}><span className="editor-file-name">{current!.fileName || challengeFile(language)}</span>{pinnedTopics.length && pinLimit <= 2 ? <PinnedTopicShortcuts topics={pinnedTopics} activeTopic={current?.title ?? null} onSelect={openPinnedTopic} language={language} /> : null}</div><div className="panel-actions"><div className="desktop-pane-actions">{lessonActions}</div><span className="mobile-editor-copy"><CopyCodeButton iconOnly code={lessonExample(current!, language, showComments)} label="full lesson example for VS Code" /></span><button className="editor-expand-button" aria-label={editorExpanded ? "Restore editor" : "Expand editor"} title={editorExpanded ? "Restore editor" : "Expand editor"} aria-pressed={editorExpanded} onClick={() => setEditorExpanded(expanded => !expanded)}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{editorExpanded ? <path d="M8 3v5H3m13-5v5h5M3 16h5v5m13-5h-5v5"/> : <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>}</svg></button><button className="editor-reset-button" onClick={() => changeBlockCode(commentPrefix + (current!.starter || ""))} title="Reset code" aria-label="Reset code"><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></svg><span className="editor-action-label">Reset</span></button></div></div>
               {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={commentPrefix + ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div ref={codeEditorRef} className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="editor-surface" style={{ minHeight: `max(100%, calc(${lineNumbers.length} * var(--editor-line-height) + var(--editor-padding)))`, minWidth: `max(100%, calc(${Math.max(...(code + guideCode).split("\n").map(line => line.length), 1)}ch + var(--editor-gutter) + var(--editor-inline-padding) + var(--editor-inline-padding)))` }}><CodeLineNumbers text={code + (showGuide ? guideCode : "")} minimumLines={8} />{showGuide && <pre className={`code-guide ${current!.title === "Check an answer with if and else" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{current!.title === "Check an answer with if and else" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} fullCode={fullGuideCode} language={language} />}</code></pre>}{<pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Check an answer with if and else"} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" wrap="soft" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div></div>}

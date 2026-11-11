@@ -15,6 +15,8 @@ const lessons=JSON.parse(source.slice(start,source.indexOf('\n};',start)+2));
 test('CSS border quiz is replaced by a separate hex reference immediately after borders',()=>{
  const index=lessons.css.findIndex(l=>l.title==='Explore CSS borders');
  assert.equal(lessons.css[index+1].referenceKind,'colours');
+ const heading=lessons.html.findIndex(l=>l.title==='Create a heading hierarchy');
+ assert.equal(lessons.html[heading+1].referenceKind,'named-colours');
  assert.equal(lessons.css[index+1].referenceOnly,true);
  assert.ok(!lessons.css.some(l=>/Border practice/i.test(l.eyebrow)));
 });
