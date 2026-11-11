@@ -1871,3 +1871,13 @@ html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:h
 .colour-reference .colour-example-grid{grid-auto-rows:minmax(84px,max-content)}
 .colour-reference .html-tag-example{min-height:84px}
 .reference-workspace :is(.named-text-colour-reference,.colour-reference) .css-featured-code{min-height:20px}
+/* Colour cards respond across the whole tile, with copy kept as a separate action. */
+:is(.named-text-colour-reference,.colour-reference) .html-tag-example{position:relative}
+:is(.named-text-colour-reference,.colour-reference) .visual-example-choice{touch-action:manipulation;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+:is(.named-text-colour-reference,.colour-reference) .visual-example-choice::after{content:"";position:absolute;inset:0;border-radius:inherit}
+.colour-reference .colour-code-row>.copy-code-control{position:relative;z-index:1}
+:is(.named-text-colour-reference,.colour-reference) .html-tag-example:has(.visual-example-choice:focus-visible){outline:2px solid var(--green);outline-offset:-2px}
+:is(.named-text-colour-reference,.colour-reference) .visual-example-choice:active::after{background:color-mix(in srgb,var(--green) 8%,transparent)}
+/* A little space between the colour sample and the related lesson link. */
+.colour-reference .font-featured-example>.featured-red-text{margin:4px 0 8px;padding:8px 14px!important;border:1px solid var(--ui-border);border-radius:8px!important;font-size:18px;line-height:1.4}
+:is(.named-text-colour-reference,.colour-reference) .font-featured-example>.colour-lesson-link{margin:2px 0 5px;min-height:44px;padding:8px 12px;font-size:13px}
