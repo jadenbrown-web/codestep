@@ -68,3 +68,16 @@ test('CSS examples colour complete property names, numbers and font strings',()=
  assert.ok(spans.some(n=>n.props.children==='12px'&&n.props.className==='syntax-number'));
  assert.ok(spans.some(n=>n.props.children==='"Courier New"'&&n.props.className==='syntax-string'));
 });
+
+
+test('all generic CSS font families receive the same value highlighting as quoted font names',()=>{
+ for(const family of ['serif','sans-serif','monospace','cursive','fantasy','system-ui']){
+  const code=`p { font-family: ${family}; }`;
+  const tree=Component({code,language:'css'});
+  const spans=React.Children.toArray(tree.props.children).filter(React.isValidElement);
+  assert.ok(spans.some(node=>node.props.children===family&&node.props.className==='syntax-string'),family);
+  assert.equal(spans.map(node=>node.props.children).join(''),code,'Highlighting preserves copyable CSS');
+ }
+ const javascript=renderToStaticMarkup(React.createElement(Component,{code:'monospace();',language:'javascript'}));
+ assert.match(javascript,/syntax-function-name[^>]*>monospace</,'CSS font rules do not affect JavaScript identifiers');
+});

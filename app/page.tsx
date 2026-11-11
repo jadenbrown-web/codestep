@@ -4267,7 +4267,7 @@ function HighlightedCode({ code, language, caretIndex, fullCode }: { code: strin
   let pattern = language === "html"
     ? /(<!--[\s\S]*?-->|<\/?|\/?>|"[^"]*"|'[^']*'|\b(?:html|head|meta|title|body|div|section|script|img|video|audio|h[1-6]|p|a|span|b|strong|i|em|mark|small|del|ins|sub|sup)\b|\b(?:style|href|src|alt|controls|id|lang|charset)\b|\b(?:background-color)\b|\b(?:const|new)\b|\b(?:Date|console|log)\b|\d+|[{}()[\];=.:#])/g
     : language === "css"
-    ? /(\/\*[\s\S]*?\*\/|"[^"\n]*"|'[^'\n]*'|#[0-9a-fA-F]{3,8}\b|#[A-Za-z_]\w*|\b(?:body|p|background-color|color|text-align|font-family|border-radius|border-bottom|border-left|border|solid|dotted|dashed|double|none|center|left|right|lightblue|red|green|blue|tomato)\b|\d+(?:px)?|[{}();:.,])/g
+    ? /(\/\*[\s\S]*?\*\/|"[^"\n]*"|'[^'\n]*'|#[0-9a-fA-F]{3,8}\b|#[A-Za-z_]\w*|\b(?:body|p|background-color|color|text-align|font-family|border-radius|border-bottom|border-left|border|solid|dotted|dashed|double|none|center|left|right|lightblue|red|green|blue|tomato|sans-serif|serif|monospace|cursive|fantasy|system-ui)\b|\d+(?:px)?|[{}();:.,])/g
     : language === "python"
     ? /(#.*|f?"[^"\n]*"|f?'[^'\n]*'|\b(?:def|class|self|return|import|from|if|elif|else|for|in|while|True|False|None|break|and|or|not|is)\b|\b(?:print|input|datetime|random|re|time|set|list|sorted|__init__)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|[{}()[\];=.:<>+*%/-])/g
     : /(\/\/[^\n]*|\/\^[A-Za-z]+\/[gimsuy]*|"[^"\n]*"|'[^'\n]*'|`[^`]*`|\b(?:def|self|import|from|True|False|None|and|or|not|is|using|static_cast|function|class|constructor|this|let|const|double|bool|out|auto|include|new|null|if|else|for|of|while|true|false|break|return|setTimeout|setInterval|clearInterval|public|static|void|string|int|get|set|var|foreach|in|await)\b|\b(?:Math|Object|process|fs|path|console|Console|Task|Date|DateTime|List|Set|HashSet|Dictionary|Random|std|cout|cin|vector|map|optional|print|input|datetime|random|re|time|Regex|RegexOptions|mt19937|uniform_int_distribution|random_device)\b|\b[A-Za-z_]\w*(?=\s*\()|\d+|===|!==|==|!=|&&|\|\||!|>=|<=|\+\+|--|[{}()[\];=.:<>?^/])/g;
@@ -4290,7 +4290,7 @@ function HighlightedCode({ code, language, caretIndex, fullCode }: { code: strin
     else if (/^(style|href|src|alt|controls|id|lang|charset)$/.test(text)) kind = "attribute";
     else if (/^(background-color|color|text-align|font-family|border-radius|border-bottom|border-left|border)$/.test(text)) kind = "api";
     else if (/^(body|p)$/.test(text)) kind = "keyword";
-    else if (/^(solid|dotted|dashed|double|none|center|left|right|lightblue|red|green|blue|tomato|#[0-9a-fA-F]+)$/.test(text)) kind = "string";
+    else if ((language === "css" && /^(sans-serif|serif|monospace|cursive|fantasy|system-ui)$/.test(text)) || /^(solid|dotted|dashed|double|none|center|left|right|lightblue|red|green|blue|tomato|#[0-9a-fA-F]+)$/.test(text)) kind = "string";
     else if (/^#[A-Za-z_]/.test(text)) kind = "function-name";
     else if (/^\d+(?:px)?$/.test(text)) kind = "number";
     else if ((language === "python" && text === "__init__") || /^(WriteLine|ReadLine|log)$/.test(text)) kind = "function-name";
