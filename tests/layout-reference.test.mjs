@@ -14,7 +14,7 @@ test('alignment, positioning and combined styles follow their prerequisites in b
   const alignment=course.findIndex(l=>l.referenceKind==='alignment');
   assert.equal(language==='html'?course[alignment-1].referenceKind:course[alignment-1].title,language==='html'?'named-colours':'Colour and centre text');
   const position=course.findIndex(l=>l.referenceKind==='positioning');
-  assert.equal(course[position-1].referenceKind,language==='html'?'fonts':'colours');
+  assert.equal(position,alignment+1,'Precise positioning comes immediately after alignment');
   assert.equal(course[position+1].referenceKind,'combined-styles');
   assert.ok(course.every((lesson,index)=>lesson.eyebrow.startsWith(String(index+1).padStart(2,'0'))));
  }
@@ -23,9 +23,11 @@ test('combined HTML has one style attribute per element and a complete, equivale
  const example=layoutExample('combined-styles',{align:'right',top:75,left:80,fontSize:20});
  const paragraph=example.html.match(/<p\b[^>]*>/)[0];
  assert.equal((paragraph.match(/style=/g)??[]).length,1);
- for(const declaration of ['color: red;','position: absolute;','top: 75px;','left: 80px;','font-size: 20px;','text-align: right;','font-family: sans-serif;','width: 160px;']){
+ for(const declaration of ['color: red;','position: absolute;','top: 75px;','left: 80px;','font-size: 20px;','text-align: right;',]){
   assert.ok(example.html.includes(declaration));assert.ok(example.css.includes(declaration));
  }
- assert.match(example.html,/position: relative; height: 180px/);
+ for(const value of [example.html,example.css])assert.doesNotMatch(value,/<div|height:|margin:|width:|font-family:|position: relative/,'Lesson code excludes preview scaffolding');
+ assert.match(example.setupCss,/position: relative; height: 180px/);
+ assert.match(example.completeHtml('html'),/<div class="preview">/);
  assert.doesNotMatch(example.companion,/style=/);
 });

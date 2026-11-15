@@ -2030,7 +2030,77 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "09 · Links",
+      "eyebrow": "09 · Positioning",
+      "title": "Position text precisely",
+      "explanation": "Use position: absolute with top and left to choose precise coordinates. Adjust the text size independently. The preview’s reference box is explained separately in the book.",
+      "note": "<!-- Explore text layout -->",
+      "prompt": "Adjust the controls, inspect the result, then copy the complete example.",
+      "answer": "<p style=\"position: absolute; top: 50px; left: 20px; font-size: 12px;\">Positioned text</p>",
+      "output": [
+        "Text layout preview."
+      ],
+      "referenceOnly": true,
+      "referenceKind": "positioning",
+      "parts": [
+        {
+          "code": "position: absolute",
+          "name": "Place this paragraph",
+          "meaning": "Takes the paragraph out of normal document flow. Use top and left to place it inside the nearest positioned ancestor. Without one, the offsets refer to the initial containing block, usually the page viewport."
+        },
+        {
+          "code": "top: 50px",
+          "name": "Distance down from the top",
+          "meaning": "Places the paragraph 50 CSS pixels below the reference box’s top edge."
+        },
+        {
+          "code": "left: 20px",
+          "name": "Distance across from the left",
+          "meaning": "Places the paragraph 20 CSS pixels from the reference box’s left edge."
+        },
+        {
+          "code": "font-size: 12px",
+          "name": "Size of the letters",
+          "meaning": "Sets the text size, independently of its position."
+        }
+      ]
+    },
+    {
+      "eyebrow": "10 · Combined styles",
+      "title": "Combine colour, alignment and position",
+      "explanation": "Combine text colour, size, alignment and precise placement. In HTML, put all of the paragraph’s declarations inside one style attribute, separated by semicolons.",
+      "note": "<!-- Explore text layout -->",
+      "prompt": "Adjust the controls, inspect the result, then copy the complete example.",
+      "answer": "<p style=\"color: red; position: absolute; top: 50px; left: 20px; font-size: 12px; text-align: center;\">This text is red and centred.</p>",
+      "output": [
+        "Text layout preview."
+      ],
+      "referenceOnly": true,
+      "referenceKind": "combined-styles",
+      "parts": [
+        {
+          "code": "style=\"...\"",
+          "name": "One style attribute per element",
+          "meaning": "In HTML, put all of this paragraph’s CSS declarations inside one style attribute. Use a semicolon to separate each declaration."
+        },
+        {
+          "code": "color: red",
+          "name": "Colour the letters",
+          "meaning": "Makes this paragraph’s text red."
+        },
+        {
+          "code": "text-align: center",
+          "name": "Align the words",
+          "meaning": "Aligns words inside the paragraph’s box. This is separate from the top and left coordinates that place the whole paragraph. The preview’s box width is explained in Preview setup."
+        },
+        {
+          "code": "position: absolute; top: 50px; left: 100px;",
+          "name": "Combine placement with appearance",
+          "meaning": "Places the paragraph in the reference box while the other declarations control its colour, size and alignment."
+        }
+      ]
+    },
+    {
+      "eyebrow": "11 · Links",
       "title": "Open another page",
       "explanation": "The a element creates a link. Its href attribute stores the destination, while the text between the tags is what the visitor clicks.",
       "note": "<!-- Link to a second HTML page -->",
@@ -2053,7 +2123,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "10 · Text elements",
+      "eyebrow": "12 · Text elements",
       "title": "Explore HTML text elements",
       "explanation": "This is a reference page rather than a quiz. Compare headings, paragraphs, text-formatting elements, inline colour and alignment styles, and a link to another page.",
       "note": "<!-- A visual guide to HTML text elements -->",
@@ -2066,7 +2136,7 @@ const lessons: Record<Language, Lesson[]> = {
       "referenceKind": "text"
     },
     {
-      "eyebrow": "11 · Fonts",
+      "eyebrow": "13 · Fonts",
       "title": "Explore HTML fonts",
       "explanation": "Use font-family inside the style attribute to choose how text looks. Each example shows the HTML and its result. A named font must be available on your device; otherwise the browser uses a fallback.",
       "note": "<!-- Choose a font for a paragraph -->",
@@ -2087,91 +2157,6 @@ const lessons: Record<Language, Lesson[]> = {
           "code": "font-family",
           "name": "Choose a font",
           "meaning": "Chooses the typeface used to draw the text. Put names containing spaces in quotes. Generic families such as serif work on every device."
-        }
-      ]
-    },
-    {
-      "eyebrow": "12 · Positioning",
-      "title": "Position text inside a box",
-      "explanation": "Choose the top and left offsets and text size. The positioned outer div makes the preview box the reference for those distances. Absolute positioning is useful for deliberate placement; it is not a replacement for responsive layouts such as Flexbox or Grid.",
-      "note": "<!-- Explore text layout -->",
-      "prompt": "Adjust the controls, inspect the result, then copy the complete example.",
-      "answer": "<div style=\"position: relative; height: 180px;\">\n  <p style=\"position: absolute; top: 50px; left: 20px; font-size: 12px; margin: 0;\">Positioned text</p>\n</div>",
-      "output": [
-        "Text layout preview."
-      ],
-      "referenceOnly": true,
-      "referenceKind": "positioning",
-      "parts": [
-        {
-          "code": "position: relative",
-          "name": "Choose the reference box",
-          "meaning": "Makes the outer div the containing block for its absolutely positioned paragraph. The preview measures distances from this box."
-        },
-        {
-          "code": "position: absolute",
-          "name": "Place this paragraph",
-          "meaning": "Takes the paragraph out of normal document flow. Use top and left to place it inside the nearest positioned ancestor. Without one, the offsets refer to the initial containing block, usually the page viewport."
-        },
-        {
-          "code": "top: 50px",
-          "name": "Distance down from the top",
-          "meaning": "Places the paragraph 50 CSS pixels below the reference box’s top edge."
-        },
-        {
-          "code": "left: 20px",
-          "name": "Distance across from the left",
-          "meaning": "Places the paragraph 20 CSS pixels from the reference box’s left edge."
-        },
-        {
-          "code": "font-size: 12px",
-          "name": "Size of the letters",
-          "meaning": "Sets the text size, independently of its position."
-        },
-        {
-          "code": "margin: 0",
-          "name": "Remove the browser’s paragraph margin",
-          "meaning": "Makes the preview’s position correspond directly to the chosen top and left offsets."
-        }
-      ]
-    },
-    {
-      "eyebrow": "13 · Combined styles",
-      "title": "Combine colour, alignment and position",
-      "explanation": "Combine the text colour, size, font, alignment and placement. In HTML, the paragraph has one style attribute containing all declarations, separated by semicolons. In a CSS file, the same declarations belong inside one p rule.",
-      "note": "<!-- Explore text layout -->",
-      "prompt": "Adjust the controls, inspect the result, then copy the complete example.",
-      "answer": "<div style=\"position: relative; height: 180px;\">\n  <p style=\"color: red; position: absolute; top: 50px; left: 100px; font-size: 12px; font-family: sans-serif; width: 160px; text-align: center; margin: 0;\">This text is red and centred.</p>\n</div>",
-      "output": [
-        "Text layout preview."
-      ],
-      "referenceOnly": true,
-      "referenceKind": "combined-styles",
-      "parts": [
-        {
-          "code": "style=\"...\"",
-          "name": "One style attribute per element",
-          "meaning": "In HTML, put all of this paragraph’s CSS declarations inside one style attribute. Separate each declaration with a semicolon. The outer div has its own style attribute because it is a different element."
-        },
-        {
-          "code": "color: red",
-          "name": "Colour the letters",
-          "meaning": "Makes this paragraph’s text red."
-        },
-        {
-          "code": "width: 160px",
-          "name": "Give alignment a box to work within",
-          "meaning": "Sets the paragraph’s width. text-align aligns the words inside that width; top and left position the whole paragraph."
-        },
-        {
-          "code": "font-family: sans-serif",
-          "name": "Choose the kind of lettering",
-          "meaning": "Uses a sans-serif font available on the device."
-        },
-        {
-          "code": "position: absolute; top: 50px; left: 100px;",
-          "name": "Combine placement with appearance",
-          "meaning": "Places the paragraph in the reference box while the other declarations control its colour, size and alignment."
         }
       ]
     },
@@ -2502,7 +2487,77 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "04 · ID selectors",
+      "eyebrow": "04 · Positioning",
+      "title": "Position text precisely",
+      "explanation": "Use position: absolute with top and left to choose precise coordinates. Adjust the text size independently. The preview’s reference box is explained separately in the book.",
+      "note": "/* Explore text layout */",
+      "prompt": "Adjust the controls, inspect the result, then copy the complete example.",
+      "answer": "p {\n  position: absolute;\n  top: 50px;\n  left: 20px;\n  font-size: 12px;\n}",
+      "output": [
+        "Text layout preview."
+      ],
+      "referenceOnly": true,
+      "referenceKind": "positioning",
+      "parts": [
+        {
+          "code": "position: absolute",
+          "name": "Place this paragraph",
+          "meaning": "Takes the paragraph out of normal document flow. Use top and left to place it inside the nearest positioned ancestor. Without one, the offsets refer to the initial containing block, usually the page viewport."
+        },
+        {
+          "code": "top: 50px",
+          "name": "Distance down from the top",
+          "meaning": "Places the paragraph 50 CSS pixels below the reference box’s top edge."
+        },
+        {
+          "code": "left: 20px",
+          "name": "Distance across from the left",
+          "meaning": "Places the paragraph 20 CSS pixels from the reference box’s left edge."
+        },
+        {
+          "code": "font-size: 12px",
+          "name": "Size of the letters",
+          "meaning": "Sets the text size, independently of its position."
+        }
+      ]
+    },
+    {
+      "eyebrow": "05 · Combined styles",
+      "title": "Combine colour, alignment and position",
+      "explanation": "Combine text colour, size, alignment and precise placement. In HTML, put all of the paragraph’s declarations inside one style attribute, separated by semicolons.",
+      "note": "/* Explore text layout */",
+      "prompt": "Adjust the controls, inspect the result, then copy the complete example.",
+      "answer": "p {\n  color: red;\n  position: absolute;\n  top: 50px;\n  left: 20px;\n  font-size: 12px;\n  text-align: center;\n}",
+      "output": [
+        "Text layout preview."
+      ],
+      "referenceOnly": true,
+      "referenceKind": "combined-styles",
+      "parts": [
+        {
+          "code": "style=\"...\"",
+          "name": "One style attribute per element",
+          "meaning": "In HTML, put all of this paragraph’s CSS declarations inside one style attribute. Use a semicolon to separate each declaration."
+        },
+        {
+          "code": "color: red",
+          "name": "Colour the letters",
+          "meaning": "Makes this paragraph’s text red."
+        },
+        {
+          "code": "text-align: center",
+          "name": "Align the words",
+          "meaning": "Aligns words inside the paragraph’s box. This is separate from the top and left coordinates that place the whole paragraph. The preview’s box width is explained in Preview setup."
+        },
+        {
+          "code": "position: absolute; top: 50px; left: 100px;",
+          "name": "Combine placement with appearance",
+          "meaning": "Places the paragraph in the reference box while the other declarations control its colour, size and alignment."
+        }
+      ]
+    },
+    {
+      "eyebrow": "06 · ID selectors",
       "title": "Style one unique element",
       "idLesson": "css",
       "browserPreview": true,
@@ -2522,7 +2577,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "05 · Font families",
+      "eyebrow": "07 · Font families",
       "title": "Compare website fonts",
       "explanation": "This is a visual reference rather than a quiz. A browser uses the first available font in a font-family list, then tries each fallback. Named fonts are not guaranteed on every device, so finish every stack with a generic family.",
       "note": "/* Compare common fonts and safe fallbacks */",
@@ -2535,7 +2590,7 @@ const lessons: Record<Language, Lesson[]> = {
       "referenceKind": "fonts"
     },
     {
-      "eyebrow": "06 · Borders",
+      "eyebrow": "08 · Borders",
       "title": "Explore CSS borders",
       "explanation": "Compare border styles and edges. The border rule sets the width, line style and colour. border-radius rounds the corners.",
       "note": "/* Choose a border style */",
@@ -2560,7 +2615,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "07 · Hex colours",
+      "eyebrow": "09 · Hex colours",
       "title": "Explore hex colours",
       "explanation": "Choose a colour using a six-digit hex value. The first pair sets red, the next green, and the last blue. Put it after color: to colour text or background-color: to colour the background.",
       "note": "/* Choose a hex colour */",
@@ -2586,91 +2641,6 @@ const lessons: Record<Language, Lesson[]> = {
           "code": "background-color",
           "name": "Colour the background",
           "meaning": "Changes the area behind the text. It accepts the same hex values."
-        }
-      ]
-    },
-    {
-      "eyebrow": "08 · Positioning",
-      "title": "Position text inside a box",
-      "explanation": "Choose the top and left offsets and text size. The positioned outer div makes the preview box the reference for those distances. Absolute positioning is useful for deliberate placement; it is not a replacement for responsive layouts such as Flexbox or Grid.",
-      "note": "/* Explore text layout */",
-      "prompt": "Adjust the controls, inspect the result, then copy the complete example.",
-      "answer": "div {\n  position: relative;\n  height: 180px;\n}\n\np {\n  position: absolute;\n  top: 50px;\n  left: 20px;\n  font-size: 12px;\n  margin: 0;\n}",
-      "output": [
-        "Text layout preview."
-      ],
-      "referenceOnly": true,
-      "referenceKind": "positioning",
-      "parts": [
-        {
-          "code": "position: relative",
-          "name": "Choose the reference box",
-          "meaning": "Makes the outer div the containing block for its absolutely positioned paragraph. The preview measures distances from this box."
-        },
-        {
-          "code": "position: absolute",
-          "name": "Place this paragraph",
-          "meaning": "Takes the paragraph out of normal document flow. Use top and left to place it inside the nearest positioned ancestor. Without one, the offsets refer to the initial containing block, usually the page viewport."
-        },
-        {
-          "code": "top: 50px",
-          "name": "Distance down from the top",
-          "meaning": "Places the paragraph 50 CSS pixels below the reference box’s top edge."
-        },
-        {
-          "code": "left: 20px",
-          "name": "Distance across from the left",
-          "meaning": "Places the paragraph 20 CSS pixels from the reference box’s left edge."
-        },
-        {
-          "code": "font-size: 12px",
-          "name": "Size of the letters",
-          "meaning": "Sets the text size, independently of its position."
-        },
-        {
-          "code": "margin: 0",
-          "name": "Remove the browser’s paragraph margin",
-          "meaning": "Makes the preview’s position correspond directly to the chosen top and left offsets."
-        }
-      ]
-    },
-    {
-      "eyebrow": "09 · Combined styles",
-      "title": "Combine colour, alignment and position",
-      "explanation": "Combine the text colour, size, font, alignment and placement. In HTML, the paragraph has one style attribute containing all declarations, separated by semicolons. In a CSS file, the same declarations belong inside one p rule.",
-      "note": "/* Explore text layout */",
-      "prompt": "Adjust the controls, inspect the result, then copy the complete example.",
-      "answer": "div {\n  position: relative;\n  height: 180px;\n}\n\np {\n  color: red;\n  position: absolute;\n  top: 50px;\n  left: 100px;\n  font-size: 12px;\n  font-family: sans-serif;\n  width: 160px;\n  text-align: center;\n  margin: 0;\n}",
-      "output": [
-        "Text layout preview."
-      ],
-      "referenceOnly": true,
-      "referenceKind": "combined-styles",
-      "parts": [
-        {
-          "code": "style=\"...\"",
-          "name": "One style attribute per element",
-          "meaning": "In HTML, put all of this paragraph’s CSS declarations inside one style attribute. Separate each declaration with a semicolon. The outer div has its own style attribute because it is a different element."
-        },
-        {
-          "code": "color: red",
-          "name": "Colour the letters",
-          "meaning": "Makes this paragraph’s text red."
-        },
-        {
-          "code": "width: 160px",
-          "name": "Give alignment a box to work within",
-          "meaning": "Sets the paragraph’s width. text-align aligns the words inside that width; top and left position the whole paragraph."
-        },
-        {
-          "code": "font-family: sans-serif",
-          "name": "Choose the kind of lettering",
-          "meaning": "Uses a sans-serif font available on the device."
-        },
-        {
-          "code": "position: absolute; top: 50px; left: 100px;",
-          "name": "Combine placement with appearance",
-          "meaning": "Places the paragraph in the reference box while the other declarations control its colour, size and alignment."
         }
       ]
     }
@@ -5332,6 +5302,13 @@ export default function Home() {
             {language === "css" && <><p>{idDrafts.current.html?.accepted ? "Your paragraph from the HTML ID lesson:" : "This rule styles the paragraph below. Use the HTML ID lesson to create it yourself."}</p><InlineCode language="html" code={linkedIdHtml} /></>}
           </section>}
 
+          {["positioning", "combined-styles"].includes(current!.referenceKind ?? "") && <details className="layout-setup-guide linked-id-guide">
+            <summary>Preview setup (optional)</summary>
+            <p>The practice canvas is <InlineCode language="css" code="height: 180px;" /> tall. This sets the box’s height, not the paragraph’s position. It is supporting setup, so it is left out of the lesson example.</p>
+            <p>The preview’s outer box uses <InlineCode language="css" code="position: relative;" />. Your paragraph’s <InlineCode language="css" code="top" /> and <InlineCode language="css" code="left" /> are measured from that box. On your own page, they use the nearest positioned ancestor, or the initial containing block if there is none.</p>
+            <p>The preview also resets paragraph spacing with <InlineCode language="css" code="margin: 0;" />{current!.referenceKind === "combined-styles" ? <> and gives the paragraph <InlineCode language="css" code="width: 160px;" /> so you can see its text alignment</> : null}. A copied snippet can look different without that surrounding setup.</p>
+            <div className="layout-setup-code"><CopyCodeButton code={layoutExample(current!.referenceKind as LayoutKind, layoutOptions).completeHtml(language as "html" | "css")} label="complete preview HTML" /><pre><code><HighlightedCode code={layoutExample(current!.referenceKind as LayoutKind, layoutOptions).completeHtml(language as "html" | "css")} language="html" /></code></pre></div>
+          </details>}
           {language === "css" && ["alignment", "positioning", "combined-styles"].includes(current!.referenceKind ?? "") && <section className="linked-id-guide">
             <h2>HTML for this CSS file</h2>
             <p>Use this HTML with the CSS example in <InlineCode language="css" code="styles.css" />:</p>
@@ -5390,7 +5367,7 @@ export default function Home() {
             </div>
             <div className="link-journey"><b>First Page</b><span>Go to Page 2 →</span><b>Page 2</b><span>← Go back</span></div>
             <button className="reference-next" onClick={nextLesson}>Continue to images →</button>
-          </div> : ["alignment", "positioning", "combined-styles"].includes(current!.referenceKind ?? "") ? <LayoutReference kind={current!.referenceKind as LayoutKind} language={language as "html" | "css"} options={layoutOptions} onChange={setLayoutOptions} onAlternate={() => openReferenceLesson(language === "html" ? "css" : "html", current!.referenceKind!)} onNext={nextLesson} actions={lessonActions} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax} />} /> : current!.referenceKind === "named-colours" ? <TextColourReference colourName={textColour} onColourChange={setTextColour} onOpenHex={() => openReferenceLesson("css", "colours")} onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} /> : (current!.referenceKind === "css" || current!.referenceKind === "colours") ? <CssVisualReference colourName={textColour} onColourChange={setTextColour} onOpenTextColour={() => openReferenceLesson("html", "named-colours")} kind={current!.referenceKind === "colours" ? "colours" : "borders"} onNext={nextLesson} actions={lessonActions} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax ?? (current!.referenceKind === "colours" ? "html" : "css")} />} /> : <HtmlTextReference onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} />}</> : <>
+          </div> : ["alignment", "positioning", "combined-styles"].includes(current!.referenceKind ?? "") ? <LayoutReference kind={current!.referenceKind as LayoutKind} language={language as "html" | "css"} options={layoutOptions} onChange={setLayoutOptions} nextLabel={index === lessons[language].length - 1 ? `Finish ${language.toUpperCase()} path →` : "Continue to the next lesson →"} onAlternate={() => openReferenceLesson(language === "html" ? "css" : "html", current!.referenceKind!)} onNext={nextLesson} actions={lessonActions} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax} />} /> : current!.referenceKind === "named-colours" ? <TextColourReference colourName={textColour} onColourChange={setTextColour} onOpenHex={() => openReferenceLesson("css", "colours")} onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} /> : (current!.referenceKind === "css" || current!.referenceKind === "colours") ? <CssVisualReference colourName={textColour} onColourChange={setTextColour} onOpenTextColour={() => openReferenceLesson("html", "named-colours")} kind={current!.referenceKind === "colours" ? "colours" : "borders"} onNext={nextLesson} actions={lessonActions} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax ?? (current!.referenceKind === "colours" ? "html" : "css")} />} /> : <HtmlTextReference onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} />}</> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className={`file-tab ${pinnedTopics.length && pinLimit <= 2 ? "has-pinned-topics" : ""}`} data-topic-tone={lessonTone(current!)} title={current!.fileName || challengeFile(language)}><span className="editor-file-name">{current!.fileName || challengeFile(language)}</span>{pinnedTopics.length && pinLimit <= 2 ? <PinnedTopicShortcuts topics={pinnedTopics} activeTopic={current?.title ?? null} onSelect={openPinnedTopic} language={language} /> : null}</div><div className="panel-actions"><div className="desktop-pane-actions">{lessonActions}</div><span className="mobile-editor-copy"><CopyCodeButton iconOnly code={lessonExample(current!, language, showComments)} label="full lesson example for VS Code" /></span><button className="editor-expand-button" aria-label={editorExpanded ? "Restore editor" : "Expand editor"} title={editorExpanded ? "Restore editor" : "Expand editor"} aria-pressed={editorExpanded} onClick={() => setEditorExpanded(expanded => !expanded)}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{editorExpanded ? <path d="M8 3v5H3m13-5v5h5M3 16h5v5m13-5h-5v5"/> : <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>}</svg></button><button className="editor-reset-button" onClick={() => changeBlockCode(commentPrefix + (current!.starter || ""))} title="Reset code" aria-label="Reset code"><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></svg><span className="editor-action-label">Reset</span></button></div></div>
               {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={commentPrefix + ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode indentationDots={indentationDots} code={value} language={language} />} /> : <div ref={codeEditorRef} className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="editor-surface" style={{ minHeight: `max(100%, calc(${lineNumbers.length} * var(--editor-line-height) + var(--editor-padding)))`, minWidth: `max(100%, calc(${Math.max(...(code + guideCode).split("\n").map(line => line.length), 1)}ch + var(--editor-gutter) + var(--editor-inline-padding) + var(--editor-inline-padding)))` }}><CodeLineNumbers text={code + (showGuide ? guideCode : "")} minimumLines={8} />{showGuide && <pre className={`code-guide ${current!.title === "Check an answer with if and else" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{current!.title === "Check an answer with if and else" ? <LearningCode indentationDots={indentationDots} indentationPrefix={code} code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode indentationDots={indentationDots} indentationPrefix={code} code={guideCode} fullCode={fullGuideCode} language={language} />}</code></pre>}{<pre className="typed-code-layer" aria-hidden="true"><code><LearningCode indentationDots={indentationDots} code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Check an answer with if and else"} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" wrap="soft" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div></div>}

@@ -1918,3 +1918,6 @@ html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:h
 @media(max-width:850px){.layout-reference>.font-featured-example{padding:5px 8px;gap:2px}.layout-reference-body{padding:6px}}
 .layout-reference .example-syntax-code{max-height:200px;overflow:auto;scrollbar-width:thin}
 @media(max-width:850px){.layout-reference .example-syntax-code{max-height:160px}}
+.layout-setup-guide>summary{cursor:pointer;color:var(--ui-text);font-weight:700;min-height:44px;display:list-item;align-content:center}
+.layout-setup-code{min-width:0;overflow:hidden}
+.layout-setup-code pre{margin:6px 0;white-space:pre-wrap;overflow-wrap:anywhere;font:600 12px/1.5 var(--mono)}
