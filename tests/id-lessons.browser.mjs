@@ -39,11 +39,28 @@ try{
    await back();assert.match(await page.locator('.drawer-summary').textContent(),/0 of 18/);
   }else{await activate(page.locator('.course-card.py-card'));await choose(html.title);}
 
-  assert.equal(await page.getByRole('button',{name:'Style this paragraph in CSS →',exact:true}).count(),0,'Complete HTML before linking to CSS');
+  assert.ok(await page.getByRole('button',{name:'Style this paragraph in CSS →',exact:true}).isVisible(),'HTML can always switch to CSS');
+  await style();await back();
+  assert.equal(await editor.inputValue(),'','An empty HTML draft survives switching');
+  assert.equal(await page.getByRole('button',{name:'Next lesson →',exact:true}).count(),0,'Switching does not mark HTML correct');
+  const unfinishedHtml='<p id="p1">Work in progress';
+  const unfinishedCss='#p1 { color:';
+  await editor.fill(unfinishedHtml);await style();await editor.fill(unfinishedCss);await back();
+  assert.equal(await editor.inputValue(),unfinishedHtml,'Unfinished HTML survives switching');
+  await check();await page.locator('.feedback.wrong').waitFor();
+  assert.ok(await page.getByRole('button',{name:'Style this paragraph in CSS →',exact:true}).isVisible(),'A wrong answer does not hide the switch');
+  await style();assert.equal(await editor.inputValue(),unfinishedCss,'Unfinished CSS survives switching');
+  await back();
+
   const htmlAttempt=html.answer.replaceAll('"',"'");
   await editor.fill(htmlAttempt);await check();await page.locator('.feedback.correct').waitFor();
   assert.equal(await paragraph.textContent(),'CSS turns this paragraph blue.');
   assert.equal(await colour(),'rgb(0, 0, 0)','The HTML ID alone does not change the text colour');
+  await activate(page.locator('.console-bar').getByRole('button',{name:'Clear',exact:true}));
+  assert.ok(await page.getByRole('button',{name:'Style this paragraph in CSS →',exact:true}).isVisible(),'Clear leaves both directions available');
+  await style();await back();
+  assert.equal(await editor.inputValue(),htmlAttempt);
+  await check();await page.locator('.feedback.correct').waitFor();
   assert.ok(await page.getByRole('button',{name:'Next lesson →',exact:true}).isVisible());
   await style();
   assert.equal(await page.locator('.lesson-copy h1').textContent(),css.title);
