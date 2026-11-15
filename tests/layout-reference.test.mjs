@@ -15,19 +15,18 @@ test('alignment, positioning and combined styles follow their prerequisites in b
   assert.equal(language==='html'?course[alignment-1].referenceKind:course[alignment-1].title,language==='html'?'named-colours':'Colour and centre text');
   const position=course.findIndex(l=>l.referenceKind==='positioning');
   assert.equal(position,alignment+1,'Precise positioning comes immediately after alignment');
-  assert.equal(course[position+1].referenceKind,'combined-styles');
+  assert.equal(course.at(-1).referenceKind,'combined-styles','Combining styles is the final recap');
   assert.ok(course.every((lesson,index)=>lesson.eyebrow.startsWith(String(index+1).padStart(2,'0'))));
  }
 });
-test('combined HTML has one style attribute per element and a complete, equivalent CSS example',()=>{
- const example=layoutExample('combined-styles',{align:'right',top:75,left:80,fontSize:20});
+test('the final recap combines exactly three properties inside one style attribute',()=>{
+ const example=layoutExample('combined-styles',{align:'right',top:75,left:80,fontSize:20,colour:'blue',fontFamily:'Georgia'});
  const paragraph=example.html.match(/<p\b[^>]*>/)[0];
  assert.equal((paragraph.match(/style=/g)??[]).length,1);
- for(const declaration of ['color: red;','position: absolute;','top: 75px;','left: 80px;','font-size: 20px;','text-align: right;',]){
+ for(const declaration of ['color: blue;','font-family: Georgia;','text-align: right;']){
   assert.ok(example.html.includes(declaration));assert.ok(example.css.includes(declaration));
  }
- for(const value of [example.html,example.css])assert.doesNotMatch(value,/<div|height:|margin:|width:|font-family:|position: relative/,'Lesson code excludes preview scaffolding');
- assert.match(example.setupCss,/position: relative; height: 180px/);
- assert.match(example.completeHtml('html'),/<div class="preview">/);
- assert.doesNotMatch(example.companion,/style=/);
+ for(const value of [example.html,example.css])assert.doesNotMatch(value,/<div|position:|top:|left:|font-size:|height:|margin:|width:/,'Recap contains only colour, font and alignment');
+ assert.equal((example.css.match(/;/g)??[]).length,3);
+ assert.equal(example.setupCss,'');assert.doesNotMatch(example.companion,/style=/);
 });

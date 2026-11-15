@@ -40,6 +40,6 @@ export default function CssVisualReference({kind,onNext,actions,renderCode,colou
     </button>
    </article>)}
   </div>
-  <footer className="html-reference-footer"><button className="html-reference-next" onClick={onNext}>{colours?'Finish CSS path →':'Continue to hex colours →'}</button></footer>
+  <footer className="html-reference-footer"><button className="html-reference-next" onClick={onNext}>{colours?'Continue to combined styles →':'Continue to hex colours →'}</button></footer>
  </section>;
 }

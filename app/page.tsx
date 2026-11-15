@@ -2065,42 +2065,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "10 · Combined styles",
-      "title": "Combine colour, alignment and position",
-      "explanation": "Combine text colour, size, alignment and precise placement. In HTML, put all of the paragraph’s declarations inside one style attribute, separated by semicolons.",
-      "note": "<!-- Explore text layout -->",
-      "prompt": "Adjust the controls, inspect the result, then copy the complete example.",
-      "answer": "<p style=\"color: red; position: absolute; top: 50px; left: 20px; font-size: 12px; text-align: center;\">This text is red and centred.</p>",
-      "output": [
-        "Text layout preview."
-      ],
-      "referenceOnly": true,
-      "referenceKind": "combined-styles",
-      "parts": [
-        {
-          "code": "style=\"...\"",
-          "name": "One style attribute per element",
-          "meaning": "In HTML, put all of this paragraph’s CSS declarations inside one style attribute. Use a semicolon to separate each declaration."
-        },
-        {
-          "code": "color: red",
-          "name": "Colour the letters",
-          "meaning": "Makes this paragraph’s text red."
-        },
-        {
-          "code": "text-align: center",
-          "name": "Align the words",
-          "meaning": "Aligns words inside the paragraph’s box. This is separate from the top and left coordinates that place the whole paragraph. The preview’s box width is explained in Preview setup."
-        },
-        {
-          "code": "position: absolute; top: 50px; left: 100px;",
-          "name": "Combine placement with appearance",
-          "meaning": "Places the paragraph in the reference box while the other declarations control its colour, size and alignment."
-        }
-      ]
-    },
-    {
-      "eyebrow": "11 · Links",
+      "eyebrow": "10 · Links",
       "title": "Open another page",
       "explanation": "The a element creates a link. Its href attribute stores the destination, while the text between the tags is what the visitor clicks.",
       "note": "<!-- Link to a second HTML page -->",
@@ -2123,7 +2088,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "12 · Text elements",
+      "eyebrow": "11 · Text elements",
       "title": "Explore HTML text elements",
       "explanation": "This is a reference page rather than a quiz. Compare headings, paragraphs, text-formatting elements, inline colour and alignment styles, and a link to another page.",
       "note": "<!-- A visual guide to HTML text elements -->",
@@ -2136,7 +2101,7 @@ const lessons: Record<Language, Lesson[]> = {
       "referenceKind": "text"
     },
     {
-      "eyebrow": "13 · Fonts",
+      "eyebrow": "12 · Fonts",
       "title": "Explore HTML fonts",
       "explanation": "Use font-family inside the style attribute to choose how text looks. Each example shows the HTML and its result. A named font must be available on your device; otherwise the browser uses a fallback.",
       "note": "<!-- Choose a font for a paragraph -->",
@@ -2161,7 +2126,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "14 · JavaScript in HTML",
+      "eyebrow": "13 · JavaScript in HTML",
       "title": "Show the current date and time",
       "explanation": "The script element lets an HTML page run JavaScript. new Date() creates the current date and time, and console.log displays it in the browser's developer console.",
       "note": "<!-- Run JavaScript from inside the HTML page -->",
@@ -2194,7 +2159,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "15 · Multiple pages",
+      "eyebrow": "14 · Multiple pages",
       "title": "Link two HTML pages",
       "explanation": "This is a two-file reference rather than a quiz. When both files are in the same folder, each href can use the other file's name as a relative path.",
       "note": "<!-- Link index.html and page2.html in both directions -->",
@@ -2207,7 +2172,7 @@ const lessons: Record<Language, Lesson[]> = {
       "referenceKind": "pages"
     },
     {
-      "eyebrow": "16 · Images",
+      "eyebrow": "15 · Images",
       "title": "Place an image on the page",
       "explanation": "The img element displays an image. src tells the browser which file to load, while alt describes the image if it cannot be seen or loaded. If car.png is beside index.html, its filename is enough for src.",
       "note": "<!-- Display car.png from the same folder as this HTML file -->",
@@ -2236,7 +2201,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "17 · Videos",
+      "eyebrow": "16 · Videos",
       "title": "Place a video on the page",
       "explanation": "The video element places a video on the page, much like img places a picture. src tells the browser to load my-video.mp4, and controls adds the built-in play, pause, volume, and timeline controls. Keep the MP4 file beside the HTML file when using only its filename.",
       "note": "<!-- Display my-video.mp4 with playback controls -->",
@@ -2260,7 +2225,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "18 · Audio",
+      "eyebrow": "17 · Audio",
       "title": "Place audio on the page",
       "explanation": "The audio element works much like video, but it plays sound without a picture area. src tells the browser to load my-audio.mp3, and controls adds play, pause, volume, and timeline controls. Keep the MP3 file beside the HTML file when using only its filename.",
       "note": "<!-- Play my-audio.mp3 with playback controls -->",
@@ -2279,7 +2244,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "19 · IDs for CSS",
+      "eyebrow": "18 · IDs for CSS",
       "title": "Give one element a unique name",
       "idLesson": "html",
       "browserPreview": true,
@@ -2305,7 +2270,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "20 · Browser-safe repetition",
+      "eyebrow": "19 · Browser-safe repetition",
       "title": "Use a button instead of while (true)",
       "explanation": "while (true) is JavaScript, not HTML. Even inside a script element, an endless loop can freeze the page. A button is safer for an HTML page: each click runs checkAnswer once, then the page waits for another click.",
       "note": "<!-- A click safely runs one answer check at a time -->",
@@ -2362,7 +2327,7 @@ const lessons: Record<Language, Lesson[]> = {
       "outputNote": "Example page result after clicking the button and entering 2. The dialog input and click are actions, not printed output. The page then waits for another click."
     },
     {
-      "eyebrow": "21 · Return values",
+      "eyebrow": "20 · Return values",
       "title": "Send a value back with return",
       "explanation": "return sends a value back to the place where a function was called, and the function ends immediately. Here, getMessage() returns the text Hello. That returned text is then placed in the paragraph.",
       "note": "<!-- Return a value from a function and show it on the page -->",
@@ -2387,6 +2352,46 @@ const lessons: Record<Language, Lesson[]> = {
         "returned by getMessage(), then placed in the paragraph"
       ],
       "outputNote": "Example visible paragraph text. return itself does not print anything."
+    },
+    {
+      "eyebrow": "21 · Combined styles",
+      "title": "Combine styles in one attribute",
+      "explanation": "A final recap of colour, font and alignment. color, font-family and text-align are CSS properties. In HTML, their declarations go inside one style attribute, with semicolons between them. In a CSS file, put the same declarations inside one rule.",
+      "note": "<!-- Explore text layout -->",
+      "prompt": "Adjust the controls, inspect the result, then copy the complete example.",
+      "answer": "<p style=\"color: red; font-family: Arial; text-align: center;\">This paragraph uses three styles.</p>",
+      "output": [
+        "Text layout preview."
+      ],
+      "referenceOnly": true,
+      "referenceKind": "combined-styles",
+      "parts": [
+        {
+          "code": "style",
+          "name": "One attribute, several CSS properties",
+          "meaning": "Put the colour, font and alignment declarations inside a single style attribute. The CSS properties are settings inside that attribute; they are not separate HTML attributes."
+        },
+        {
+          "code": "color",
+          "name": "Text colour",
+          "meaning": "Controls the colour of the letters."
+        },
+        {
+          "code": "font-family",
+          "name": "Font",
+          "meaning": "Chooses the kind of lettering."
+        },
+        {
+          "code": "text-align",
+          "name": "Alignment",
+          "meaning": "Aligns the words inside the paragraph."
+        },
+        {
+          "code": ";",
+          "name": "Separate the declarations",
+          "meaning": "End each declaration with a semicolon. In HTML, the three declarations stay inside the same pair of quotation marks."
+        }
+      ]
     }
   ],
   "css": [
@@ -2522,42 +2527,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "05 · Combined styles",
-      "title": "Combine colour, alignment and position",
-      "explanation": "Combine text colour, size, alignment and precise placement. In HTML, put all of the paragraph’s declarations inside one style attribute, separated by semicolons.",
-      "note": "/* Explore text layout */",
-      "prompt": "Adjust the controls, inspect the result, then copy the complete example.",
-      "answer": "p {\n  color: red;\n  position: absolute;\n  top: 50px;\n  left: 20px;\n  font-size: 12px;\n  text-align: center;\n}",
-      "output": [
-        "Text layout preview."
-      ],
-      "referenceOnly": true,
-      "referenceKind": "combined-styles",
-      "parts": [
-        {
-          "code": "style=\"...\"",
-          "name": "One style attribute per element",
-          "meaning": "In HTML, put all of this paragraph’s CSS declarations inside one style attribute. Use a semicolon to separate each declaration."
-        },
-        {
-          "code": "color: red",
-          "name": "Colour the letters",
-          "meaning": "Makes this paragraph’s text red."
-        },
-        {
-          "code": "text-align: center",
-          "name": "Align the words",
-          "meaning": "Aligns words inside the paragraph’s box. This is separate from the top and left coordinates that place the whole paragraph. The preview’s box width is explained in Preview setup."
-        },
-        {
-          "code": "position: absolute; top: 50px; left: 100px;",
-          "name": "Combine placement with appearance",
-          "meaning": "Places the paragraph in the reference box while the other declarations control its colour, size and alignment."
-        }
-      ]
-    },
-    {
-      "eyebrow": "06 · ID selectors",
+      "eyebrow": "05 · ID selectors",
       "title": "Style one unique element",
       "idLesson": "css",
       "browserPreview": true,
@@ -2577,7 +2547,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "07 · Font families",
+      "eyebrow": "06 · Font families",
       "title": "Compare website fonts",
       "explanation": "This is a visual reference rather than a quiz. A browser uses the first available font in a font-family list, then tries each fallback. Named fonts are not guaranteed on every device, so finish every stack with a generic family.",
       "note": "/* Compare common fonts and safe fallbacks */",
@@ -2590,7 +2560,7 @@ const lessons: Record<Language, Lesson[]> = {
       "referenceKind": "fonts"
     },
     {
-      "eyebrow": "08 · Borders",
+      "eyebrow": "07 · Borders",
       "title": "Explore CSS borders",
       "explanation": "Compare border styles and edges. The border rule sets the width, line style and colour. border-radius rounds the corners.",
       "note": "/* Choose a border style */",
@@ -2615,7 +2585,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "09 · Hex colours",
+      "eyebrow": "08 · Hex colours",
       "title": "Explore hex colours",
       "explanation": "Choose a colour using a six-digit hex value. The first pair sets red, the next green, and the last blue. Put it after color: to colour text or background-color: to colour the background.",
       "note": "/* Choose a hex colour */",
@@ -2641,6 +2611,46 @@ const lessons: Record<Language, Lesson[]> = {
           "code": "background-color",
           "name": "Colour the background",
           "meaning": "Changes the area behind the text. It accepts the same hex values."
+        }
+      ]
+    },
+    {
+      "eyebrow": "09 · Combined styles",
+      "title": "Combine styles in one rule",
+      "explanation": "A final recap of colour, font and alignment. color, font-family and text-align are CSS properties. In HTML, their declarations go inside one style attribute, with semicolons between them. In a CSS file, put the same declarations inside one rule.",
+      "note": "/* Explore text layout */",
+      "prompt": "Adjust the controls, inspect the result, then copy the complete example.",
+      "answer": "p {\n  color: red;\n  font-family: Arial;\n  text-align: center;\n}",
+      "output": [
+        "Text layout preview."
+      ],
+      "referenceOnly": true,
+      "referenceKind": "combined-styles",
+      "parts": [
+        {
+          "code": "p { ... }",
+          "name": "One rule, several declarations",
+          "meaning": "Keep the three declarations together inside the p rule. The matching HTML example uses one style attribute for the same settings."
+        },
+        {
+          "code": "color",
+          "name": "Text colour",
+          "meaning": "Controls the colour of the letters."
+        },
+        {
+          "code": "font-family",
+          "name": "Font",
+          "meaning": "Chooses the kind of lettering."
+        },
+        {
+          "code": "text-align",
+          "name": "Alignment",
+          "meaning": "Aligns the words inside the paragraph."
+        },
+        {
+          "code": ";",
+          "name": "Separate the declarations",
+          "meaning": "End each declaration with a semicolon. In HTML, the three declarations stay inside the same pair of quotation marks."
         }
       ]
     }
@@ -5295,6 +5305,7 @@ export default function Home() {
           <h1>{current!.title}</h1>
           <p className="lesson-overview">{lessonOverview(current!)}</p>
           {language === "javascript" && baseCurrent!.compareNode && <InputRuntimeExamples nodeCode={baseCurrent!.answer} selected={inputRuntime} onSelect={setInputRuntime} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax} />} />}
+          {current!.referenceKind === "combined-styles" && <section className="linked-id-guide combined-style-explanation"><h2>{language === "html" ? "One style attribute" : "One CSS rule"}</h2><p><InlineCode language="css" code="color" />, <InlineCode language="css" code="font-family" /> and <InlineCode language="css" code="text-align" /> are CSS properties. {language === "html" ? <>Put all three declarations inside one HTML <InlineCode language="html" code="style" /> attribute and one pair of quotation marks.</> : <>Put all three declarations inside the same <InlineCode language="css" code="p { ... }" /> rule. The matching HTML version groups them in one <InlineCode language="html" code="style" /> attribute.</>} Separate declarations with a semicolon.</p></section>}
           <LessonBreakdown lesson={current!} language={language} />
           {current!.idLesson && <section className="linked-id-guide">
             <h2>One paragraph, two languages</h2>
@@ -5302,11 +5313,11 @@ export default function Home() {
             {language === "css" && <><p>{idDrafts.current.html?.accepted ? "Your paragraph from the HTML ID lesson:" : "This rule styles the paragraph below. Use the HTML ID lesson to create it yourself."}</p><InlineCode language="html" code={linkedIdHtml} /></>}
           </section>}
 
-          {["positioning", "combined-styles"].includes(current!.referenceKind ?? "") && <details className="layout-setup-guide linked-id-guide">
+          {current!.referenceKind === "positioning" && <details className="layout-setup-guide linked-id-guide">
             <summary>Preview setup (optional)</summary>
             <p>The practice canvas is <InlineCode language="css" code="height: 180px;" /> tall. This sets the box’s height, not the paragraph’s position. It is supporting setup, so it is left out of the lesson example.</p>
             <p>The preview’s outer box uses <InlineCode language="css" code="position: relative;" />. Your paragraph’s <InlineCode language="css" code="top" /> and <InlineCode language="css" code="left" /> are measured from that box. On your own page, they use the nearest positioned ancestor, or the initial containing block if there is none.</p>
-            <p>The preview also resets paragraph spacing with <InlineCode language="css" code="margin: 0;" />{current!.referenceKind === "combined-styles" ? <> and gives the paragraph <InlineCode language="css" code="width: 160px;" /> so you can see its text alignment</> : null}. A copied snippet can look different without that surrounding setup.</p>
+            <p>The preview also resets paragraph spacing with <InlineCode language="css" code="margin: 0;" />. A copied snippet can look different without that surrounding setup.</p>
             <div className="layout-setup-code"><CopyCodeButton code={layoutExample(current!.referenceKind as LayoutKind, layoutOptions).completeHtml(language as "html" | "css")} label="complete preview HTML" /><pre><code><HighlightedCode code={layoutExample(current!.referenceKind as LayoutKind, layoutOptions).completeHtml(language as "html" | "css")} language="html" /></code></pre></div>
           </details>}
           {language === "css" && ["alignment", "positioning", "combined-styles"].includes(current!.referenceKind ?? "") && <section className="linked-id-guide">

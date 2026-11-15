@@ -1916,8 +1916,13 @@ html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:h
 .layout-preview>.browser-result-preview{flex:none;height:212px;min-height:212px}
 @media(min-width:851px){.layout-reference .font-example-heading{margin:-6px -10px 0;padding-left:10px}}
 @media(max-width:850px){.layout-reference>.font-featured-example{padding:5px 8px;gap:2px}.layout-reference-body{padding:6px}}
-.layout-reference .example-syntax-code{max-height:200px;overflow:auto;scrollbar-width:thin}
-@media(max-width:850px){.layout-reference .example-syntax-code{max-height:160px}}
+.layout-reference .example-syntax-code{max-height:none;overflow:visible}
+
 .layout-setup-guide>summary{cursor:pointer;color:var(--ui-text);font-weight:700;min-height:44px;display:list-item;align-content:center}
 .layout-setup-code{min-width:0;overflow:hidden}
 .layout-setup-code pre{margin:6px 0;white-space:pre-wrap;overflow-wrap:anywhere;font:600 12px/1.5 var(--mono)}
+
+/* Keep the layout controls and their preview together when the viewport has room. */
+.layout-reference-body{gap:8px}
+.layout-reference[data-layout-kind="positioning"] .layout-controls{grid-template-columns:repeat(3,minmax(0,1fr))}
+.layout-reference:not([data-layout-kind="positioning"]) .layout-preview>.browser-result-preview{height:clamp(140px,25dvh,212px);min-height:140px}
