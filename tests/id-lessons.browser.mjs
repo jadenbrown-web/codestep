@@ -36,7 +36,7 @@ try{
    await activate(page.locator('.course-card.css-card'));await choose(css.title);
    await editor.fill(css.answer);await check();await page.locator('.feedback.correct').waitFor();
    assert.equal(await colour(),'rgb(0, 0, 255)','Starting from CSS uses the matching example paragraph');
-   await back();assert.match(await page.locator('.drawer-summary').textContent(),/0 of 18/);
+   await back();assert.match(await page.locator('.drawer-summary').textContent(),new RegExp(`0 of ${lessons.html.length}`));
   }else{await activate(page.locator('.course-card.py-card'));await choose(html.title);}
 
   assert.ok(await page.getByRole('button',{name:'Style this paragraph in CSS →',exact:true}).isVisible(),'HTML can always switch to CSS');
@@ -64,7 +64,7 @@ try{
   assert.ok(await page.getByRole('button',{name:'Next lesson →',exact:true}).isVisible());
   await style();
   assert.equal(await page.locator('.lesson-copy h1').textContent(),css.title);
-  assert.match(await page.locator('.drawer-summary').textContent(),startWithCss?/3 of 6/:/0 of 6/,'The link does not complete CSS lessons');
+  assert.match(await page.locator('.drawer-summary').textContent(),new RegExp(`${startWithCss?lessons.css.indexOf(css)+1:0} of ${lessons.css.length}`),'The link does not complete CSS lessons');
   const cssAttempt=css.answer.replace('blue','#0000FF');
   await editor.fill(cssAttempt);await back();
   assert.equal(await editor.inputValue(),htmlAttempt,'The actual HTML draft survives the round trip');

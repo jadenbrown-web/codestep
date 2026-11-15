@@ -1899,3 +1899,22 @@ html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:h
 .current-topic-marker{display:block;width:4px;height:18px;border-radius:3px;background:var(--ui-text)}
 /* Paint dots on real whitespace; never replace or insert code characters. */
 .indentation-space{background-image:radial-gradient(circle,#7b9587 1px,transparent 1.3px);background-size:1ch 1.4em;background-position:0 center;background-repeat:repeat-x}
+.layout-reference>.font-featured-example{padding:6px 10px;gap:4px}
+.layout-reference .font-featured-example .css-featured-code{min-height:20px}
+.layout-reference .colour-lesson-link{min-height:44px;margin-bottom:4px;padding:6px 10px}
+.layout-reference-body{flex:1;min-height:0;overflow:auto;padding:8px;display:flex;flex-direction:column;gap:10px}
+.layout-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;color:var(--ui-text);font:600 13px/1.4 var(--sans)}
+.layout-controls label{display:flex;flex-direction:column;min-width:0;gap:2px}
+.layout-controls output{color:var(--ui-muted);font:600 12px var(--mono)}
+.layout-controls input[type=range]{width:100%;height:36px;margin:0;accent-color:var(--green-dark);touch-action:pan-y}
+.layout-controls select{height:44px;width:100%;border:1px solid var(--ui-border);border-radius:8px;background:var(--ui-surface);color:var(--ui-text);font:inherit;padding:4px 8px}
+.layout-alignment-control{grid-column:1/-1;display:flex;flex-direction:column;gap:5px}
+.layout-choice-row{display:flex;gap:6px}
+.layout-choice{flex:1;min-height:44px;padding:6px;border:1px solid var(--ui-border);border-radius:8px;background:transparent;color:var(--ui-text);font:650 13px var(--sans);cursor:pointer}
+.layout-choice[aria-pressed=true]{background:var(--selection-surface);border-color:var(--green-dark)}
+.layout-preview{display:flex;flex-direction:column;gap:6px;flex:none;font:600 13px var(--sans);color:var(--ui-muted)}
+.layout-preview>.browser-result-preview{flex:none;height:212px;min-height:212px}
+@media(min-width:851px){.layout-reference .font-example-heading{margin:-6px -10px 0;padding-left:10px}}
+@media(max-width:850px){.layout-reference>.font-featured-example{padding:5px 8px;gap:2px}.layout-reference-body{padding:6px}}
+.layout-reference .example-syntax-code{max-height:200px;overflow:auto;scrollbar-width:thin}
+@media(max-width:850px){.layout-reference .example-syntax-code{max-height:160px}}
