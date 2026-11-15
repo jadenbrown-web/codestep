@@ -1,0 +1,76 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {build} from 'esbuild';
+import {chromium} from 'playwright';
+const source=fs.readFileSync('app/page.tsx','utf8');
+const start=source.indexOf('{',source.indexOf('const lessons:'));
+const lessons=JSON.parse(source.slice(start,source.indexOf('\n};',start)+2));
+const lesson=lessons.python.find(item=>item.title==='Make something happen');
+const bundle=await build({stdin:{contents:`import React from 'react';import {createRoot} from 'react-dom/client';import App from './app/page';createRoot(document.getElementById('root')).render(<App/>);`,loader:'tsx',resolveDir:process.cwd()},bundle:true,format:'iife',platform:'browser',write:false,define:{'process.env.NODE_ENV':'"production"'}});
+const browser=await chromium.launch({headless:true,...(fs.existsSync('/usr/bin/chromium')?{executablePath:'/usr/bin/chromium'}:{})});
+try{
+ for(const width of [1400,390]) for(const theme of ['light','dark']){
+  const page=await browser.newPage({viewport:{width,height:844},hasTouch:width===390,isMobile:width===390});
+  const errors=[];page.on('pageerror',error=>errors.push(error.message));
+  await page.route('https://codestep.test/**',route=>{
+   const path=new URL(route.request().url()).pathname;
+   if(path==='/')return route.fulfill({contentType:'text/html',body:`<html><meta name="viewport" content="width=device-width,initial-scale=1"><style>${fs.readFileSync('app/globals.css','utf8')}</style><body><div id="root"></div></body></html>`});
+   return fs.existsSync('public'+path)?route.fulfill({body:fs.readFileSync('public'+path),contentType:path.endsWith('.wasm')?'application/wasm':path.endsWith('.js')?'text/javascript':'image/svg+xml'}):route.fulfill({status:404,body:''});
+  });
+  await page.goto('https://codestep.test/');
+  await page.evaluate(theme=>{localStorage.setItem('codestep-theme',theme);localStorage.setItem('codestep-code-blocks','false');},theme);
+  await page.addScriptTag({content:bundle.outputFiles[0].text});
+  await page.locator('.course-card.python-card').click();
+  if(width===390)await page.getByRole('button',{name:'Open lesson list',exact:true}).tap();
+  await page.locator('.drawer-lessons .topic-lesson-button').filter({hasText:lesson.title}).click();
+  if(width===390)await page.getByRole('button',{name:'Practice',exact:true}).tap();
+  const editor=page.getByRole('textbox',{name:'Code editor',exact:true});
+  const sample="def make_tea():\n    print('Making tea')\n    if True:\n        print('Ready')\nmake_tea()";
+  await editor.fill(sample);
+  const dots=page.locator('.typed-code-layer .indentation-space');
+  assert.equal((await dots.allTextContents()).join(''),'                ');
+  assert.equal(await editor.inputValue(),sample);
+  assert.equal(await page.locator('.typed-code-layer code').textContent(),sample,'Rendered code preserves actual spaces');
+  const span=await dots.first().evaluate(el=>({background:getComputedStyle(el).backgroundImage,width:el.getBoundingClientRect().width,font:getComputedStyle(el).fontSize}));
+  assert.match(span.background,/radial-gradient/);assert.ok(span.width>0);
+  if(theme==='dark')await page.screenshot({path:`/tmp/codestep-indent-dots-${width}.png`});
+  await page.locator('.settings-button:visible').first().click();
+  const toggle=page.getByRole('switch',{name:'Indentation dots',exact:true});
+  assert.equal(await toggle.getAttribute('aria-checked'),'true');
+  await toggle.click();
+  assert.equal(await dots.count(),0);
+  assert.equal(await page.evaluate(()=>localStorage.getItem('codestep-indentation-dots')),'false');
+  await page.getByRole('button',{name:'Close settings',exact:true}).click();
+  assert.equal(await editor.inputValue(),sample);
+  // Re-mount using the same storage, as a page reload does.
+  await page.reload();await page.addScriptTag({content:bundle.outputFiles[0].text});
+  await page.locator('.course-card.python-card').click();
+  if(width===390)await page.getByRole('button',{name:'Open lesson list',exact:true}).click();
+  await page.locator('.drawer-lessons .topic-lesson-button').filter({hasText:lesson.title}).click();
+  const selected=page.locator('.topic-lesson-button[data-active="true"]');
+  assert.equal(await selected.locator('.current-topic-marker').count(),1);
+  assert.equal(await selected.locator('.example-choice-mark svg').count(),0);
+  if(width===390)await page.getByRole('button',{name:'Practice',exact:true}).click();
+  await editor.fill(sample);assert.equal(await dots.count(),0,'Setting survives reload');
+  await page.getByRole('button',{name:'Compare with another language',exact:true}).filter({visible:true}).click();
+  await page.locator('dialog[open]').waitFor();
+  await page.waitForFunction(()=>[...document.querySelectorAll('.comparison-card')].every(card=>card.querySelector('.comparison-code-reveal')?.textContent===card.querySelector('.comparison-code-space')?.textContent));
+  assert.equal(await page.locator('dialog .indentation-space').count(),0,'Compare respects the disabled preference');
+  await page.getByRole('button',{name:'Back to lesson',exact:true}).click();
+  await page.locator('.settings-button:visible').first().click();await toggle.click();
+  await page.getByRole('button',{name:'Close settings',exact:true}).click();
+  assert.ok(await dots.count()>0);assert.equal(await editor.inputValue(),sample);
+  await page.getByRole('button',{name:'Compare with another language',exact:true}).filter({visible:true}).click();
+  await page.locator('.comparison-card').nth(0).locator('.indentation-space').first().waitFor();
+  await page.locator('.comparison-card').nth(1).locator('.indentation-space').first().waitFor();
+  if(width===390)await page.getByRole('button',{name:'Open comparison examples',exact:true}).click();
+  assert.equal(await page.locator('dialog .current-topic-marker').count(),1,'Compare shares the same selected-topic marker');
+  await page.evaluate(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async text=>window.copiedCode=text}}));
+  await page.getByRole('button',{name:'Copy Python code',exact:true}).click();
+  assert.equal(await page.evaluate(()=>window.copiedCode),sample,'Copied code has spaces, not decorative dots');
+  await page.getByRole('button',{name:'Back to lesson',exact:true}).click();
+  assert.deepEqual(errors,[]);
+  console.log(`PASS ${width} ${theme}: whitespace guides, unchanged text/caret, saved setting and consistent topic marker`);
+  await page.close();
+ }
+}finally{await browser.close();}

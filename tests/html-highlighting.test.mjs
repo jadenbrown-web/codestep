@@ -81,3 +81,17 @@ test('unquoted CSS font families receive the same value highlighting as quoted f
  const javascript=renderToStaticMarkup(React.createElement(Component,{code:'monospace();',language:'javascript'}));
  assert.match(javascript,/syntax-function-name[^>]*>monospace</,'CSS font rules do not affect JavaScript identifiers');
 });
+
+
+test('indentation dots preserve whitespace and stay out of mid-line spaces',()=>{
+ const code="def make_tea():\n    print('Making tea')\n\tprint('Ready')";
+ const markup=renderToStaticMarkup(React.createElement(Component,{code,language:'python',indentationDots:true,caretIndex:18}));
+ const spaces=[...markup.matchAll(/class="indentation-space">([ \t]*)<\/span>/g)].map(match=>match[1]).join('');
+ assert.equal(spaces,'    \t');
+ assert.equal((markup.match(/class="editor-caret"/g)??[]).length,1);
+ assert.doesNotMatch(markup,/·/,'Dots are painted, never inserted into code');
+ const disabled=renderToStaticMarkup(React.createElement(Component,{code,language:'python',indentationDots:false}));
+ assert.doesNotMatch(disabled,/indentation-space/);
+ const partial=renderToStaticMarkup(React.createElement(Component,{code:'  tea',language:'python',indentationDots:true,indentationPrefix:'print('}));
+ assert.doesNotMatch(partial,/indentation-space/,'A partial guide must not mark spaces inside a line');
+});

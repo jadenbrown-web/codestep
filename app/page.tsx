@@ -4246,7 +4246,7 @@ function SyntaxDiagnostic({ parts }: { parts: DiagnosticPart[] }) {
   return <div className="syntax-diagnostic" role="alert">{parts.map((part, index) => <span key={`${part.text}-${index}`} className={`diagnostic-${part.kind}`} tabIndex={0} data-help={part.help} aria-label={`${part.text}: ${part.help}`}>{part.text}</span>)}</div>;
 }
 
-function HighlightedCode({ code, language, caretIndex, fullCode }: { code: string; language: Language; caretIndex?: number; fullCode?: string }) {
+function HighlightedCode({ code, language, caretIndex, fullCode, indentationDots = false, indentationPrefix = "" }: { code: string; language: Language; caretIndex?: number; fullCode?: string; indentationDots?: boolean; indentationPrefix?: string }) {
   const visibleLength = code.length;
   if (fullCode?.startsWith(code)) code = fullCode;
   if (language === "html") {
@@ -4261,7 +4261,7 @@ function HighlightedCode({ code, language, caretIndex, fullCode }: { code: strin
     }
     if (segments.length) {
       if (start < code.length) segments.push({ code: code.slice(start), language: "html", start });
-      return <>{segments.filter(segment => segment.start < visibleLength || caretIndex === segment.start).map((segment, index) => <HighlightedCode key={index} code={segment.code.slice(0, Math.max(0, visibleLength - segment.start))} fullCode={segment.code} language={segment.language} caretIndex={caretIndex !== undefined && caretIndex >= segment.start && (caretIndex < segment.start + segment.code.length || index === segments.length - 1) ? caretIndex - segment.start : undefined} />)}</>;
+      return <>{segments.filter(segment => segment.start < visibleLength || caretIndex === segment.start).map((segment, index) => <HighlightedCode key={index} code={segment.code.slice(0, Math.max(0, visibleLength - segment.start))} fullCode={segment.code} language={segment.language} indentationDots={indentationDots} indentationPrefix={indentationPrefix + code.slice(0, segment.start)} caretIndex={caretIndex !== undefined && caretIndex >= segment.start && (caretIndex < segment.start + segment.code.length || index === segments.length - 1) ? caretIndex - segment.start : undefined} />)}</>;
     }
   }
   const languageApis: Record<Language, RegExp> = {
@@ -4316,20 +4316,36 @@ function HighlightedCode({ code, language, caretIndex, fullCode }: { code: strin
     visibleParts.push({ ...part, text: part.text.slice(0, remaining) });
     remaining -= part.text.length;
   }
+  const renderText = (text: string, start: number) => {
+    if (!indentationDots) return text;
+    const context = indentationPrefix + code;
+    const pieces: React.ReactNode[] = [];
+    let cursor = 0;
+    for (const match of text.matchAll(/[ \t]+/g)) {
+      const at = indentationPrefix.length + start + match.index!;
+      const lineStart = context.lastIndexOf("\n", at - 1) + 1;
+      if (!/^[ \t]*$/.test(context.slice(lineStart, at))) continue;
+      pieces.push(text.slice(cursor, match.index));
+      pieces.push(<span className="indentation-space" key={at}>{match[0]}</span>);
+      cursor = match.index! + match[0].length;
+    }
+    pieces.push(text.slice(cursor));
+    return pieces;
+  };
   let offset = 0;
   let caretPlaced = false;
   return <>{visibleParts.map((part, index) => {
     const start = offset;
     const end = start + part.text.length;
     offset = end;
-    if (caretIndex === undefined || caretPlaced || caretIndex < start || caretIndex > end) return <span className={`syntax-${part.kind}`} key={index}>{part.text}</span>;
+    if (caretIndex === undefined || caretPlaced || caretIndex < start || caretIndex > end) return <span className={`syntax-${part.kind}`} key={index}>{renderText(part.text, start)}</span>;
     const split = Math.max(0, Math.min(part.text.length, caretIndex - start));
     caretPlaced = true;
-    return <span className={`syntax-${part.kind}`} key={index}>{part.text.slice(0, split)}<i className="editor-caret" />{part.text.slice(split)}</span>;
+    return <span className={`syntax-${part.kind}`} key={index}>{renderText(part.text.slice(0, split), start)}<i className="editor-caret" />{renderText(part.text.slice(split), start + split)}</span>;
   })}{caretIndex !== undefined && !caretPlaced && <i className="editor-caret" />}</>;
 }
 
-function LearningCode({ code, starter, language, caretIndex, focusConditions }: { code: string; starter?: string; language: Language; caretIndex: number; focusConditions?: boolean }) {
+function LearningCode({ code, starter, language, caretIndex, focusConditions, indentationDots = false, indentationPrefix = "" }: { code: string; starter?: string; language: Language; caretIndex: number; focusConditions?: boolean; indentationDots?: boolean; indentationPrefix?: string }) {
   if (focusConditions) {
     const segments: { start: number; end: number; fresh: boolean }[] = [];
     let offset = 0;
@@ -4344,18 +4360,18 @@ function LearningCode({ code, starter, language, caretIndex, focusConditions }: 
       if (last < line.length) segments.push({start: offset + last, end: offset + line.length, fresh: false});
       offset += line.length;
     }
-    return <>{segments.map((segment, i) => <span key={i} className={segment.fresh ? "new-code" : "learned-code"}><HighlightedCode code={code.slice(segment.start, segment.end)} language={language} caretIndex={caretIndex >= segment.start && (caretIndex < segment.end || i === segments.length - 1) ? caretIndex - segment.start : undefined} /></span>)}{!code && <i className="editor-caret" />}</>;
+    return <>{segments.map((segment, i) => <span key={i} className={segment.fresh ? "new-code" : "learned-code"}><HighlightedCode code={code.slice(segment.start, segment.end)} language={language} indentationDots={indentationDots} indentationPrefix={indentationPrefix + code.slice(0, segment.start)} caretIndex={caretIndex >= segment.start && (caretIndex < segment.end || i === segments.length - 1) ? caretIndex - segment.start : undefined} /></span>)}{!code && <i className="editor-caret" />}</>;
   }
   const learnedLength = starter && code.startsWith(starter) ? starter.length : 0;
-  if (!learnedLength) return <span className="new-code"><HighlightedCode code={code} language={language} caretIndex={caretIndex} /></span>;
+  if (!learnedLength) return <span className="new-code"><HighlightedCode code={code} language={language} indentationDots={indentationDots} indentationPrefix={indentationPrefix} caretIndex={caretIndex} /></span>;
 
   const learnedCode = code.slice(0, learnedLength);
   const newCode = code.slice(learnedLength);
   const caretInLearnedCode = caretIndex <= learnedLength;
 
   return <>
-    <span className="learned-code"><HighlightedCode code={learnedCode} language={language} caretIndex={caretInLearnedCode ? caretIndex : undefined} /></span>
-    <span className="new-code"><HighlightedCode code={newCode} language={language} caretIndex={!caretInLearnedCode ? caretIndex - learnedLength : undefined} /></span>
+    <span className="learned-code"><HighlightedCode code={learnedCode} language={language} indentationDots={indentationDots} indentationPrefix={indentationPrefix} caretIndex={caretInLearnedCode ? caretIndex : undefined} /></span>
+    <span className="new-code"><HighlightedCode code={newCode} language={language} indentationDots={indentationDots} indentationPrefix={indentationPrefix + learnedCode} caretIndex={!caretInLearnedCode ? caretIndex - learnedLength : undefined} /></span>
   </>;
 }
 
@@ -4398,7 +4414,7 @@ function MenuHeader({ title, titleId, onBack, backLabel, className }: { title: s
   return <header className={`app-header menu-header ${className}`}><BackButton onClick={onBack} label={backLabel} /><div className="menu-header-heading"><small>CODESTEP</small><h2 id={titleId}>{title}</h2></div></header>;
 }
 
-function SettingsPanel({ open, themeMode, showGuide, showComments, onCommentsChange, colourTyping, blockMode, onBlockModeChange, onThemeChange, onGuideChange, onColourTypingChange, onClose }: { open: boolean; themeMode: ThemeMode; showGuide: boolean; showComments: boolean; onCommentsChange: (show: boolean) => void; colourTyping: boolean; blockMode: boolean; onBlockModeChange: (enabled: boolean) => void; onThemeChange: (mode: ThemeMode) => void; onGuideChange: (show: boolean) => void; onColourTypingChange: (show: boolean) => void; onClose: () => void }) {
+function SettingsPanel({ indentationDots = true, onIndentationDotsChange = () => {}, open, themeMode, showGuide, showComments, onCommentsChange, colourTyping, blockMode, onBlockModeChange, onThemeChange, onGuideChange, onColourTypingChange, onClose }: { indentationDots?: boolean; onIndentationDotsChange?: (enabled: boolean) => void; open: boolean; themeMode: ThemeMode; showGuide: boolean; showComments: boolean; onCommentsChange: (show: boolean) => void; colourTyping: boolean; blockMode: boolean; onBlockModeChange: (enabled: boolean) => void; onThemeChange: (mode: ThemeMode) => void; onGuideChange: (show: boolean) => void; onColourTypingChange: (show: boolean) => void; onClose: () => void }) {
   const close = useRef(onClose);
   close.current = onClose;
   useEffect(() => {
@@ -4428,6 +4444,7 @@ function SettingsPanel({ open, themeMode, showGuide, showComments, onCommentsCha
       <div className="settings-group guide-setting"><div><b>Code blocks</b><span>Tap or drag ready-made lines into your code. Turn off to type instead. Your choice is saved on this device.</span></div><button aria-label="Code blocks" className={`switch ${blockMode ? "on" : ""}`} role="switch" aria-checked={blockMode} onClick={() => onBlockModeChange(!blockMode)}><i /></button></div>
       <div className="settings-group guide-setting"><div><b>Code guide</b><span>Show a faint, colour-coded copy of the expected answer in the editor.</span></div><button aria-label="Code guide" className={`switch ${showGuide ? "on" : ""}`} role="switch" aria-checked={showGuide} onClick={() => onGuideChange(!showGuide)}><i /></button></div>
       <div className="settings-group guide-setting"><div><b>Colour typed code</b><span>Give your typed code the same syntax colours as the ghost guide.</span></div><button aria-label="Colour typed code" className={`switch ${colourTyping ? "on" : ""}`} role="switch" aria-checked={colourTyping} onClick={() => onColourTypingChange(!colourTyping)}><i /></button></div>
+      <div className="settings-group guide-setting"><div><b>Indentation dots</b><span>Show dots for leading spaces and tabs to make code blocks easier to follow. Copied code keeps its original whitespace.</span></div><button aria-label="Indentation dots" className={`switch ${indentationDots ? "on" : ""}`} role="switch" aria-checked={indentationDots} onClick={() => onIndentationDotsChange(!indentationDots)}><i /></button></div>
       <div className="settings-group guide-setting"><div><b>Lesson comments</b><span>Show step-by-step comments in the code guide and copied examples. You can skip typing the comments.</span></div><button aria-label="Lesson comments" className={`switch ${showComments ? "on" : ""}`} role="switch" aria-checked={showComments} onClick={() => onCommentsChange(!showComments)}><i /></button></div>
       <p className="settings-foot">Comments explain the code and do not change the result. Your choice is saved on this device.</p>
       </div>
@@ -4526,7 +4543,7 @@ function LessonExplanation({ lesson, language }: { lesson: Lesson; language: Lan
 }
 
 function TopicLessonRow({ title, category, tone, active, onSelect, pin, unavailable }: { title: string; category: string; tone: string; active: boolean; onSelect: () => void; pin: React.ReactNode; unavailable?: string }) {
-  return <div className="lesson-list-row topic-lesson-row"><button className={`topic-lesson-button tone-${tone} ${active ? "active" : ""}`} data-active={active} aria-pressed={active} onClick={onSelect}><span className="example-label"><small>{category}</small><strong>{title}</strong>{unavailable && <span className="comparison-topic-unavailable">{unavailable}</span>}</span><span className="example-choice-mark" aria-hidden="true">{active && <svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m5 12 4 4L19 6"/></svg>}</span></button>{pin}</div>;
+  return <div className="lesson-list-row topic-lesson-row"><button className={`topic-lesson-button tone-${tone} ${active ? "active" : ""}`} data-active={active} aria-pressed={active} onClick={onSelect}><span className="example-label"><small>{category}</small><strong>{title}</strong>{unavailable && <span className="comparison-topic-unavailable">{unavailable}</span>}</span><span className="example-choice-mark" aria-hidden="true">{active && <span className="current-topic-marker" /> }</span></button>{pin}</div>;
 }
 
 function ComparisonExamplePicker({ target, selected, onSelect, sourceLanguage, pins, onTogglePin, pinLimit = 2 }: { target: Language; selected?: Lesson; onSelect: (title: string) => void; sourceLanguage: Language; pins: string[]; onTogglePin: (topic: string) => void; pinLimit?: number }) {
@@ -4556,7 +4573,7 @@ function ComparisonExamplePicker({ target, selected, onSelect, sourceLanguage, p
   </div>;
 }
 
-function LanguageComparison({ language, lesson, editorCode, showComments, onClose, pinnedTopics = [], onTogglePin = () => {}, pinLimit = 2 }: { language: Language; lesson: Lesson; editorCode: string; showComments: boolean; onClose: () => void; pinnedTopics?: string[]; onTogglePin?: (topic: string) => void; pinLimit?: number }) {
+function LanguageComparison({ indentationDots = true, language, lesson, editorCode, showComments, onClose, pinnedTopics = [], onTogglePin = () => {}, pinLimit = 2 }: { indentationDots?: boolean; language: Language; lesson: Lesson; editorCode: string; showComments: boolean; onClose: () => void; pinnedTopics?: string[]; onTogglePin?: (topic: string) => void; pinLimit?: number }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [target, setTarget] = useState<Language>(language === "javascript" ? "cpp" : "javascript");
   const [pickedLesson, setPickedLesson] = useState<Lesson | null>(null);
@@ -4593,8 +4610,8 @@ function LanguageComparison({ language, lesson, editorCode, showComments, onClos
       {((language === "javascript" && sourceLesson?.compareNode) || (target === "javascript" && other?.compareNode)) && <div className="comparison-input-runtime runtime-picker" role="group" aria-label="JavaScript input environment"><span>JavaScript input:</span><button data-active={comparisonRuntime === "browser"} aria-pressed={comparisonRuntime === "browser"} onClick={() => { setComparisonRuntime("browser"); setRuntimeChanged(true); }}>Browser prompt()</button><button data-active={comparisonRuntime === "node"} aria-pressed={comparisonRuntime === "node"} onClick={() => { setComparisonRuntime("node"); setRuntimeChanged(true); }}>Node.js terminal</button><small>Changes the comparison example; your practice code stays unchanged.</small></div>}
     </div>
     <div className="language-comparison-columns">
-      <section className={`comparison-card ${sourceLesson ? `tone-${lessonTone(sourceLesson)}` : ""}`}><header className="comparison-filebar"><div className={`comparison-file-tab ${pinnedTopics.length && pinLimit <= 2 ? "has-pinned-topics" : ""}`} data-topic-tone={sourceLesson ? lessonTone(sourceLesson) : "green"} title={languageName(language)}><span className="comparison-panel-identity"><img src={`language-logos/${language}.svg`} alt="" width="26" height="26"/><span><strong>{languageName(language)}</strong><small>Your language</small></span></span><span className="comparison-file-name">{sourceLesson ? sourceLesson.fileName || challengeFile(language) : languageName(language)}</span>{pinLimit <= 2 && <PinnedTopicShortcuts topics={pinnedTopics} activeTopic={activeTopic} onSelect={selectPinnedTopic} language={language} />}</div><CopyCodeButton iconOnly code={sourceCode} label={languageName(language)} /></header>{!sourceLesson && <p className="comparison-unavailable" role="status">{comparisonUnavailable(pickedLesson ?? lesson, language)}</p>}<pre className="numbered-comparison-code" aria-label={`${languageName(language)} code for comparison`}><CodeLineNumbers text={sourceCode} /><code className="comparison-code-space" aria-hidden="true">{sourceCode}</code><code className="comparison-code-reveal"><HighlightedCode code={sourceReveal} fullCode={sourceCode} language={language} /></code></pre></section>
-      <section className={`comparison-card ${other ? `tone-${lessonTone(other)}` : ""}`} key={target + (other?.title ?? "")}><header className="comparison-filebar"><div className="comparison-file-tab" data-topic-tone={other ? lessonTone(other) : "green"} title={languageName(target)}><span className="comparison-panel-identity"><img src={`language-logos/${target}.svg`} alt="" width="26" height="26"/><span><strong>{languageName(target)}</strong><small>Comparing with</small></span></span><span className="comparison-file-name">{other ? other.fileName || challengeFile(target) : languageName(target)}</span></div><CopyCodeButton iconOnly code={other ? lessonExample(other, target, showComments) : ""} label={languageName(target)} /></header>{!other && <p className="comparison-unavailable" role="status">{comparisonUnavailable(pickedLesson ?? lesson, target)}</p>}<pre className="numbered-comparison-code" aria-label="Other language code"><CodeLineNumbers text={targetCode} /><code className="comparison-code-space" aria-hidden="true">{targetCode}</code><code className="comparison-code-reveal">{other ? <HighlightedCode code={targetReveal} fullCode={targetCode} language={target} /> : null}</code></pre></section>
+      <section className={`comparison-card ${sourceLesson ? `tone-${lessonTone(sourceLesson)}` : ""}`}><header className="comparison-filebar"><div className={`comparison-file-tab ${pinnedTopics.length && pinLimit <= 2 ? "has-pinned-topics" : ""}`} data-topic-tone={sourceLesson ? lessonTone(sourceLesson) : "green"} title={languageName(language)}><span className="comparison-panel-identity"><img src={`language-logos/${language}.svg`} alt="" width="26" height="26"/><span><strong>{languageName(language)}</strong><small>Your language</small></span></span><span className="comparison-file-name">{sourceLesson ? sourceLesson.fileName || challengeFile(language) : languageName(language)}</span>{pinLimit <= 2 && <PinnedTopicShortcuts topics={pinnedTopics} activeTopic={activeTopic} onSelect={selectPinnedTopic} language={language} />}</div><CopyCodeButton iconOnly code={sourceCode} label={languageName(language)} /></header>{!sourceLesson && <p className="comparison-unavailable" role="status">{comparisonUnavailable(pickedLesson ?? lesson, language)}</p>}<pre className="numbered-comparison-code" aria-label={`${languageName(language)} code for comparison`}><CodeLineNumbers text={sourceCode} /><code className="comparison-code-space" aria-hidden="true">{sourceCode}</code><code className="comparison-code-reveal"><HighlightedCode indentationDots={indentationDots} code={sourceReveal} fullCode={sourceCode} language={language} /></code></pre></section>
+      <section className={`comparison-card ${other ? `tone-${lessonTone(other)}` : ""}`} key={target + (other?.title ?? "")}><header className="comparison-filebar"><div className="comparison-file-tab" data-topic-tone={other ? lessonTone(other) : "green"} title={languageName(target)}><span className="comparison-panel-identity"><img src={`language-logos/${target}.svg`} alt="" width="26" height="26"/><span><strong>{languageName(target)}</strong><small>Comparing with</small></span></span><span className="comparison-file-name">{other ? other.fileName || challengeFile(target) : languageName(target)}</span></div><CopyCodeButton iconOnly code={other ? lessonExample(other, target, showComments) : ""} label={languageName(target)} /></header>{!other && <p className="comparison-unavailable" role="status">{comparisonUnavailable(pickedLesson ?? lesson, target)}</p>}<pre className="numbered-comparison-code" aria-label="Other language code"><CodeLineNumbers text={targetCode} /><code className="comparison-code-space" aria-hidden="true">{targetCode}</code><code className="comparison-code-reveal">{other ? <HighlightedCode indentationDots={indentationDots} code={targetReveal} fullCode={targetCode} language={target} /> : null}</code></pre></section>
     </div>
     {notesOpen && <button className="comparison-notes-backdrop" aria-label="Close explanations" onClick={() => setNotesOpen(false)} />}<aside id="comparison-notes-panel" className="comparison-notes" hidden={!notesOpen} aria-label="Explanations and setup"><div className="comparison-notes-heading"><b>Explanations and setup</b><button className="comparison-notes-close" aria-label="Close explanations" onClick={() => setNotesOpen(false)}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><path d="m8 15 4-4 4 4"/></svg></button></div><div className="comparison-notes-language"><h3><img className="comparison-language-logo" src={`language-logos/${language}.svg`} alt="" width="24" height="24" />{languageName(language)}</h3><div className="comparison-description"><p>{hasEditorCode ? "Your language · code currently in your editor." : sourceLesson ? <span>{lessonOverview(sourceLesson)}</span> : "Choose another example to compare this topic."}</p>{sourceLesson && <LessonBreakdown lesson={sourceLesson} language={language} />}</div></div><div className="comparison-notes-language"><h3><img className="comparison-language-logo" src={`language-logos/${target}.svg`} alt="" width="24" height="24" />{languageName(target)}</h3><div className="comparison-description">{!other && <p>{comparisonUnavailable(pickedLesson ?? lesson, target)}</p>}{other && <><p>{lessonOverview(other)}</p><LessonBreakdown lesson={other} language={target} />{other.runHint && <p><CodeProse text={other.runHint} language={target} /></p>}</>}</div></div></aside>
   </dialog>;
@@ -4657,6 +4674,7 @@ export default function Home() {
   const [showComments, setShowComments] = useState(false);
   const insertedComment = useRef("");
   const [colourTyping, setColourTyping] = useState(true);
+  const [indentationDots, setIndentationDots] = useState(true);
   const [blockMode, setBlockMode] = useState(false);
   const [checkerVersion, setCheckerVersion] = useState(0);
   const [checking, setChecking] = useState(false);
@@ -4826,6 +4844,8 @@ export default function Home() {
     const savedGuide = localStorage.getItem("codestep-code-guide");
     setShowComments(localStorage.getItem("codestep-lesson-comments") === "true");
     const savedColourTyping = localStorage.getItem("codestep-colour-typing");
+    const savedDots = localStorage.getItem("codestep-indentation-dots");
+    if (savedDots !== null) setIndentationDots(savedDots === "true");
     if (savedTheme && ["light", "dark", "system"].includes(savedTheme)) setThemeMode(savedTheme);
     if (savedGuide !== null) setShowGuide(savedGuide === "true");
     if (savedColourTyping !== null) setColourTyping(savedColourTyping === "true");
@@ -5034,7 +5054,7 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <SettingsPanel open={settingsOpen} themeMode={themeMode} showGuide={showGuide} showComments={showComments} onCommentsChange={changeComments} colourTyping={colourTyping} blockMode={blockMode} onBlockModeChange={changeBlockMode} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onColourTypingChange={setColourTyping} onClose={() => setSettingsOpen(false)} />
+      <SettingsPanel indentationDots={indentationDots} onIndentationDotsChange={enabled => { setIndentationDots(enabled); localStorage.setItem("codestep-indentation-dots", String(enabled)); }} open={settingsOpen} themeMode={themeMode} showGuide={showGuide} showComments={showComments} onCommentsChange={changeComments} colourTyping={colourTyping} blockMode={blockMode} onBlockModeChange={changeBlockMode} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onColourTypingChange={setColourTyping} onClose={() => setSettingsOpen(false)} />
       </>
     );
   }
@@ -5043,7 +5063,7 @@ export default function Home() {
   const desktopHomeControls = <div className="desktop-home-controls"><div className="lesson-brand-group"><HomeButton onClick={() => { setSettingsOpen(false); setLanguage(null); }} /></div></div>;
   return (
     <>
-    {comparisonOpen && <LanguageComparison language={language} pinLimit={pinLimit} pinnedTopics={pinnedTopics} onTogglePin={togglePinnedTopic} lesson={current!} editorCode={code} showComments={showComments} onClose={() => setComparisonOpen(false)} />}
+    {comparisonOpen && <LanguageComparison indentationDots={indentationDots} language={language} pinLimit={pinLimit} pinnedTopics={pinnedTopics} onTogglePin={togglePinnedTopic} lesson={current!} editorCode={code} showComments={showComments} onClose={() => setComparisonOpen(false)} />}
     <main className={`lesson-shell mobile-${mobilePane} ${current!.referenceOnly ? "reference-mode" : ""}`}>
       <header className="lesson-nav app-header">
         <div className="lesson-brand-group">{pinLimit <= 2 && <HomeButton onClick={() => { setSettingsOpen(false); setLanguage(null); }} />}<button className="drawer-toggle" onClick={() => { setSettingsOpen(false); setNavOpen(open => window.innerWidth > 850 ? true : !open); if (window.innerWidth > 850) lessonListRef.current?.scrollTo({ top: 0, behavior: "smooth" }); }} aria-label={pinLimit > 2 ? "Learning path" : navOpen ? "Close lesson list" : "Open lesson list"} data-active={navOpen} aria-expanded={navOpen}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><path d="M5 6h14M5 12h14M5 18h14"/></svg></button></div>
@@ -5137,7 +5157,7 @@ export default function Home() {
           </div> : current!.referenceKind === "named-colours" ? <TextColourReference colourName={textColour} onColourChange={setTextColour} onOpenHex={() => openReferenceLesson("css", "colours")} onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} /> : (current!.referenceKind === "css" || current!.referenceKind === "colours") ? <CssVisualReference colourName={textColour} onColourChange={setTextColour} onOpenTextColour={() => openReferenceLesson("html", "named-colours")} kind={current!.referenceKind === "colours" ? "colours" : "borders"} onNext={nextLesson} actions={lessonActions} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax ?? (current!.referenceKind === "colours" ? "html" : "css")} />} /> : <HtmlTextReference onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} />}</> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className={`file-tab ${pinnedTopics.length && pinLimit <= 2 ? "has-pinned-topics" : ""}`} data-topic-tone={lessonTone(current!)} title={current!.fileName || challengeFile(language)}><span className="editor-file-name">{current!.fileName || challengeFile(language)}</span>{pinnedTopics.length && pinLimit <= 2 ? <PinnedTopicShortcuts topics={pinnedTopics} activeTopic={current?.title ?? null} onSelect={openPinnedTopic} language={language} /> : null}</div><div className="panel-actions"><div className="desktop-pane-actions">{lessonActions}</div><span className="mobile-editor-copy"><CopyCodeButton iconOnly code={lessonExample(current!, language, showComments)} label="full lesson example for VS Code" /></span><button className="editor-expand-button" aria-label={editorExpanded ? "Restore editor" : "Expand editor"} title={editorExpanded ? "Restore editor" : "Expand editor"} aria-pressed={editorExpanded} onClick={() => setEditorExpanded(expanded => !expanded)}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{editorExpanded ? <path d="M8 3v5H3m13-5v5h5M3 16h5v5m13-5h-5v5"/> : <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>}</svg></button><button className="editor-reset-button" onClick={() => changeBlockCode(commentPrefix + (current!.starter || ""))} title="Reset code" aria-label="Reset code"><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></svg><span className="editor-action-label">Reset</span></button></div></div>
-              {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={commentPrefix + ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode code={value} language={language} />} /> : <div ref={codeEditorRef} className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="editor-surface" style={{ minHeight: `max(100%, calc(${lineNumbers.length} * var(--editor-line-height) + var(--editor-padding)))`, minWidth: `max(100%, calc(${Math.max(...(code + guideCode).split("\n").map(line => line.length), 1)}ch + var(--editor-gutter) + var(--editor-inline-padding) + var(--editor-inline-padding)))` }}><CodeLineNumbers text={code + (showGuide ? guideCode : "")} minimumLines={8} />{showGuide && <pre className={`code-guide ${current!.title === "Check an answer with if and else" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{current!.title === "Check an answer with if and else" ? <LearningCode code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode code={guideCode} fullCode={fullGuideCode} language={language} />}</code></pre>}{<pre className="typed-code-layer" aria-hidden="true"><code><LearningCode code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Check an answer with if and else"} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" wrap="soft" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div></div>}
+              {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={commentPrefix + ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode indentationDots={indentationDots} code={value} language={language} />} /> : <div ref={codeEditorRef} className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="editor-surface" style={{ minHeight: `max(100%, calc(${lineNumbers.length} * var(--editor-line-height) + var(--editor-padding)))`, minWidth: `max(100%, calc(${Math.max(...(code + guideCode).split("\n").map(line => line.length), 1)}ch + var(--editor-gutter) + var(--editor-inline-padding) + var(--editor-inline-padding)))` }}><CodeLineNumbers text={code + (showGuide ? guideCode : "")} minimumLines={8} />{showGuide && <pre className={`code-guide ${current!.title === "Check an answer with if and else" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{current!.title === "Check an answer with if and else" ? <LearningCode indentationDots={indentationDots} indentationPrefix={code} code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode indentationDots={indentationDots} indentationPrefix={code} code={guideCode} fullCode={fullGuideCode} language={language} />}</code></pre>}{<pre className="typed-code-layer" aria-hidden="true"><code><LearningCode indentationDots={indentationDots} code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Check an answer with if and else"} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" wrap="soft" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div></div>}
           </div>
           <div className="console-panel">
             <div className="console-bar"><span><i /> {language === "html" || language === "css" ? "RESULT PREVIEW" : "CONSOLE"}</span><button onClick={() => setStatus("idle")}>Clear</button></div>
@@ -5159,7 +5179,7 @@ export default function Home() {
         </section>
       </div>
     </main>
-    <SettingsPanel open={settingsOpen} themeMode={themeMode} showGuide={showGuide} showComments={showComments} onCommentsChange={changeComments} colourTyping={colourTyping} blockMode={blockMode} onBlockModeChange={changeBlockMode} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onColourTypingChange={setColourTyping} onClose={() => setSettingsOpen(false)} />
+    <SettingsPanel indentationDots={indentationDots} onIndentationDotsChange={enabled => { setIndentationDots(enabled); localStorage.setItem("codestep-indentation-dots", String(enabled)); }} open={settingsOpen} themeMode={themeMode} showGuide={showGuide} showComments={showComments} onCommentsChange={changeComments} colourTyping={colourTyping} blockMode={blockMode} onBlockModeChange={changeBlockMode} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onColourTypingChange={setColourTyping} onClose={() => setSettingsOpen(false)} />
     </>
   );
 }

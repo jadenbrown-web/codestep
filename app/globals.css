@@ -1895,3 +1895,7 @@ html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:h
  .workspace>.feedback:has(.linked-id-action)>.lesson-feedback-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);width:100%;align-items:stretch}
  .workspace>.feedback:has(.linked-id-action) .lesson-feedback-actions>button{min-height:48px;height:auto;padding:6px 8px}
 }
+/* Current topic is distinct from a completion tick, in both navigation panels. */
+.current-topic-marker{display:block;width:4px;height:18px;border-radius:3px;background:var(--ui-text)}
+/* Paint dots on real whitespace; never replace or insert code characters. */
+.indentation-space{background-image:radial-gradient(circle,#7b9587 1px,transparent 1.3px);background-size:1ch 1.4em;background-position:0 center;background-repeat:repeat-x}
