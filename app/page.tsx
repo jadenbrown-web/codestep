@@ -5332,6 +5332,12 @@ export default function Home() {
             {language === "css" && <><p>{idDrafts.current.html?.accepted ? "Your paragraph from the HTML ID lesson:" : "This rule styles the paragraph below. Use the HTML ID lesson to create it yourself."}</p><InlineCode language="html" code={linkedIdHtml} /></>}
           </section>}
 
+          {language === "css" && ["alignment", "positioning", "combined-styles"].includes(current!.referenceKind ?? "") && <section className="linked-id-guide">
+            <h2>HTML for this CSS file</h2>
+            <p>Use this HTML with the CSS example in <InlineCode language="css" code="styles.css" />:</p>
+            <InlineCode language="html" code={layoutExample(current!.referenceKind as LayoutKind, layoutOptions).companion} />
+            <p>The matching HTML lesson shows the alternative that puts CSS inside a <InlineCode language="html" code="style" /> attribute. Use either that inline version or this CSS-file version. Leave the inline styles out when using this version, because inline values normally override stylesheet rules.</p>
+          </section>}
           {(current!.referenceKind === "named-colours" || current!.referenceKind === "colours") && <section className="colour-lesson-explanation">
             <p>Choose a colour to update the example. Change the words between <InlineCode language="html" code="<p>" /> and <InlineCode language="html" code="</p>" /> to write your own paragraph.</p>
             <p>HTML’s example uses a name: <InlineCode language="html" code={`<p style="color: ${textColour.toLowerCase()};">This color is ${textColour.toLowerCase()}</p>`} />. The same colour in a CSS file is <InlineCode language="css" code={`p { color: ${WEB_COLOURS.find(([name]) => name === textColour)?.[1] ?? "#FF0000"}; }`} />.</p>
