@@ -8,9 +8,11 @@ import ClubTerminalInput from "./ClubTerminalInput";
 import BankTerminalInput from "./BankTerminalInput";
 import ShoppingTotalInput from "./ShoppingTotalInput";
 import ComparisonCasePicker from "./ComparisonCasePicker";
+import TimeZonePicker from "./TimeZonePicker";
+import {applyTimeZone,formatZonedClock,timeZoneLabel,type TimeZoneId} from "./time-zones";
 import ComparisonValueInput from "./ComparisonValueInput";
 import {comparisonExample,type ComparisonCaseId} from "./comparison-examples";
-import {applyClockTarget,nextClockTarget,formatClockReading,type ClockTarget} from "./clock-lessons";
+import {applyClockTarget,nextClockTarget,type ClockTarget} from "./clock-lessons";
 import InputRuntimeExamples from "./InputRuntimeExamples";
 import RunCommands from "./RunCommands";
 import {browserInputPatch, type InputRuntime} from "./input-runtimes";
@@ -55,6 +57,7 @@ type Lesson = {
   comparisonCase?: ComparisonCaseId;
   clockExample?: boolean;
   displayCurrentTime?: boolean;
+  timeZone?: TimeZoneId;
   clockTarget?: ClockTarget;
   idLesson?: "html" | "css";
   referenceKind?: "text" | "fonts" | "pages" | "css" | "colours" | "named-colours" | "comparisons" | "alignment" | "positioning" | "combined-styles";
@@ -4887,12 +4890,14 @@ function LanguageComparison({ indentationDots = true, language, lesson, editorCo
   const [runtimeChanged, setRuntimeChanged] = useState(false);
   const [comparisonCase,setComparisonCase] = useState<ComparisonCaseId>(lesson.comparisonCase ?? "at-least");
   const [caseChanged,setCaseChanged] = useState(false);
+  const [comparisonZone,setComparisonZone] = useState<TimeZoneId>(lesson.timeZone ?? "local");
+  const [zoneChanged,setZoneChanged] = useState(false);
   const comparisonClock = useMemo(() => pickedLesson ? nextClockTarget() : lesson.clockTarget ?? nextClockTarget(), [pickedLesson, lesson]);
-  const contextual = (value: Lesson | null, lang: Language) => value ? value.comparisonExample ? {...value,...comparisonExample(lang,comparisonCase)} : applyClockTarget(value,comparisonClock) : null;
+  const contextual = (value: Lesson | null, lang: Language) => value ? value.comparisonExample ? {...value,...comparisonExample(lang,comparisonCase)} : applyTimeZone(applyClockTarget(value,comparisonClock),lang,comparisonZone) : null;
   const sourceLesson = contextual(javascriptInputLesson(pickedLesson ? matchingLesson(pickedLesson, language) : lesson, language, comparisonRuntime),language);
   const prefix = lessonComment(lesson, language);
   const editedBody = editorCode.startsWith(prefix) ? editorCode.slice(prefix.length) : editorCode;
-  const hasEditorCode = !pickedLesson && !(language === "javascript" && runtimeChanged) && !(lesson.comparisonExample && caseChanged) && !lesson.referenceOnly && !!editedBody.trim();
+  const hasEditorCode = !pickedLesson && !(language === "javascript" && runtimeChanged) && !(lesson.displayCurrentTime && zoneChanged) && !(lesson.comparisonExample && caseChanged) && !lesson.referenceOnly && !!editedBody.trim();
   const sourceCode = hasEditorCode ? editorCode : sourceLesson ? lessonExample(sourceLesson, language, showComments) : "";
   const other = contextual(javascriptInputLesson(matchingLesson(pickedLesson ?? lesson, target), target, comparisonRuntime),target);
   const selectPinnedTopic = (topic: string) => {
@@ -4901,7 +4906,7 @@ function LanguageComparison({ indentationDots = true, language, lesson, editorCo
   };
   const activeTopic = sourceLesson?.title ?? null;
   const targetCode = other ? lessonExample(other, target, showComments) : "";
-  const replayKey = `${language}-${target}-${pickedLesson?.title ?? lesson.title}-${comparisonRuntime}-${comparisonCase}`;
+  const replayKey = `${language}-${target}-${pickedLesson?.title ?? lesson.title}-${comparisonRuntime}-${comparisonCase}-${comparisonZone}`;
   const sourceReveal = useQuickCodeReveal(sourceCode, replayKey);
   const targetReveal = useQuickCodeReveal(targetCode, replayKey);
   useEffect(() => {
@@ -4916,6 +4921,7 @@ function LanguageComparison({ indentationDots = true, language, lesson, editorCo
     <header className="lesson-nav app-header comparison-topbar"><div className="lesson-brand-group"><BackButton onClick={onClose} label="Back to lesson" /><button className="drawer-toggle comparison-notes-toggle" aria-label="Lesson explanations" title="Lesson explanations" data-active={notesOpen} aria-expanded={notesOpen} aria-controls="comparison-notes-panel" onClick={() => setNotesOpen(!notesOpen)}><LessonSymbol /></button><ComparisonExamplePicker key={target} target={target} sourceLanguage={language} pins={pinnedTopics} pinLimit={pinLimit} onTogglePin={onTogglePin} selected={other} onSelect={title => setPickedLesson(lessons[target].find(item => item.title === title) ?? null)} /></div>{pinLimit > 2 && pinnedTopics.length > 0 && <div className="desktop-header-pins"><PinnedTopicShortcuts topics={pinnedTopics} activeTopic={activeTopic} onSelect={selectPinnedTopic} language={language} /></div>}<div className="comparison-header-languages"><h2 id="language-comparison-title">Compare code</h2><div className="compare-language-choices"><div role="group" aria-label="Comparison language">{(Object.keys(lessons) as Language[]).filter(item => item !== language && item !== "html" && item !== "css").map(item => <button className={`language-choice language-${item}`} key={item} aria-label={`Compare with ${languageName(item)}`} title={languageName(item)} data-active={target === item} aria-pressed={target === item} onClick={() => setTarget(item)}><img className="comparison-language-logo" src={`language-logos/${item}.svg`} alt="" width="24" height="24" /><span className="comparison-language-name">{languageName(item)}</span></button>)}</div></div></div></header>
     <div className="language-comparison-controls">
       <p className="comparison-context">{(pickedLesson ?? lesson).title}</p>
+      {(sourceLesson?.displayCurrentTime || other?.displayCurrentTime) && <TimeZonePicker selected={comparisonZone} onSelect={value=>{setComparisonZone(value);setZoneChanged(true);}} comparison />}
       {(sourceLesson?.comparisonExample || other?.comparisonExample) && <ComparisonCasePicker selected={comparisonCase} onSelect={value=>{setComparisonCase(value);setCaseChanged(true);}} language={language} comparison />}
       {((language === "javascript" && sourceLesson?.compareNode) || (target === "javascript" && other?.compareNode)) && <div className="comparison-input-runtime runtime-picker" role="group" aria-label="JavaScript input environment"><span>JavaScript input:</span><button data-active={comparisonRuntime === "browser"} aria-pressed={comparisonRuntime === "browser"} onClick={() => { setComparisonRuntime("browser"); setRuntimeChanged(true); }}>Browser prompt()</button><button data-active={comparisonRuntime === "node"} aria-pressed={comparisonRuntime === "node"} onClick={() => { setComparisonRuntime("node"); setRuntimeChanged(true); }}>Node.js terminal</button><small>Changes the comparison example; your practice code stays unchanged.</small></div>}
     </div>
@@ -4990,8 +4996,9 @@ export default function Home() {
   const [checking, setChecking] = useState(false);
   const [checkerError, setCheckerError] = useState("");
   const [comparisonCase,setComparisonCase] = useState<ComparisonCaseId>("at-least");
-  const checkContext = useRef({ code, language, index, comparisonCase });
-  checkContext.current = { code, language, index, comparisonCase };
+  const [timeZone,setTimeZone] = useState<TimeZoneId>("local");
+  const checkContext = useRef({ code, language, index, comparisonCase, timeZone });
+  checkContext.current = { code, language, index, comparisonCase, timeZone };
 
   useEffect(() => {
     if (!language) return;
@@ -5046,6 +5053,7 @@ export default function Home() {
   const baseCurrent = language ? lessons[language][index] : null;
   const clockTarget = useMemo(() => nextClockTarget(), [baseCurrent]);
   const current = useMemo(() => {
+    if(baseCurrent?.displayCurrentTime)return applyTimeZone(baseCurrent,language!,timeZone);
     if(baseCurrent?.comparisonExample)return {...baseCurrent,...comparisonExample(language!,comparisonCase)};
     if(baseCurrent?.clockExample)return applyClockTarget(baseCurrent,clockTarget);
     if (baseCurrent && ["alignment", "positioning", "combined-styles"].includes(baseCurrent.referenceKind ?? "")) {
@@ -5067,7 +5075,7 @@ export default function Home() {
       ] };
     }
     return baseCurrent && language === "javascript" && baseCurrent.compareNode && inputRuntime === "browser" ? { ...baseCurrent, ...browserInputPatch() } : baseCurrent;
-  }, [baseCurrent, language, inputRuntime, textColour, textColourTag, layoutOptions, clockTarget, comparisonCase]);
+  }, [baseCurrent, language, inputRuntime, textColour, textColourTag, layoutOptions, clockTarget, comparisonCase, timeZone]);
   const pinnedTopics = language ? (pinnedByLanguage[language] ?? []).slice(0, pinLimit) : [];
   const visibleLessons = language ? filterTopicLessons(lessons[language], null) : [];
   const openPinnedTopic = (topic: string) => {
@@ -5108,7 +5116,7 @@ export default function Home() {
   }, [code, current, language, checkerVersion]);
   const acceptedCode = lessonCheck?.accepted ?? false;
   const diagnostic: DiagnosticPart[] = [{ text: checkerError || lessonCheck?.message || "The checker is loading. Try Check code again.", help: "Equivalent supported syntax is accepted. An unverified answer may still be valid; a syntax warning means the parser found incomplete or malformed code.", kind: "message" }];
-  const clockReadingOutput = useMemo(() => [formatClockReading()], [status, current]);
+  const clockReadingOutput = useMemo(() => [formatZonedClock(new Date(),current?.timeZone ?? "local")], [status, current]);
   const previewOutput = current?.displayCurrentTime ? clockReadingOutput : lessonCheck?.accepted && lessonCheck.output ? lessonCheck.output : current?.output;
   const previewColours = lessonCheck?.accepted && lessonCheck.colours ? lessonCheck.colours : current?.outputColors;
   const linkedIdHtml = idDrafts.current.html?.accepted ? idDrafts.current.html.code : lessons.html.find(item => item.idLesson === "html")!.answer;
@@ -5272,12 +5280,12 @@ export default function Home() {
     setCheckerError("");
     try {
       const result = lessonCheck ?? await checkLesson(code, current, language);
-      if (checkContext.current.code !== context.code || checkContext.current.language !== context.language || checkContext.current.index !== context.index || checkContext.current.comparisonCase !== context.comparisonCase) return;
+      if (checkContext.current.code !== context.code || checkContext.current.language !== context.language || checkContext.current.index !== context.index || checkContext.current.comparisonCase !== context.comparisonCase || checkContext.current.timeZone !== context.timeZone) return;
       setCheckerVersion(version => version + 1);
       setStatus(result.accepted ? "correct" : "wrong");
       if (result.accepted) setCompleted(old => ({ ...old, [language]: Math.max(old[language], index + 1) }));
     } catch {
-      if (checkContext.current.code === context.code && checkContext.current.language === context.language && checkContext.current.index === context.index && checkContext.current.comparisonCase === context.comparisonCase) {
+      if (checkContext.current.code === context.code && checkContext.current.language === context.language && checkContext.current.index === context.index && checkContext.current.comparisonCase === context.comparisonCase && checkContext.current.timeZone === context.timeZone) {
         setCheckerError("The checker couldn’t load. Please try Check code again.");
         setStatus("wrong");
       }
@@ -5493,6 +5501,7 @@ export default function Home() {
             <button className="reference-next" onClick={nextLesson}>Continue to images →</button>
           </div> : ["alignment", "positioning", "combined-styles"].includes(current!.referenceKind ?? "") ? <LayoutReference kind={current!.referenceKind as LayoutKind} language={language as "html" | "css"} options={layoutOptions} onChange={setLayoutOptions} nextLabel={index === lessons[language].length - 1 ? `Finish ${language.toUpperCase()} path →` : "Continue to the next lesson →"} onAlternate={() => openReferenceLesson(language === "html" ? "css" : "html", current!.referenceKind!)} onNext={nextLesson} actions={lessonActions} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax} />} /> : current!.referenceKind === "named-colours" ? <TextColourReference colourName={textColour} onColourChange={setTextColour} onOpenHex={() => openReferenceLesson("css", "colours")} onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} /> : (current!.referenceKind === "css" || current!.referenceKind === "colours") ? <CssVisualReference colourName={textColour} onColourChange={setTextColour} onOpenTextColour={() => openReferenceLesson("html", "named-colours")} kind={current!.referenceKind === "colours" ? "colours" : "borders"} onNext={nextLesson} actions={lessonActions} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax ?? (current!.referenceKind === "colours" ? "html" : "css")} />} /> : <HtmlTextReference onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} />}</> : <>
           <div className="editor-panel">
+            {current!.displayCurrentTime && <TimeZonePicker key={`${language}-${index}`} selected={timeZone} onSelect={setTimeZone} />}
             {current!.comparisonExample && <ComparisonCasePicker selected={comparisonCase} onSelect={setComparisonCase} language={language} />}
             <div className="panel-bar"><div className={`file-tab ${pinnedTopics.length && pinLimit <= 2 ? "has-pinned-topics" : ""}`} data-topic-tone={lessonTone(current!)} title={current!.fileName || challengeFile(language)}><span className="editor-file-name">{current!.fileName || challengeFile(language)}</span>{pinnedTopics.length && pinLimit <= 2 ? <PinnedTopicShortcuts topics={pinnedTopics} activeTopic={current?.title ?? null} onSelect={openPinnedTopic} language={language} /> : null}</div><div className="panel-actions"><div className="desktop-pane-actions">{lessonActions}</div><span className="mobile-editor-copy"><CopyCodeButton iconOnly code={lessonExample(current!, language, showComments)} label="full lesson example for VS Code" /></span><button className="editor-expand-button" aria-label={editorExpanded ? "Restore editor" : "Expand editor"} title={editorExpanded ? "Restore editor" : "Expand editor"} aria-pressed={editorExpanded} onClick={() => setEditorExpanded(expanded => !expanded)}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{editorExpanded ? <path d="M8 3v5H3m13-5v5h5M3 16h5v5m13-5h-5v5"/> : <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>}</svg></button><button className="editor-reset-button" onClick={() => changeBlockCode(commentPrefix + (current!.starter || ""))} title="Reset code" aria-label="Reset code"><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></svg><span className="editor-action-label">Reset</span></button></div></div>
               {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={commentPrefix + ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode indentationDots={indentationDots} code={value} language={language} />} /> : <div ref={codeEditorRef} className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="editor-surface" style={{ minHeight: `max(100%, calc(${lineNumbers.length} * var(--editor-line-height) + var(--editor-padding)))`, minWidth: `max(100%, calc(${Math.max(...(code + guideCode).split("\n").map(line => line.length), 1)}ch + var(--editor-gutter) + var(--editor-inline-padding) + var(--editor-inline-padding)))` }}><CodeLineNumbers text={code + (showGuide ? guideCode : "")} minimumLines={8} />{showGuide && <pre className={`code-guide ${current!.comparisonExample ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{!!current!.comparisonExample ? <LearningCode indentationDots={indentationDots} indentationPrefix={code} code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode indentationDots={indentationDots} indentationPrefix={code} code={guideCode} fullCode={fullGuideCode} language={language} />}</code></pre>}{<pre className="typed-code-layer" aria-hidden="true"><code><LearningCode indentationDots={indentationDots} code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={!!current!.comparisonExample} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" wrap="soft" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div></div>}
@@ -5502,7 +5511,7 @@ export default function Home() {
             <div className="console-body">
               {status === "idle" && <span className="console-muted">{language === "html" || language === "css" ? "Your page result preview will appear here..." : "Your program output will appear here..."}</span>}
               {status === "wrong" && <><SyntaxDiagnostic parts={diagnostic} /><div className="console-muted diagnostic-hint">Hover over or focus each underlined part to see what it means.</div></>}
-              {status === "correct" && <><div className="run-line"><span><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Code accepted — {current?.interactiveInput === "comparison-value" ? "try a value below" : current?.interactiveInput === "shopping-total" ? "enter a price and quantity below" : current?.interactiveInput === "bank-deposit" ? "enter a deposit below" : current?.interactiveInput ? "enter a name below" : current?.displayCurrentTime ? "current local time" : language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div>{current?.interactiveInput === "comparison-value" ? <ComparisonValueInput key={`${language}-${index}-${comparisonCase}`} example={comparisonCase} /> : current?.interactiveInput === "shopping-total" ? <ShoppingTotalInput key={`${language}-${index}`} /> : current?.interactiveInput === "bank-deposit" ? <BankTerminalInput key={`${language}-${index}`} /> : current?.interactiveInput === "club-name" ? <ClubTerminalInput key={`${language}-${index}`} /> : current?.browserPreview ? <BrowserResultPreview showTab={current.browserPreview === "document"} code={current.idLesson === "css" ? linkedIdHtml : practiceCode} css={current.idLesson === "css" ? practiceCode : undefined} /> : <div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div>}</>}
+              {status === "correct" && <><div className="run-line"><span><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Code accepted — {current?.interactiveInput === "comparison-value" ? "try a value below" : current?.interactiveInput === "shopping-total" ? "enter a price and quantity below" : current?.interactiveInput === "bank-deposit" ? "enter a deposit below" : current?.interactiveInput ? "enter a name below" : current?.displayCurrentTime ? current.timeZone === "local" ? "current local time" : `current time in ${timeZoneLabel(current.timeZone!)}` : language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div>{current?.interactiveInput === "comparison-value" ? <ComparisonValueInput key={`${language}-${index}-${comparisonCase}`} example={comparisonCase} /> : current?.interactiveInput === "shopping-total" ? <ShoppingTotalInput key={`${language}-${index}`} /> : current?.interactiveInput === "bank-deposit" ? <BankTerminalInput key={`${language}-${index}`} /> : current?.interactiveInput === "club-name" ? <ClubTerminalInput key={`${language}-${index}`} /> : current?.browserPreview ? <BrowserResultPreview showTab={current.browserPreview === "document"} code={current.idLesson === "css" ? linkedIdHtml : practiceCode} css={current.idLesson === "css" ? practiceCode : undefined} /> : <div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div>}</>}
             </div>
           </div>
           <div className={`feedback ${status}`}>

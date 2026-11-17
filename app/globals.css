@@ -1993,3 +1993,12 @@ html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:h
 .comparison-case-choices button[aria-pressed=true]{border-color:var(--green-dark);background:var(--selection-surface)}
 .comparison-case-picker p{display:flex;flex-direction:column;gap:2px;margin:5px 0 0;font:12px/1.35 var(--sans)}
 .comparison-case-picker p span{color:var(--ui-muted);font-size:11px}
+
+.time-zone-picker{font:14px/1.4 var(--sans);flex:none;background:var(--ui-surface);padding:10px 12px;border-bottom:1px solid var(--ui-border);position:relative;}
+.time-zone-trigger,.time-zone-options button{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;width:100%;padding:10px 12px;text-align:left;color:var(--ui-text);background:var(--ui-surface);border:1px solid var(--ui-border);border-radius:8px;font:inherit;cursor:pointer;}
+.time-zone-options{position:absolute;z-index:30;top:56px;left:12px;right:12px;box-shadow:0 8px 24px #0003;padding:8px;background:var(--ui-surface);border:1px solid var(--ui-border);border-radius:10px;}
+.time-zone-options b{display:block;padding:6px 4px;font-size:12px;color:var(--ui-muted);}
+.time-zone-options button{margin-bottom:4px;}
+.time-zone-options button[aria-pressed="true"]{border-color:var(--green);background:var(--selection-surface);}
+.time-zone-picker small{display:block;margin-top:6px;color:var(--ui-muted);font-size:12px;line-height:1.4;}
+.time-zone-picker button:focus-visible{outline:2px solid var(--green);outline-offset:2px;}

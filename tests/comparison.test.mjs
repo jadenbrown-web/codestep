@@ -23,6 +23,9 @@ const clockTarget={hour:18,minute:29,label:'18:29'};
 
 const comparisonModule=ts.transpileModule(fs.readFileSync('app/comparison-examples.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
 const {comparisonExample}=await import('data:text/javascript;base64,'+Buffer.from(comparisonModule).toString('base64'));
+const zoneModule=ts.transpileModule(fs.readFileSync('app/time-zones.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
+const {applyTimeZone}=await import('data:text/javascript;base64,'+Buffer.from(zoneModule).toString('base64'));
+
 
 function setup(language = 'python', reveal = code => code, pinLimit = 2) {
   const states = [];
@@ -31,8 +34,8 @@ function setup(language = 'python', reveal = code => code, pinLimit = 2) {
   const Copy = () => null;
   const Pins = () => null;
   const Code = ({ code }) => React.createElement(React.Fragment, null, code);
-  const names = ['React', 'useState', 'useRef', 'useEffect', 'lessons', 'lessonComment', 'lessonExample', 'languageName', 'lessonTone', 'challengeFile', 'MenuHeader', 'ComparisonExamplePicker', 'CopyCodeButton', 'HighlightedCode', 'LessonExplanation', 'CppSetupGuide', 'BackButton', 'CodeLineNumbers', 'useQuickCodeReveal', 'PinnedTopicShortcuts', 'pinnedLessonIndex', 'lessonTopic', 'LessonSymbol', 'LessonBreakdown', 'lessonOverview', 'CodeProse', 'browserInputPatch', 'useMemo', 'applyClockTarget', 'nextClockTarget', 'comparisonExample', 'ComparisonCasePicker'];
-  const values = [React, initial => { const index = cursor++; if (!(index in states)) states[index] = initial; return [states[index], next => { states[index] = next; }]; }, () => ({ current: null }), () => {}, lessons, () => '', lesson => lesson.answer, value => value, () => 'blue', () => 'code', () => null, Picker, Copy, Code, ({ lesson }) => lesson.explanation, () => null, () => null, () => null, (code, key, enabled = true) => enabled ? reveal(code, key) : "", Pins, pinnedLessonIndex, lessonTopic, () => null, () => null, lesson => lesson.title, () => null, browserInputPatch, callback=>callback(), applyClockTarget, ()=>clockTarget, comparisonExample, ()=>null];
+  const names = ['React', 'useState', 'useRef', 'useEffect', 'lessons', 'lessonComment', 'lessonExample', 'languageName', 'lessonTone', 'challengeFile', 'MenuHeader', 'ComparisonExamplePicker', 'CopyCodeButton', 'HighlightedCode', 'LessonExplanation', 'CppSetupGuide', 'BackButton', 'CodeLineNumbers', 'useQuickCodeReveal', 'PinnedTopicShortcuts', 'pinnedLessonIndex', 'lessonTopic', 'LessonSymbol', 'LessonBreakdown', 'lessonOverview', 'CodeProse', 'browserInputPatch', 'useMemo', 'applyClockTarget', 'nextClockTarget', 'comparisonExample', 'ComparisonCasePicker', 'applyTimeZone', 'TimeZonePicker'];
+  const values = [React, initial => { const index = cursor++; if (!(index in states)) states[index] = initial; return [states[index], next => { states[index] = next; }]; }, () => ({ current: null }), () => {}, lessons, () => '', lesson => lesson.answer, value => value, () => 'blue', () => 'code', () => null, Picker, Copy, Code, ({ lesson }) => lesson.explanation, () => null, () => null, () => null, (code, key, enabled = true) => enabled ? reveal(code, key) : "", Pins, pinnedLessonIndex, lessonTopic, () => null, () => null, lesson => lesson.title, () => null, browserInputPatch, callback=>callback(), applyClockTarget, ()=>clockTarget, comparisonExample, ()=>null, applyTimeZone, ()=>null];
   const Component = new Function(...names, compiled + '\nreturn LanguageComparison;')(...values);
   const props = { language, pinLimit, lesson: lessons[language][0], editorCode: 'original editor code', showComments: false, pinnedTopics: ['Functions', 'Time'].map(topic => lessons[language].find(lesson => lessonTopic(lesson) === topic).title), onClose() {} };
   function render() { cursor = 0; return Component(props); }
