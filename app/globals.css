@@ -1926,3 +1926,24 @@ html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:h
 .layout-reference-body{gap:8px}
 .layout-reference[data-layout-kind="positioning"] .layout-controls{grid-template-columns:repeat(3,minmax(0,1fr))}
 .layout-reference:not([data-layout-kind="positioning"]) .layout-preview>.browser-result-preview{height:clamp(140px,25dvh,212px);min-height:140px}
+
+/* Matching HTML/CSS references share controls, preview dimensions and switch position. */
+.layout-reference .font-featured-example{display:flex;flex-direction:column}
+.layout-reference .colour-lesson-link{order:0;margin:0;white-space:nowrap}
+.layout-reference .css-featured-code{order:1}
+.layout-reference[data-layout-kind="positioning"] .css-featured-code{min-height:140px}
+.layout-reference[data-layout-kind="combined-styles"] .css-featured-code{min-height:100px}
+.layout-reference[data-layout-kind="alignment"] .css-featured-code{min-height:60px}
+.layout-option-group{grid-column:1/-1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.layout-reference[data-layout-kind="positioning"] .layout-controls{grid-template-columns:repeat(2,minmax(0,1fr))}
+.layout-reference .layout-preview>.browser-result-preview{height:clamp(140px,25dvh,212px);min-height:140px}
+.layout-reference .layout-choice{touch-action:manipulation}
+
+.layout-reference .example-syntax-code{font-size:12px;line-height:20px}
+.layout-reference .colour-lesson-link{width:176px}
+.reference-workspace .layout-reference .css-featured-code{padding:0;align-items:flex-start}
+.reference-workspace .layout-reference .css-featured-code>.copy-code-control{margin-top:0}
+.layout-reference[data-layout-kind="combined-styles"] .layout-alignment-control,
+.layout-reference[data-layout-kind="combined-styles"] .layout-option-group[aria-label="Text colour"]{grid-column:auto}
+.layout-reference[data-layout-kind="combined-styles"] .layout-choice-row{gap:4px}
+.layout-reference[data-layout-kind="combined-styles"] .layout-choice{padding:5px 2px;font-size:12px}
