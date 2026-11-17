@@ -335,13 +335,15 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "09 · Classes",
       "title": "Create and use a class",
-      "explanation": "A function is called with its name, such as correct(). A class is used in a similar way, but you put new before its name: new Car(\"Ford\", 2014). People sometimes call this ‘calling the class’, but its proper name is creating an object, or an instance, from the class. The class is defined before the code that creates objects from it.",
-      "note": "// Define the class first, then use new Car(...) to create objects",
-      "prompt": "Create the Car class, then call its constructor with new to make Ford and Audi objects.",
-      "answer": "class Car {\n  constructor(name, year) {\n    // this.name is the property stored in the car object.\n    // name is the value passed into the constructor.\n    this.name = name;\n\n    // this.year is the property stored in the car object.\n    // year is the value passed into the constructor.\n    this.year = year;\n  }\n}\n\nconst myCar1 = new Car(\"Ford\", 2014);\nconst myCar2 = new Car(\"Audi\", 2019);\n\nconsole.log(`${myCar1.name}, ${myCar1.year}`);\nconsole.log(`${myCar2.name}, ${myCar2.year}`);",
+      "explanation": "A garage can hold several cars that share the same kinds of information. Car defines the shared template; each object stores its own name and year. Create three separate cars—Ford (2014), Audi (2019), and BMW (2022)—then print the garage list. The class lets you reuse the same setup without defining a new type for each car.",
+      "note": "// Create three Car objects and print your garage.",
+      "prompt": "Define Car with a name and year. Create Ford (2014), Audi (2019), and BMW (2022), then print === MY GARAGE === and each car as name - year.",
+      "answer": "class Car {\n  constructor(name, year) {\n    this.name = name;\n\n    this.year = year;\n  }\n}\n\nconst car1 = new Car(\"Ford\", 2014);\nconst car2 = new Car(\"Audi\", 2019);\nconst car3 = new Car(\"BMW\", 2022);\n\nconsole.log(\"=== MY GARAGE ===\");\nconsole.log(`${car1.name} - ${car1.year}`);\nconsole.log(`${car2.name} - ${car2.year}`);\nconsole.log(`${car3.name} - ${car3.year}`);",
       "output": [
-        "Ford, 2014",
-        "Audi, 2019"
+        "=== MY GARAGE ===",
+        "Ford - 2014",
+        "Audi - 2019",
+        "BMW - 2022"
       ],
       "parts": [
         {
@@ -574,23 +576,33 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "15 · Expressions",
       "title": "Calculate a value",
-      "explanation": "An expression produces a value. 80 + 20 produces 100. speed > 100 produces false when speed is 100. A statement performs an instruction, such as saving that result or printing it. + adds, - subtracts, * multiplies, / divides, and % gives the remainder. JavaScript division can produce a decimal result.",
-      "note": "// Calculate speed with 80 + 20, then print Speed: 100.",
-      "prompt": "Calculate speed with 80 + 20, then print Speed: 100.",
-      "answer": "let speed = 80 + 20;\nconsole.log(`Speed: ${speed}`);",
+      "explanation": "A shopping total shows why expressions are useful. price stores the £25 cost of one item, and quantity stores how many you are buying. price * quantity multiplies 25 by 3 to produce 75. Save the result in total, then print Total: £75. The * symbol means multiplication.",
+      "note": "// Calculate the cost of three items at £25 each.",
+      "prompt": "Store price as 25 and quantity as 3, multiply them to calculate total, then print Total: £75.",
+      "answer": "let price = 25;\nlet quantity = 3;\n\nlet total = price * quantity;\n\nconsole.log(`Total: £${total}`);",
       "output": [
-        "Speed: 100"
+        "Total: £75"
       ],
       "parts": [
         {
-          "code": "80 + 20",
-          "name": "Expression",
-          "meaning": "Produces the value 100."
+          "code": "price",
+          "name": "Price of one item",
+          "meaning": "Stores 25: one item costs £25."
         },
         {
-          "code": "speed > 100",
-          "name": "Boolean expression",
-          "meaning": "Produces true or false."
+          "code": "quantity",
+          "name": "How many items",
+          "meaning": "Stores 3: you are buying three items."
+        },
+        {
+          "code": "price * quantity",
+          "name": "Calculate the total",
+          "meaning": "The multiplication expression uses both saved values. 25 multiplied by 3 is 75; changing either value changes the total."
+        },
+        {
+          "code": "total",
+          "name": "Save the result",
+          "meaning": "Stores the calculated cost so the print instruction can use it. The £ symbol is text in the output, not part of the calculation."
         }
       ]
     },
@@ -1169,13 +1181,15 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "08 · Classes",
       "title": "Create and use a class",
-      "explanation": "A method is called with its name, such as correct(). A class is used in a similar way, but you put new before its name: new Car(\"Ford\", 2014). The Car class is defined before Program, and Main then creates objects, or instances, from that class.",
-      "note": "// Define Car, create car objects, then print their properties.",
-      "prompt": "Create the Car class, then call its constructor with new to make Ford and Audi objects.",
-      "answer": "class Car\n{\n  public string Name { get; set; }\n  public int Year { get; set; }\n\n  public Car(string name, int year)\n  {\n    // this.Name is the property stored in the car object.\n    // name is the value passed into the constructor.\n    this.Name = name;\n\n    // this.Year is the property stored in the car object.\n    // year is the value passed into the constructor.\n    this.Year = year;\n  }\n}\n\nclass Program\n{\n  static void Main()\n  {\n    Car myCar1 = new Car(\"Ford\", 2014);\n    Car myCar2 = new Car(\"Audi\", 2019);\n\n    Console.WriteLine($\"{myCar1.Name}, {myCar1.Year}\");\n    Console.WriteLine($\"{myCar2.Name}, {myCar2.Year}\");\n  }\n}",
+      "explanation": "A garage can hold several cars that share the same kinds of information. Car defines the shared template; each object stores its own name and year. Create three separate cars—Ford (2014), Audi (2019), and BMW (2022)—then print the garage list. The class lets you reuse the same setup without defining a new type for each car.",
+      "note": "// Create three Car objects and print your garage.",
+      "prompt": "Define Car with a name and year. Create Ford (2014), Audi (2019), and BMW (2022), then print === MY GARAGE === and each car as name - year.",
+      "answer": "class Car\n{\n  public string Name { get; set; }\n  public int Year { get; set; }\n\n  public Car(string name, int year)\n  {\n    this.Name = name;\n\n    this.Year = year;\n  }\n}\n\nclass Program\n{\n  static void Main()\n  {\n    Car car1 = new Car(\"Ford\", 2014);\n    Car car2 = new Car(\"Audi\", 2019);\n    Car car3 = new Car(\"BMW\", 2022);\n\n    Console.WriteLine(\"=== MY GARAGE ===\");\n    Console.WriteLine($\"{car1.Name} - {car1.Year}\");\n    Console.WriteLine($\"{car2.Name} - {car2.Year}\");\n    Console.WriteLine($\"{car3.Name} - {car3.Year}\");\n  }\n}",
       "output": [
-        "Ford, 2014",
-        "Audi, 2019"
+        "=== MY GARAGE ===",
+        "Ford - 2014",
+        "Audi - 2019",
+        "BMW - 2022"
       ],
       "parts": [
         {
@@ -1427,23 +1441,33 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "14 · Expressions",
       "title": "Calculate a value",
-      "explanation": "An expression produces a value. 80 + 20 produces 100. speed > 100 produces false when speed is 100. A statement performs an instruction, such as saving that result or printing it. + adds, - subtracts, * multiplies, / divides, and % gives the remainder. C# integer division discards the fractional part; use a double such as 5.0 when you need a decimal result.",
-      "note": "// Calculate speed with 80 + 20, then print Speed: 100.",
-      "prompt": "Calculate speed with 80 + 20, then print Speed: 100.",
-      "answer": "int speed = 80 + 20;\nConsole.WriteLine($\"Speed: {speed}\");",
+      "explanation": "A shopping total shows why expressions are useful. price stores the £25 cost of one item, and quantity stores how many you are buying. price * quantity multiplies 25 by 3 to produce 75. Save the result in total, then print Total: £75. The * symbol means multiplication.",
+      "note": "// Calculate the cost of three items at £25 each.",
+      "prompt": "Store price as 25 and quantity as 3, multiply them to calculate total, then print Total: £75.",
+      "answer": "int price = 25;\nint quantity = 3;\n\nint total = price * quantity;\n\nConsole.WriteLine($\"Total: £{total}\");",
       "output": [
-        "Speed: 100"
+        "Total: £75"
       ],
       "parts": [
         {
-          "code": "80 + 20",
-          "name": "Expression",
-          "meaning": "Produces the value 100."
+          "code": "price",
+          "name": "Price of one item",
+          "meaning": "Stores 25: one item costs £25."
         },
         {
-          "code": "speed > 100",
-          "name": "Boolean expression",
-          "meaning": "Produces true or false."
+          "code": "quantity",
+          "name": "How many items",
+          "meaning": "Stores 3: you are buying three items."
+        },
+        {
+          "code": "price * quantity",
+          "name": "Calculate the total",
+          "meaning": "The multiplication expression uses both saved values. 25 multiplied by 3 is 75; changing either value changes the total."
+        },
+        {
+          "code": "total",
+          "name": "Save the result",
+          "meaning": "Stores the calculated cost so the print instruction can use it. The £ symbol is text in the output, not part of the calculation."
         }
       ],
       "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
@@ -2870,13 +2894,15 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "08 · Classes",
       "title": "Create and use a class",
-      "explanation": "class defines a type. Calling Car(\"Ford\", 2014) creates an object and __init__ sets it up. self refers to that object; self.name stores the supplied name. A colon and indentation group each body. The f-string prints its properties.",
-      "note": "# Define the class first, then call Car(...) to create objects.",
-      "prompt": "Create the Car class, then create Ford and Audi objects.",
-      "answer": "class Car:\n    def __init__(self, name, year):\n        self.name = name\n        self.year = year\n\nmyCar1 = Car(\"Ford\", 2014)\nmyCar2 = Car(\"Audi\", 2019)\n\nprint(f\"{myCar1.name}, {myCar1.year}\")\nprint(f\"{myCar2.name}, {myCar2.year}\")",
+      "explanation": "A garage can hold several cars that share the same kinds of information. Car defines the shared template; each object stores its own name and year. Create three separate cars—Ford (2014), Audi (2019), and BMW (2022)—then print the garage list. The class lets you reuse the same setup without defining a new type for each car.",
+      "note": "# Create three Car objects and print your garage.",
+      "prompt": "Define Car with a name and year. Create Ford (2014), Audi (2019), and BMW (2022), then print === MY GARAGE === and each car as name - year.",
+      "answer": "class Car:\n    def __init__(self, name, year):\n        self.name = name\n        self.year = year\n\ncar1 = Car(\"Ford\", 2014)\ncar2 = Car(\"Audi\", 2019)\ncar3 = Car(\"BMW\", 2022)\n\nprint(\"=== MY GARAGE ===\")\nprint(f\"{car1.name} - {car1.year}\")\nprint(f\"{car2.name} - {car2.year}\")\nprint(f\"{car3.name} - {car3.year}\")",
       "output": [
-        "Ford, 2014",
-        "Audi, 2019"
+        "=== MY GARAGE ===",
+        "Ford - 2014",
+        "Audi - 2019",
+        "BMW - 2022"
       ],
       "parts": [
         {
@@ -3079,18 +3105,33 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "14 · Expressions",
       "title": "Calculate a value",
-      "explanation": "An expression produces a value: 80 + 20 produces 100. speed > 100 produces False when speed is 100. + adds, - subtracts, * multiplies, / divides, // divides and rounds down, and % gives a remainder.",
-      "note": "# Calculate speed with 80 + 20, then print Speed: 100.",
-      "prompt": "Calculate speed with 80 + 20, then print Speed: 100.",
-      "answer": "speed = 80 + 20\nprint(f\"Speed: {speed}\")",
+      "explanation": "A shopping total shows why expressions are useful. price stores the £25 cost of one item, and quantity stores how many you are buying. price * quantity multiplies 25 by 3 to produce 75. Save the result in total, then print Total: £75. The * symbol means multiplication.",
+      "note": "# Calculate the cost of three items at £25 each.",
+      "prompt": "Store price as 25 and quantity as 3, multiply them to calculate total, then print Total: £75.",
+      "answer": "price = 25\nquantity = 3\n\ntotal = price * quantity\n\nprint(f\"Total: £{total}\")",
       "output": [
-        "Speed: 100"
+        "Total: £75"
       ],
       "parts": [
         {
-          "code": "80 + 20",
-          "name": "Expression",
-          "meaning": "Produces the value 100."
+          "code": "price",
+          "name": "Price of one item",
+          "meaning": "Stores 25: one item costs £25."
+        },
+        {
+          "code": "quantity",
+          "name": "How many items",
+          "meaning": "Stores 3: you are buying three items."
+        },
+        {
+          "code": "price * quantity",
+          "name": "Calculate the total",
+          "meaning": "The multiplication expression uses both saved values. 25 multiplied by 3 is 75; changing either value changes the total."
+        },
+        {
+          "code": "total",
+          "name": "Save the result",
+          "meaning": "Stores the calculated cost so the print instruction can use it. The £ symbol is text in the output, not part of the calculation."
         }
       ],
       "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
@@ -3665,13 +3706,15 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "08 · Classes",
       "title": "Create and use a class",
-      "explanation": "class defines a type. public makes these members accessible from main. Car(...) is its constructor. this->name is the current object’s member; name is the constructor parameter. Car myCar1(\"Ford\", 2014) creates the object without new. A class declaration ends with };.",
-      "note": "// Define Car, create car objects, then print their properties.",
-      "prompt": "Create the Car class, then create Ford and Audi objects.",
-      "answer": "#include <iostream>\n#include <string>\n\nclass Car {\npublic:\n  std::string name;\n  int year;\n\n  Car(std::string name, int year) {\n    this->name = name;\n    this->year = year;\n  }\n};\n\nint main() {\n  Car myCar1(\"Ford\", 2014);\n  Car myCar2(\"Audi\", 2019);\n\n  std::cout << myCar1.name << \", \" << myCar1.year << \"\\n\";\n  std::cout << myCar2.name << \", \" << myCar2.year << \"\\n\";\n}",
+      "explanation": "A garage can hold several cars that share the same kinds of information. Car defines the shared template; each object stores its own name and year. Create three separate cars—Ford (2014), Audi (2019), and BMW (2022)—then print the garage list. The class lets you reuse the same setup without defining a new type for each car.",
+      "note": "// Create three Car objects and print your garage.",
+      "prompt": "Define Car with a name and year. Create Ford (2014), Audi (2019), and BMW (2022), then print === MY GARAGE === and each car as name - year.",
+      "answer": "#include <iostream>\n#include <string>\n\nclass Car {\npublic:\n  std::string name;\n  int year;\n\n  Car(std::string name, int year) {\n    this->name = name;\n    this->year = year;\n  }\n};\n\nint main() {\n  Car car1(\"Ford\", 2014);\n  Car car2(\"Audi\", 2019);\n  Car car3(\"BMW\", 2022);\n\n  std::cout << \"=== MY GARAGE ===\\n\";\n  std::cout << car1.name << \" - \" << car1.year << \"\\n\";\n  std::cout << car2.name << \" - \" << car2.year << \"\\n\";\n  std::cout << car3.name << \" - \" << car3.year << \"\\n\";\n}",
       "output": [
-        "Ford, 2014",
-        "Audi, 2019"
+        "=== MY GARAGE ===",
+        "Ford - 2014",
+        "Audi - 2019",
+        "BMW - 2022"
       ],
       "parts": [
         {
@@ -3894,18 +3937,33 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "14 · Expressions",
       "title": "Calculate a value",
-      "explanation": "An expression produces a value: 80 + 20 produces 100. speed > 100 produces false when speed is 100. + adds, - subtracts, * multiplies, / divides, and % gives an integer remainder. Integer division truncates the fraction; use 5.0 for a floating-point result.",
-      "note": "// Calculate speed with 80 + 20, then print Speed: 100.",
-      "prompt": "Calculate speed with 80 + 20, then print Speed: 100.",
-      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  int speed = 80 + 20;\n  std::cout << \"Speed: \" << speed << \"\\n\";\n}",
+      "explanation": "A shopping total shows why expressions are useful. price stores the £25 cost of one item, and quantity stores how many you are buying. price * quantity multiplies 25 by 3 to produce 75. Save the result in total, then print Total: £75. The * symbol means multiplication.",
+      "note": "// Calculate the cost of three items at £25 each.",
+      "prompt": "Store price as 25 and quantity as 3, multiply them to calculate total, then print Total: £75.",
+      "answer": "#include <iostream>\n\nint main() {\n  int price = 25;\n  int quantity = 3;\n\n  int total = price * quantity;\n\n  std::cout << \"Total: £\" << total << \"\\n\";\n}",
       "output": [
-        "Speed: 100"
+        "Total: £75"
       ],
       "parts": [
         {
-          "code": "80 + 20",
-          "name": "Expression",
-          "meaning": "Produces the value 100."
+          "code": "price",
+          "name": "Price of one item",
+          "meaning": "Stores 25: one item costs £25."
+        },
+        {
+          "code": "quantity",
+          "name": "How many items",
+          "meaning": "Stores 3: you are buying three items."
+        },
+        {
+          "code": "price * quantity",
+          "name": "Calculate the total",
+          "meaning": "The multiplication expression uses both saved values. 25 multiplied by 3 is 75; changing either value changes the total."
+        },
+        {
+          "code": "total",
+          "name": "Save the result",
+          "meaning": "Stores the calculated cost so the print instruction can use it. The £ symbol is text in the output, not part of the calculation."
         }
       ],
       "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."

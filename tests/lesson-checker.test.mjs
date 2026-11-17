@@ -30,10 +30,10 @@ for (const [language, lessons] of Object.entries(courses)) {
 for (const language of ['javascript', 'python', 'csharp', 'cpp']) {
   test(`${language}: arithmetic lesson accepts consistent renaming, rejects changed result and missing calculation`, () => {
     const lesson = courses[language].find(item => item.title === 'Calculate a value');
-    const renamed = lesson.answer.replace(/\bspeed\b/g, 'velocity');
+    const renamed = lesson.answer.replace(/\btotal\b/g, 'cost');
     assert.equal(check(language, lesson.title, renamed).accepted, true);
-    assert.equal(check(language, lesson.title, renamed.replace('80 + 20', '80 + 21')).accepted, false);
-    assert.equal(check(language, lesson.title, renamed.replace('80 + 20', '100')).accepted, false);
+    assert.equal(check(language, lesson.title, renamed.replace('25', '26')).accepted, false);
+    assert.equal(check(language, lesson.title, renamed.replace('price * quantity', '75')).accepted, false);
   });
   test(`${language}: removing a required function call cannot pass`, () => {
     const lesson = courses[language].find(item => item.title === 'Make something happen');
@@ -48,13 +48,13 @@ test('Python preserves significant indentation and whitespace inside strings', (
 });
 test('JavaScript accepts concatenation, optional semicolons and let for an unchanged value', () => {
   const lesson = courses.javascript.find(item => item.title === 'Calculate a value');
-  assert.equal(check('javascript', lesson.title, 'const total = 80 + 20\nconsole.log("Speed: " + total)').accepted, true);
+  assert.equal(check('javascript', lesson.title, 'const price = 25\nconst quantity = 3\nconst total = price * quantity\nconsole.log("Total: £" + total)').accepted, true);
 });
 test('Python accepts concatenation with str instead of an f-string', () => {
-  assert.equal(check('python', 'Calculate a value', 'total = 80 + 20\nprint("Speed: " + str(total))').accepted, true);
+  assert.equal(check('python', 'Calculate a value', 'price = 25\nquantity = 3\ntotal = price * quantity\nprint("Total: £" + str(total))').accepted, true);
 });
 test('C# accepts string concatenation and inferred local types', () => {
-  assert.equal(check('csharp', 'Calculate a value', 'int total = 80 + 20;\nConsole.WriteLine("Speed: " + total);').accepted, true);
+  assert.equal(check('csharp', 'Calculate a value', 'var price = 25;\nvar quantity = 3;\nvar total = price * quantity;\nConsole.WriteLine("Total: £" + total);').accepted, true);
   assert.equal(check('csharp', 'Choose a text colour', 'const string red = "\\u001b[31m";\nconst string green = "\\u001b[32m";\nconst string reset = "\\u001b[0m";\nConsole.WriteLine(red + "Red text" + reset);\nConsole.WriteLine(green + "Green text" + reset);').accepted, true);
 });
 test('HTML attribute order and void-tag slash are equivalent; missing alt and changed source fail', () => {
@@ -80,9 +80,10 @@ test('Independent colour declarations can be reordered; use before assignment do
   assert.equal(check('javascript', lesson.title, [...lines.slice(4), ...lines.slice(0, 3)].join('\n')).accepted, false);
 });
 for (const language of ['javascript', 'python', 'csharp', 'cpp']) {
-  test(`${language}: reversing constant addition keeps the calculation`, () => {
-    const lesson = courses[language].find(item => item.title === 'Calculate a value');
-    assert.equal(check(language, lesson.title, lesson.answer.replace('80 + 20', '20 + 80')).accepted, true);
+  test(`${language}: reversing constant multiplication keeps the calculation`, () => {
+    const original = courses[language].find(item => item.title === 'Calculate a value');
+    const lesson = {...original, answer:original.answer.replace('price * quantity','25 * 3')};
+    assert.equal(compareLesson(parsers[language],lesson.answer.replace('25 * 3','3 * 25'),lesson,language).accepted,true);
   });
 }
 for (const language of ['javascript', 'csharp', 'cpp']) {
@@ -109,7 +110,7 @@ test('Semantic details cannot disappear during comparison', () => {
 });
 test('Formatting conversions and scope capture are preserved', () => {
   const lesson = courses.python.find(item => item.title === 'Calculate a value');
-  assert.equal(check('python', lesson.title, lesson.answer.replace('{speed}', '{speed!r}')).accepted, false);
+  assert.equal(check('python', lesson.title, lesson.answer.replace('{total}', '{total!r}')).accepted, false);
   const custom = { title: 'Scope', prompt: 'Print the outer value', answer: 'let x = 1;\nfunction show() { let y = 1; console.log(x); }\nshow();' };
   assert.equal(compareLesson(parsers.javascript, custom.answer.replace('console.log(x)', 'console.log(y)'), custom, 'javascript').accepted, false);
 });
@@ -149,4 +150,13 @@ for (const language of ['javascript', 'python', 'csharp', 'cpp']) {
     assert.equal(check(language, lesson.title, lesson.answer.replace('2. Settings', '2. Options')).accepted, false);
     assert.equal(check(language, lesson.title, lesson.answer.replace('\\n3. Exit', ' 3. Exit')).accepted, false);
   });
+}
+
+for (const language of ['javascript','python','csharp','cpp']) {
+ test(`${language}: garage keeps three separate cars and exact output`,()=>{
+  const lesson=courses[language].find(item=>item.title==='Create and use a class');
+  assert.deepEqual(lesson.output,['=== MY GARAGE ===','Ford - 2014','Audi - 2019','BMW - 2022']);
+  assert.equal(check(language,lesson.title,lesson.answer).accepted,true);
+  assert.equal(check(language,lesson.title,lesson.answer.replace('2022','2023')).accepted,false);
+ });
 }
