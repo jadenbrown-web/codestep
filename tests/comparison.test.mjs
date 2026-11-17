@@ -17,6 +17,10 @@ const { firstTopicLessonIndex, pinnedLessonIndex, lessonTopic } = await import("
 const inputModule=ts.transpileModule(fs.readFileSync('app/input-runtimes.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
 const {browserInputPatch}=await import('data:text/javascript;base64,'+Buffer.from(inputModule).toString('base64'));
 
+const clockModule=ts.transpileModule(fs.readFileSync('app/clock-lessons.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
+const {applyClockTarget}=await import('data:text/javascript;base64,'+Buffer.from(clockModule).toString('base64'));
+const clockTarget={hour:18,minute:29,label:'18:29'};
+
 function setup(language = 'python', reveal = code => code, pinLimit = 2) {
   const states = [];
   let cursor = 0;
@@ -24,8 +28,8 @@ function setup(language = 'python', reveal = code => code, pinLimit = 2) {
   const Copy = () => null;
   const Pins = () => null;
   const Code = ({ code }) => React.createElement(React.Fragment, null, code);
-  const names = ['React', 'useState', 'useRef', 'useEffect', 'lessons', 'lessonComment', 'lessonExample', 'languageName', 'lessonTone', 'challengeFile', 'MenuHeader', 'ComparisonExamplePicker', 'CopyCodeButton', 'HighlightedCode', 'LessonExplanation', 'CppSetupGuide', 'BackButton', 'CodeLineNumbers', 'useQuickCodeReveal', 'PinnedTopicShortcuts', 'pinnedLessonIndex', 'lessonTopic', 'LessonSymbol', 'LessonBreakdown', 'lessonOverview', 'CodeProse', 'browserInputPatch'];
-  const values = [React, initial => { const index = cursor++; if (!(index in states)) states[index] = initial; return [states[index], next => { states[index] = next; }]; }, () => ({ current: null }), () => {}, lessons, () => '', lesson => lesson.answer, value => value, () => 'blue', () => 'code', () => null, Picker, Copy, Code, ({ lesson }) => lesson.explanation, () => null, () => null, () => null, (code, key, enabled = true) => enabled ? reveal(code, key) : "", Pins, pinnedLessonIndex, lessonTopic, () => null, () => null, lesson => lesson.title, () => null, browserInputPatch];
+  const names = ['React', 'useState', 'useRef', 'useEffect', 'lessons', 'lessonComment', 'lessonExample', 'languageName', 'lessonTone', 'challengeFile', 'MenuHeader', 'ComparisonExamplePicker', 'CopyCodeButton', 'HighlightedCode', 'LessonExplanation', 'CppSetupGuide', 'BackButton', 'CodeLineNumbers', 'useQuickCodeReveal', 'PinnedTopicShortcuts', 'pinnedLessonIndex', 'lessonTopic', 'LessonSymbol', 'LessonBreakdown', 'lessonOverview', 'CodeProse', 'browserInputPatch', 'useMemo', 'applyClockTarget', 'nextClockTarget'];
+  const values = [React, initial => { const index = cursor++; if (!(index in states)) states[index] = initial; return [states[index], next => { states[index] = next; }]; }, () => ({ current: null }), () => {}, lessons, () => '', lesson => lesson.answer, value => value, () => 'blue', () => 'code', () => null, Picker, Copy, Code, ({ lesson }) => lesson.explanation, () => null, () => null, () => null, (code, key, enabled = true) => enabled ? reveal(code, key) : "", Pins, pinnedLessonIndex, lessonTopic, () => null, () => null, lesson => lesson.title, () => null, browserInputPatch, callback=>callback(), applyClockTarget, ()=>clockTarget];
   const Component = new Function(...names, compiled + '\nreturn LanguageComparison;')(...values);
   const props = { language, pinLimit, lesson: lessons[language][0], editorCode: 'original editor code', showComments: false, pinnedTopics: ['Functions', 'Time'].map(topic => lessons[language].find(lesson => lessonTopic(lesson) === topic).title), onClose() {} };
   function render() { cursor = 0; return Component(props); }
@@ -152,7 +156,7 @@ test('a pinned second date-and-time lesson opens that exact example in both lang
   const comparison = setup();
   comparison.selectPin('Keep checking until the time is reached');
   assert.equal(comparison.activePin(), 'Keep checking until the time is reached');
-  assert.deepEqual(comparison.code(), ['python', 'javascript'].map(language => lessons[language].find(lesson => lesson.title === 'Keep checking until the time is reached').answer));
+  assert.deepEqual(comparison.code(), ['python', 'javascript'].map(language => applyClockTarget(lessons[language].find(lesson => lesson.title === 'Keep checking until the time is reached'),clockTarget).answer));
 });
 
 

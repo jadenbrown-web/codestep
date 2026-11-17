@@ -102,7 +102,7 @@ test('JavaScript accepts arrow functions while retaining the required call', () 
 });
 test('Semantic details cannot disappear during comparison', () => {
   const timeLesson = courses.python.find(item => item.title === 'Check for a particular time');
-  assert.equal(check('python', timeLesson.title, timeLesson.answer.replace('minutes=1', 'minutes=2')).accepted, false);
+  assert.equal(check('python', timeLesson.title, timeLesson.answer.replace('hour == 17', 'hour == 18')).accepted, false);
   const rangeLesson = courses.javascript.find(item => item.title === 'Check an answer with if and else');
   assert.equal(check('javascript', rangeLesson.title, rangeLesson.answer.replaceAll('==', '!=')).accepted, false);
   const csharpLesson = courses.csharp.find(item => item.title === 'Choose a text colour');
