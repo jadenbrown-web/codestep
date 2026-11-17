@@ -1947,3 +1947,7 @@ html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:h
 .layout-reference[data-layout-kind="combined-styles"] .layout-option-group[aria-label="Text colour"]{grid-column:auto}
 .layout-reference[data-layout-kind="combined-styles"] .layout-choice-row{gap:4px}
 .layout-reference[data-layout-kind="combined-styles"] .layout-choice{padding:5px 2px;font-size:12px}
+
+/* Reference actions share the practice bar's four-pixel clearance and corners. */
+.html-reference-footer{padding:4px;min-height:53px}
+.html-reference-next{box-sizing:border-box;height:44px;min-height:44px;border-radius:9px}

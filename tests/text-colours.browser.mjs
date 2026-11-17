@@ -70,9 +70,11 @@ try{
   assert.notEqual(await preview.evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(255, 255, 255)','White preview has a contrasting background');
   assert.equal(await page.locator('.named-text-colour-grid').evaluate(el=>el.scrollWidth>el.clientWidth+1),false);
   await activate(page.getByRole('button',{name:'See White as a hex value in CSS →',exact:true}));
-  const featured=page.locator('.featured-red-text');
-  const box=await featured.evaluate(el=>{const s=getComputedStyle(el);return {radius:parseFloat(s.borderRadius),fits:el.scrollHeight<=el.clientHeight+1};});
-  assert.ok(box.radius>=6 && box.fits,'Preview is rounded and fully contained');
+  assert.equal(await page.locator('.featured-red-text').count(),0,'Colour previews belong in the cards rather than duplicating the selected colour above');
+  const action=await page.locator('.html-reference-next').evaluate(el=>{const r=el.getBoundingClientRect(),panel=el.closest('.html-text-reference').getBoundingClientRect();return {right:panel.right-r.right,bottom:panel.bottom-r.bottom,height:r.height,radius:parseFloat(getComputedStyle(el).borderRadius)};});
+  assert.equal(action.height,44);
+  assert.equal(action.radius,9);
+  assert.ok(Math.abs(action.right-5)<=1 && Math.abs(action.bottom-5)<=1,'Continue has the same four-pixel clearance inside the panel border as Check code');
   assert.equal(await page.locator('.font-featured-example>span').count(),0,'Long explanation lives in book view');
   assert.equal(await page.locator('.colour-example-grid').evaluate(el=>el.scrollWidth>el.clientWidth+1),false);
   if(theme==='dark'){await activate(page.getByRole('button',{name:'Use Brown hex colour',exact:true}));await page.screenshot({path:`/tmp/colour-compact-css-${width}.png`});}
