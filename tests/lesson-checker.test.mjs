@@ -54,7 +54,7 @@ test('Python accepts concatenation with str instead of an f-string', () => {
   assert.equal(check('python', 'Calculate a value', 'price = 25\nquantity = 3\ntotal = price * quantity\nprint("Total: £" + str(total))').accepted, true);
 });
 test('C# accepts string concatenation and inferred local types', () => {
-  assert.equal(check('csharp', 'Calculate a value', 'var price = 25;\nvar quantity = 3;\nvar total = price * quantity;\nConsole.WriteLine("Total: £" + total);').accepted, true);
+  assert.equal(check('csharp', 'Calculate a value', 'var price = 25;\nvar quantity = 3;\nint total = price * quantity;\nConsole.WriteLine("Total: £" + total);').accepted, true);
   assert.equal(check('csharp', 'Choose a text colour', 'const string red = "\\u001b[31m";\nconst string green = "\\u001b[32m";\nconst string reset = "\\u001b[0m";\nConsole.WriteLine(red + "Red text" + reset);\nConsole.WriteLine(green + "Green text" + reset);').accepted, true);
 });
 test('HTML attribute order and void-tag slash are equivalent; missing alt and changed source fail', () => {
