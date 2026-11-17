@@ -1955,3 +1955,20 @@ html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:h
 /* Native heading margins and sizes need room for both levels in the result. */
 .workspace:not(.editor-expanded)>.console-panel[data-browser-preview="headings"]:has(.browser-result-preview){flex:0 0 246px;min-height:246px;max-height:246px}
 .console-panel[data-browser-preview="headings"] .console-body:has(.browser-result-preview){flex:1}
+
+.workspace:not(.editor-expanded)>.console-panel[data-browser-preview="document"]:has(.browser-result-preview){flex:0 0 246px;min-height:246px;max-height:246px}
+.console-panel[data-browser-preview="document"] .console-body:has(.browser-result-preview){flex:1}
+.browser-page-preview{display:flex;flex-direction:column;flex:1;min-height:140px;overflow:hidden;border:1px solid var(--ui-border);border-radius:6px;background:#fff}
+.browser-preview-tab{display:flex;align-items:center;gap:7px;flex:none;min-height:32px;padding:4px 10px;background:var(--ui-surface);color:var(--ui-text);font:600 12px/1.4 var(--sans)}
+.browser-preview-tab svg{width:16px;height:16px;flex:none}
+.browser-preview-tab span{overflow-wrap:anywhere}
+.browser-page-preview>.browser-result-preview{border-radius:0}
+
+/* Browser chrome mirrors the embedded file preview shown in VS Code. */
+.browser-page-preview{background:#202122;border-color:#424344;padding:0}
+.browser-preview-tab{align-self:flex-start;max-width:100%;background:#292a2b;color:#f1f1f1;border:1px solid #424344;border-top:0;border-left:0;border-radius:0 0 5px 0;font-weight:500}
+.browser-preview-tab .browser-tab-close{width:14px;height:14px;margin-left:8px;color:#c2c4c5}
+.browser-preview-navigation{display:flex;align-items:center;gap:10px;padding:5px 8px;color:#a5a8aa;min-width:0}
+.browser-preview-navigation>svg{width:16px;height:16px;flex:none}
+.browser-preview-navigation>span{flex:1;min-width:0;padding:4px 8px;border:1px solid #454647;border-radius:4px;background:#191a1b;color:#c4c6c8;font:12px/1.2 var(--sans);overflow-wrap:anywhere}
+.browser-page-preview>.browser-result-preview{border-radius:3px;margin:0 2px 2px;width:calc(100% - 4px)}

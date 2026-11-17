@@ -42,7 +42,7 @@ type Lesson = {
   runHint?: string;
   compareNode?: boolean;
   referenceOnly?: boolean;
-  browserPreview?: boolean | "headings";
+  browserPreview?: boolean | "headings" | "document";
   idLesson?: "html" | "css";
   referenceKind?: "text" | "fonts" | "pages" | "css" | "colours" | "named-colours" | "comparisons" | "alignment" | "positioning" | "combined-styles";
 };
@@ -1867,6 +1867,7 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "03 · Head and title",
       "title": "Name the browser tab",
+      "browserPreview": "document",
       "explanation": "The head holds information about the page. meta charset UTF-8 lets it display a wide range of characters correctly, while title supplies the text shown on the browser tab.",
       "note": "<!-- Set the character encoding and browser-tab title -->",
       "prompt": "Create the head, set UTF-8, and give the page a title.",
@@ -5389,7 +5390,7 @@ export default function Home() {
             <div className="console-body">
               {status === "idle" && <span className="console-muted">{language === "html" || language === "css" ? "Your page result preview will appear here..." : "Your program output will appear here..."}</span>}
               {status === "wrong" && <><SyntaxDiagnostic parts={diagnostic} /><div className="console-muted diagnostic-hint">Hover over or focus each underlined part to see what it means.</div></>}
-              {status === "correct" && <><div className="run-line"><span><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Code accepted — {language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div>{current?.browserPreview ? <BrowserResultPreview code={current.idLesson === "css" ? linkedIdHtml : practiceCode} css={current.idLesson === "css" ? practiceCode : undefined} /> : <div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div>}</>}
+              {status === "correct" && <><div className="run-line"><span><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Code accepted — {language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div>{current?.browserPreview ? <BrowserResultPreview showTab={current.browserPreview === "document"} code={current.idLesson === "css" ? linkedIdHtml : practiceCode} css={current.idLesson === "css" ? practiceCode : undefined} /> : <div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div>}</>}
             </div>
           </div>
           <div className={`feedback ${status}`}>
