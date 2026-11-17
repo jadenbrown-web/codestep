@@ -6,6 +6,7 @@ import CodeBlocks from "./CodeBlocks";
 import BrowserResultPreview from "./BrowserResultPreview";
 import ClubTerminalInput from "./ClubTerminalInput";
 import BankTerminalInput from "./BankTerminalInput";
+import ShoppingTotalInput from "./ShoppingTotalInput";
 import {applyClockTarget,nextClockTarget,formatClockReading,type ClockTarget} from "./clock-lessons";
 import InputRuntimeExamples from "./InputRuntimeExamples";
 import RunCommands from "./RunCommands";
@@ -46,7 +47,7 @@ type Lesson = {
   compareNode?: boolean;
   referenceOnly?: boolean;
   browserPreview?: boolean | "headings" | "document";
-  interactiveInput?: "club-name" | "bank-deposit";
+  interactiveInput?: "club-name" | "bank-deposit" | "shopping-total";
   clockExample?: boolean;
   displayCurrentTime?: boolean;
   clockTarget?: ClockTarget;
@@ -315,26 +316,39 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "08 · Functions",
-      "title": "Use one function inside another",
-      "explanation": "getMessage() returns Hello. In console.log(getMessage()), the inner function runs first, then console.log prints its returned value. Each call has its own pair of parentheses. In console.log((getMessage())), the extra parentheses only group the result; (( is not a special sign for multiple functions.",
-      "note": "// Return Hello from getMessage, then print it by calling the function inside the print call.",
-      "prompt": "Return Hello from getMessage, then print it by calling the function inside the print call.",
-      "answer": "function getMessage() {\n  return \"Hello\";\n}\n\nconsole.log(getMessage());",
+      "title": "Use a function's returned value",
+      "explanation": "A function can calculate a result and send it back with return. calculateTotal receives price and quantity as parameters, multiplies them, and returns the result. The calling code reads the two inputs, saves the returned value in total, then prints it. return does not print anything; it ends the function and gives its value back to the caller.",
+      "note": "// Return the calculated total, then save and print it outside the function.",
+      "prompt": "Define calculateTotal(price, quantity) to return their product. Ask for a whole-number price and quantity, call the function, save the returned value in total, then print Total: £ followed by the result.",
+      "answer": "function calculateTotal(price, quantity) {\n  return price * quantity;\n}\n\nimport { createInterface } from \"node:readline/promises\";\n\nconst input = createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\nconst price = Number(await input.question(\"Enter the price: £\"));\nconst quantity = Number(await input.question(\"Enter the quantity: \"));\ninput.close();\n\nconst total = calculateTotal(price, quantity);\n\nconsole.log(`Total: £${total}`);",
       "output": [
-        "Hello"
+        "Total: £75"
       ],
       "parts": [
         {
-          "code": "return",
-          "name": "Send back",
-          "meaning": "Ends the function and sends its value back to the caller."
+          "code": "calculateTotal(price, quantity)",
+          "name": "Pass values into a function",
+          "meaning": "price and quantity are the parameters. When the function is called, they receive the two values supplied by the calling code."
         },
         {
-          "code": "console.log(getMessage())",
-          "name": "Nested calls",
-          "meaning": "getMessage runs first; console.log receives Hello."
+          "code": "return price * quantity",
+          "name": "Send the answer back",
+          "meaning": "Multiplies the two values, ends this function, and sends the result back. It does not display text in the console."
+        },
+        {
+          "code": "total = calculateTotal(price, quantity)",
+          "name": "Save the returned value",
+          "meaning": "Calls the function with the entered values. The value sent back by return is saved in total."
+        },
+        {
+          "code": "total",
+          "name": "Print after calculating",
+          "meaning": "The print instruction uses the saved total after the function has finished. With price 25 and quantity 3, the result is Total: £75."
         }
-      ]
+      ],
+      "interactiveInput": "shopping-total",
+      "fileName": "total.mjs",
+      "runHint": "Save the complete example as total.mjs and run node total.mjs with Node.js 18 or newer. Enter whole numbers for price and quantity. Number converts the terminal replies from text to numbers."
     },
     {
       "eyebrow": "09 · Classes",
@@ -1148,27 +1162,38 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "07 · Functions",
-      "title": "Use one function inside another",
-      "explanation": "getMessage() returns Hello. In Console.WriteLine(getMessage()), the inner function runs first, then Console.WriteLine prints its returned value. Each call has its own pair of parentheses. In Console.WriteLine((getMessage())), the extra parentheses only group the result; (( is not a special sign for multiple functions.",
-      "note": "// Return Hello from getMessage, then print it by calling the function inside the print call.",
-      "prompt": "Return Hello from getMessage, then print it by calling the function inside the print call.",
-      "answer": "string getMessage() {\n  return \"Hello\";\n}\n\nConsole.WriteLine(getMessage());",
+      "title": "Use a function's returned value",
+      "explanation": "A function can calculate a result and send it back with return. calculateTotal receives price and quantity as parameters, multiplies them, and returns the result. The calling code reads the two inputs, saves the returned value in total, then prints it. return does not print anything; it ends the function and gives its value back to the caller.",
+      "note": "// Return the calculated total, then save and print it outside the function.",
+      "prompt": "Define calculateTotal(price, quantity) to return their product. Ask for a whole-number price and quantity, call the function, save the returned value in total, then print Total: £ followed by the result.",
+      "answer": "int calculateTotal(int price, int quantity)\n{\n  return price * quantity;\n}\n\nConsole.Write(\"Enter the price: £\");\nint price = int.Parse(Console.ReadLine() ?? \"0\");\nConsole.Write(\"Enter the quantity: \");\nint quantity = int.Parse(Console.ReadLine() ?? \"0\");\n\nint total = calculateTotal(price, quantity);\n\nConsole.WriteLine($\"Total: £{total}\");",
       "output": [
-        "Hello"
+        "Total: £75"
       ],
       "parts": [
         {
-          "code": "return",
-          "name": "Send back",
-          "meaning": "Ends the function and sends its value back to the caller."
+          "code": "calculateTotal(price, quantity)",
+          "name": "Pass values into a function",
+          "meaning": "price and quantity are the parameters. When the function is called, they receive the two values supplied by the calling code."
         },
         {
-          "code": "Console.WriteLine(getMessage())",
-          "name": "Nested calls",
-          "meaning": "getMessage runs first; Console.WriteLine receives Hello."
+          "code": "return price * quantity",
+          "name": "Send the answer back",
+          "meaning": "Multiplies the two values, ends this function, and sends the result back. It does not display text in the console."
+        },
+        {
+          "code": "total = calculateTotal(price, quantity)",
+          "name": "Save the returned value",
+          "meaning": "Calls the function with the entered values. The value sent back by return is saved in total."
+        },
+        {
+          "code": "total",
+          "name": "Print after calculating",
+          "meaning": "The print instruction uses the saved total after the function has finished. With price 25 and quantity 3, the result is Total: £75."
         }
       ],
-      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first.",
+      "interactiveInput": "shopping-total"
     },
     {
       "eyebrow": "08 · Classes",
@@ -2862,27 +2887,38 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "07 · Functions",
-      "title": "Use one function inside another",
-      "explanation": "getMessage() returns Hello. In print(getMessage()), the inner function runs first and print receives the returned text. Each call has its own pair of parentheses. Extra parentheses group an expression; (( is not a special sign for multiple functions.",
-      "note": "# Return Hello from getMessage, then print it by calling the function inside the print call.",
-      "prompt": "Return Hello from getMessage, then print it by calling the function inside the print call.",
-      "answer": "def getMessage():\n    return \"Hello\"\n\nprint(getMessage())",
+      "title": "Use a function's returned value",
+      "explanation": "A function can calculate a result and send it back with return. calculateTotal receives price and quantity as parameters, multiplies them, and returns the result. The calling code reads the two inputs, saves the returned value in total, then prints it. return does not print anything; it ends the function and gives its value back to the caller.",
+      "note": "# Return the calculated total, then save and print it outside the function.",
+      "prompt": "Define calculateTotal(price, quantity) to return their product. Ask for a whole-number price and quantity, call the function, save the returned value in total, then print Total: £ followed by the result.",
+      "answer": "def calculateTotal(price, quantity):\n    return price * quantity\n\nprice = int(input(\"Enter the price: £\"))\nquantity = int(input(\"Enter the quantity: \"))\n\ntotal = calculateTotal(price, quantity)\n\nprint(f\"Total: £{total}\")",
       "output": [
-        "Hello"
+        "Total: £75"
       ],
       "parts": [
         {
-          "code": "return",
-          "name": "Send back",
-          "meaning": "Immediately ends this function and sends its value back to the caller. It does not print the value or merely leave a loop."
+          "code": "calculateTotal(price, quantity)",
+          "name": "Pass values into a function",
+          "meaning": "price and quantity are the parameters. When the function is called, they receive the two values supplied by the calling code."
         },
         {
-          "code": "print(getMessage())",
-          "name": "Nested calls",
-          "meaning": "The inner call runs first."
+          "code": "return price * quantity",
+          "name": "Send the answer back",
+          "meaning": "Multiplies the two values, ends this function, and sends the result back. It does not display text in the console."
+        },
+        {
+          "code": "total = calculateTotal(price, quantity)",
+          "name": "Save the returned value",
+          "meaning": "Calls the function with the entered values. The value sent back by return is saved in total."
+        },
+        {
+          "code": "total",
+          "name": "Print after calculating",
+          "meaning": "The print instruction uses the saved total after the function has finished. With price 25 and quantity 3, the result is Total: £75."
         }
       ],
-      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal.",
+      "interactiveInput": "shopping-total"
     },
     {
       "eyebrow": "08 · Classes",
@@ -3681,26 +3717,37 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "07 · Functions",
       "title": "Use a function's returned value",
-      "explanation": "getMessage() returns Hello as a std::string. return immediately ends that function and sends its value back to the caller. std::cout << getMessage() then prints the returned text. Here << sends a value to the output stream; it is not another function call.",
-      "note": "// Return Hello from getMessage, then print its returned value.",
-      "prompt": "Return Hello from getMessage, then print its returned value.",
-      "answer": "#include <iostream>\n#include <string>\n\nstd::string getMessage() {\n  return \"Hello\";\n}\n\nint main() {\n  std::cout << getMessage() << \"\\n\";\n}",
+      "explanation": "A function can calculate a result and send it back with return. calculateTotal receives price and quantity as parameters, multiplies them, and returns the result. The calling code reads the two inputs, saves the returned value in total, then prints it. return does not print anything; it ends the function and gives its value back to the caller.",
+      "note": "// Return the calculated total, then save and print it outside the function.",
+      "prompt": "Define calculateTotal(price, quantity) to return their product. Ask for a whole-number price and quantity, call the function, save the returned value in total, then print Total: £ followed by the result.",
+      "answer": "#include <iostream>\n\nint calculateTotal(int price, int quantity) {\n  return price * quantity;\n}\n\nint main() {\n  int price = 0;\n  int quantity = 0;\n  std::cout << \"Enter the price: £\";\n  std::cin >> price;\n  std::cout << \"Enter the quantity: \";\n  std::cin >> quantity;\n\n  int total = calculateTotal(price, quantity);\n\n  std::cout << \"Total: £\" << total << \"\\n\";\n}",
       "output": [
-        "Hello"
+        "Total: £75"
       ],
       "parts": [
         {
-          "code": "std::string",
-          "name": "Text",
-          "meaning": "The type of text returned by this function."
+          "code": "calculateTotal(price, quantity)",
+          "name": "Pass values into a function",
+          "meaning": "price and quantity are the parameters. When the function is called, they receive the two values supplied by the calling code."
         },
         {
-          "code": "return",
-          "name": "Send back",
-          "meaning": "Immediately ends this function and sends its value back to the caller. It does not print the value or merely leave a loop."
+          "code": "return price * quantity",
+          "name": "Send the answer back",
+          "meaning": "Multiplies the two values, ends this function, and sends the result back. It does not display text in the console."
+        },
+        {
+          "code": "total = calculateTotal(price, quantity)",
+          "name": "Save the returned value",
+          "meaning": "Calls the function with the entered values. The value sent back by return is saved in total."
+        },
+        {
+          "code": "total",
+          "name": "Print after calculating",
+          "meaning": "The print instruction uses the saved total after the function has finished. With price 25 and quantity 3, the result is Total: £75."
         }
       ],
-      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed.",
+      "interactiveInput": "shopping-total"
     },
     {
       "eyebrow": "08 · Classes",
@@ -5455,7 +5502,7 @@ export default function Home() {
             <div className="console-body">
               {status === "idle" && <span className="console-muted">{language === "html" || language === "css" ? "Your page result preview will appear here..." : "Your program output will appear here..."}</span>}
               {status === "wrong" && <><SyntaxDiagnostic parts={diagnostic} /><div className="console-muted diagnostic-hint">Hover over or focus each underlined part to see what it means.</div></>}
-              {status === "correct" && <><div className="run-line"><span><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Code accepted — {current?.interactiveInput === "bank-deposit" ? "enter a deposit below" : current?.interactiveInput ? "enter a name below" : current?.displayCurrentTime ? "current local time" : language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div>{current?.interactiveInput === "bank-deposit" ? <BankTerminalInput key={`${language}-${index}`} /> : current?.interactiveInput === "club-name" ? <ClubTerminalInput key={`${language}-${index}`} /> : current?.browserPreview ? <BrowserResultPreview showTab={current.browserPreview === "document"} code={current.idLesson === "css" ? linkedIdHtml : practiceCode} css={current.idLesson === "css" ? practiceCode : undefined} /> : <div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div>}</>}
+              {status === "correct" && <><div className="run-line"><span><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Code accepted — {current?.interactiveInput === "shopping-total" ? "enter a price and quantity below" : current?.interactiveInput === "bank-deposit" ? "enter a deposit below" : current?.interactiveInput ? "enter a name below" : current?.displayCurrentTime ? "current local time" : language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div>{current?.interactiveInput === "shopping-total" ? <ShoppingTotalInput key={`${language}-${index}`} /> : current?.interactiveInput === "bank-deposit" ? <BankTerminalInput key={`${language}-${index}`} /> : current?.interactiveInput === "club-name" ? <ClubTerminalInput key={`${language}-${index}`} /> : current?.browserPreview ? <BrowserResultPreview showTab={current.browserPreview === "document"} code={current.idLesson === "css" ? linkedIdHtml : practiceCode} css={current.idLesson === "css" ? practiceCode : undefined} /> : <div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div>}</>}
             </div>
           </div>
           <div className={`feedback ${status}`}>

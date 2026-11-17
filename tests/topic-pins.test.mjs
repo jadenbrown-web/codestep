@@ -69,3 +69,8 @@ test('the one-check clock pin follows the renamed current-time lesson',()=>{
  const courses={python:[{title:'Display the current time',eyebrow:'05 · Date and time'}]};
  assert.deepEqual(restoreLessonPins(JSON.stringify({python:['Check for a particular time']}),courses),{python:['Display the current time']});
 });
+
+test('the nested-call pin follows the clearer returned-value lesson',()=>{
+ const courses={python:[{title:"Use a function's returned value",eyebrow:'07 · Functions'}]};
+ assert.deepEqual(restoreLessonPins(JSON.stringify({python:['Use one function inside another']}),courses),{python:["Use a function's returned value"]});
+});

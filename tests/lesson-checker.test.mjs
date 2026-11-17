@@ -98,7 +98,8 @@ for (const language of ['javascript', 'csharp', 'cpp']) {
 }
 test('JavaScript accepts arrow functions while retaining the required call', () => {
   assert.equal(check('javascript', 'Make something happen', 'const correct = () => { console.log("correct"); };\ncorrect();').accepted, true);
-  assert.equal(check('javascript', 'Use one function inside another', 'const getMessage = () => "Hello";\nconsole.log(getMessage());').accepted, true);
+  const lesson={title:'Return a greeting',answer:'function getMessage() {\n  return "Hello";\n}\n\nconsole.log(getMessage());',prompt:'Return Hello and print the returned value.'};
+  assert.equal(compareLesson(parsers.javascript,'const getMessage = () => "Hello";\nconsole.log(getMessage());',lesson,'javascript').accepted,true);
 });
 test('Semantic details cannot disappear during comparison', () => {
   const timeLesson = courses.python.find(item => item.title === 'Display the current time');
@@ -185,4 +186,11 @@ for(const language of ['javascript','python','csharp','cpp'])test(`${language}: 
 test('the bank balance must remain reassignable in JavaScript',()=>{
  const lesson=courses.javascript.find(item=>item.title==='Store and update values');
  assert.equal(check('javascript',lesson.title,lesson.answer.replace('let balance','const balance')).accepted,false);
+});
+
+for(const language of ['javascript','python','csharp','cpp'])test(`${language}: returned totals require a calculation and its captured result`,()=>{
+ const lesson=courses[language].find(item=>item.interactiveInput==='shopping-total');
+ assert.equal(check(language,lesson.title,lesson.answer).accepted,true);
+ assert.equal(check(language,lesson.title,lesson.answer.replace('return price * quantity','return price + quantity')).accepted,false);
+ assert.equal(check(language,lesson.title,lesson.answer.replace('total = calculateTotal(price, quantity)','total = 75')).accepted,false);
 });
