@@ -1972,3 +1972,11 @@ html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:h
 .browser-preview-navigation>svg{width:16px;height:16px;flex:none}
 .browser-preview-navigation>span{flex:1;min-width:0;padding:4px 8px;border:1px solid #454647;border-radius:4px;background:#191a1b;color:#c4c6c8;font:12px/1.2 var(--sans);overflow-wrap:anywhere}
 .browser-page-preview>.browser-result-preview{border-radius:3px;margin:0 2px 2px;width:calc(100% - 4px)}
+/* The regex exercise accepts a real reply inside its console. */
+.console-body:has(.club-terminal){white-space:normal}
+.club-terminal-form{display:flex;align-items:flex-end;gap:8px;margin-top:8px}
+.club-terminal-form label{display:flex;flex:1;min-width:0;flex-direction:column;gap:5px}
+.club-terminal-form input{box-sizing:border-box;width:100%;min-width:0;min-height:44px;padding:8px;border:1px solid var(--ui-border);border-radius:6px;background:var(--ui-surface);color:var(--ui-text);font:inherit}
+.club-terminal-form button{min-height:44px;padding:8px 10px;border:0;border-radius:6px;background:var(--green);color:#fff;font:650 12px var(--sans);cursor:pointer;touch-action:manipulation}
+.club-terminal-result{margin:8px 0 0;color:var(--ui-text);line-height:1.5}
+.workspace:not(.editor-expanded)>.console-panel:has(.club-terminal){flex:0 0 226px;min-height:226px;max-height:260px}

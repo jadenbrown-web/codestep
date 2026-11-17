@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboa
 
 import CodeBlocks from "./CodeBlocks";
 import BrowserResultPreview from "./BrowserResultPreview";
+import ClubTerminalInput from "./ClubTerminalInput";
 import InputRuntimeExamples from "./InputRuntimeExamples";
 import RunCommands from "./RunCommands";
 import {browserInputPatch, type InputRuntime} from "./input-runtimes";
@@ -43,6 +44,7 @@ type Lesson = {
   compareNode?: boolean;
   referenceOnly?: boolean;
   browserPreview?: boolean | "headings" | "document";
+  interactiveInput?: "club-name";
   idLesson?: "html" | "css";
   referenceKind?: "text" | "fonts" | "pages" | "css" | "colours" | "named-colours" | "comparisons" | "alignment" | "positioning" | "combined-styles";
 };
@@ -576,12 +578,12 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "15 · Expressions",
       "title": "Calculate a value",
-      "explanation": "A shopping total shows why expressions are useful. price stores the £25 cost of one item, and quantity stores how many you are buying. price * quantity multiplies 25 by 3 to produce 75. Save the result in total, then print Total: £75. The * symbol means multiplication.",
-      "note": "// Calculate the cost of three items at £25 each.",
-      "prompt": "Store price as 25 and quantity as 3, multiply them to calculate total, then print Total: £75.",
-      "answer": "let price = 25;\nlet quantity = 3;\n\nlet total = price * quantity;\n\nconsole.log(`Total: £${total}`);",
+      "explanation": "Calculate a shopping total with delivery. price stores £25 per item, quantity stores 3 items, and delivery stores a £5 charge for the order. In price * quantity + delivery, multiplication happens first: 25 × 3 is 75. Then add 5 for delivery to get 80. Save the result in total and print Total: £80.",
+      "note": "// Calculate three items at £25 each, plus £5 delivery.",
+      "prompt": "Store price as 25, quantity as 3, and delivery as 5. Calculate price * quantity + delivery, then print Total: £80.",
+      "answer": "let price = 25;\nlet quantity = 3;\nlet delivery = 5;\n\nlet total = price * quantity + delivery;\n\nconsole.log(`Total: £${total}`);",
       "output": [
-        "Total: £75"
+        "Total: £80"
       ],
       "parts": [
         {
@@ -595,14 +597,19 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Stores 3: you are buying three items."
         },
         {
-          "code": "price * quantity",
-          "name": "Calculate the total",
-          "meaning": "The multiplication expression uses both saved values. 25 multiplied by 3 is 75; changing either value changes the total."
+          "code": "delivery",
+          "name": "Delivery for the order",
+          "meaning": "Stores 5: add one £5 delivery charge after calculating the cost of the items."
+        },
+        {
+          "code": "price * quantity + delivery",
+          "name": "Multiply, then add",
+          "meaning": "The * operation happens before +. Multiply 25 by 3 to get 75, then add 5 to get 80. Writing (price * quantity) + delivery makes that same order explicit."
         },
         {
           "code": "total",
-          "name": "Save the result",
-          "meaning": "Stores the calculated cost so the print instruction can use it. The £ symbol is text in the output, not part of the calculation."
+          "name": "Save the final cost",
+          "meaning": "Stores the result so the print instruction can display Total: £80. The £ symbol is text, not part of the arithmetic."
         }
       ]
     },
@@ -737,54 +744,38 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "20 · Regular expressions",
       "title": "Let names beginning with J enter",
-      "explanation": "A regular expression checks text against a pattern. /^J/i means: the slashes hold the pattern, ^ anchors the check to the beginning, J is the required first letter, and i ignores uppercase or lowercase. It accepts any word beginning with J—not only names—and rejects J when it appears later in the text.",
-      "note": "// Let people into the club when their name begins with J",
-      "prompt": "Check the five names and print who may enter the club.",
-      "answer": "const names = [\"Jordan\", \"James\", \"Jessica\", \"Sarah\", \"Ben\"];\n\nfor (const name of names) {\n  if (/^J/i.test(name)) {\n    console.log(name + \" can enter the club.\");\n  } else {\n    console.log(name + \" cannot enter the club.\");\n  }\n}",
+      "explanation": "Ask for a name, then check its first letter with the ^J regular expression. The case-insensitive option accepts J or j. A matching name prints You can enter the club!; any other name, including an empty reply, prints You cannot enter the club. The ^ anchor checks the beginning, so a J later in the name does not count.",
+      "note": "// Ask for a name and check whether it begins with J or j.",
+      "prompt": "Ask for a name, then allow entry if it starts with J or j; otherwise refuse entry.",
+      "answer": "import { createInterface } from \"node:readline/promises\";\n\nconst input = createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\nlet name = await input.question(\"Enter your name: \");\ninput.close();\n\nif (/^J/i.test(name)) {\n  console.log(\"You can enter the club!\");\n} else {\n  console.log(\"You cannot enter the club.\");\n}",
       "output": [
-        "Jordan can enter the club.",
-        "James can enter the club.",
-        "Jessica can enter the club.",
-        "Sarah cannot enter the club.",
-        "Ben cannot enter the club."
+        "You can enter the club!"
       ],
       "parts": [
         {
-          "code": "for (const name of names)",
-          "name": "Visit each name",
-          "meaning": "Takes each name from the array in order, runs the body once per name, and stops when the array ends."
+          "code": "input.question(\"Enter your name: \")",
+          "name": "Ask for a name",
+          "meaning": "Waits for a line of text typed in the terminal and saves the reply in name."
         },
         {
-          "code": "name + \"...\"",
-          "name": "Join text",
-          "meaning": "When used with text, `+` joins the name and message into one string."
+          "code": "^J",
+          "name": "Check the first letter",
+          "meaning": "The caret anchors the pattern to the beginning. Only a J at the start can match."
         },
         {
-          "code": "/ ... /",
-          "name": "Pattern",
-          "meaning": "The forward slashes mark the beginning and end of a regular expression."
+          "code": "/^J/i.test(name)",
+          "name": "Accept J or j",
+          "meaning": "Checks the entered name against the pattern without distinguishing uppercase from lowercase."
         },
         {
-          "code": "^",
-          "name": "Beginning",
-          "meaning": "The caret says the match must start at the very beginning of the text."
-        },
-        {
-          "code": "J",
-          "name": "Required letter",
-          "meaning": "This is the letter that must appear first."
-        },
-        {
-          "code": "i",
-          "name": "Ignore case",
-          "meaning": "Accepts either uppercase J or lowercase j."
-        },
-        {
-          "code": ".test(name)",
-          "name": "Check a name",
-          "meaning": "Returns true when name begins with J and false when it does not."
+          "code": "else",
+          "name": "Refuse other names",
+          "meaning": "Runs when the pattern does not match, including an empty name or a name with J later in the text."
         }
-      ]
+      ],
+      "interactiveInput": "club-name",
+      "fileName": "club.mjs",
+      "runHint": "Save the whole example as club.mjs. Run node club.mjs in the terminal with Node.js 18 or newer, then enter a name. The .mjs extension enables import and top-level await."
     },
     {
       "title": "Get a filename from a path",
@@ -1441,12 +1432,12 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "14 · Expressions",
       "title": "Calculate a value",
-      "explanation": "A shopping total shows why expressions are useful. price stores the £25 cost of one item, and quantity stores how many you are buying. price * quantity multiplies 25 by 3 to produce 75. Save the result in total, then print Total: £75. The * symbol means multiplication.",
-      "note": "// Calculate the cost of three items at £25 each.",
-      "prompt": "Store price as 25 and quantity as 3, multiply them to calculate total, then print Total: £75.",
-      "answer": "int price = 25;\nint quantity = 3;\n\nint total = price * quantity;\n\nConsole.WriteLine($\"Total: £{total}\");",
+      "explanation": "Calculate a shopping total with delivery. price stores £25 per item, quantity stores 3 items, and delivery stores a £5 charge for the order. In price * quantity + delivery, multiplication happens first: 25 × 3 is 75. Then add 5 for delivery to get 80. Save the result in total and print Total: £80.",
+      "note": "// Calculate three items at £25 each, plus £5 delivery.",
+      "prompt": "Store price as 25, quantity as 3, and delivery as 5. Calculate price * quantity + delivery, then print Total: £80.",
+      "answer": "int price = 25;\nint quantity = 3;\nint delivery = 5;\n\nint total = price * quantity + delivery;\n\nConsole.WriteLine($\"Total: £{total}\");",
       "output": [
-        "Total: £75"
+        "Total: £80"
       ],
       "parts": [
         {
@@ -1460,14 +1451,19 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Stores 3: you are buying three items."
         },
         {
-          "code": "price * quantity",
-          "name": "Calculate the total",
-          "meaning": "The multiplication expression uses both saved values. 25 multiplied by 3 is 75; changing either value changes the total."
+          "code": "delivery",
+          "name": "Delivery for the order",
+          "meaning": "Stores 5: add one £5 delivery charge after calculating the cost of the items."
+        },
+        {
+          "code": "price * quantity + delivery",
+          "name": "Multiply, then add",
+          "meaning": "The * operation happens before +. Multiply 25 by 3 to get 75, then add 5 to get 80. Writing (price * quantity) + delivery makes that same order explicit."
         },
         {
           "code": "total",
-          "name": "Save the result",
-          "meaning": "Stores the calculated cost so the print instruction can use it. The £ symbol is text in the output, not part of the calculation."
+          "name": "Save the final cost",
+          "meaning": "Stores the result so the print instruction can display Total: £80. The £ symbol is text, not part of the arithmetic."
         }
       ],
       "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
@@ -1620,35 +1616,37 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "19 · Regular expressions",
       "title": "Let names beginning with J enter",
-      "explanation": "A regular expression checks text against a pattern. Regex comes from System.Text.RegularExpressions. ^J means the text must begin with J, while RegexOptions.IgnoreCase accepts uppercase or lowercase. It accepts any word beginning with J—not only names—and rejects J when it appears later in the text.",
-      "note": "// Let people into the club when their name begins with J",
-      "prompt": "Check the five names and print who may enter the club.",
-      "answer": "using System.Text.RegularExpressions;\n\nstring[] names = { \"Jordan\", \"James\", \"Jessica\", \"Sarah\", \"Ben\" };\n\nforeach (string name in names) {\n  if (Regex.IsMatch(name, \"^J\", RegexOptions.IgnoreCase)) {\n    Console.WriteLine($\"{name} can enter the club.\");\n  } else {\n    Console.WriteLine($\"{name} cannot enter the club.\");\n  }\n}",
+      "explanation": "Ask for a name, then check its first letter with the ^J regular expression. The case-insensitive option accepts J or j. A matching name prints You can enter the club!; any other name, including an empty reply, prints You cannot enter the club. The ^ anchor checks the beginning, so a J later in the name does not count.",
+      "note": "// Ask for a name and check whether it begins with J or j.",
+      "prompt": "Ask for a name, then allow entry if it starts with J or j; otherwise refuse entry.",
+      "answer": "using System.Text.RegularExpressions;\n\nConsole.Write(\"Enter your name: \");\nstring name = Console.ReadLine() ?? \"\";\n\nif (Regex.IsMatch(name, \"^J\", RegexOptions.IgnoreCase)) {\n  Console.WriteLine(\"You can enter the club!\");\n} else {\n  Console.WriteLine(\"You cannot enter the club.\");\n}",
       "output": [
-        "Jordan can enter the club.",
-        "James can enter the club.",
-        "Jessica can enter the club.",
-        "Sarah cannot enter the club.",
-        "Ben cannot enter the club."
+        "You can enter the club!"
       ],
       "parts": [
         {
-          "code": "\"^J\"",
-          "name": "Pattern",
-          "meaning": "The caret requires J to be at the beginning of the text."
+          "code": "Console.ReadLine()",
+          "name": "Ask for a name",
+          "meaning": "Waits for a line of text typed in the terminal and saves the reply in name."
         },
         {
-          "code": "Regex.IsMatch",
-          "name": "Check a name",
-          "meaning": "Returns true when the supplied name matches the pattern."
+          "code": "^J",
+          "name": "Check the first letter",
+          "meaning": "The caret anchors the pattern to the beginning. Only a J at the start can match."
         },
         {
-          "code": "RegexOptions.IgnoreCase",
-          "name": "Ignore case",
-          "meaning": "Accepts either uppercase J or lowercase j."
+          "code": "Regex.IsMatch(name, \"^J\", RegexOptions.IgnoreCase)",
+          "name": "Accept J or j",
+          "meaning": "Checks the entered name against the pattern without distinguishing uppercase from lowercase."
+        },
+        {
+          "code": "else",
+          "name": "Refuse other names",
+          "meaning": "Runs when the pattern does not match, including an empty name or a name with J later in the text."
         }
       ],
-      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first.",
+      "interactiveInput": "club-name"
     },
     {
       "title": "Get a filename from a path",
@@ -3105,12 +3103,12 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "14 · Expressions",
       "title": "Calculate a value",
-      "explanation": "A shopping total shows why expressions are useful. price stores the £25 cost of one item, and quantity stores how many you are buying. price * quantity multiplies 25 by 3 to produce 75. Save the result in total, then print Total: £75. The * symbol means multiplication.",
-      "note": "# Calculate the cost of three items at £25 each.",
-      "prompt": "Store price as 25 and quantity as 3, multiply them to calculate total, then print Total: £75.",
-      "answer": "price = 25\nquantity = 3\n\ntotal = price * quantity\n\nprint(f\"Total: £{total}\")",
+      "explanation": "Calculate a shopping total with delivery. price stores £25 per item, quantity stores 3 items, and delivery stores a £5 charge for the order. In price * quantity + delivery, multiplication happens first: 25 × 3 is 75. Then add 5 for delivery to get 80. Save the result in total and print Total: £80.",
+      "note": "# Calculate three items at £25 each, plus £5 delivery.",
+      "prompt": "Store price as 25, quantity as 3, and delivery as 5. Calculate price * quantity + delivery, then print Total: £80.",
+      "answer": "price = 25\nquantity = 3\ndelivery = 5\n\ntotal = price * quantity + delivery\n\nprint(f\"Total: £{total}\")",
       "output": [
-        "Total: £75"
+        "Total: £80"
       ],
       "parts": [
         {
@@ -3124,14 +3122,19 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Stores 3: you are buying three items."
         },
         {
-          "code": "price * quantity",
-          "name": "Calculate the total",
-          "meaning": "The multiplication expression uses both saved values. 25 multiplied by 3 is 75; changing either value changes the total."
+          "code": "delivery",
+          "name": "Delivery for the order",
+          "meaning": "Stores 5: add one £5 delivery charge after calculating the cost of the items."
+        },
+        {
+          "code": "price * quantity + delivery",
+          "name": "Multiply, then add",
+          "meaning": "The * operation happens before +. Multiply 25 by 3 to get 75, then add 5 to get 80. Writing (price * quantity) + delivery makes that same order explicit."
         },
         {
           "code": "total",
-          "name": "Save the result",
-          "meaning": "Stores the calculated cost so the print instruction can use it. The £ symbol is text in the output, not part of the calculation."
+          "name": "Save the final cost",
+          "meaning": "Stores the result so the print instruction can display Total: £80. The £ symbol is text, not part of the arithmetic."
         }
       ],
       "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
@@ -3269,35 +3272,37 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "19 · Regular expressions",
       "title": "Let names beginning with J enter",
-      "explanation": "re searches text with a pattern. ^ means the start, J is the required letter, and re.IGNORECASE accepts J or j. re.search returns a match object when found, which if treats as true.",
-      "note": "# Let people into the club when their name begins with J",
-      "prompt": "Check the five names and print who may enter the club.",
-      "answer": "import re\n\nnames = [\"Jordan\", \"James\", \"Jessica\", \"Sarah\", \"Ben\"]\n\nfor name in names:\n    if re.search(\"^J\", name, re.IGNORECASE):\n        print(name + \" can enter the club.\")\n    else:\n        print(name + \" cannot enter the club.\")",
+      "explanation": "Ask for a name, then check its first letter with the ^J regular expression. The case-insensitive option accepts J or j. A matching name prints You can enter the club!; any other name, including an empty reply, prints You cannot enter the club. The ^ anchor checks the beginning, so a J later in the name does not count.",
+      "note": "# Ask for a name and check whether it begins with J or j.",
+      "prompt": "Ask for a name, then allow entry if it starts with J or j; otherwise refuse entry.",
+      "answer": "import re\n\nname = input(\"Enter your name: \")\n\nif re.search(\"^J\", name, re.IGNORECASE):\n    print(\"You can enter the club!\")\nelse:\n    print(\"You cannot enter the club.\")",
       "output": [
-        "Jordan can enter the club.",
-        "James can enter the club.",
-        "Jessica can enter the club.",
-        "Sarah cannot enter the club.",
-        "Ben cannot enter the club."
+        "You can enter the club!"
       ],
       "parts": [
         {
-          "code": "for name in names:",
-          "name": "Visit each name",
-          "meaning": "Visits each name once. name holds the current item, and the indented body runs for that item."
+          "code": "input(\"Enter your name: \")",
+          "name": "Ask for a name",
+          "meaning": "Waits for a line of text typed in the terminal and saves the reply in name."
         },
         {
-          "code": "\"^J\"",
-          "name": "Starts with J",
-          "meaning": "The caret anchors the pattern at the start."
+          "code": "^J",
+          "name": "Check the first letter",
+          "meaning": "The caret anchors the pattern to the beginning. Only a J at the start can match."
         },
         {
-          "code": "re.IGNORECASE",
-          "name": "Ignore case",
-          "meaning": "Matches J or j."
+          "code": "re.search(\"^J\", name, re.IGNORECASE)",
+          "name": "Accept J or j",
+          "meaning": "Checks the entered name against the pattern without distinguishing uppercase from lowercase."
+        },
+        {
+          "code": "else",
+          "name": "Refuse other names",
+          "meaning": "Runs when the pattern does not match, including an empty name or a name with J later in the text."
         }
       ],
-      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal.",
+      "interactiveInput": "club-name"
     },
     {
       "title": "Get a filename from a path",
@@ -3937,12 +3942,12 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "14 · Expressions",
       "title": "Calculate a value",
-      "explanation": "A shopping total shows why expressions are useful. price stores the £25 cost of one item, and quantity stores how many you are buying. price * quantity multiplies 25 by 3 to produce 75. Save the result in total, then print Total: £75. The * symbol means multiplication.",
-      "note": "// Calculate the cost of three items at £25 each.",
-      "prompt": "Store price as 25 and quantity as 3, multiply them to calculate total, then print Total: £75.",
-      "answer": "#include <iostream>\n\nint main() {\n  int price = 25;\n  int quantity = 3;\n\n  int total = price * quantity;\n\n  std::cout << \"Total: £\" << total << \"\\n\";\n}",
+      "explanation": "Calculate a shopping total with delivery. price stores £25 per item, quantity stores 3 items, and delivery stores a £5 charge for the order. In price * quantity + delivery, multiplication happens first: 25 × 3 is 75. Then add 5 for delivery to get 80. Save the result in total and print Total: £80.",
+      "note": "// Calculate three items at £25 each, plus £5 delivery.",
+      "prompt": "Store price as 25, quantity as 3, and delivery as 5. Calculate price * quantity + delivery, then print Total: £80.",
+      "answer": "#include <iostream>\n\nint main() {\n  int price = 25;\n  int quantity = 3;\n  int delivery = 5;\n\n  int total = price * quantity + delivery;\n\n  std::cout << \"Total: £\" << total << \"\\n\";\n}",
       "output": [
-        "Total: £75"
+        "Total: £80"
       ],
       "parts": [
         {
@@ -3956,14 +3961,19 @@ const lessons: Record<Language, Lesson[]> = {
           "meaning": "Stores 3: you are buying three items."
         },
         {
-          "code": "price * quantity",
-          "name": "Calculate the total",
-          "meaning": "The multiplication expression uses both saved values. 25 multiplied by 3 is 75; changing either value changes the total."
+          "code": "delivery",
+          "name": "Delivery for the order",
+          "meaning": "Stores 5: add one £5 delivery charge after calculating the cost of the items."
+        },
+        {
+          "code": "price * quantity + delivery",
+          "name": "Multiply, then add",
+          "meaning": "The * operation happens before +. Multiply 25 by 3 to get 75, then add 5 to get 80. Writing (price * quantity) + delivery makes that same order explicit."
         },
         {
           "code": "total",
-          "name": "Save the result",
-          "meaning": "Stores the calculated cost so the print instruction can use it. The £ symbol is text in the output, not part of the calculation."
+          "name": "Save the final cost",
+          "meaning": "Stores the result so the print instruction can display Total: £80. The £ symbol is text, not part of the arithmetic."
         }
       ],
       "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
@@ -4136,30 +4146,37 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "19 · Regular expressions",
       "title": "Let names beginning with J enter",
-      "explanation": "std::regex holds the pattern. ^ requires J at the beginning; std::regex::icase ignores case. regex_search returns true for a matching name. This accepts any text starting with J or j, not only names.",
-      "note": "// Let people into the club when their name begins with J",
-      "prompt": "Check the five names and print who may enter the club.",
-      "answer": "#include <iostream>\n#include <string>\n#include <vector>\n#include <regex>\n\nint main() {\n  std::vector<std::string> names = {\"Jordan\", \"James\", \"Jessica\", \"Sarah\", \"Ben\"};\n  std::regex pattern(\"^J\", std::regex::icase);\n\n  for (const auto& name : names) {\n    if (std::regex_search(name, pattern)) {\n      std::cout << name << \" can enter the club.\\n\";\n    } else {\n      std::cout << name << \" cannot enter the club.\\n\";\n    }\n  }\n}",
+      "explanation": "Ask for a name, then check its first letter with the ^J regular expression. The case-insensitive option accepts J or j. A matching name prints You can enter the club!; any other name, including an empty reply, prints You cannot enter the club. The ^ anchor checks the beginning, so a J later in the name does not count.",
+      "note": "// Ask for a name and check whether it begins with J or j.",
+      "prompt": "Ask for a name, then allow entry if it starts with J or j; otherwise refuse entry.",
+      "answer": "#include <iostream>\n#include <string>\n#include <regex>\n\nint main() {\n  std::cout << \"Enter your name: \";\n  std::string name;\n  std::getline(std::cin, name);\n  std::regex pattern(\"^J\", std::regex::icase);\n\n  if (std::regex_search(name, pattern)) {\n    std::cout << \"You can enter the club!\\n\";\n  } else {\n    std::cout << \"You cannot enter the club.\\n\";\n  }\n}",
       "output": [
-        "Jordan can enter the club.",
-        "James can enter the club.",
-        "Jessica can enter the club.",
-        "Sarah cannot enter the club.",
-        "Ben cannot enter the club."
+        "You can enter the club!"
       ],
       "parts": [
         {
-          "code": "std::regex",
-          "name": "Pattern",
-          "meaning": "Stores the text pattern."
+          "code": "std::getline(std::cin, name)",
+          "name": "Ask for a name",
+          "meaning": "Waits for a line of text typed in the terminal and saves the reply in name."
         },
         {
-          "code": "std::regex::icase",
-          "name": "Ignore case",
-          "meaning": "Matches J or j."
+          "code": "^J",
+          "name": "Check the first letter",
+          "meaning": "The caret anchors the pattern to the beginning. Only a J at the start can match."
+        },
+        {
+          "code": "std::regex_search(name, pattern)",
+          "name": "Accept J or j",
+          "meaning": "Checks the entered name against the pattern without distinguishing uppercase from lowercase."
+        },
+        {
+          "code": "else",
+          "name": "Refuse other names",
+          "meaning": "Runs when the pattern does not match, including an empty name or a name with J later in the text."
         }
       ],
-      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed.",
+      "interactiveInput": "club-name"
     },
     {
       "title": "Get a filename from a path",
@@ -5080,7 +5097,7 @@ export default function Home() {
   }, [current, ghostSource, showGuide]);
 
   useEffect(() => {
-    if (status !== "correct" || !current || current.browserPreview) { setTypedOutput(""); return; }
+    if (status !== "correct" || !current || current.browserPreview || current.interactiveInput) { setTypedOutput(""); return; }
     const completeOutput = (previewOutput ?? current.output).join("\n");
     let position = 0;
     let typingTimer: ReturnType<typeof setTimeout> | undefined;
@@ -5437,7 +5454,7 @@ export default function Home() {
             <div className="console-body">
               {status === "idle" && <span className="console-muted">{language === "html" || language === "css" ? "Your page result preview will appear here..." : "Your program output will appear here..."}</span>}
               {status === "wrong" && <><SyntaxDiagnostic parts={diagnostic} /><div className="console-muted diagnostic-hint">Hover over or focus each underlined part to see what it means.</div></>}
-              {status === "correct" && <><div className="run-line"><span><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Code accepted — {language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div>{current?.browserPreview ? <BrowserResultPreview showTab={current.browserPreview === "document"} code={current.idLesson === "css" ? linkedIdHtml : practiceCode} css={current.idLesson === "css" ? practiceCode : undefined} /> : <div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div>}</>}
+              {status === "correct" && <><div className="run-line"><span><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Code accepted — {current?.interactiveInput ? "enter a name below" : language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div>{current?.interactiveInput === "club-name" ? <ClubTerminalInput key={`${language}-${index}`} /> : current?.browserPreview ? <BrowserResultPreview showTab={current.browserPreview === "document"} code={current.idLesson === "css" ? linkedIdHtml : practiceCode} css={current.idLesson === "css" ? practiceCode : undefined} /> : <div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div>}</>}
             </div>
           </div>
           <div className={`feedback ${status}`}>
