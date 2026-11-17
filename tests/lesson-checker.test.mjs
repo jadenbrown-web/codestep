@@ -140,3 +140,13 @@ test('case tolerance still rejects missing punctuation, changed text and Python 
   const python = courses.python.find(item => item.title === 'Make something happen');
   assert.equal(check('python', python.title, python.answer.toUpperCase().replace('    PRINT', 'PRINT')).accepted, false);
 });
+
+for (const language of ['javascript', 'python', 'csharp', 'cpp']) {
+  test(`${language}: the main menu has the same four lines and requires its choices`, () => {
+    const lesson = courses[language].find(item => item.title === 'Print several lines at once');
+    assert.deepEqual(lesson.output, ['=== MAIN MENU ===', '1. Start Game', '2. Settings', '3. Exit']);
+    assert.equal(check(language, lesson.title, lesson.answer).accepted, true);
+    assert.equal(check(language, lesson.title, lesson.answer.replace('2. Settings', '2. Options')).accepted, false);
+    assert.equal(check(language, lesson.title, lesson.answer.replace('\\n3. Exit', ' 3. Exit')).accepted, false);
+  });
+}

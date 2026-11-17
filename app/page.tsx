@@ -52,14 +52,15 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "01 · Console output",
       "title": "Print several lines at once",
-      "explanation": "console.log displays text in the console. Write \\n inside a quoted string to start a new line. The first \\n puts Welcome on the next line, and the second puts Goodbye on another line.",
-      "note": "// Print Hello, Welcome, and Goodbye on separate lines.",
-      "prompt": "Print Hello, Welcome, and Goodbye on separate lines.",
-      "answer": "console.log(\" Hello \\n Welcome \\n Goodbye\");",
+      "explanation": "console.log displays text in the console. Write \\n inside one quoted string to start a new line. Here, three \\n escapes put the menu title and its three choices on four separate lines.",
+      "note": "// Print a main menu with each choice on its own line.",
+      "prompt": "Print === MAIN MENU ===, 1. Start Game, 2. Settings, and 3. Exit on four separate lines.",
+      "answer": "console.log(\"=== MAIN MENU ===\\n1. Start Game\\n2. Settings\\n3. Exit\");",
       "output": [
-        " Hello ",
-        " Welcome ",
-        " Goodbye"
+        "=== MAIN MENU ===",
+        "1. Start Game",
+        "2. Settings",
+        "3. Exit"
       ],
       "parts": [
         {
@@ -945,14 +946,15 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "01 · Console output",
       "title": "Print several lines at once",
-      "explanation": "Console.WriteLine displays text in the console. Write \\n inside a quoted string to start a new line. The first \\n puts Welcome on the next line, and the second puts Goodbye on another line.",
-      "note": "// Print Hello, Welcome, and Goodbye on separate lines.",
-      "prompt": "Print Hello, Welcome, and Goodbye on separate lines.",
-      "answer": "Console.WriteLine(\" Hello \\n Welcome \\n Goodbye\");",
+      "explanation": "Console.WriteLine displays text in the console. Write \\n inside one quoted string to start a new line. Here, three \\n escapes put the menu title and its three choices on four separate lines.",
+      "note": "// Print a main menu with each choice on its own line.",
+      "prompt": "Print === MAIN MENU ===, 1. Start Game, 2. Settings, and 3. Exit on four separate lines.",
+      "answer": "Console.WriteLine(\"=== MAIN MENU ===\\n1. Start Game\\n2. Settings\\n3. Exit\");",
       "output": [
-        " Hello ",
-        " Welcome ",
-        " Goodbye"
+        "=== MAIN MENU ===",
+        "1. Start Game",
+        "2. Settings",
+        "3. Exit"
       ],
       "parts": [
         {
@@ -2661,14 +2663,15 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "01 · Console output",
       "title": "Print several lines at once",
-      "explanation": "print displays text in the console. Write \\n inside a quoted string to start a new line. The first \\n puts Welcome on the next line, and the second puts Goodbye on another line.",
-      "note": "# Print Hello, Welcome, and Goodbye on separate lines.",
-      "prompt": "Print Hello, Welcome, and Goodbye on separate lines.",
-      "answer": "print(\" Hello \\n Welcome \\n Goodbye\")",
+      "explanation": "print displays text in the console. Write \\n inside one quoted string to start a new line. Here, three \\n escapes put the menu title and its three choices on four separate lines.",
+      "note": "# Print a main menu with each choice on its own line.",
+      "prompt": "Print === MAIN MENU ===, 1. Start Game, 2. Settings, and 3. Exit on four separate lines.",
+      "answer": "print(\"=== MAIN MENU ===\\n1. Start Game\\n2. Settings\\n3. Exit\")",
       "output": [
-        " Hello ",
-        " Welcome ",
-        " Goodbye"
+        "=== MAIN MENU ===",
+        "1. Start Game",
+        "2. Settings",
+        "3. Exit"
       ],
       "parts": [
         {
@@ -3455,14 +3458,15 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "01 · Console output",
       "title": "Print several lines at once",
-      "explanation": "std::cout displays text in the console. Write \\n inside a quoted string to start a new line. The first \\n puts Welcome on the next line, and the second puts Goodbye on another line. << sends the text to std::cout. main is where the program begins; #include <iostream> makes console output available.",
-      "note": "// Print Hello, Welcome, and Goodbye on separate lines.",
-      "prompt": "Print Hello, Welcome, and Goodbye on separate lines.",
-      "answer": "#include <iostream>\n\nint main() {\n  std::cout << \" Hello \\n Welcome \\n Goodbye\\n\";\n}",
+      "explanation": "std::cout displays text in the console. Write \\n inside one quoted string to start a new line. Here, three \\n escapes put the menu title and its three choices on four separate lines. << sends the text to std::cout. main is where the program begins; #include <iostream> makes console output available.",
+      "note": "// Print a main menu with each choice on its own line.",
+      "prompt": "Print === MAIN MENU ===, 1. Start Game, 2. Settings, and 3. Exit on four separate lines.",
+      "answer": "#include <iostream>\n\nint main() {\n  std::cout << \"=== MAIN MENU ===\\n1. Start Game\\n2. Settings\\n3. Exit\\n\";\n}",
       "output": [
-        " Hello ",
-        " Welcome ",
-        " Goodbye"
+        "=== MAIN MENU ===",
+        "1. Start Game",
+        "2. Settings",
+        "3. Exit"
       ],
       "parts": [
         {
