@@ -59,3 +59,8 @@ test('restoring desktop pins preserves all five while phone views can show two',
   assert.deepEqual(restored.python.slice(0, 2), ['A', 'B']);
   assert.equal(restored.python.length, 5);
 });
+
+test('old variable lesson pins follow the renamed bank balance lesson',()=>{
+ const courses={javascript:[{title:'Store and update values',eyebrow:'10 · Variables'}],python:[{title:'Store and update values',eyebrow:'09 · Variables'}]};
+ assert.deepEqual(restoreLessonPins(JSON.stringify({javascript:['Choose let or const'],python:['Use changeable and fixed values']}),courses),{javascript:['Store and update values'],python:['Store and update values']});
+});

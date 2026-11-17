@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboa
 import CodeBlocks from "./CodeBlocks";
 import BrowserResultPreview from "./BrowserResultPreview";
 import ClubTerminalInput from "./ClubTerminalInput";
+import BankTerminalInput from "./BankTerminalInput";
 import {applyClockTarget,nextClockTarget,type ClockTarget} from "./clock-lessons";
 import InputRuntimeExamples from "./InputRuntimeExamples";
 import RunCommands from "./RunCommands";
@@ -45,7 +46,7 @@ type Lesson = {
   compareNode?: boolean;
   referenceOnly?: boolean;
   browserPreview?: boolean | "headings" | "document";
-  interactiveInput?: "club-name";
+  interactiveInput?: "club-name" | "bank-deposit";
   clockExample?: boolean;
   clockTarget?: ClockTarget;
   idLesson?: "html" | "css";
@@ -387,38 +388,45 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "10 · Variables",
-      "title": "Choose let or const",
-      "explanation": "A variable stores a value under a name. let allows you to assign a different value to that name later. const prevents assigning a different value to the same name. Both can store the answer returned by prompt(). These are separate examples: run one at a time, because you cannot declare name twice in the same scope.",
-      "note": "// let: this variable can be reassigned.\n// const: this variable cannot be reassigned.",
-      "prompt": "Use let to ask for a name, then print hello followed by the name.",
-      "answer": "let name = prompt (\"Enter your name: \");\nconsole.log(`hello ${name}`);\n// this variable is changeable",
+      "title": "Store and update values",
+      "explanation": "A variable stores a value you can use and change. balance starts at 100. Ask for a whole-number deposit, then balance = balance + deposit reads the old balance, adds the deposit, and saves the new value under the same name. A deposit of £50 changes the balance from £100 to £150.",
+      "note": "// Store a starting balance, read a deposit, then update the same variable.",
+      "prompt": "Start balance at 100, print it, ask for a whole-number deposit, add it to balance, then print the new balance.",
+      "answer": "import { createInterface } from \"node:readline/promises\";\n\nconst input = createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\nlet balance = 100;\n\nconsole.log(`Starting balance: £${balance}`);\n\nconst deposit = Number(await input.question(\"How much would you like to deposit? £\"));\ninput.close();\n\nbalance = balance + deposit;\n\nconsole.log(`New balance: £${balance}`);",
       "output": [
-        "hello Alex"
+        "Starting balance: £100",
+        "New balance: £150"
       ],
       "parts": [
         {
+          "code": "balance",
+          "name": "Store the balance",
+          "meaning": "Starts with 100. A variable gives a stored value a name so the program can read it and change it later."
+        },
+        {
+          "code": "Number(await input.question(...))",
+          "name": "Read a deposit",
+          "meaning": "Asks for an amount and reads the reply as a whole number of pounds. Try 50 to add £50 to the starting balance."
+        },
+        {
+          "code": "balance = balance + deposit",
+          "name": "Update the same variable",
+          "meaning": "First read the old balance on the right, add the deposit, then save the result back into balance on the left. This updates the existing variable."
+        },
+        {
           "code": "let",
-          "name": "Changeable",
-          "meaning": "Creates a variable that can receive a different value later: name = \"Sam\"; is allowed."
+          "name": "Allow reassignment",
+          "meaning": "Use let for balance because its saved value changes after the deposit."
         },
         {
           "code": "const",
-          "name": "Cannot be reassigned",
-          "meaning": "Creates a variable that cannot receive a different value later. After declaring it with const, name = \"Sam\"; causes an error."
-        },
-        {
-          "code": "=",
-          "name": "Assign a value",
-          "meaning": "Stores the value on the right in the variable on the left. Declare a variable once; use its name without let to change it."
-        },
-        {
-          "code": "${name}",
-          "name": "Use the saved name",
-          "meaning": "Inserts the value of name into the text between backticks."
+          "name": "Keep a binding fixed",
+          "meaning": "The deposit and input bindings are declared once and are not reassigned during this run."
         }
       ],
-      "outputNote": "Example output when the user enters Alex in the prompt dialog.",
-      "runHint": "Run this example in a browser developer console or inside an HTML script. prompt() opens a browser dialog; it is not available in the Node terminal. CodeStep checks the code and shows a sample result."
+      "runHint": "Save the complete example as bank.mjs and run node bank.mjs with Node.js 18 or newer. Enter a whole-number deposit, such as 50. let allows balance to change; const keeps the input interface and deposit bindings fixed.",
+      "interactiveInput": "bank-deposit",
+      "fileName": "bank.mjs"
     },
     {
       "eyebrow": "11 · Terminal input",
@@ -1245,32 +1253,34 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "09 · Variables",
-      "title": "Use changeable and fixed values",
-      "explanation": "speed starts at 80 and can be reassigned. speed = 100 replaces its earlier value. const keeps maxSpeed fixed at 100, so assigning a different value to maxSpeed is not allowed. The last instruction prints the updated speed.",
-      "note": "// Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
-      "prompt": "Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
-      "answer": "int speed = 80;\nconst int maxSpeed = 100;\n\nspeed = 100;\nConsole.WriteLine($\"Speed: {speed}\");",
+      "title": "Store and update values",
+      "explanation": "A variable stores a value you can use and change. balance starts at 100. Ask for a whole-number deposit, then balance = balance + deposit reads the old balance, adds the deposit, and saves the new value under the same name. A deposit of £50 changes the balance from £100 to £150.",
+      "note": "// Store a starting balance, read a deposit, then update the same variable.",
+      "prompt": "Start balance at 100, print it, ask for a whole-number deposit, add it to balance, then print the new balance.",
+      "answer": "int balance = 100;\n\nConsole.WriteLine($\"Starting balance: £{balance}\");\n\nConsole.Write(\"How much would you like to deposit? £\");\nint deposit = int.Parse(Console.ReadLine() ?? \"0\");\n\nbalance = balance + deposit;\n\nConsole.WriteLine($\"New balance: £{balance}\");",
       "output": [
-        "Speed: 100"
+        "Starting balance: £100",
+        "New balance: £150"
       ],
       "parts": [
         {
-          "code": "int speed = 80;",
-          "name": "Changeable value",
-          "meaning": "Creates speed with the starting value 80. It can receive a different value later."
+          "code": "balance",
+          "name": "Store the balance",
+          "meaning": "Starts with 100. A variable gives a stored value a name so the program can read it and change it later."
         },
         {
-          "code": "const int maxSpeed = 100;",
-          "name": "Fixed value",
-          "meaning": "Creates maxSpeed as a constant. It cannot be reassigned."
+          "code": "int.Parse(Console.ReadLine() ?? \"0\")",
+          "name": "Read a deposit",
+          "meaning": "Asks for an amount and reads the reply as a whole number of pounds. Try 50 to add £50 to the starting balance."
         },
         {
-          "code": "speed = 100;",
-          "name": "Reassign",
-          "meaning": "Replaces the earlier value 80 with 100; it does not create a second speed variable."
+          "code": "balance = balance + deposit",
+          "name": "Update the same variable",
+          "meaning": "First read the old balance on the right, add the deposit, then save the result back into balance on the left. This updates the existing variable."
         }
       ],
-      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
+      "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first.",
+      "interactiveInput": "bank-deposit"
     },
     {
       "eyebrow": "10 · Terminal input",
@@ -2937,27 +2947,34 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "09 · Variables",
-      "title": "Use changeable and fixed values",
-      "explanation": "Assignment creates a name such as speed and can change its value later. Python has no let or const keyword. MAX_SPEED uses capital letters to signal a constant by convention, but Python still allows reassignment. The f-string inserts speed in the text.",
-      "note": "# Create speed and MAX_SPEED, change speed to 100, then print Speed: 100.",
-      "prompt": "Create speed and MAX_SPEED, change speed to 100, then print Speed: 100.",
-      "answer": "speed = 80\nMAX_SPEED = 100\n\nspeed = 100\nprint(f\"Speed: {speed}\")",
+      "title": "Store and update values",
+      "explanation": "A variable stores a value you can use and change. balance starts at 100. Ask for a whole-number deposit, then balance = balance + deposit reads the old balance, adds the deposit, and saves the new value under the same name. A deposit of £50 changes the balance from £100 to £150.",
+      "note": "# Store a starting balance, read a deposit, then update the same variable.",
+      "prompt": "Start balance at 100, print it, ask for a whole-number deposit, add it to balance, then print the new balance.",
+      "answer": "balance = 100\n\nprint(f\"Starting balance: £{balance}\")\n\ndeposit = int(input(\"How much would you like to deposit? £\"))\n\nbalance = balance + deposit\n\nprint(f\"New balance: £{balance}\")",
       "output": [
-        "Speed: 100"
+        "Starting balance: £100",
+        "New balance: £150"
       ],
       "parts": [
         {
-          "code": "speed = 100",
-          "name": "Assignment",
-          "meaning": "Creates or changes a variable."
+          "code": "balance",
+          "name": "Store the balance",
+          "meaning": "Starts with 100. A variable gives a stored value a name so the program can read it and change it later."
         },
         {
-          "code": "MAX_SPEED",
-          "name": "Constant convention",
-          "meaning": "Capital letters suggest a fixed value but do not enforce it."
+          "code": "int(input(...))",
+          "name": "Read a deposit",
+          "meaning": "Asks for an amount and reads the reply as a whole number of pounds. Try 50 to add £50 to the starting balance."
+        },
+        {
+          "code": "balance = balance + deposit",
+          "name": "Update the same variable",
+          "meaning": "First read the old balance on the right, add the deposit, then save the result back into balance on the left. This updates the existing variable."
         }
       ],
-      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
+      "runHint": "Save as main.py and run python3 main.py in the VS Code terminal.",
+      "interactiveInput": "bank-deposit"
     },
     {
       "eyebrow": "10 · Terminal input",
@@ -3778,32 +3795,34 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "09 · Variables",
-      "title": "Use changeable and fixed values",
-      "explanation": "speed starts at 80 and can be reassigned. speed = 100 replaces its earlier value. const keeps maxSpeed fixed at 100, so assigning a different value to maxSpeed is not allowed. The last instruction prints the updated speed.",
-      "note": "// Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
-      "prompt": "Create speed and maxSpeed, change speed to 100, then print Speed: 100.",
-      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n  int speed = 80;\n  const int maxSpeed = 100;\n\n  speed = 100;\n  std::cout << \"Speed: \" << speed << \"\\n\";\n}",
+      "title": "Store and update values",
+      "explanation": "A variable stores a value you can use and change. balance starts at 100. Ask for a whole-number deposit, then balance = balance + deposit reads the old balance, adds the deposit, and saves the new value under the same name. A deposit of £50 changes the balance from £100 to £150.",
+      "note": "// Store a starting balance, read a deposit, then update the same variable.",
+      "prompt": "Start balance at 100, print it, ask for a whole-number deposit, add it to balance, then print the new balance.",
+      "answer": "#include <iostream>\n\nint main() {\n  int balance = 100;\n\n  std::cout << \"Starting balance: £\" << balance << \"\\n\";\n\n  std::cout << \"How much would you like to deposit? £\";\n  int deposit = 0;\n  std::cin >> deposit;\n\n  balance = balance + deposit;\n\n  std::cout << \"New balance: £\" << balance << \"\\n\";\n}",
       "output": [
-        "Speed: 100"
+        "Starting balance: £100",
+        "New balance: £150"
       ],
       "parts": [
         {
-          "code": "int speed = 80;",
-          "name": "Changeable value",
-          "meaning": "Creates speed with the starting value 80. It can receive a different value later."
+          "code": "balance",
+          "name": "Store the balance",
+          "meaning": "Starts with 100. A variable gives a stored value a name so the program can read it and change it later."
         },
         {
-          "code": "const int maxSpeed = 100;",
-          "name": "Fixed value",
-          "meaning": "Creates maxSpeed as a constant. It cannot be reassigned."
+          "code": "std::cin >> deposit",
+          "name": "Read a deposit",
+          "meaning": "Asks for an amount and reads the reply as a whole number of pounds. Try 50 to add £50 to the starting balance."
         },
         {
-          "code": "speed = 100;",
-          "name": "Reassign",
-          "meaning": "Replaces the earlier value 80 with 100; it does not create a second speed variable."
+          "code": "balance = balance + deposit",
+          "name": "Update the same variable",
+          "meaning": "First read the old balance on the right, add the deposit, then save the result back into balance on the left. This updates the existing variable."
         }
       ],
-      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
+      "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed.",
+      "interactiveInput": "bank-deposit"
     },
     {
       "eyebrow": "10 · Terminal input",
@@ -5484,7 +5503,7 @@ export default function Home() {
             <div className="console-body">
               {status === "idle" && <span className="console-muted">{language === "html" || language === "css" ? "Your page result preview will appear here..." : "Your program output will appear here..."}</span>}
               {status === "wrong" && <><SyntaxDiagnostic parts={diagnostic} /><div className="console-muted diagnostic-hint">Hover over or focus each underlined part to see what it means.</div></>}
-              {status === "correct" && <><div className="run-line"><span><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Code accepted — {current?.interactiveInput ? "enter a name below" : language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div>{current?.interactiveInput === "club-name" ? <ClubTerminalInput key={`${language}-${index}`} /> : current?.browserPreview ? <BrowserResultPreview showTab={current.browserPreview === "document"} code={current.idLesson === "css" ? linkedIdHtml : practiceCode} css={current.idLesson === "css" ? practiceCode : undefined} /> : <div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div>}</>}
+              {status === "correct" && <><div className="run-line"><span><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Code accepted — {current?.interactiveInput === "bank-deposit" ? "enter a deposit below" : current?.interactiveInput ? "enter a name below" : language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div>{current?.interactiveInput === "bank-deposit" ? <BankTerminalInput key={`${language}-${index}`} /> : current?.interactiveInput === "club-name" ? <ClubTerminalInput key={`${language}-${index}`} /> : current?.browserPreview ? <BrowserResultPreview showTab={current.browserPreview === "document"} code={current.idLesson === "css" ? linkedIdHtml : practiceCode} css={current.idLesson === "css" ? practiceCode : undefined} /> : <div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div>}</>}
             </div>
           </div>
           <div className={`feedback ${status}`}>

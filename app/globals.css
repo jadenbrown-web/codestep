@@ -1980,3 +1980,5 @@ html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:h
 .club-terminal-form button{min-height:44px;padding:8px 10px;border:0;border-radius:6px;background:var(--green);color:#fff;font:650 12px var(--sans);cursor:pointer;touch-action:manipulation}
 .club-terminal-result{margin:8px 0 0;color:var(--ui-text);line-height:1.5}
 .workspace:not(.editor-expanded)>.console-panel:has(.club-terminal){flex:0 0 226px;min-height:226px;max-height:260px}
+.bank-starting-balance{margin:8px 0 0;color:var(--ui-text)}
+.workspace:not(.editor-expanded)>.console-panel:has(.bank-terminal){flex:0 0 280px;min-height:280px;max-height:310px}

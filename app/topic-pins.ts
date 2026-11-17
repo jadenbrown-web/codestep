@@ -42,7 +42,8 @@ export function restoreLessonPins(raw: string | null, courses: Record<string, { 
       if (!Array.isArray(saved[language])) continue;
       const resolved = saved[language].flatMap((value: unknown) => {
         if (typeof value !== "string") return [];
-        const lesson = course.find(item => item.title === value) ?? course.find(item => lessonTopic(item) === value);
+        const renamed = ["Choose let or const", "Use changeable and fixed values"].includes(value) ? "Store and update values" : value;
+        const lesson = course.find(item => item.title === renamed) ?? course.find(item => lessonTopic(item) === value);
         return lesson ? [lesson.title] : [];
       });
       restored[language] = [...new Set(resolved as string[])].slice(0, limit);

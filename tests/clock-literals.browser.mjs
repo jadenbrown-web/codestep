@@ -27,8 +27,7 @@ try{
   for(const lesson of lessons[language].filter(item=>item.clockExample)){
    await page.clock.setFixedTime(new Date('2026-11-17T18:28:20Z'));
    await choose(lesson);
-   await page.waitForFunction(()=>/minute ===? 29/.test(document.querySelector('.code-guide code')?.textContent??''));
-   const guide=await page.locator('.code-guide code').textContent();
+   const guide=await (await page.waitForFunction(()=>{const text=document.querySelector('.code-guide code')?.textContent??'';return /hour ===? 18/.test(text)&&/minute ===? 29/.test(text)?text:false;})).jsonValue();
    assert.match(guide,/hour ===? 18/);assert.match(guide,/minute ===? 29/);
    assert.doesNotMatch(guide,/timedelta|AddMinutes|Date.now|sleep\(60\)/);
    await page.evaluate(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async value=>window.copied=value}}));
@@ -39,7 +38,7 @@ try{
    await editor.fill(copied.slice(0,20));
    await page.clock.setFixedTime(new Date('2026-11-17T19:59:40Z'));
    assert.equal(await editor.inputValue(),copied.slice(0,20),'A changing clock never overwrites the draft');
-   assert.match(await page.locator('.code-guide code').textContent(),/minute ===? 29/);
+   await page.waitForFunction(()=>/minute ===? 29/.test(document.querySelector('.code-guide code')?.textContent??''));
    await editor.fill(copied);
    await page.getByRole('button',{name:'Check code',exact:true}).click();await page.locator('.feedback.correct').waitFor();
    await page.getByRole('button',{name:'Compare with another language',exact:true}).click();
@@ -51,8 +50,7 @@ try{
   await choose(lessons[language][0]);
   await page.clock.setFixedTime(new Date('2026-11-17T23:59:40Z'));
   await choose(lessons[language].find(item=>item.clockExample));
-  await page.waitForFunction(()=>/minute ===? 0/.test(document.querySelector('.code-guide code')?.textContent??''));
-  const midnight=await page.locator('.code-guide code').textContent();assert.match(midnight,/hour ===? 0/);assert.match(midnight,/minute ===? 0/);
+  const midnight=await (await page.waitForFunction(()=>{const text=document.querySelector('.code-guide code')?.textContent??'';return /hour ===? 0/.test(text)&&/minute ===? 0/.test(text)?text:false;})).jsonValue();assert.match(midnight,/hour ===? 0/);assert.match(midnight,/minute ===? 0/);
   assert.deepEqual(errors,[]);console.log(`PASS ${width} ${language}: next-minute hour/minute literals, stable drafts, exact copies, shared comparison and midnight rollover`);
   await page.close();
  }

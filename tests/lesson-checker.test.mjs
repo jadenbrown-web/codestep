@@ -174,3 +174,15 @@ for(const language of ['javascript','python','csharp','cpp']) {
   assert.equal(check(language,lesson.title,lesson.answer.replace('^J','^K')).accepted,false);
  });
 }
+
+for(const language of ['javascript','python','csharp','cpp'])test(`${language}: bank balance must add the entered deposit`,()=>{
+ const lesson=courses[language].find(item=>item.title==='Store and update values');
+ assert.equal(lesson.interactiveInput,'bank-deposit');
+ assert.equal(check(language,lesson.title,lesson.answer).accepted,true);
+ assert.equal(check(language,lesson.title,lesson.answer.replace('balance + deposit','balance - deposit')).accepted,false);
+});
+
+test('the bank balance must remain reassignable in JavaScript',()=>{
+ const lesson=courses.javascript.find(item=>item.title==='Store and update values');
+ assert.equal(check('javascript',lesson.title,lesson.answer.replace('let balance','const balance')).accepted,false);
+});

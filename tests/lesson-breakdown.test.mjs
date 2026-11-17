@@ -107,7 +107,7 @@ test('HTML page text does not get mistaken for embedded JavaScript keywords', ()
 });
 test('JavaScript variable examples use the shared breakdown rather than duplicate panels', () => {
   assert.doesNotMatch(source,/className="variable-examples"/);
-  const lesson = lessons.javascript.find(lesson=>lesson.title==='Choose let or const');
+  const lesson = lessons.javascript.find(lesson=>lesson.title==='Store and update values');
   const parts = syntaxBreakdown(lesson,'javascript');
   for(const keyword of ['let','const']) assert.equal(parts.filter(part=>part.code===keyword).length,1);
 });

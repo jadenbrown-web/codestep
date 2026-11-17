@@ -258,7 +258,7 @@ function canonical(root: Node, language: CourseLanguage, lesson: Exercise): Form
     }
 
     if (ignored.has(node.type)) return [];
-    if (language === 'javascript' && ['let', 'const'].includes(node.text) && lesson.title !== 'Use changeable and fixed values') return 'binding-kind';
+    if (language === 'javascript' && ['let', 'const'].includes(node.text) && lesson.title !== 'Store and update values') return 'binding-kind';
     if (language === 'csharp' && ['implicit_type', 'predefined_type'].includes(node.type) && node.parent?.type === 'variable_declaration') {
       const value = node.parent.descendantsOfType('equals_value_clause')[0]?.namedChildren[0];
       if (value && (strings.has(value.type) || numbers.has(value.type))) {
@@ -304,7 +304,7 @@ function canonical(root: Node, language: CourseLanguage, lesson: Exercise): Form
         children.splice(start, sorted.length, ...sorted); start = end - 1;
       }
     }
-    let forms = children.map(child => child.isNamed() ? convert(child) : language === 'javascript' && ['let', 'const'].includes(child.text) && lesson.title !== 'Use changeable and fixed values' ? 'binding-kind' : child.text);
+    let forms = children.map(child => child.isNamed() ? convert(child) : language === 'javascript' && ['let', 'const'].includes(child.text) && lesson.title !== 'Store and update values' ? 'binding-kind' : child.text);
     if (language === 'html' && ['start_tag', 'self_closing_tag'].includes(node.type)) {
       const attributes = children.filter(child => child.type === 'attribute').map(convert).sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
       forms = ['<', ...children.filter(child => child.type === 'tag_name').map(convert), ...attributes, '>'];
