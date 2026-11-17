@@ -204,3 +204,14 @@ for(const language of ['javascript','python','csharp','cpp']) for(const example 
  const incorrect=lesson.answer.replace(condition,language==='python'?'False':'false');
  assert.equal(compareLesson(parsers[language],incorrect,lesson,language).accepted,false);
 });
+
+for (const language of ['python','javascript','csharp','cpp']) {
+  test(`${language}: simplified sets lesson requires duplicate removal and a displayed result`,()=>{
+    const lesson=courses[language].find(item=>item.title==='Remove duplicate names');
+    assert.equal(compareLesson(parsers[language],lesson.answer,lesson,language).accepted,true);
+    const withoutSet=lesson.answer.replace({python:'set(names)',javascript:'new Set(names)',csharp:'new HashSet<string>(names)',cpp:'std::set<std::string>'}[language],{python:'list(names)',javascript:'names',csharp:'new List<string>(names)',cpp:'std::multiset<std::string>'}[language]);
+    assert.equal(compareLesson(parsers[language],withoutSet,lesson,language).accepted,false);
+    const noResult=lesson.answer.replace({python:'print(uniqueNames)',javascript:'console.log(uniqueNames);',csharp:'Console.WriteLine(name);',cpp:'std::cout << name << "\\n";'}[language],'');
+    assert.equal(compareLesson(parsers[language],noResult,lesson,language).accepted,false);
+  });
+}

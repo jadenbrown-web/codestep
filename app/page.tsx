@@ -722,29 +722,36 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "18 · Sets",
       "title": "Remove duplicate names",
-      "explanation": "A Set stores only unique values. Passing names into new Set(names) removes repeated names, and [...uniqueNames] spreads the remaining values back into an array for printing.",
-      "note": "// Ask for three names, then remove any duplicates",
-      "prompt": "Collect three names, create a Set, and print its unique values.",
-      "answer": "const names = [];\n\nnames.push(prompt(\"Enter the first name:\"));\nnames.push(prompt(\"Enter the second name:\"));\nnames.push(prompt(\"Enter the third name:\"));\n\nconst uniqueNames = new Set(names);\n\nconsole.log(`[${[...uniqueNames].join(\", \")}]`);",
+      "explanation": "Ask for three names and keep just one copy of each exact name. Try Alex, Sam, Alex: Alex appears once. Capitalisation matters: Alex and alex are different names. An array can contain duplicates; new Set(names) creates a Set containing only its unique values. console.log(uniqueNames) displays the Set directly. JavaScript Sets keep insertion order.",
+      "note": "// Ask for three names, then remove duplicates.",
+      "prompt": "Ask for three names, remove duplicate names with a set, and display the unique names.",
+      "answer": "const names = [];\n\nnames.push(prompt(\"Enter first name: \"));\nnames.push(prompt(\"Enter second name: \"));\nnames.push(prompt(\"Enter third name: \"));\n\nconst uniqueNames = new Set(names);\n\nconsole.log(uniqueNames);",
       "output": [
-        "[Alex, Sam]"
+        "Set(2) {'Alex', 'Sam'}"
       ],
       "parts": [
         {
-          "code": "new Set(names)",
-          "name": "Remove duplicates",
-          "meaning": "Creates a Set from names. A Set keeps only one copy of each value."
+          "code": "const names = []",
+          "name": "Start an array",
+          "meaning": "Creates an empty array, which can hold repeated names."
         },
         {
-          "code": "[...uniqueNames]",
-          "name": "Spread into an array",
-          "meaning": "The three dots copy every Set value into a new array for familiar array-style output."
+          "code": "names.push(prompt(\"Enter first name: \"))",
+          "name": "Read and add a name",
+          "meaning": "prompt asks for text in the browser; push adds it to the array. Enter a name in each of the three dialogs."
+        },
+        {
+          "code": "new Set(names)",
+          "name": "Keep unique names",
+          "meaning": "Creates a Set from the array and keeps each exact name once. JavaScript keeps the order in which distinct names were first added."
+        },
+        {
+          "code": "console.log(uniqueNames)",
+          "name": "Display the Set",
+          "meaning": "Shows the Set directly in the developer console. The exact console formatting varies by browser."
         }
       ],
-      "outputAnnotations": [
-        "Alex appears once"
-      ],
-      "outputNote": "Example input: Alex, Sam, Alex. The repeated name is kept once. The labels are annotations, not printed text.",
+      "outputNote": "Example input: Alex, Sam, Alex. The Set contains two names. Your browser may format its console display differently.",
       "runHint": "Run this example in a browser developer console or inside an HTML script. prompt() opens a browser dialog; it is not available in the Node terminal. CodeStep checks the code and shows a sample result."
     },
     {
@@ -1579,36 +1586,38 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "17 · Sets",
       "title": "Remove duplicate names",
-      "explanation": "A HashSet stores only unique values. Passing names into new HashSet<string>(names) removes repeated names, and string.Join makes the remaining values readable for printing.",
-      "note": "// Ask for three names, then remove any duplicates",
-      "prompt": "Collect three names, create a Set, and print its unique values.",
-      "answer": "List<string> names = new List<string>();\n\nConsole.WriteLine(\"Enter the first name:\");\nnames.Add(Console.ReadLine());\nConsole.WriteLine(\"Enter the second name:\");\nnames.Add(Console.ReadLine());\nConsole.WriteLine(\"Enter the third name:\");\nnames.Add(Console.ReadLine());\n\nHashSet<string> uniqueNames = new HashSet<string>(names);\n\nConsole.WriteLine($\"[{string.Join(\", \", uniqueNames)}]\");",
+      "explanation": "Ask for three names and keep just one copy of each exact name. Try Alex, Sam, Alex: Alex appears once. Capitalisation matters: Alex and alex are different names. A List can contain duplicates; new HashSet<string>(names) creates a set containing only its unique values. foreach prints each unique name on its own line. HashSet does not guarantee a display order.",
+      "note": "// Ask for three names, then remove duplicates.",
+      "prompt": "Ask for three names, remove duplicate names with a set, and display the unique names.",
+      "answer": "List<string> names = new List<string>();\n\nConsole.Write(\"Enter first name: \");\nnames.Add(Console.ReadLine());\nConsole.Write(\"Enter second name: \");\nnames.Add(Console.ReadLine());\nConsole.Write(\"Enter third name: \");\nnames.Add(Console.ReadLine());\n\nHashSet<string> uniqueNames = new HashSet<string>(names);\n\nforeach (string name in uniqueNames) {\n    Console.WriteLine(name);\n}",
       "output": [
-        "Enter the first name:",
-        "Enter the second name:",
-        "Enter the third name:",
-        "[Alex, Sam]"
+        "Alex",
+        "Sam"
       ],
       "parts": [
         {
-          "code": "HashSet<string>",
-          "name": "Unique text collection",
-          "meaning": "Defines a collection that stores no duplicate text values."
+          "code": "List<string> names = new List<string>()",
+          "name": "Start a list",
+          "meaning": "Creates a list for text values. Lists can hold repeated names."
+        },
+        {
+          "code": "names.Add(Console.ReadLine())",
+          "name": "Read and add a name",
+          "meaning": "Console.Write displays the question, Console.ReadLine reads the entered name, and Add saves it in the list."
         },
         {
           "code": "new HashSet<string>(names)",
-          "name": "Remove duplicates",
-          "meaning": "Creates the HashSet from names and keeps only one copy of each value."
+          "name": "Keep unique names",
+          "meaning": "Creates a set from the list and keeps each exact name once. HashSet does not guarantee a display order."
+        },
+        {
+          "code": "foreach (string name in uniqueNames)",
+          "name": "Display each unique name",
+          "meaning": "Visits each name in the set and prints it on its own line. Printing the HashSet itself would show its type rather than its names."
         }
       ],
       "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first.",
-      "outputAnnotations": [
-        "you enter Alex",
-        "you enter Sam",
-        "you enter Alex",
-        "Alex appears once"
-      ],
-      "outputNote": "Example input: Alex, Sam, Alex. The repeated name is kept once. A HashSet does not promise a display order."
+      "outputNote": "Example input: Alex, Sam, Alex. One possible output order is shown. The input prompts appear when you run the program."
     },
     {
       "eyebrow": "18 · Null",
@@ -3247,41 +3256,37 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "17 · Sets",
       "title": "Remove duplicate names",
-      "explanation": "set(names) removes duplicates. Python sets do not promise a display order, so sorted makes an alphabetical list before join combines its names into text and print displays it. A set literal uses {\"Alex\", \"Sam\"}; empty {} creates a dictionary, so use set() for an empty set.",
-      "note": "# Ask for three names, then remove any duplicates",
-      "prompt": "Collect three names, create a set, and print its unique values.",
-      "answer": "names = []\n\nnames.append(input(\"Enter the first name:\"))\nnames.append(input(\"Enter the second name:\"))\nnames.append(input(\"Enter the third name:\"))\n\nuniqueNames = set(names)\n\nprint(\"[\" + \", \".join(sorted(uniqueNames)) + \"]\")",
+      "explanation": "Ask for three names and keep just one copy of each exact name. Try Alex, Sam, Alex: Alex appears once. Capitalisation matters: Alex and alex are different names. A list can contain duplicates; set(names) creates a set containing only its unique values. print(uniqueNames) displays the set directly. A set has no guaranteed display order.",
+      "note": "# Ask for three names, then remove duplicates.",
+      "prompt": "Ask for three names, remove duplicate names with a set, and display the unique names.",
+      "answer": "names = []\n\nnames.append(input(\"Enter first name: \"))\nnames.append(input(\"Enter second name: \"))\nnames.append(input(\"Enter third name: \"))\n\nuniqueNames = set(names)\n\nprint(uniqueNames)",
       "output": [
-        "Enter the first name:",
-        "Enter the second name:",
-        "Enter the third name:",
-        "[Alex, Sam]"
+        "{'Alex', 'Sam'}"
       ],
       "parts": [
         {
+          "code": "names = []",
+          "name": "Start a list",
+          "meaning": "Creates an empty list. A list can hold repeated names."
+        },
+        {
+          "code": "names.append(input(\"Enter first name: \"))",
+          "name": "Read and add a name",
+          "meaning": "input asks for text; append adds that text to the list. Repeat this for the second and third names."
+        },
+        {
           "code": "set(names)",
-          "name": "Unique values",
-          "meaning": "Removes repeated values."
+          "name": "Keep unique names",
+          "meaning": "Creates a set from the list. Repeated values are kept once. Alex and alex remain different values."
         },
         {
-          "code": "sorted",
-          "name": "Stable display",
-          "meaning": "Sorts the unique values before printing."
-        },
-        {
-          "code": "\"[\" + ... + \"]\"",
-          "name": "Add display brackets",
-          "meaning": "`+` joins the printed brackets with the combined names. These brackets are text for display, not a new list."
+          "code": "print(uniqueNames)",
+          "name": "Display the set",
+          "meaning": "Prints the unique names directly. Sets have no guaranteed display order; the same names may appear in a different order."
         }
       ],
       "runHint": "Save as main.py and run python3 main.py in the VS Code terminal.",
-      "outputAnnotations": [
-        "you enter Alex",
-        "you enter Sam",
-        "you enter Alex",
-        "Alex appears once"
-      ],
-      "outputNote": "Example input: Alex, Sam, Alex. The repeated name is kept once. The labels are annotations, not printed text."
+      "outputNote": "Example input: Alex, Sam, Alex. One possible set display is shown; the names may appear in another order. The input prompts appear when you run the program."
     },
     {
       "eyebrow": "18 · Null",
@@ -4118,46 +4123,33 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "17 · Sets",
       "title": "Remove duplicate names",
-      "explanation": "std::set stores unique values in sorted order. The loop prints a comma between items and square brackets around them. firstItem prevents a comma before the first item. Alex, Sam, Alex becomes [Alex, Sam].",
-      "note": "// Ask for three names, then remove any duplicates",
-      "prompt": "Collect three names, create a std::set, and print its unique values.",
-      "answer": "#include <iostream>\n#include <string>\n#include <set>\n\nint main() {\n  std::cout << \"Enter the first name:\";\n  std::string first;\n  std::getline(std::cin, first);\n  std::cout << \"Enter the second name:\";\n  std::string second;\n  std::getline(std::cin, second);\n  std::cout << \"Enter the third name:\";\n  std::string third;\n  std::getline(std::cin, third);\n\n  std::set<std::string> uniqueNames = {first, second, third};\n\n  std::cout << \"[\";\n  bool firstItem = true;\n  for (const auto& name : uniqueNames) {\n    if (!firstItem) std::cout << \", \";\n    std::cout << name;\n    firstItem = false;\n  }\n  std::cout << \"]\\n\";\n}",
+      "explanation": "Ask for three names and keep just one copy of each exact name. Try Alex, Sam, Alex: Alex appears once. Capitalisation matters: Alex and alex are different names. std::set keeps one copy of each name and orders the names alphabetically in this example. The loop prints each unique name on its own line.",
+      "note": "// Ask for three names, then remove duplicates.",
+      "prompt": "Ask for three names, remove duplicate names with a set, and display the unique names.",
+      "answer": "#include <iostream>\n#include <string>\n#include <set>\n\nint main() {\n  std::cout << \"Enter first name: \";\n  std::string first;\n  std::getline(std::cin, first);\n  std::cout << \"Enter second name: \";\n  std::string second;\n  std::getline(std::cin, second);\n  std::cout << \"Enter third name: \";\n  std::string third;\n  std::getline(std::cin, third);\n\n  std::set<std::string> uniqueNames = {first, second, third};\n\n  for (const auto& name : uniqueNames) {\n    std::cout << name << \"\\n\";\n  }\n}",
       "output": [
-        "Enter the first name:",
-        "Enter the second name:",
-        "Enter the third name:",
-        "[Alex, Sam]"
+        "Alex",
+        "Sam"
       ],
       "parts": [
         {
-          "code": "std::set",
-          "name": "Unique values",
-          "meaning": "Keeps one copy of each value in sorted order."
+          "code": "std::getline(std::cin, first)",
+          "name": "Read a name",
+          "meaning": "Reads the entered name, including spaces. Repeat for the second and third names."
+        },
+        {
+          "code": "std::set<std::string> uniqueNames = {first, second, third}",
+          "name": "Keep unique names",
+          "meaning": "Creates a set from the three names. Each exact name appears once. std::set stores these strings in sorted order."
         },
         {
           "code": "for (const auto& name : uniqueNames)",
-          "name": "Visit each unique name",
-          "meaning": "Runs once for each set value. auto infers its type; `&` reads the existing value without copying it; const prevents changing it through name."
-        },
-        {
-          "code": "if (!firstItem)",
-          "name": "Add separators after the first item",
-          "meaning": "! reverses true and false. This prints a comma only after the first item has already been printed."
-        },
-        {
-          "code": "firstItem = false",
-          "name": "Remember the first item is done",
-          "meaning": "Makes the next repetition include a comma before its name."
+          "name": "Display each unique name",
+          "meaning": "Visits each name and prints it on its own line. const auto& reads each value without changing or copying it."
         }
       ],
       "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed.",
-      "outputAnnotations": [
-        "you enter Alex",
-        "you enter Sam",
-        "you enter Alex",
-        "Alex appears once"
-      ],
-      "outputNote": "Example input: Alex, Sam, Alex. The repeated name is kept once. The labels are annotations, not printed text."
+      "outputNote": "Example input: Alex, Sam, Alex. std::set displays these names in sorted order. The input prompts appear when you run the program."
     },
     {
       "eyebrow": "18 · Null",
