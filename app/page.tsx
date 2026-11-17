@@ -6,7 +6,7 @@ import CodeBlocks from "./CodeBlocks";
 import BrowserResultPreview from "./BrowserResultPreview";
 import ClubTerminalInput from "./ClubTerminalInput";
 import BankTerminalInput from "./BankTerminalInput";
-import {applyClockTarget,nextClockTarget,type ClockTarget} from "./clock-lessons";
+import {applyClockTarget,nextClockTarget,formatClockReading,type ClockTarget} from "./clock-lessons";
 import InputRuntimeExamples from "./InputRuntimeExamples";
 import RunCommands from "./RunCommands";
 import {browserInputPatch, type InputRuntime} from "./input-runtimes";
@@ -48,6 +48,7 @@ type Lesson = {
   browserPreview?: boolean | "headings" | "document";
   interactiveInput?: "club-name" | "bank-deposit";
   clockExample?: boolean;
+  displayCurrentTime?: boolean;
   clockTarget?: ClockTarget;
   idLesson?: "html" | "css";
   referenceKind?: "text" | "fonts" | "pages" | "css" | "colours" | "named-colours" | "comparisons" | "alignment" | "positioning" | "combined-styles";
@@ -254,48 +255,33 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "06 · Date and time",
-      "title": "Check for a particular time",
-      "explanation": "This checks the local clock once. The app fills in the next clock minute when you open the lesson. Run this code during 17:20 to print Time reached!; at other times this one check prints nothing. An if statement does not wait or keep watching. The next lesson repeats the check for you.",
-      "note": "// Print Time reached! if the local hour is 17 and the minute is 20.",
-      "prompt": "Print Time reached! if the local hour is 17 and the minute is 20.",
-      "answer": "let time = new Date();\n\nlet hour = time.getHours();\nlet minute = time.getMinutes();\n\nif (hour === 17 && minute === 20) {\n  console.log(\"Time reached!\");\n}",
+      "title": "Display the current time",
+      "explanation": "Read the current local time once, then display its hour and minute in 24-hour HH:MM format. For example, 09:05 means five minutes past nine in the morning. This example displays the clock straight away; the next lesson keeps checking until a chosen time is reached.",
+      "note": "// Read the local clock once and print the current hour and minute.",
+      "prompt": "Read the current local time and print it in 24-hour HH:MM format.",
+      "answer": "const time = new Date();\nconsole.log(time.toLocaleTimeString(\"en-GB\", { hour: \"2-digit\", minute: \"2-digit\", hour12: false }));",
       "output": [
-        "Time reached!"
+        "12:34"
       ],
       "parts": [
         {
           "code": "new Date()",
-          "name": "Capture the clock",
-          "meaning": "Captures the current local date and time. This saved Date object does not keep updating itself."
+          "name": "Read the clock once",
+          "meaning": "Captures the current local date and time when this line runs. This saved reading does not change by itself."
         },
         {
-          "code": "let time =",
-          "name": "Save a value",
-          "meaning": "let gives a value a name that can be reassigned later. = saves the value on the right under the name on the left."
+          "code": "time.toLocaleTimeString(...)",
+          "name": "Display hours and minutes",
+          "meaning": "Formats the saved reading as HH:MM in 24-hour time. Each part uses two digits, so five past nine is displayed as 09:05."
         },
         {
-          "code": "if (...) { ... }",
-          "name": "Run a matching check",
-          "meaning": "Runs the instructions inside the braces only when the condition is true."
-        },
-        {
-          "code": "time.getHours()",
-          "name": "Hour",
-          "meaning": "Reads the hour from 0 to 23."
-        },
-        {
-          "code": "time.getMinutes()",
-          "name": "Minute",
-          "meaning": "Reads the minute from 0 to 59."
-        },
-        {
-          "code": "&&",
-          "name": "Both",
-          "meaning": "The hour and minute must both match."
+          "code": "hour12: false",
+          "name": "Use a 24-hour clock",
+          "meaning": "Displays the hour without AM or PM. The en-GB format and two-digit options keep the output consistent as HH:MM."
         }
       ],
-      "outputNote": "Example output at 17:20. The app previews the result immediately; copied code uses the hour and minute shown in the editor.",
-      "clockExample": true
+      "outputNote": "Your local time when Check code was pressed, in 24-hour HH:MM format. Clear and check again for a fresh reading. Copied code reads the clock when you run it.",
+      "displayCurrentTime": true
     },
     {
       "eyebrow": "07 · Date and time",
@@ -1105,44 +1091,34 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "05 · Date and time",
-      "title": "Check for a particular time",
-      "explanation": "This checks the local clock once. The app fills in the next clock minute when you open the lesson. Run this code during 17:20 to print Time reached!; at other times this one check prints nothing. An if statement does not wait or keep watching. The next lesson repeats the check for you.",
-      "note": "// Print Time reached! if the local hour is 17 and the minute is 20.",
-      "prompt": "Print Time reached! if the local hour is 17 and the minute is 20.",
-      "answer": "DateTime time = DateTime.Now;\n\nint hour = time.Hour;\nint minute = time.Minute;\n\nif (hour == 17 && minute == 20) {\n  Console.WriteLine(\"Time reached!\");\n}",
+      "title": "Display the current time",
+      "explanation": "Read the current local time once, then display its hour and minute in 24-hour HH:MM format. For example, 09:05 means five minutes past nine in the morning. This example displays the clock straight away; the next lesson keeps checking until a chosen time is reached.",
+      "note": "// Read the local clock once and print the current hour and minute.",
+      "prompt": "Read the current local time and print it in 24-hour HH:MM format.",
+      "answer": "DateTime time = DateTime.Now;\nConsole.WriteLine(time.ToString(\"HH:mm\"));",
       "output": [
-        "Time reached!"
+        "12:34"
       ],
       "parts": [
         {
           "code": "DateTime.Now",
-          "name": "Capture the clock",
-          "meaning": "Reads a snapshot of the computer's current local date and time. This saved value does not keep updating itself."
+          "name": "Read the clock once",
+          "meaning": "Captures the current local date and time when this line runs. This saved reading does not change by itself."
         },
         {
-          "code": "time.Hour",
-          "name": "Hour",
-          "meaning": "Reads the hour from 0 to 23."
+          "code": "time.ToString(\"HH:mm\")",
+          "name": "Display hours and minutes",
+          "meaning": "Formats the saved reading as HH:MM in 24-hour time. Each part uses two digits, so five past nine is displayed as 09:05."
         },
         {
-          "code": "time.Minute",
-          "name": "Minute",
-          "meaning": "Reads the minute from 0 to 59."
-        },
-        {
-          "code": "&&",
-          "name": "Both",
-          "meaning": "The hour and minute must both match."
-        },
-        {
-          "code": "if (hour == 17 && minute == 20)",
-          "name": "Check both values",
-          "meaning": "if runs its body only when both comparisons are true. && (two ampersands) means both the hour and minute must match."
+          "code": "\"HH:mm\"",
+          "name": "Choose the clock format",
+          "meaning": "HH means the hour from 00 to 23; lowercase mm means the minute. The colon appears between them."
         }
       ],
-      "outputNote": "Example output at 17:20. The app previews the result immediately; copied code uses the hour and minute shown in the editor.",
+      "outputNote": "Your local time when Check code was pressed, in 24-hour HH:MM format. Clear and check again for a fresh reading. Copied code reads the clock when you run it.",
       "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first.",
-      "clockExample": true
+      "displayCurrentTime": true
     },
     {
       "eyebrow": "06 · Date and time",
@@ -2829,44 +2805,34 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "05 · Date and time",
-      "title": "Check for a particular time",
-      "explanation": "This checks the local clock once. The app fills in the next clock minute when you open the lesson. Run this code during 17:20 to print Time reached!; at other times this one check prints nothing. An if statement does not wait or keep watching. The next lesson repeats the check for you.",
-      "note": "# Print Time reached! if the local hour is 17 and the minute is 20.",
-      "prompt": "Print Time reached! if the local hour is 17 and the minute is 20.",
-      "answer": "from datetime import datetime\n\ntime = datetime.now()\n\nhour = time.hour\nminute = time.minute\n\nif hour == 17 and minute == 20:\n    print(\"Time reached!\")",
+      "title": "Display the current time",
+      "explanation": "Read the current local time once, then display its hour and minute in 24-hour HH:MM format. For example, 09:05 means five minutes past nine in the morning. This example displays the clock straight away; the next lesson keeps checking until a chosen time is reached.",
+      "note": "# Read the local clock once and print the current hour and minute.",
+      "prompt": "Read the current local time and print it in 24-hour HH:MM format.",
+      "answer": "from datetime import datetime\n\ntime = datetime.now()\nprint(time.strftime(\"%H:%M\"))",
       "output": [
-        "Time reached!"
+        "12:34"
       ],
       "parts": [
         {
-          "code": "from datetime import datetime",
-          "name": "Load the clock tool",
-          "meaning": "Loads the datetime class from Python's datetime module."
-        },
-        {
           "code": "datetime.now()",
-          "name": "Capture the clock",
-          "meaning": "Captures the current local date and time for this one check."
+          "name": "Read the clock once",
+          "meaning": "Captures the current local date and time when this line runs. This saved reading does not change by itself."
         },
         {
-          "code": "time.hour / time.minute",
-          "name": "Clock parts",
-          "meaning": "Read the hour and minute from the saved time."
+          "code": "time.strftime(\"%H:%M\")",
+          "name": "Display hours and minutes",
+          "meaning": "Formats the saved reading as HH:MM in 24-hour time. Each part uses two digits, so five past nine is displayed as 09:05."
         },
         {
-          "code": "and",
-          "name": "Both",
-          "meaning": "Both conditions must be true."
-        },
-        {
-          "code": "if hour == 17 and minute == 20",
-          "name": "Check both values",
-          "meaning": "if runs its body only when both comparisons are true. and means both the hour and minute must match."
+          "code": "\"%H:%M\"",
+          "name": "Choose the clock format",
+          "meaning": "%H means the hour from 00 to 23; %M means the minute from 00 to 59. The colon appears between them."
         }
       ],
-      "outputNote": "Example output at 17:20. The app previews the result immediately; copied code uses the hour and minute shown in the editor.",
+      "outputNote": "Your local time when Check code was pressed, in 24-hour HH:MM format. Clear and check again for a fresh reading. Copied code reads the clock when you run it.",
       "runHint": "Save as main.py and run python3 main.py in the VS Code terminal.",
-      "clockExample": true
+      "displayCurrentTime": true
     },
     {
       "eyebrow": "06 · Date and time",
@@ -3657,49 +3623,34 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "05 · Date and time",
-      "title": "Check for a particular time",
-      "explanation": "This checks the local clock once. The app fills in the next clock minute when you open the lesson. Run this code during 17:20 to print Time reached!; at other times this one check prints nothing. An if statement does not wait or keep watching. The next lesson repeats the check for you.",
-      "note": "// Print Time reached! if the local hour is 17 and the minute is 20.",
-      "prompt": "Print Time reached! if the local hour is 17 and the minute is 20.",
-      "answer": "#include <iostream>\n#include <string>\n#include <ctime>\n\nint main() {\n  std::time_t now = std::time(nullptr);\n  std::tm time = *std::localtime(&now);\n\n  int hour = time.tm_hour;\n  int minute = time.tm_min;\n\n  if (hour == 17 && minute == 20) {\n    std::cout << \"Time reached!\\n\";\n  }\n}",
+      "title": "Display the current time",
+      "explanation": "Read the current local time once, then display its hour and minute in 24-hour HH:MM format. For example, 09:05 means five minutes past nine in the morning. This example displays the clock straight away; the next lesson keeps checking until a chosen time is reached.",
+      "note": "// Read the local clock once and print the current hour and minute.",
+      "prompt": "Read the current local time and print it in 24-hour HH:MM format.",
+      "answer": "#include <iostream>\n#include <ctime>\n#include <iomanip>\n\nint main() {\n  std::time_t now = std::time(nullptr);\n  std::tm time = *std::localtime(&now);\n  std::cout << std::put_time(&time, \"%H:%M\") << \"\\n\";\n}",
       "output": [
-        "Time reached!"
+        "12:34"
       ],
       "parts": [
         {
           "code": "std::time(nullptr)",
-          "name": "Read the timestamp",
-          "meaning": "Gets the current timestamp. nullptr means no extra pointer is supplied for storing another copy."
+          "name": "Read the clock once",
+          "meaning": "Captures the current local date and time when this line runs. This saved reading does not change by itself."
+        },
+        {
+          "code": "std::put_time(&time, \"%H:%M\")",
+          "name": "Display hours and minutes",
+          "meaning": "Formats the saved reading as HH:MM in 24-hour time. Each part uses two digits, so five past nine is displayed as 09:05."
         },
         {
           "code": "std::localtime(&now)",
-          "name": "Read local calendar fields",
-          "meaning": "Converts the timestamp into local date and time fields. &now passes the address of now."
-        },
-        {
-          "code": "*std::localtime(&now)",
-          "name": "Copy the fields",
-          "meaning": "The leading * reads the time structure through the returned pointer so its fields can be saved in time."
-        },
-        {
-          "code": "tm_hour / tm_min",
-          "name": "Clock parts",
-          "meaning": "Read the local hour and minute."
-        },
-        {
-          "code": "&&",
-          "name": "Both",
-          "meaning": "Requires both comparisons to be true."
-        },
-        {
-          "code": "if (hour == 17 && minute == 20)",
-          "name": "Check both values",
-          "meaning": "if runs its body only when both comparisons are true. && (two ampersands) means both the hour and minute must match."
+          "name": "Use local clock fields",
+          "meaning": "Converts the saved timestamp into local hours, minutes and other calendar fields. The example copies those fields into time before displaying them."
         }
       ],
-      "outputNote": "Example output at 17:20. The app previews the result immediately; copied code uses the hour and minute shown in the editor.",
+      "outputNote": "Your local time when Check code was pressed, in 24-hour HH:MM format. Clear and check again for a fresh reading. Copied code reads the clock when you run it.",
       "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed.",
-      "clockExample": true
+      "displayCurrentTime": true
     },
     {
       "eyebrow": "06 · Date and time",
@@ -5111,7 +5062,8 @@ export default function Home() {
   }, [code, current, language, checkerVersion]);
   const acceptedCode = lessonCheck?.accepted ?? false;
   const diagnostic: DiagnosticPart[] = [{ text: checkerError || lessonCheck?.message || "The checker is loading. Try Check code again.", help: "Equivalent supported syntax is accepted. An unverified answer may still be valid; a syntax warning means the parser found incomplete or malformed code.", kind: "message" }];
-  const previewOutput = lessonCheck?.accepted && lessonCheck.output ? lessonCheck.output : current?.output;
+  const clockReadingOutput = useMemo(() => [formatClockReading()], [status, current]);
+  const previewOutput = current?.displayCurrentTime ? clockReadingOutput : lessonCheck?.accepted && lessonCheck.output ? lessonCheck.output : current?.output;
   const previewColours = lessonCheck?.accepted && lessonCheck.colours ? lessonCheck.colours : current?.outputColors;
   const linkedIdHtml = idDrafts.current.html?.accepted ? idDrafts.current.html.code : lessons.html.find(item => item.idLesson === "html")!.answer;
 
@@ -5503,7 +5455,7 @@ export default function Home() {
             <div className="console-body">
               {status === "idle" && <span className="console-muted">{language === "html" || language === "css" ? "Your page result preview will appear here..." : "Your program output will appear here..."}</span>}
               {status === "wrong" && <><SyntaxDiagnostic parts={diagnostic} /><div className="console-muted diagnostic-hint">Hover over or focus each underlined part to see what it means.</div></>}
-              {status === "correct" && <><div className="run-line"><span><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Code accepted — {current?.interactiveInput === "bank-deposit" ? "enter a deposit below" : current?.interactiveInput ? "enter a name below" : language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div>{current?.interactiveInput === "bank-deposit" ? <BankTerminalInput key={`${language}-${index}`} /> : current?.interactiveInput === "club-name" ? <ClubTerminalInput key={`${language}-${index}`} /> : current?.browserPreview ? <BrowserResultPreview showTab={current.browserPreview === "document"} code={current.idLesson === "css" ? linkedIdHtml : practiceCode} css={current.idLesson === "css" ? practiceCode : undefined} /> : <div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div>}</>}
+              {status === "correct" && <><div className="run-line"><span><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Code accepted — {current?.interactiveInput === "bank-deposit" ? "enter a deposit below" : current?.interactiveInput ? "enter a name below" : current?.displayCurrentTime ? "current local time" : language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div>{current?.interactiveInput === "bank-deposit" ? <BankTerminalInput key={`${language}-${index}`} /> : current?.interactiveInput === "club-name" ? <ClubTerminalInput key={`${language}-${index}`} /> : current?.browserPreview ? <BrowserResultPreview showTab={current.browserPreview === "document"} code={current.idLesson === "css" ? linkedIdHtml : practiceCode} css={current.idLesson === "css" ? practiceCode : undefined} /> : <div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div>}</>}
             </div>
           </div>
           <div className={`feedback ${status}`}>

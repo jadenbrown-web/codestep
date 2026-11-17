@@ -42,7 +42,7 @@ export function restoreLessonPins(raw: string | null, courses: Record<string, { 
       if (!Array.isArray(saved[language])) continue;
       const resolved = saved[language].flatMap((value: unknown) => {
         if (typeof value !== "string") return [];
-        const renamed = ["Choose let or const", "Use changeable and fixed values"].includes(value) ? "Store and update values" : value;
+        const renamed = ["Choose let or const", "Use changeable and fixed values"].includes(value) ? "Store and update values" : value === "Check for a particular time" ? "Display the current time" : value;
         const lesson = course.find(item => item.title === renamed) ?? course.find(item => lessonTopic(item) === value);
         return lesson ? [lesson.title] : [];
       });

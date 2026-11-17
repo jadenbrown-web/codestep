@@ -64,3 +64,8 @@ test('old variable lesson pins follow the renamed bank balance lesson',()=>{
  const courses={javascript:[{title:'Store and update values',eyebrow:'10 · Variables'}],python:[{title:'Store and update values',eyebrow:'09 · Variables'}]};
  assert.deepEqual(restoreLessonPins(JSON.stringify({javascript:['Choose let or const'],python:['Use changeable and fixed values']}),courses),{javascript:['Store and update values'],python:['Store and update values']});
 });
+
+test('the one-check clock pin follows the renamed current-time lesson',()=>{
+ const courses={python:[{title:'Display the current time',eyebrow:'05 · Date and time'}]};
+ assert.deepEqual(restoreLessonPins(JSON.stringify({python:['Check for a particular time']}),courses),{python:['Display the current time']});
+});

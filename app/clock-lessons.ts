@@ -1,3 +1,4 @@
+export function formatClockReading(now=new Date()){return `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;}
 export type ClockTarget={hour:number;minute:number;label:string};
 export function nextClockTarget(now=new Date()):ClockTarget{
  const target=new Date(now.getTime());

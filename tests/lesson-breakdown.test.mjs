@@ -162,7 +162,7 @@ test('shared programming basics explain the action before specialised terminolog
 });
 
 test('clock examples explain the current local clock import', () => {
- const lesson=lessons.python.find(item=>item.title==='Check for a particular time');
+ const lesson=lessons.python.find(item=>item.title==='Display the current time');
  const imports=importBreakdown(lesson,'python');
  assert.match(imports.find(item=>item.code==='from datetime import datetime').meaning,/datetime.now\(\)/);
 });
