@@ -31,8 +31,7 @@ try{
   assert.equal(await code(),'<p style="color: #0000FF;">Blue text</p>');
   if(width<=850)await page.locator('[data-colour="Green"]').tap({position:{x:3,y:3}});else await page.getByRole('button',{name:'Use Green hex colour',exact:true}).click();
   assert.equal(await code(),'<p style="color: #008000;">Green text</p>');
-  await activate(page.getByRole('button',{name:'Copy Red hex code',exact:true}));
-  assert.equal(await code(),'<p style="color: #008000;">Green text</p>','Copying another swatch does not select it');
+  assert.equal(await page.locator('.html-tag-grid .copy-code-button').count(),0,'Only the main example has a copy button');
   await activate(page.getByRole('button',{name:'Copy green HTML tag code',exact:true}));
   assert.equal(await page.evaluate(()=>window.copiedCode),'<p style="color: #008000;">Green text</p>');
   await activate(page.getByRole('button',{name:'See Green as a named colour in HTML →',exact:true}));

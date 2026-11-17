@@ -23,7 +23,7 @@ try {
     assert.equal(await example.locator('.visual-example-code code').textContent(),'<h1>Main heading</h1>');
     const position=await example.boundingBox();
     assert.ok(position.y>=0&&position.y+position.height<viewport.height,'main example stays visible at the top');
-    assert.equal(await page.locator('[data-html-tag] .copy-code-button').count(),18);
+    assert.equal(await page.locator('[data-html-tag] .copy-code-button').count(),0);
     assert.equal(await page.locator('.reference-pane-toolbar').count(),0);
     if(viewport.width>850) {
       assert.equal(await page.locator('.app-header').isVisible(),false,'reference page has no extra desktop navbar');

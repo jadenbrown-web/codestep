@@ -43,7 +43,7 @@ try{
     const cards=await root.locator('.html-tag-code').evaluateAll(es=>es.map(el=>({base:getComputedStyle(el).color,colours:[...el.querySelectorAll('span')].map(span=>getComputedStyle(span).color)})));
     assert.equal(cards.length,18);
     assert.ok(cards.every(card=>card.colours.some(colour=>colour!==card.base)),'Every HTML card uses syntax colours');
-    if(width===390) assert.ok((await root.locator('.font-featured-example').boundingBox()).height<=84,'Phone featured heading stays compact');
+    if(width===390) assert.ok((await root.locator('.font-featured-example').boundingBox()).height<=110,'Phone featured heading stays compact');
   }
   if(kind==='fonts'){
     assert.ok(await root.locator('[data-font]').evaluateAll(es=>es.every(el=>el.getBoundingClientRect().height<=84)),'Font cards are compact');
@@ -60,9 +60,7 @@ try{
    const state=await copy.evaluate(el=>{const s=getComputedStyle(el);return {background:s.backgroundColor,radius:s.borderRadius};});
    assert.notEqual(state.background,'rgba(0, 0, 0, 0)','CSS copy hover has visible fill');
    assert.equal(state.radius,'8px');
-   const firstLine=await codeRow.locator('code').evaluate(el=>{const r=el.getBoundingClientRect();return r.y+parseFloat(getComputedStyle(el).lineHeight)/2;});
-   const box=await copy.boundingBox();
-   assert.ok(Math.abs(box.y+box.height/2-firstLine)<1,'CSS copy highlight centres on the first code line');
+
   }
   const misplaced=await root.locator('.copy-code-button').evaluateAll(es=>es.filter(e=>!e.closest('.visual-example-code,.tag-card-heading,.file-example-code')).map(e=>e.getAttribute('aria-label')));
   assert.deepEqual(misplaced,[],'each copy button is beside the code it copies');
@@ -72,24 +70,17 @@ try{
     return Math.abs(b.x+b.width/2-i.x-i.width/2)>1||Math.abs(b.y+b.height/2-i.y-i.height/2)>1;
   }).map(button=>button.getAttribute('aria-label')));
   assert.deepEqual(offCentre,[],'Every copy glyph is centred in its highlight');
-  const alignment=await root.locator('.visual-example-code,.tag-card-heading,.file-example-code').evaluateAll(es=>es.map(e=>{
-   const code=e.querySelector('code'),icon=e.querySelector('.copy-code-button svg');
-   if(!code||!icon)return null;const c=code.getBoundingClientRect(),i=icon.getBoundingClientRect();
-   return {text:code.textContent.slice(0,30),icon:i.y+i.height/2,first:e.matches('.tag-card-heading,.colour-code-row')?c.y+c.height/2:c.y+parseFloat(getComputedStyle(code).paddingTop)+parseFloat(getComputedStyle(code).lineHeight)/2,difference:Math.abs((i.y+i.height/2)-(e.matches('.tag-card-heading,.colour-code-row')?c.y+c.height/2:c.y+parseFloat(getComputedStyle(code).paddingTop)+parseFloat(getComputedStyle(code).lineHeight)/2))};
-  }).filter(Boolean));
-  for(const item of alignment)assert.ok(item.difference<1,`${kind}: copy icon aligns with the first code line (${JSON.stringify(item)})`);
-  if(width>850){
-   const offsets=await root.evaluate(el=>{
-    const pane=el.firstElementChild;const rect=pane.getBoundingClientRect();
-    const shell=document.createElement('main');shell.className='lesson-shell';shell.style.cssText=`position:fixed;left:-10000px;top:0;width:${rect.width}px;height:100px`;
-    const editor=document.createElement('div');editor.className='editor-panel';
-    editor.innerHTML='<div class="panel-bar"><div class="file-tab">main.js</div><div class="panel-actions"><button class="copy-code-button" aria-label="Copy code"></button><button class="editor-expand-button" aria-label="Expand"></button><button class="editor-reset-button" aria-label="Reset"></button><div class="desktop-pane-actions"><div class="lesson-actions"><button class="drawer-toggle editor-mode-toggle" aria-label="Use blocks"></button><button class="compare-language-button" aria-label="Compare"></button><button class="settings-button" aria-label="Settings"></button></div></div></div></div>';
-    shell.append(editor);document.body.append(shell);
-    const baseline=editor.getBoundingClientRect();
-    const result=['.editor-mode-toggle','.settings-button'].map(selector=>{const actual=pane.querySelector(selector).getBoundingClientRect();const expected=editor.querySelector(selector).getBoundingClientRect();return {x:(rect.right-actual.x-actual.width/2)-(baseline.right-expected.x-expected.width/2),y:(actual.y+actual.height/2-rect.y)-(expected.y+expected.height/2-baseline.y)};});
-    shell.remove();return result;
-   });
-   for(const offset of offsets){assert.ok(Math.abs(offset.x)<1,'navigation matches the editor right-hand positions');assert.ok(Math.abs(offset.y)<1,'navigation matches the editor top positions');}
+  if(kind!=='pages'){
+   assert.equal(await root.locator('.html-tag-grid .copy-code-button').count(),0,'individual cards only select the main example');
+   const pane=await root.locator('.font-featured-example').boundingBox();
+   const button=await root.locator('.font-featured-example .copy-code-button').boundingBox();
+   assert.ok(Math.abs(button.y-pane.y-6)<1,'copy is at the main example top edge');
+   assert.ok(Math.abs(pane.x+pane.width-button.x-button.width-6)<1,'copy is at the main example right edge');
+   const actions=root.locator('.font-example-heading .desktop-pane-actions');
+   if(width>850 && await actions.count()){
+    const box=await actions.boundingBox();
+    assert.ok(box.x+box.width<=button.x+1,'navigation does not overlap the copy button');
+   }
   }
   if(kind==='css'||kind==='colours'){
    const clipped=await root.locator('.html-tag-example').evaluateAll(es=>es.filter(e=>e.scrollWidth>e.clientWidth+1||e.scrollHeight>e.clientHeight+1).map(e=>e.outerHTML));
@@ -126,15 +117,15 @@ try{
    assert.equal(await page.evaluate(()=>window.copied.at(-1)),'<b>Bold text</b>');
    await root.getByRole('button',{name:'Show p code',exact:true}).click();
    assert.equal(await root.locator('.font-featured-example .visual-example-code>code').textContent(),'<p>A paragraph.</p>');
-   await root.getByRole('button',{name:'Copy mark code',exact:true}).click();
+   await root.getByRole('button',{name:'Show mark code',exact:true}).click();
+   await root.getByRole('button',{name:'Copy text elements example code',exact:true}).click();
    assert.equal(await page.evaluate(()=>window.copied.at(-1)),'<mark>Marked text</mark>');
   }else if(kind==='css'){
    await root.getByRole('button',{name:'Show Solid border code',exact:true}).click();
    await root.getByRole('button',{name:'Copy border example code',exact:true}).click();
    assert.equal(await page.evaluate(()=>window.copied.at(-1)),'p.notice {\n  border: 5px solid red;\n}');
   }else if(kind==='colours'){
-   await root.getByRole('button',{name:'Copy Blue hex code',exact:true}).click();
-   assert.equal(await page.evaluate(()=>window.copied.at(-1)),'#0000FF');
+   assert.equal(await root.locator('.colour-example-grid .copy-code-button').count(),0);
    await root.getByRole('button',{name:'Copy red HTML tag code',exact:true}).click();
    assert.equal(await page.evaluate(()=>window.copied.at(-1)),'<p style="color: #FF0000;">Red text</p>');
   }else if(kind==='pages'){

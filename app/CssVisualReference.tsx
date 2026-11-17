@@ -32,7 +32,7 @@ export default function CssVisualReference({kind,onNext,actions,renderCode,colou
    {colours?WEB_COLOURS.map(([name,hex])=><article className="html-tag-example colour-example" data-colour={name} data-example={hex===(WEB_COLOURS.find(([n])=>n===(onColourChange?colourName:localColour))?.[1])||undefined} key={name}>
     <button className="visual-example-choice" aria-label={`Use ${name} hex colour`} aria-pressed={name===(onColourChange?colourName:localColour)} onClick={()=>{setLocalColour(name);onColourChange?.(name);}}><b className="font-example-label">{name}</b>
     <div className="colour-swatch" style={{backgroundColor:hex}} aria-label={`${name} colour swatch`} /></button>
-    <div className="visual-example-code colour-code-row"><code className="colour-hex">{renderCode ? renderCode(hex,"css") : hex}</code><CopyCodeButton iconOnly code={hex} label={`${name} hex`} /></div>
+    <div className="visual-example-code colour-code-row"><code className="colour-hex">{renderCode ? renderCode(hex,"css") : hex}</code></div>
    </article>):BORDER_EXAMPLES.map(item=><article className="html-tag-example" data-border={item.name} data-example={selected.name === item.name || undefined} key={item.name}>
     <button className="visual-example-choice" aria-label={`Show ${item.name} code`} aria-pressed={selected.name === item.name} onClick={() => setSelected(item)}>
      <b className="font-example-label">{item.name}</b>
