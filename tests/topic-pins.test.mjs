@@ -74,3 +74,8 @@ test('the nested-call pin follows the clearer returned-value lesson',()=>{
  const courses={python:[{title:"Use a function's returned value",eyebrow:'07 · Functions'}]};
  assert.deepEqual(restoreLessonPins(JSON.stringify({python:['Use one function inside another']}),courses),{python:["Use a function's returned value"]});
 });
+
+test('old if-statement pins follow the selectable comparison lesson',()=>{
+ const courses={python:[{title:'Make decisions with if and else',eyebrow:'11 · If statements and symbols'}]};
+ assert.deepEqual(restoreLessonPins(JSON.stringify({python:['Check an answer with if and else']}),courses),{python:['Make decisions with if and else']});
+});

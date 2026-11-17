@@ -104,8 +104,8 @@ test('JavaScript accepts arrow functions while retaining the required call', () 
 test('Semantic details cannot disappear during comparison', () => {
   const timeLesson = courses.python.find(item => item.title === 'Display the current time');
   assert.equal(check('python', timeLesson.title, timeLesson.answer.replace('%H:%M', '%H:%S')).accepted, false);
-  const rangeLesson = courses.javascript.find(item => item.title === 'Check an answer with if and else');
-  assert.equal(check('javascript', rangeLesson.title, rangeLesson.answer.replaceAll('==', '!=')).accepted, false);
+  const rangeLesson = courses.javascript.find(item => item.title === 'Make decisions with if and else');
+  assert.equal(check('javascript', rangeLesson.title, rangeLesson.answer.replace('>=', '<')).accepted, false);
   const csharpLesson = courses.csharp.find(item => item.title === 'Choose a text colour');
   assert.equal(check('csharp', csharpLesson.title, csharpLesson.answer.replaceAll('string', 'int')).accepted, false);
 });
@@ -193,4 +193,14 @@ for(const language of ['javascript','python','csharp','cpp'])test(`${language}: 
  assert.equal(check(language,lesson.title,lesson.answer).accepted,true);
  assert.equal(check(language,lesson.title,lesson.answer.replace('return price * quantity','return price + quantity')).accepted,false);
  assert.equal(check(language,lesson.title,lesson.answer.replace('total = calculateTotal(price, quantity)','total = 75')).accepted,false);
+});
+
+const comparisonBuild=await build({entryPoints:['app/comparison-examples.ts'],bundle:true,platform:'node',format:'esm',write:false});
+const {comparisonCases,comparisonExample}=await import('data:text/javascript;base64,'+Buffer.from(comparisonBuild.outputFiles[0].text).toString('base64'));
+for(const language of ['javascript','python','csharp','cpp']) for(const example of comparisonCases)test(`${language}: ${example.name} quiz follows the selected scenario`,()=>{
+ const lesson=comparisonExample(language,example.id);
+ assert.equal(compareLesson(parsers[language],lesson.answer,lesson,language).accepted,true);
+ const condition=lesson.parts[1].code;
+ const incorrect=lesson.answer.replace(condition,language==='python'?'False':'false');
+ assert.equal(compareLesson(parsers[language],incorrect,lesson,language).accepted,false);
 });

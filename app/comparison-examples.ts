@@ -1,0 +1,36 @@
+export const comparisonCases=[
+ {id:'at-least',name:'At least',symbol:'>=',scenario:'Club entry',variable:'age',question:'How old are you? ',condition:'age >= 18',yes:'You can enter!',no:'You are too young.',sample:21,meaning:'At least 18 includes 18 itself. Ages below 18 go to else.'},
+ {id:'greater',name:'Greater than',symbol:'>',scenario:'Hot weather',variable:'temperature',question:'Enter the temperature: ',condition:'temperature > 30',yes:'It is hot.',no:'It is not above 30.',sample:31,meaning:'Greater than 30 excludes 30 itself. Only a higher temperature passes.'},
+ {id:'less',name:'Less than',symbol:'<',scenario:'Low stock',variable:'stock',question:'How many items are in stock? ',condition:'stock < 5',yes:'Order more stock.',no:'Stock level is fine.',sample:4,meaning:'Fewer than 5 items triggers an order. Exactly 5 does not pass this check.'},
+ {id:'at-most',name:'At most',symbol:'<=',scenario:'Baggage limit',variable:'weight',question:'Enter the bag weight in kg: ',condition:'weight <= 20',yes:'Bag accepted.',no:'Bag is too heavy.',sample:20,meaning:'At most 20 includes a bag weighing exactly 20 kg.'},
+ {id:'equal',name:'Equal to',symbol:'==',scenario:'Perfect score',variable:'score',question:'Enter your score: ',condition:'score == 100',yes:'Perfect score!',no:'Keep practising.',sample:100,meaning:'Equal to requires exactly 100. A smaller or larger value does not pass.'},
+ {id:'not-equal',name:'Not equal to',symbol:'!=',scenario:'Ground floor',variable:'floor',question:'Enter the floor number: ',condition:'floor != 0',yes:'You are on another floor.',no:'You are on the ground floor.',sample:2,meaning:'Not equal to passes for any floor number except 0.'},
+ {id:'between',name:'Between',symbol:'Between',scenario:'Room temperature',variable:'temperature',question:'Enter the room temperature: ',condition:'temperature >= 20 AND temperature <= 25',yes:'Temperature is in range.',no:'Temperature is outside the range.',sample:22,meaning:'Both checks must pass: at least 20 and at most 25. The endpoints 20 and 25 are included.'},
+ {id:'outside',name:'Outside',symbol:'Outside',scenario:'Parcel weight range',variable:'weight',question:'Enter the parcel weight in kg: ',condition:'weight < 2 OR weight > 10',yes:'Parcel is outside the range.',no:'Parcel is within the range.',sample:1,meaning:'Either check can pass: below 2 or above 10. Exactly 2 and 10 stay inside the allowed range.'},
+ {id:'margin',name:'Within a margin',symbol:'± margin',scenario:'Measurement tolerance',variable:'measured',question:'Enter the measured value: ',condition:'ABS(measured - 100) <= 5',yes:'Measurement is within tolerance.',no:'Measurement is outside tolerance.',sample:103,meaning:'The target is 100 with a margin of 5 either way. Absolute difference ignores direction, so values from 95 through 105 pass, including both endpoints.'},
+] as const;
+export type ComparisonCaseId=typeof comparisonCases[number]['id'];
+export function comparisonCase(id:ComparisonCaseId){return comparisonCases.find(item=>item.id===id)!;}
+export function comparisonMessage(id:ComparisonCaseId,value:number){
+ const matches={ 'at-least':value>=18,greater:value>30,less:value<5,'at-most':value<=20,equal:value===100,'not-equal':value!==0,between:value>=20&&value<=25,outside:value<2||value>10,margin:Math.abs(value-100)<=5 };
+ const item=comparisonCase(id);return matches[id]?item.yes:item.no;
+}
+export function comparisonExample(language:string,id:ComparisonCaseId){
+ const item=comparisonCase(id),v=item.variable,q=JSON.stringify(item.question),yes=JSON.stringify(item.yes),no=JSON.stringify(item.no);
+ const condition=item.condition.replace(' AND ',language==='python'?' and ':' && ').replace(' OR ',language==='python'?' or ':' || ').replace('ABS',language==='python'?'abs':language==='javascript'?'Math.abs':language==='csharp'?'Math.Abs':'std::abs').replace(' == ',language==='javascript'?' === ':' == ').replace(' != ',language==='javascript'?' !== ':' != ');
+ let answer='',inputCode='',conversion='',fileName=language==='python'?'main.py':language==='csharp'?'Program.cs':'main.cpp',runHint='';
+ if(language==='python'){
+  inputCode=`int(input(${q}))`;conversion='input() returns text. int(...) converts that text to a whole number before the comparison; it is a conversion function, not part of the variable name.';
+  answer=`${v} = ${inputCode}\n\nif ${condition}:\n    print(${yes})\nelse:\n    print(${no})`;runHint='Save as main.py and run python3 main.py. Enter a whole number when asked.';
+ }else if(language==='javascript'){
+  inputCode=`Number(await input.question(${q}))`;conversion='input.question() returns text. Number(...) converts it to a number so the comparison uses numeric values. === and !== are JavaScript’s strict equality and inequality operators.';fileName='comparison.mjs';
+  answer=`import { createInterface } from "node:readline/promises";\n\nconst input = createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\nconst ${v} = ${inputCode};\ninput.close();\n\nif (${condition}) {\n  console.log(${yes});\n} else {\n  console.log(${no});\n}`;runHint='Save the complete example as comparison.mjs and run node comparison.mjs with Node.js 18 or newer. Enter a whole number when asked.';
+ }else if(language==='csharp'){
+  inputCode='int.Parse(Console.ReadLine() ?? "0")';conversion='int declares a whole-number variable. Console.ReadLine() returns text; int.Parse(...) converts that reply to an integer. The ?? "0" handles a missing reply.';
+  answer=`Console.Write(${q});\nint ${v} = ${inputCode};\n\nif (${condition}) {\n  Console.WriteLine(${yes});\n} else {\n  Console.WriteLine(${no});\n}`;runHint='Save as Program.cs in a .NET console project and run dotnet run. Enter a whole number when asked.';
+ }else{
+  inputCode=`std::cin >> ${v}`;conversion='int declares a whole-number variable. std::cin reads the typed number into it. This is different from Python’s int(...), which converts text to a whole number.';
+  answer=`#include <iostream>\n${id==='margin'?'#include <cstdlib>\n':''}\nint main() {\n  int ${v} = 0;\n  std::cout << ${q};\n  ${inputCode};\n\n  if (${condition}) {\n    std::cout << ${JSON.stringify(item.yes+'\n')};\n  } else {\n    std::cout << ${JSON.stringify(item.no+'\n')};\n  }\n}`;runHint='Save as main.cpp, compile with g++ -std=c++17 main.cpp -o main, then run ./main. Enter a whole number when asked.';
+ }
+ return {title:'Make decisions with if and else',comparisonExample:true,comparisonCase:id,interactiveInput:'comparison-value' as const,answer,fileName,runHint,explanation:`${item.scenario}: ${item.meaning} Read one number, run the if body when the condition is true, otherwise run else. Only one branch runs; the separate loops lesson repeats a question.`,prompt:`Ask “${item.question.trim()}” and use ${condition} to print “${item.yes}” or “${item.no}”.`,note:(language==='python'?'# ':'// ')+item.scenario+': '+item.meaning,output:[comparisonMessage(id,item.sample)],parts:[{code:inputCode,name:'Read a whole number',meaning:conversion},{code:condition,name:item.name,meaning:item.meaning},{code:'if',name:'Run the matching branch',meaning:`When ${condition} is true, print ${item.yes}`},{code:'else',name:'Handle the other result',meaning:`When the condition is false, print ${item.no} Only one branch runs.`}]};
+}

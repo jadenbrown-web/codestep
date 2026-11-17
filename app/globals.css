@@ -1985,3 +1985,11 @@ html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:h
 .total-terminal-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:end}
 .total-terminal-form button{grid-column:1/-1}
 .workspace:not(.editor-expanded)>.console-panel:has(.total-terminal){flex:0 0 280px;min-height:280px;max-height:310px}
+.comparison-case-picker{flex:none;padding:6px 8px;border-bottom:1px solid var(--ui-border);color:var(--ui-text);background:var(--ui-surface)}
+.comparison-case-choices{display:flex;flex-wrap:wrap;gap:4px}
+.comparison-case-choices button{flex:1 0 44px;min-height:44px;border:1px solid var(--ui-border);border-radius:6px;padding:4px 8px;background:transparent;color:var(--ui-text);cursor:pointer;touch-action:manipulation}
+.comparison-case-choices button:nth-child(n+7){flex-basis:90px}
+.comparison-case-choices code{font:650 13px var(--mono)}
+.comparison-case-choices button[aria-pressed=true]{border-color:var(--green-dark);background:var(--selection-surface)}
+.comparison-case-picker p{display:flex;flex-direction:column;gap:2px;margin:5px 0 0;font:12px/1.35 var(--sans)}
+.comparison-case-picker p span{color:var(--ui-muted);font-size:11px}

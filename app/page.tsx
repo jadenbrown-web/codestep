@@ -7,6 +7,9 @@ import BrowserResultPreview from "./BrowserResultPreview";
 import ClubTerminalInput from "./ClubTerminalInput";
 import BankTerminalInput from "./BankTerminalInput";
 import ShoppingTotalInput from "./ShoppingTotalInput";
+import ComparisonCasePicker from "./ComparisonCasePicker";
+import ComparisonValueInput from "./ComparisonValueInput";
+import {comparisonExample,type ComparisonCaseId} from "./comparison-examples";
 import {applyClockTarget,nextClockTarget,formatClockReading,type ClockTarget} from "./clock-lessons";
 import InputRuntimeExamples from "./InputRuntimeExamples";
 import RunCommands from "./RunCommands";
@@ -47,7 +50,9 @@ type Lesson = {
   compareNode?: boolean;
   referenceOnly?: boolean;
   browserPreview?: boolean | "headings" | "document";
-  interactiveInput?: "club-name" | "bank-deposit" | "shopping-total";
+  interactiveInput?: "club-name" | "bank-deposit" | "shopping-total" | "comparison-value";
+  comparisonExample?: boolean;
+  comparisonCase?: ComparisonCaseId;
   clockExample?: boolean;
   displayCurrentTime?: boolean;
   clockTarget?: ClockTarget;
@@ -472,46 +477,44 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "12 · If statements and symbols",
-      "title": "Check an answer with if and else",
-      "explanation": "Ask “What is 1 + 1?” and save the entered text in answer. == checks whether it equals \"2\". if runs its body when the check is true and prints Correct!; else runs its body when the check is false and prints Try again. Only one body runs. This example asks once. In the next lesson, a loop asks the same question again after a wrong answer.",
-      "note": "// Ask once; print Correct! for 2, otherwise print Try again.",
-      "prompt": "Ask What is 1 + 1? and use if and else to print Correct! or Try again.",
-      "answer": "let answer = prompt(\"What is 1 + 1?\");\n\nif (answer == \"2\") {\n    console.log(\"Correct!\");\n} else {\n    console.log(\"Try again.\");\n}",
+      "title": "Make decisions with if and else",
+      "explanation": "Club entry: At least 18 includes 18 itself. Ages below 18 go to else. Read one number, run the if body when the condition is true, otherwise run else. Only one branch runs; the separate loops lesson repeats a question.",
+      "note": "// Club entry: At least 18 includes 18 itself. Ages below 18 go to else.",
+      "prompt": "Ask “How old are you?” and use age >= 18 to print “You can enter!” or “You are too young.”.",
+      "answer": "import { createInterface } from \"node:readline/promises\";\n\nconst input = createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\nconst age = Number(await input.question(\"How old are you? \"));\ninput.close();\n\nif (age >= 18) {\n  console.log(\"You can enter!\");\n} else {\n  console.log(\"You are too young.\");\n}",
       "output": [
-        "Correct!"
+        "You can enter!"
       ],
       "parts": [
         {
-          "code": "if",
-          "name": "Check the answer",
-          "meaning": "Runs the first body only when answer equals \"2\"."
+          "code": "Number(await input.question(\"How old are you? \"))",
+          "name": "Read a whole number",
+          "meaning": "input.question() returns text. Number(...) converts it to a number so the comparison uses numeric values. === and !== are JavaScript’s strict equality and inequality operators."
         },
         {
-          "code": "==",
-          "name": "Equal to",
-          "meaning": "Compares the entered text with \"2\". Both values are text in this example; = saves a value instead."
+          "code": "age >= 18",
+          "name": "At least",
+          "meaning": "At least 18 includes 18 itself. Ages below 18 go to else."
+        },
+        {
+          "code": "if",
+          "name": "Run the matching branch",
+          "meaning": "When age >= 18 is true, print You can enter!"
         },
         {
           "code": "else",
-          "name": "Otherwise",
-          "meaning": "Runs the other body and prints Try again. when the if condition is false. It does not ask another question by itself."
-        },
-        {
-          "code": "()",
-          "name": "Hold the condition",
-          "meaning": "The parentheses after if contain the check: answer == \"2\"."
-        },
-        {
-          "code": "{}",
-          "name": "Group the instructions",
-          "meaning": "The braces after if and else surround each body. Put each action for that body on its own line inside them."
+          "name": "Handle the other result",
+          "meaning": "When the condition is false, print You are too young. Only one branch runs."
         }
       ],
-      "outputNote": "Example input: 2. Entering a different answer prints Try again. The input labels are annotations, not text printed by the program.",
-      "runHint": "Run this example in a browser developer console or inside an HTML script. prompt() opens a browser dialog; it is not available in the Node terminal. CodeStep checks the code and shows a sample result. Answer once; run the example again to try a different answer.",
+      "runHint": "Save the complete example as comparison.mjs and run node comparison.mjs with Node.js 18 or newer. Enter a whole number when asked.",
       "outputAnnotations": [
         "answer is 2"
-      ]
+      ],
+      "comparisonExample": true,
+      "comparisonCase": "at-least",
+      "interactiveInput": "comparison-value",
+      "fileName": "comparison.mjs"
     },
     {
       "eyebrow": "13 · Loops",
@@ -1320,53 +1323,45 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "11 · If statements and symbols",
-      "title": "Check an answer with if and else",
-      "explanation": "Ask “What is 1 + 1?” and save the entered text in answer. == checks whether it equals \"2\". if runs its body when the check is true and prints Correct!; else runs its body when the check is false and prints Try again. Only one body runs. This example asks once. In the next lesson, a loop asks the same question again after a wrong answer.",
-      "note": "// Ask once; print Correct! for 2, otherwise print Try again.",
-      "prompt": "Ask What is 1 + 1? and use if and else to print Correct! or Try again.",
-      "answer": "Console.WriteLine(\"What is 1 + 1?\");\nstring? answer = Console.ReadLine();\n\nif (answer == \"2\") {\n    Console.WriteLine(\"Correct!\");\n} else {\n    Console.WriteLine(\"Try again.\");\n}",
+      "title": "Make decisions with if and else",
+      "explanation": "Club entry: At least 18 includes 18 itself. Ages below 18 go to else. Read one number, run the if body when the condition is true, otherwise run else. Only one branch runs; the separate loops lesson repeats a question.",
+      "note": "// Club entry: At least 18 includes 18 itself. Ages below 18 go to else.",
+      "prompt": "Ask “How old are you?” and use age >= 18 to print “You can enter!” or “You are too young.”.",
+      "answer": "Console.Write(\"How old are you? \");\nint age = int.Parse(Console.ReadLine() ?? \"0\");\n\nif (age >= 18) {\n  Console.WriteLine(\"You can enter!\");\n} else {\n  Console.WriteLine(\"You are too young.\");\n}",
       "output": [
-        "What is 1 + 1?",
-        "Correct!"
+        "You can enter!"
       ],
       "parts": [
         {
-          "code": "if",
-          "name": "Check the answer",
-          "meaning": "Runs the first body only when answer equals \"2\"."
+          "code": "int.Parse(Console.ReadLine() ?? \"0\")",
+          "name": "Read a whole number",
+          "meaning": "int declares a whole-number variable. Console.ReadLine() returns text; int.Parse(...) converts that reply to an integer. The ?? \"0\" handles a missing reply."
         },
         {
-          "code": "==",
-          "name": "Equal to",
-          "meaning": "Compares the entered text with \"2\". Both values are text in this example; = saves a value instead."
+          "code": "age >= 18",
+          "name": "At least",
+          "meaning": "At least 18 includes 18 itself. Ages below 18 go to else."
+        },
+        {
+          "code": "if",
+          "name": "Run the matching branch",
+          "meaning": "When age >= 18 is true, print You can enter!"
         },
         {
           "code": "else",
-          "name": "Otherwise",
-          "meaning": "Runs the other body and prints Try again. when the if condition is false. It does not ask another question by itself."
-        },
-        {
-          "code": "()",
-          "name": "Hold the condition",
-          "meaning": "The parentheses after if contain the check: answer == \"2\"."
-        },
-        {
-          "code": "{}",
-          "name": "Group the instructions",
-          "meaning": "The braces after if and else surround each body. Put each action for that body on its own line inside them."
-        },
-        {
-          "code": "string? answer",
-          "name": "Allow missing input",
-          "meaning": "The question mark allows answer to hold text or null when no line of input is available."
+          "name": "Handle the other result",
+          "meaning": "When the condition is false, print You are too young. Only one branch runs."
         }
       ],
-      "outputNote": "Example input: 2. Entering a different answer prints Try again. The input labels are annotations, not text printed by the program.",
-      "runHint": "Put this top-level code in Program.cs in a .NET console project and run dotnet run. Type your answer and press Enter. Run the program again to try another answer.",
+      "runHint": "Save as Program.cs in a .NET console project and run dotnet run. Enter a whole number when asked.",
       "outputAnnotations": [
         "you enter 2",
         "answer is correct"
-      ]
+      ],
+      "comparisonExample": true,
+      "comparisonCase": "at-least",
+      "interactiveInput": "comparison-value",
+      "fileName": "Program.cs"
     },
     {
       "eyebrow": "12 · Loops",
@@ -3011,43 +3006,45 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "11 · If statements and symbols",
-      "title": "Check an answer with if and else",
-      "explanation": "Ask “What is 1 + 1?” and save the entered text in answer. == checks whether it equals \"2\". if runs its body when the check is true and prints Correct!; else runs its body when the check is false and prints Try again. Only one body runs. This example asks once. In the next lesson, a loop asks the same question again after a wrong answer.",
-      "note": "# Ask once; print Correct! for 2, otherwise print Try again.",
-      "prompt": "Ask What is 1 + 1? and use if and else to print Correct! or Try again.",
-      "answer": "answer = input(\"What is 1 + 1?\")\n\nif answer == \"2\":\n    print(\"Correct!\")\nelse:\n    print(\"Try again.\")",
+      "title": "Make decisions with if and else",
+      "explanation": "Club entry: At least 18 includes 18 itself. Ages below 18 go to else. Read one number, run the if body when the condition is true, otherwise run else. Only one branch runs; the separate loops lesson repeats a question.",
+      "note": "# Club entry: At least 18 includes 18 itself. Ages below 18 go to else.",
+      "prompt": "Ask “How old are you?” and use age >= 18 to print “You can enter!” or “You are too young.”.",
+      "answer": "age = int(input(\"How old are you? \"))\n\nif age >= 18:\n    print(\"You can enter!\")\nelse:\n    print(\"You are too young.\")",
       "output": [
-        "What is 1 + 1?",
-        "Correct!"
+        "You can enter!"
       ],
       "parts": [
         {
-          "code": "if",
-          "name": "Check the answer",
-          "meaning": "Runs the first body only when answer equals \"2\"."
+          "code": "int(input(\"How old are you? \"))",
+          "name": "Read a whole number",
+          "meaning": "input() returns text. int(...) converts that text to a whole number before the comparison; it is a conversion function, not part of the variable name."
         },
         {
-          "code": "==",
-          "name": "Equal to",
-          "meaning": "Compares the entered text with \"2\". Both values are text in this example; = saves a value instead."
+          "code": "age >= 18",
+          "name": "At least",
+          "meaning": "At least 18 includes 18 itself. Ages below 18 go to else."
+        },
+        {
+          "code": "if",
+          "name": "Run the matching branch",
+          "meaning": "When age >= 18 is true, print You can enter!"
         },
         {
           "code": "else",
-          "name": "Otherwise",
-          "meaning": "Runs the other body and prints Try again. when the if condition is false. It does not ask another question by itself."
-        },
-        {
-          "code": ": / indentation",
-          "name": "Start and group a body",
-          "meaning": "A colon ends the if or else line. The indented print belongs to that body; keep its four spaces."
+          "name": "Handle the other result",
+          "meaning": "When the condition is false, print You are too young. Only one branch runs."
         }
       ],
-      "outputNote": "Example input: 2. Entering a different answer prints Try again. The input labels are annotations, not text printed by the program.",
-      "runHint": "Save as main.py and run python main.py (or python3 main.py). Type your answer and press Enter. Run the program again to try another answer.",
+      "runHint": "Save as main.py and run python3 main.py. Enter a whole number when asked.",
       "outputAnnotations": [
         "you enter 2",
         "answer is correct"
-      ]
+      ],
+      "comparisonExample": true,
+      "comparisonCase": "at-least",
+      "interactiveInput": "comparison-value",
+      "fileName": "main.py"
     },
     {
       "eyebrow": "12 · Loops",
@@ -3855,48 +3852,45 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "11 · If statements and symbols",
-      "title": "Check an answer with if and else",
-      "explanation": "Ask “What is 1 + 1?” and save the entered text in answer. == checks whether it equals \"2\". if runs its body when the check is true and prints Correct!; else runs its body when the check is false and prints Try again. Only one body runs. This example asks once. In the next lesson, a loop asks the same question again after a wrong answer.",
-      "note": "// Ask once; print Correct! for 2, otherwise print Try again.",
-      "prompt": "Ask What is 1 + 1? and use if and else to print Correct! or Try again.",
-      "answer": "#include <iostream>\n#include <string>\n\nint main() {\n    std::cout << \"What is 1 + 1?\";\n    std::string answer;\n    std::getline(std::cin, answer);\n\n    if (answer == \"2\") {\n        std::cout << \"Correct!\\n\";\n    } else {\n        std::cout << \"Try again.\\n\";\n    }\n}",
+      "title": "Make decisions with if and else",
+      "explanation": "Club entry: At least 18 includes 18 itself. Ages below 18 go to else. Read one number, run the if body when the condition is true, otherwise run else. Only one branch runs; the separate loops lesson repeats a question.",
+      "note": "// Club entry: At least 18 includes 18 itself. Ages below 18 go to else.",
+      "prompt": "Ask “How old are you?” and use age >= 18 to print “You can enter!” or “You are too young.”.",
+      "answer": "#include <iostream>\n\nint main() {\n  int age = 0;\n  std::cout << \"How old are you? \";\n  std::cin >> age;\n\n  if (age >= 18) {\n    std::cout << \"You can enter!\\n\";\n  } else {\n    std::cout << \"You are too young.\\n\";\n  }\n}",
       "output": [
-        "What is 1 + 1?",
-        "Correct!"
+        "You can enter!"
       ],
       "parts": [
         {
-          "code": "if",
-          "name": "Check the answer",
-          "meaning": "Runs the first body only when answer equals \"2\"."
+          "code": "std::cin >> age",
+          "name": "Read a whole number",
+          "meaning": "int declares a whole-number variable. std::cin reads the typed number into it. This is different from Python’s int(...), which converts text to a whole number."
         },
         {
-          "code": "==",
-          "name": "Equal to",
-          "meaning": "Compares the entered text with \"2\". Both values are text in this example; = saves a value instead."
+          "code": "age >= 18",
+          "name": "At least",
+          "meaning": "At least 18 includes 18 itself. Ages below 18 go to else."
+        },
+        {
+          "code": "if",
+          "name": "Run the matching branch",
+          "meaning": "When age >= 18 is true, print You can enter!"
         },
         {
           "code": "else",
-          "name": "Otherwise",
-          "meaning": "Runs the other body and prints Try again. when the if condition is false. It does not ask another question by itself."
-        },
-        {
-          "code": "()",
-          "name": "Hold the condition",
-          "meaning": "The parentheses after if contain the check: answer == \"2\"."
-        },
-        {
-          "code": "{}",
-          "name": "Group the instructions",
-          "meaning": "The braces after if and else surround each body. Put each action for that body on its own line inside them."
+          "name": "Handle the other result",
+          "meaning": "When the condition is false, print You are too young. Only one branch runs."
         }
       ],
-      "outputNote": "Example input: 2. Entering a different answer prints Try again. The input labels are annotations, not text printed by the program.",
-      "runHint": "Save as main.cpp; compile with g++ -std=c++17 main.cpp -o main, then run ./main (Windows: .\\main.exe). Type your answer and press Enter. Run the program again to try another answer.",
+      "runHint": "Save as main.cpp, compile with g++ -std=c++17 main.cpp -o main, then run ./main. Enter a whole number when asked.",
       "outputAnnotations": [
         "you enter 2",
         "answer is correct"
-      ]
+      ],
+      "comparisonExample": true,
+      "comparisonCase": "at-least",
+      "interactiveInput": "comparison-value",
+      "fileName": "main.cpp"
     },
     {
       "eyebrow": "12 · Loops",
@@ -4891,21 +4885,23 @@ function LanguageComparison({ indentationDots = true, language, lesson, editorCo
   const [notesOpen, setNotesOpen] = useState(false);
   const [comparisonRuntime, setComparisonRuntime] = useState<InputRuntime>(language === "javascript" && lesson.compareNode && /createInterface/.test(lesson.answer) ? "node" : "browser");
   const [runtimeChanged, setRuntimeChanged] = useState(false);
+  const [comparisonCase,setComparisonCase] = useState<ComparisonCaseId>(lesson.comparisonCase ?? "at-least");
+  const [caseChanged,setCaseChanged] = useState(false);
   const comparisonClock = useMemo(() => pickedLesson ? nextClockTarget() : lesson.clockTarget ?? nextClockTarget(), [pickedLesson, lesson]);
-  const clocked = (value: Lesson | null) => value ? applyClockTarget(value,comparisonClock) : null;
-  const sourceLesson = clocked(javascriptInputLesson(pickedLesson ? matchingLesson(pickedLesson, language) : lesson, language, comparisonRuntime));
+  const contextual = (value: Lesson | null, lang: Language) => value ? value.comparisonExample ? {...value,...comparisonExample(lang,comparisonCase)} : applyClockTarget(value,comparisonClock) : null;
+  const sourceLesson = contextual(javascriptInputLesson(pickedLesson ? matchingLesson(pickedLesson, language) : lesson, language, comparisonRuntime),language);
   const prefix = lessonComment(lesson, language);
   const editedBody = editorCode.startsWith(prefix) ? editorCode.slice(prefix.length) : editorCode;
-  const hasEditorCode = !pickedLesson && !(language === "javascript" && runtimeChanged) && !lesson.referenceOnly && !!editedBody.trim();
+  const hasEditorCode = !pickedLesson && !(language === "javascript" && runtimeChanged) && !(lesson.comparisonExample && caseChanged) && !lesson.referenceOnly && !!editedBody.trim();
   const sourceCode = hasEditorCode ? editorCode : sourceLesson ? lessonExample(sourceLesson, language, showComments) : "";
-  const other = clocked(javascriptInputLesson(matchingLesson(pickedLesson ?? lesson, target), target, comparisonRuntime));
+  const other = contextual(javascriptInputLesson(matchingLesson(pickedLesson ?? lesson, target), target, comparisonRuntime),target);
   const selectPinnedTopic = (topic: string) => {
     const nextIndex = pinnedLessonIndex(lessons[language], topic);
     if (nextIndex >= 0) setPickedLesson(lessons[language][nextIndex]);
   };
   const activeTopic = sourceLesson?.title ?? null;
   const targetCode = other ? lessonExample(other, target, showComments) : "";
-  const replayKey = `${language}-${target}-${pickedLesson?.title ?? lesson.title}-${comparisonRuntime}`;
+  const replayKey = `${language}-${target}-${pickedLesson?.title ?? lesson.title}-${comparisonRuntime}-${comparisonCase}`;
   const sourceReveal = useQuickCodeReveal(sourceCode, replayKey);
   const targetReveal = useQuickCodeReveal(targetCode, replayKey);
   useEffect(() => {
@@ -4920,6 +4916,7 @@ function LanguageComparison({ indentationDots = true, language, lesson, editorCo
     <header className="lesson-nav app-header comparison-topbar"><div className="lesson-brand-group"><BackButton onClick={onClose} label="Back to lesson" /><button className="drawer-toggle comparison-notes-toggle" aria-label="Lesson explanations" title="Lesson explanations" data-active={notesOpen} aria-expanded={notesOpen} aria-controls="comparison-notes-panel" onClick={() => setNotesOpen(!notesOpen)}><LessonSymbol /></button><ComparisonExamplePicker key={target} target={target} sourceLanguage={language} pins={pinnedTopics} pinLimit={pinLimit} onTogglePin={onTogglePin} selected={other} onSelect={title => setPickedLesson(lessons[target].find(item => item.title === title) ?? null)} /></div>{pinLimit > 2 && pinnedTopics.length > 0 && <div className="desktop-header-pins"><PinnedTopicShortcuts topics={pinnedTopics} activeTopic={activeTopic} onSelect={selectPinnedTopic} language={language} /></div>}<div className="comparison-header-languages"><h2 id="language-comparison-title">Compare code</h2><div className="compare-language-choices"><div role="group" aria-label="Comparison language">{(Object.keys(lessons) as Language[]).filter(item => item !== language && item !== "html" && item !== "css").map(item => <button className={`language-choice language-${item}`} key={item} aria-label={`Compare with ${languageName(item)}`} title={languageName(item)} data-active={target === item} aria-pressed={target === item} onClick={() => setTarget(item)}><img className="comparison-language-logo" src={`language-logos/${item}.svg`} alt="" width="24" height="24" /><span className="comparison-language-name">{languageName(item)}</span></button>)}</div></div></div></header>
     <div className="language-comparison-controls">
       <p className="comparison-context">{(pickedLesson ?? lesson).title}</p>
+      {(sourceLesson?.comparisonExample || other?.comparisonExample) && <ComparisonCasePicker selected={comparisonCase} onSelect={value=>{setComparisonCase(value);setCaseChanged(true);}} language={language} comparison />}
       {((language === "javascript" && sourceLesson?.compareNode) || (target === "javascript" && other?.compareNode)) && <div className="comparison-input-runtime runtime-picker" role="group" aria-label="JavaScript input environment"><span>JavaScript input:</span><button data-active={comparisonRuntime === "browser"} aria-pressed={comparisonRuntime === "browser"} onClick={() => { setComparisonRuntime("browser"); setRuntimeChanged(true); }}>Browser prompt()</button><button data-active={comparisonRuntime === "node"} aria-pressed={comparisonRuntime === "node"} onClick={() => { setComparisonRuntime("node"); setRuntimeChanged(true); }}>Node.js terminal</button><small>Changes the comparison example; your practice code stays unchanged.</small></div>}
     </div>
     <div className="language-comparison-columns">
@@ -4992,8 +4989,9 @@ export default function Home() {
   const [checkerVersion, setCheckerVersion] = useState(0);
   const [checking, setChecking] = useState(false);
   const [checkerError, setCheckerError] = useState("");
-  const checkContext = useRef({ code, language, index });
-  checkContext.current = { code, language, index };
+  const [comparisonCase,setComparisonCase] = useState<ComparisonCaseId>("at-least");
+  const checkContext = useRef({ code, language, index, comparisonCase });
+  checkContext.current = { code, language, index, comparisonCase };
 
   useEffect(() => {
     if (!language) return;
@@ -5048,6 +5046,7 @@ export default function Home() {
   const baseCurrent = language ? lessons[language][index] : null;
   const clockTarget = useMemo(() => nextClockTarget(), [baseCurrent]);
   const current = useMemo(() => {
+    if(baseCurrent?.comparisonExample)return {...baseCurrent,...comparisonExample(language!,comparisonCase)};
     if(baseCurrent?.clockExample)return applyClockTarget(baseCurrent,clockTarget);
     if (baseCurrent && ["alignment", "positioning", "combined-styles"].includes(baseCurrent.referenceKind ?? "")) {
       const example = layoutExample(baseCurrent.referenceKind as LayoutKind, layoutOptions);
@@ -5068,7 +5067,7 @@ export default function Home() {
       ] };
     }
     return baseCurrent && language === "javascript" && baseCurrent.compareNode && inputRuntime === "browser" ? { ...baseCurrent, ...browserInputPatch() } : baseCurrent;
-  }, [baseCurrent, language, inputRuntime, textColour, textColourTag, layoutOptions, clockTarget]);
+  }, [baseCurrent, language, inputRuntime, textColour, textColourTag, layoutOptions, clockTarget, comparisonCase]);
   const pinnedTopics = language ? (pinnedByLanguage[language] ?? []).slice(0, pinLimit) : [];
   const visibleLessons = language ? filterTopicLessons(lessons[language], null) : [];
   const openPinnedTopic = (topic: string) => {
@@ -5273,12 +5272,12 @@ export default function Home() {
     setCheckerError("");
     try {
       const result = lessonCheck ?? await checkLesson(code, current, language);
-      if (checkContext.current.code !== context.code || checkContext.current.language !== context.language || checkContext.current.index !== context.index) return;
+      if (checkContext.current.code !== context.code || checkContext.current.language !== context.language || checkContext.current.index !== context.index || checkContext.current.comparisonCase !== context.comparisonCase) return;
       setCheckerVersion(version => version + 1);
       setStatus(result.accepted ? "correct" : "wrong");
       if (result.accepted) setCompleted(old => ({ ...old, [language]: Math.max(old[language], index + 1) }));
     } catch {
-      if (checkContext.current.code === context.code && checkContext.current.language === context.language && checkContext.current.index === context.index) {
+      if (checkContext.current.code === context.code && checkContext.current.language === context.language && checkContext.current.index === context.index && checkContext.current.comparisonCase === context.comparisonCase) {
         setCheckerError("The checker couldn’t load. Please try Check code again.");
         setStatus("wrong");
       }
@@ -5494,15 +5493,16 @@ export default function Home() {
             <button className="reference-next" onClick={nextLesson}>Continue to images →</button>
           </div> : ["alignment", "positioning", "combined-styles"].includes(current!.referenceKind ?? "") ? <LayoutReference kind={current!.referenceKind as LayoutKind} language={language as "html" | "css"} options={layoutOptions} onChange={setLayoutOptions} nextLabel={index === lessons[language].length - 1 ? `Finish ${language.toUpperCase()} path →` : "Continue to the next lesson →"} onAlternate={() => openReferenceLesson(language === "html" ? "css" : "html", current!.referenceKind!)} onNext={nextLesson} actions={lessonActions} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax} />} /> : current!.referenceKind === "named-colours" ? <TextColourReference colourName={textColour} onColourChange={setTextColour} onOpenHex={() => openReferenceLesson("css", "colours")} onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} /> : (current!.referenceKind === "css" || current!.referenceKind === "colours") ? <CssVisualReference colourName={textColour} onColourChange={setTextColour} onOpenTextColour={() => openReferenceLesson("html", "named-colours")} kind={current!.referenceKind === "colours" ? "colours" : "borders"} onNext={nextLesson} actions={lessonActions} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax ?? (current!.referenceKind === "colours" ? "html" : "css")} />} /> : <HtmlTextReference onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} />}</> : <>
           <div className="editor-panel">
+            {current!.comparisonExample && <ComparisonCasePicker selected={comparisonCase} onSelect={setComparisonCase} language={language} />}
             <div className="panel-bar"><div className={`file-tab ${pinnedTopics.length && pinLimit <= 2 ? "has-pinned-topics" : ""}`} data-topic-tone={lessonTone(current!)} title={current!.fileName || challengeFile(language)}><span className="editor-file-name">{current!.fileName || challengeFile(language)}</span>{pinnedTopics.length && pinLimit <= 2 ? <PinnedTopicShortcuts topics={pinnedTopics} activeTopic={current?.title ?? null} onSelect={openPinnedTopic} language={language} /> : null}</div><div className="panel-actions"><div className="desktop-pane-actions">{lessonActions}</div><span className="mobile-editor-copy"><CopyCodeButton iconOnly code={lessonExample(current!, language, showComments)} label="full lesson example for VS Code" /></span><button className="editor-expand-button" aria-label={editorExpanded ? "Restore editor" : "Expand editor"} title={editorExpanded ? "Restore editor" : "Expand editor"} aria-pressed={editorExpanded} onClick={() => setEditorExpanded(expanded => !expanded)}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{editorExpanded ? <path d="M8 3v5H3m13-5v5h5M3 16h5v5m13-5h-5v5"/> : <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>}</svg></button><button className="editor-reset-button" onClick={() => changeBlockCode(commentPrefix + (current!.starter || ""))} title="Reset code" aria-label="Reset code"><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></svg><span className="editor-action-label">Reset</span></button></div></div>
-              {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={commentPrefix + ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode indentationDots={indentationDots} code={value} language={language} />} /> : <div ref={codeEditorRef} className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="editor-surface" style={{ minHeight: `max(100%, calc(${lineNumbers.length} * var(--editor-line-height) + var(--editor-padding)))`, minWidth: `max(100%, calc(${Math.max(...(code + guideCode).split("\n").map(line => line.length), 1)}ch + var(--editor-gutter) + var(--editor-inline-padding) + var(--editor-inline-padding)))` }}><CodeLineNumbers text={code + (showGuide ? guideCode : "")} minimumLines={8} />{showGuide && <pre className={`code-guide ${current!.title === "Check an answer with if and else" ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{current!.title === "Check an answer with if and else" ? <LearningCode indentationDots={indentationDots} indentationPrefix={code} code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode indentationDots={indentationDots} indentationPrefix={code} code={guideCode} fullCode={fullGuideCode} language={language} />}</code></pre>}{<pre className="typed-code-layer" aria-hidden="true"><code><LearningCode indentationDots={indentationDots} code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={current!.title === "Check an answer with if and else"} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" wrap="soft" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div></div>}
+              {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={commentPrefix + ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode indentationDots={indentationDots} code={value} language={language} />} /> : <div ref={codeEditorRef} className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="editor-surface" style={{ minHeight: `max(100%, calc(${lineNumbers.length} * var(--editor-line-height) + var(--editor-padding)))`, minWidth: `max(100%, calc(${Math.max(...(code + guideCode).split("\n").map(line => line.length), 1)}ch + var(--editor-gutter) + var(--editor-inline-padding) + var(--editor-inline-padding)))` }}><CodeLineNumbers text={code + (showGuide ? guideCode : "")} minimumLines={8} />{showGuide && <pre className={`code-guide ${current!.comparisonExample ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{!!current!.comparisonExample ? <LearningCode indentationDots={indentationDots} indentationPrefix={code} code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode indentationDots={indentationDots} indentationPrefix={code} code={guideCode} fullCode={fullGuideCode} language={language} />}</code></pre>}{<pre className="typed-code-layer" aria-hidden="true"><code><LearningCode indentationDots={indentationDots} code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={!!current!.comparisonExample} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" wrap="soft" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div></div>}
           </div>
           <div className="console-panel" data-browser-preview={current?.browserPreview || undefined}>
             <div className="console-bar"><span><i /> {language === "html" || language === "css" ? "RESULT PREVIEW" : "CONSOLE"}</span><button onClick={() => setStatus("idle")}>Clear</button></div>
             <div className="console-body">
               {status === "idle" && <span className="console-muted">{language === "html" || language === "css" ? "Your page result preview will appear here..." : "Your program output will appear here..."}</span>}
               {status === "wrong" && <><SyntaxDiagnostic parts={diagnostic} /><div className="console-muted diagnostic-hint">Hover over or focus each underlined part to see what it means.</div></>}
-              {status === "correct" && <><div className="run-line"><span><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Code accepted — {current?.interactiveInput === "shopping-total" ? "enter a price and quantity below" : current?.interactiveInput === "bank-deposit" ? "enter a deposit below" : current?.interactiveInput ? "enter a name below" : current?.displayCurrentTime ? "current local time" : language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div>{current?.interactiveInput === "shopping-total" ? <ShoppingTotalInput key={`${language}-${index}`} /> : current?.interactiveInput === "bank-deposit" ? <BankTerminalInput key={`${language}-${index}`} /> : current?.interactiveInput === "club-name" ? <ClubTerminalInput key={`${language}-${index}`} /> : current?.browserPreview ? <BrowserResultPreview showTab={current.browserPreview === "document"} code={current.idLesson === "css" ? linkedIdHtml : practiceCode} css={current.idLesson === "css" ? practiceCode : undefined} /> : <div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div>}</>}
+              {status === "correct" && <><div className="run-line"><span><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Code accepted — {current?.interactiveInput === "comparison-value" ? "try a value below" : current?.interactiveInput === "shopping-total" ? "enter a price and quantity below" : current?.interactiveInput === "bank-deposit" ? "enter a deposit below" : current?.interactiveInput ? "enter a name below" : current?.displayCurrentTime ? "current local time" : language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div>{current?.interactiveInput === "comparison-value" ? <ComparisonValueInput key={`${language}-${index}-${comparisonCase}`} example={comparisonCase} /> : current?.interactiveInput === "shopping-total" ? <ShoppingTotalInput key={`${language}-${index}`} /> : current?.interactiveInput === "bank-deposit" ? <BankTerminalInput key={`${language}-${index}`} /> : current?.interactiveInput === "club-name" ? <ClubTerminalInput key={`${language}-${index}`} /> : current?.browserPreview ? <BrowserResultPreview showTab={current.browserPreview === "document"} code={current.idLesson === "css" ? linkedIdHtml : practiceCode} css={current.idLesson === "css" ? practiceCode : undefined} /> : <div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div>}</>}
             </div>
           </div>
           <div className={`feedback ${status}`}>
