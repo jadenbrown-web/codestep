@@ -38,6 +38,7 @@ try{
    if(width===390&&language==='python'&&id==='Europe/Paris')await page.screenshot({path:'/tmp/codestep-zone-menu-phone.png'});
    await picker.getByRole('button',{name:label,exact:true}).click();
    assert.equal(await trigger.getAttribute('aria-expanded'),'false');
+   await page.waitForFunction(()=>document.querySelector('textarea[aria-label="Code editor"]')?.value==='');
    assert.equal(await editor.inputValue(),'');
    assert.equal(await page.locator('.typed-output').count(),0);
    await page.evaluate(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async code=>window.copied=code}}));
