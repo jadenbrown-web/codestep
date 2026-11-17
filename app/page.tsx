@@ -249,75 +249,65 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "06 · Date and time",
       "title": "Check for a particular time",
-      "explanation": "This checks the local time once. getHours() and getMinutes() read parts of time. === compares values and types; && requires both comparisons to be true. The message prints only if this code runs during 17:20. An if statement alone does not keep watching the clock.",
-      "note": "// Print Time reached! if the local hour is 17 and the minute is 20.",
-      "prompt": "Print Time reached! if the local hour is 17 and the minute is 20.",
-      "answer": "let time = new Date();\n\nlet hour = time.getHours();\nlet minute = time.getMinutes();\n\nif (hour === 17 && minute === 20) {\n  console.log(\"Time reached!\");\n}",
+      "explanation": "The target is calculated once, one minute after the current time when the program starts. This example waits for that minute, then checks the clock once. The >= comparison means the target has been reached or passed, so a late check still works. The full timestamp handles the next hour and midnight automatically.",
+      "note": "// Set a target one minute from now, wait, then check once.",
+      "prompt": "Set a target one minute from now and print Time reached! once after waiting for it.",
+      "answer": "const target = Date.now() + 60000;\n\nsetTimeout(() => {\n  if (Date.now() >= target) {\n    console.log(\"Time reached!\");\n  }\n}, 60000);",
       "output": [
         "Time reached!"
       ],
       "parts": [
         {
-          "code": "new Date()",
-          "name": "Capture the clock",
-          "meaning": "Captures the current local date and time. This saved Date object does not keep updating itself."
+          "code": "Date.now() + 60000",
+          "name": "One minute from now",
+          "meaning": "Read the current time and add one minute. Save this target once before waiting or repeating; recalculating it inside the loop would keep moving the deadline."
         },
         {
-          "code": "let time =",
-          "name": "Save a value",
-          "meaning": "let gives a value a name that can be reassigned later. = saves the value on the right under the name on the left."
+          "code": "setTimeout",
+          "name": "Wait one minute",
+          "meaning": "Wait until the one-minute target before checking. The pause uses seconds in Python and milliseconds in JavaScript and C#; C++ waits until the target timestamp."
         },
         {
-          "code": "if (...) { ... }",
-          "name": "Run a matching check",
-          "meaning": "Runs the instructions inside the braces only when the condition is true."
-        },
-        {
-          "code": "time.getHours()",
-          "name": "Hour",
-          "meaning": "Reads the hour from 0 to 23."
-        },
-        {
-          "code": "time.getMinutes()",
-          "name": "Minute",
-          "meaning": "Reads the minute from 0 to 59."
-        },
-        {
-          "code": "&&",
-          "name": "Both",
-          "meaning": "The hour and minute must both match."
+          "code": "Date.now() >= target",
+          "name": "Reached or passed",
+          "meaning": "Compare the full current timestamp with the saved target. >= accepts the target time or any later time, including a check that runs late."
         }
       ],
-      "outputNote": "Example output when the clock is 17:20. At other times, this snippet prints nothing."
+      "outputNote": "Example output after one minute. This app previews the result immediately; running the code on your computer waits for the target. Keep the program open."
     },
     {
       "eyebrow": "07 · Date and time",
       "title": "Keep checking until the time is reached",
-      "explanation": "This checks the clock every second while the program stays open. Each check creates a fresh Date. At 17:20 it prints once and clearInterval stops future checks. If 17:20 has passed, it waits for the next day. Browser timers may run late, especially in background tabs, so this is a learning example rather than an exact alarm.",
-      "note": "// Keep checking the local clock and print Time reached! once at 17:20.",
-      "prompt": "Keep checking the local clock and print Time reached! once at 17:20.",
-      "answer": "const timer = setInterval(() => {\n  let time = new Date();\n  let hour = time.getHours();\n  let minute = time.getMinutes();\n\n  if (hour === 17 && minute === 20) {\n    console.log(\"Time reached!\");\n    clearInterval(timer);\n  }\n}, 1000);",
+      "explanation": "The target is calculated once, one minute after the current time when the program starts. This example checks a fresh clock reading every second and stops after printing once. The >= comparison means the target has been reached or passed, so a late check still works. The full timestamp handles the next hour and midnight automatically.",
+      "note": "// Set a target one minute from now and check every second.",
+      "prompt": "Set a target one minute from now and print Time reached! once when a repeated check reaches it.",
+      "answer": "const target = Date.now() + 60000;\n\nconst timer = setInterval(() => {\n  if (Date.now() >= target) {\n    console.log(\"Time reached!\");\n    clearInterval(timer);\n  }\n}, 1000);",
       "output": [
         "Time reached!"
       ],
       "parts": [
         {
+          "code": "Date.now() + 60000",
+          "name": "One minute from now",
+          "meaning": "Read the current time and add one minute. Save this target once before waiting or repeating; recalculating it inside the loop would keep moving the deadline."
+        },
+        {
           "code": "setInterval",
-          "name": "Repeat checks",
-          "meaning": "Runs the same function again after each delay. Here, that function checks whether it is time to continue."
+          "name": "Check every second",
+          "meaning": "Pause one second between checks. JavaScript schedules repeated callbacks; the other languages pause between loop repetitions."
+        },
+        {
+          "code": "Date.now() >= target",
+          "name": "Reached or passed",
+          "meaning": "Compare the full current timestamp with the saved target. >= accepts the target time or any later time, including a check that runs late."
         },
         {
           "code": "clearInterval(timer)",
-          "name": "Stop",
-          "meaning": "Cancels the repeating timer after the matching time."
-        },
-        {
-          "code": "const timer = setInterval(...)",
-          "name": "Keep the timer identifier",
-          "meaning": "Saves this interval's identifier so clearInterval(timer) can stop that particular interval."
+          "name": "Stop after printing",
+          "meaning": "Stop future checks after printing Time reached! once."
         }
       ],
-      "outputNote": "Example output at 17:20. The lesson preview does not wait for the clock."
+      "outputNote": "Example output after one minute. This app previews the result immediately; running the code on your computer waits for the target. Keep the program open."
     },
     {
       "eyebrow": "08 · Functions",
@@ -1090,66 +1080,66 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "05 · Date and time",
       "title": "Check for a particular time",
-      "explanation": "This checks the local time once. Hour and Minute read parts of time. == compares values; && requires both comparisons to be true. The message prints only if this code runs during 17:20. An if statement alone does not keep watching the clock.",
-      "note": "// Print Time reached! if the local hour is 17 and the minute is 20.",
-      "prompt": "Print Time reached! if the local hour is 17 and the minute is 20.",
-      "answer": "DateTime time = DateTime.Now;\n\nint hour = time.Hour;\nint minute = time.Minute;\n\nif (hour == 17 && minute == 20) {\n  Console.WriteLine(\"Time reached!\");\n}",
+      "explanation": "The target is calculated once, one minute after the current time when the program starts. This example waits for that minute, then checks the clock once. The >= comparison means the target has been reached or passed, so a late check still works. The full timestamp handles the next hour and midnight automatically.",
+      "note": "// Set a target one minute from now, wait, then check once.",
+      "prompt": "Set a target one minute from now and print Time reached! once after waiting for it.",
+      "answer": "DateTime target = DateTime.Now.AddMinutes(1);\n\nawait System.Threading.Tasks.Task.Delay(60000);\nif (DateTime.Now >= target) {\n  Console.WriteLine(\"Time reached!\");\n}",
       "output": [
         "Time reached!"
       ],
       "parts": [
         {
-          "code": "DateTime.Now",
-          "name": "Capture the clock",
-          "meaning": "Reads a snapshot of the computer's current local date and time. This saved value does not keep updating itself."
+          "code": "DateTime.Now.AddMinutes(1)",
+          "name": "One minute from now",
+          "meaning": "Read the current time and add one minute. Save this target once before waiting or repeating; recalculating it inside the loop would keep moving the deadline."
         },
         {
-          "code": "time.Hour",
-          "name": "Hour",
-          "meaning": "Reads the hour from 0 to 23."
+          "code": "Task.Delay(60000)",
+          "name": "Wait one minute",
+          "meaning": "Wait until the one-minute target before checking. The pause uses seconds in Python and milliseconds in JavaScript and C#; C++ waits until the target timestamp."
         },
         {
-          "code": "time.Minute",
-          "name": "Minute",
-          "meaning": "Reads the minute from 0 to 59."
-        },
-        {
-          "code": "&&",
-          "name": "Both",
-          "meaning": "The hour and minute must both match."
-        },
-        {
-          "code": "if (hour == 17 && minute == 20)",
-          "name": "Check both values",
-          "meaning": "if runs its body only when both comparisons are true. && (two ampersands) means both the hour and minute must match."
+          "code": "DateTime.Now >= target",
+          "name": "Reached or passed",
+          "meaning": "Compare the full current timestamp with the saved target. >= accepts the target time or any later time, including a check that runs late."
         }
       ],
-      "outputNote": "Example output when the clock is 17:20. At other times, this snippet prints nothing.",
+      "outputNote": "Example output after one minute. This app previews the result immediately; running the code on your computer waits for the target. Keep the program open.",
       "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
       "eyebrow": "06 · Date and time",
       "title": "Keep checking until the time is reached",
-      "explanation": "This loop checks a fresh DateTime.Now every second while the program stays open. At 17:20 it prints once and break stops the loop. Task.Delay gives the loop a 1-second wait between checks. If 17:20 has passed, it waits for the next day. Checks can run late, so this is a learning example rather than an exact alarm.",
-      "note": "// Keep checking the local clock and print Time reached! once at 17:20.",
-      "prompt": "Keep checking the local clock and print Time reached! once at 17:20.",
-      "answer": "while (true) {\n  DateTime time = DateTime.Now;\n  int hour = time.Hour;\n  int minute = time.Minute;\n\n  if (hour == 17 && minute == 20) {\n    Console.WriteLine(\"Time reached!\");\n    break;\n  }\n\n  await System.Threading.Tasks.Task.Delay(1000);\n}",
+      "explanation": "The target is calculated once, one minute after the current time when the program starts. This example checks a fresh clock reading every second and stops after printing once. The >= comparison means the target has been reached or passed, so a late check still works. The full timestamp handles the next hour and midnight automatically.",
+      "note": "// Set a target one minute from now and check every second.",
+      "prompt": "Set a target one minute from now and print Time reached! once when a repeated check reaches it.",
+      "answer": "DateTime target = DateTime.Now.AddMinutes(1);\n\nwhile (true) {\n  if (DateTime.Now >= target) {\n    Console.WriteLine(\"Time reached!\");\n    break;\n  }\n\n  await System.Threading.Tasks.Task.Delay(1000);\n}",
       "output": [
         "Time reached!"
       ],
       "parts": [
         {
-          "code": "while (true)",
-          "name": "Repeat checks",
-          "meaning": "The condition stays true, so the loop repeats its body inside the braces until break is reached."
+          "code": "DateTime.Now.AddMinutes(1)",
+          "name": "One minute from now",
+          "meaning": "Read the current time and add one minute. Save this target once before waiting or repeating; recalculating it inside the loop would keep moving the deadline."
+        },
+        {
+          "code": "Task.Delay(1000)",
+          "name": "Check every second",
+          "meaning": "Pause one second between checks. JavaScript schedules repeated callbacks; the other languages pause between loop repetitions."
+        },
+        {
+          "code": "DateTime.Now >= target",
+          "name": "Reached or passed",
+          "meaning": "Compare the full current timestamp with the saved target. >= accepts the target time or any later time, including a check that runs late."
         },
         {
           "code": "break",
-          "name": "Leave the loop",
-          "meaning": "Immediately leaves the nearest loop and skips the rest of that repetition. Execution continues after the loop; break does not end the whole program."
+          "name": "Stop after printing",
+          "meaning": "Stop future checks after printing Time reached! once."
         }
       ],
-      "outputNote": "Example output at 17:20. The lesson preview does not wait for the clock.",
+      "outputNote": "Example output after one minute. This app previews the result immediately; running the code on your computer waits for the target. Keep the program open.",
       "runHint": "Save the example in Program.cs inside a console project. Create one with dotnet new console, then run it with dotnet run. Install the .NET SDK first."
     },
     {
@@ -2791,66 +2781,66 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "05 · Date and time",
       "title": "Check for a particular time",
-      "explanation": "This checks the local clock once. == compares values and and requires both checks to be true. A colon starts the if body, and indentation identifies the code inside it. This prints only if run during 17:20; it does not keep watching the clock.",
-      "note": "# Print Time reached! if the local hour is 17 and the minute is 20.",
-      "prompt": "Print Time reached! if the local hour is 17 and the minute is 20.",
-      "answer": "from datetime import datetime\n\ntime = datetime.now()\n\nhour = time.hour\nminute = time.minute\n\nif hour == 17 and minute == 20:\n    print(\"Time reached!\")",
+      "explanation": "The target is calculated once, one minute after the current time when the program starts. This example waits for that minute, then checks the clock once. The >= comparison means the target has been reached or passed, so a late check still works. The full timestamp handles the next hour and midnight automatically.",
+      "note": "# Set a target one minute from now, wait, then check once.",
+      "prompt": "Set a target one minute from now and print Time reached! once after waiting for it.",
+      "answer": "from datetime import datetime, timedelta\nimport time\n\ntarget = datetime.now() + timedelta(minutes=1)\n\ntime.sleep(60)\nif datetime.now() >= target:\n    print(\"Time reached!\")",
       "output": [
         "Time reached!"
       ],
       "parts": [
         {
-          "code": "from datetime import datetime",
-          "name": "Load the clock tool",
-          "meaning": "Loads the datetime class from Python's datetime module."
+          "code": "datetime.now() + timedelta(minutes=1)",
+          "name": "One minute from now",
+          "meaning": "Read the current time and add one minute. Save this target once before waiting or repeating; recalculating it inside the loop would keep moving the deadline."
         },
         {
-          "code": "datetime.now()",
-          "name": "Capture the clock",
-          "meaning": "Captures the current local date and time for this one check."
+          "code": "time.sleep(60)",
+          "name": "Wait one minute",
+          "meaning": "Wait until the one-minute target before checking. The pause uses seconds in Python and milliseconds in JavaScript and C#; C++ waits until the target timestamp."
         },
         {
-          "code": "time.hour / time.minute",
-          "name": "Clock parts",
-          "meaning": "Read the hour and minute from the saved time."
-        },
-        {
-          "code": "and",
-          "name": "Both",
-          "meaning": "Both conditions must be true."
-        },
-        {
-          "code": "if hour == 17 and minute == 20",
-          "name": "Check both values",
-          "meaning": "if runs its body only when both comparisons are true. and means both the hour and minute must match."
+          "code": "datetime.now() >= target",
+          "name": "Reached or passed",
+          "meaning": "Compare the full current timestamp with the saved target. >= accepts the target time or any later time, including a check that runs late."
         }
       ],
-      "outputNote": "Example output when the clock is 17:20. At other times, this snippet prints nothing.",
+      "outputNote": "Example output after one minute. This app previews the result immediately; running the code on your computer waits for the target. Keep the program open.",
       "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
       "eyebrow": "06 · Date and time",
       "title": "Keep checking until the time is reached",
-      "explanation": "The loop creates a fresh local time each second. At 17:20 it prints once and break leaves the loop. time.sleep(1) pauses between checks. Keep the program open; if 17:20 has passed, it waits until the next day. Checks can run late.",
-      "note": "# Keep checking the local clock and print Time reached! once at 17:20.",
-      "prompt": "Keep checking the local clock and print Time reached! once at 17:20.",
-      "answer": "from datetime import datetime\nimport time\n\nwhile True:\n    now = datetime.now()\n    hour = now.hour\n    minute = now.minute\n\n    if hour == 17 and minute == 20:\n        print(\"Time reached!\")\n        break\n\n    time.sleep(1)",
+      "explanation": "The target is calculated once, one minute after the current time when the program starts. This example checks a fresh clock reading every second and stops after printing once. The >= comparison means the target has been reached or passed, so a late check still works. The full timestamp handles the next hour and midnight automatically.",
+      "note": "# Set a target one minute from now and check every second.",
+      "prompt": "Set a target one minute from now and print Time reached! once when a repeated check reaches it.",
+      "answer": "from datetime import datetime, timedelta\nimport time\n\ntarget = datetime.now() + timedelta(minutes=1)\n\nwhile True:\n    if datetime.now() >= target:\n        print(\"Time reached!\")\n        break\n\n    time.sleep(1)",
       "output": [
         "Time reached!"
       ],
       "parts": [
         {
-          "code": "while True:",
-          "name": "Repeat",
-          "meaning": "The condition stays true, so the loop repeats its indented body until break is reached."
+          "code": "datetime.now() + timedelta(minutes=1)",
+          "name": "One minute from now",
+          "meaning": "Read the current time and add one minute. Save this target once before waiting or repeating; recalculating it inside the loop would keep moving the deadline."
+        },
+        {
+          "code": "time.sleep(1)",
+          "name": "Check every second",
+          "meaning": "Pause one second between checks. JavaScript schedules repeated callbacks; the other languages pause between loop repetitions."
+        },
+        {
+          "code": "datetime.now() >= target",
+          "name": "Reached or passed",
+          "meaning": "Compare the full current timestamp with the saved target. >= accepts the target time or any later time, including a check that runs late."
         },
         {
           "code": "break",
-          "name": "Leave the loop",
-          "meaning": "Immediately leaves the nearest loop and skips the rest of that repetition. Execution continues after the loop; break does not end the whole program."
+          "name": "Stop after printing",
+          "meaning": "Stop future checks after printing Time reached! once."
         }
       ],
-      "outputNote": "Example output at 17:20. The lesson preview does not wait for the clock.",
+      "outputNote": "Example output after one minute. This app previews the result immediately; running the code on your computer waits for the target. Keep the program open.",
       "runHint": "Save as main.py and run python3 main.py in the VS Code terminal."
     },
     {
@@ -3586,71 +3576,66 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "05 · Date and time",
       "title": "Check for a particular time",
-      "explanation": "This checks the local clock once. tm_hour is the hour from 0 to 23; tm_min is the minute from 0 to 59. == compares values and && requires both checks to be true. This prints only if run during 17:20; it does not keep watching the clock.",
-      "note": "// Print Time reached! if the local hour is 17 and the minute is 20.",
-      "prompt": "Print Time reached! if the local hour is 17 and the minute is 20.",
-      "answer": "#include <iostream>\n#include <string>\n#include <ctime>\n\nint main() {\n  std::time_t now = std::time(nullptr);\n  std::tm time = *std::localtime(&now);\n\n  int hour = time.tm_hour;\n  int minute = time.tm_min;\n\n  if (hour == 17 && minute == 20) {\n    std::cout << \"Time reached!\\n\";\n  }\n}",
+      "explanation": "The target is calculated once, one minute after the current time when the program starts. This example waits for that minute, then checks the clock once. The >= comparison means the target has been reached or passed, so a late check still works. The full timestamp handles the next hour and midnight automatically.",
+      "note": "// Set a target one minute from now, wait, then check once.",
+      "prompt": "Set a target one minute from now and print Time reached! once after waiting for it.",
+      "answer": "#include <iostream>\n#include <chrono>\n#include <thread>\n\nint main() {\n  auto target = std::chrono::system_clock::now() + std::chrono::minutes(1);\n\n  std::this_thread::sleep_until(target);\n  if (std::chrono::system_clock::now() >= target) {\n    std::cout << \"Time reached!\\n\";\n  }\n}",
       "output": [
         "Time reached!"
       ],
       "parts": [
         {
-          "code": "std::time(nullptr)",
-          "name": "Read the timestamp",
-          "meaning": "Gets the current timestamp. nullptr means no extra pointer is supplied for storing another copy."
+          "code": "std::chrono::system_clock::now() + std::chrono::minutes(1)",
+          "name": "One minute from now",
+          "meaning": "Read the current time and add one minute. Save this target once before waiting or repeating; recalculating it inside the loop would keep moving the deadline."
         },
         {
-          "code": "std::localtime(&now)",
-          "name": "Read local calendar fields",
-          "meaning": "Converts the timestamp into local date and time fields. &now passes the address of now."
+          "code": "std::this_thread::sleep_until(target)",
+          "name": "Wait one minute",
+          "meaning": "Wait until the one-minute target before checking. The pause uses seconds in Python and milliseconds in JavaScript and C#; C++ waits until the target timestamp."
         },
         {
-          "code": "*std::localtime(&now)",
-          "name": "Copy the fields",
-          "meaning": "The leading * reads the time structure through the returned pointer so its fields can be saved in time."
-        },
-        {
-          "code": "tm_hour / tm_min",
-          "name": "Clock parts",
-          "meaning": "Read the local hour and minute."
-        },
-        {
-          "code": "&&",
-          "name": "Both",
-          "meaning": "Requires both comparisons to be true."
-        },
-        {
-          "code": "if (hour == 17 && minute == 20)",
-          "name": "Check both values",
-          "meaning": "if runs its body only when both comparisons are true. && (two ampersands) means both the hour and minute must match."
+          "code": "std::chrono::system_clock::now() >= target",
+          "name": "Reached or passed",
+          "meaning": "Compare the full current timestamp with the saved target. >= accepts the target time or any later time, including a check that runs late."
         }
       ],
-      "outputNote": "Example output when the clock is 17:20. At other times, this snippet prints nothing.",
+      "outputNote": "Example output after one minute. This app previews the result immediately; running the code on your computer waits for the target. Keep the program open.",
       "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {
       "eyebrow": "06 · Date and time",
       "title": "Keep checking until the time is reached",
-      "explanation": "The loop gets a fresh local time each second. At 17:20 it prints once and break leaves the loop. sleep_for waits between checks. Keep the program open; if 17:20 has passed, it waits until the next day. Checks can run late.",
-      "note": "// Keep checking the local clock and print Time reached! once at 17:20.",
-      "prompt": "Keep checking the local clock and print Time reached! once at 17:20.",
-      "answer": "#include <iostream>\n#include <string>\n#include <ctime>\n#include <thread>\n#include <chrono>\n\nint main() {\n  while (true) {\n    std::time_t now = std::time(nullptr);\n    std::tm time = *std::localtime(&now);\n    int hour = time.tm_hour;\n    int minute = time.tm_min;\n\n    if (hour == 17 && minute == 20) {\n      std::cout << \"Time reached!\\n\";\n      break;\n    }\n\n    std::this_thread::sleep_for(std::chrono::seconds(1));\n  }\n}",
+      "explanation": "The target is calculated once, one minute after the current time when the program starts. This example checks a fresh clock reading every second and stops after printing once. The >= comparison means the target has been reached or passed, so a late check still works. The full timestamp handles the next hour and midnight automatically.",
+      "note": "// Set a target one minute from now and check every second.",
+      "prompt": "Set a target one minute from now and print Time reached! once when a repeated check reaches it.",
+      "answer": "#include <iostream>\n#include <chrono>\n#include <thread>\n\nint main() {\n  auto target = std::chrono::system_clock::now() + std::chrono::minutes(1);\n\n  while (true) {\n    if (std::chrono::system_clock::now() >= target) {\n      std::cout << \"Time reached!\\n\";\n      break;\n    }\n\n    std::this_thread::sleep_for(std::chrono::seconds(1));\n  }\n}",
       "output": [
         "Time reached!"
       ],
       "parts": [
         {
-          "code": "while (true)",
-          "name": "Repeat",
-          "meaning": "The condition stays true, so the loop repeats its body inside the braces until break is reached."
+          "code": "std::chrono::system_clock::now() + std::chrono::minutes(1)",
+          "name": "One minute from now",
+          "meaning": "Read the current time and add one minute. Save this target once before waiting or repeating; recalculating it inside the loop would keep moving the deadline."
+        },
+        {
+          "code": "std::this_thread::sleep_for",
+          "name": "Check every second",
+          "meaning": "Pause one second between checks. JavaScript schedules repeated callbacks; the other languages pause between loop repetitions."
+        },
+        {
+          "code": "std::chrono::system_clock::now() >= target",
+          "name": "Reached or passed",
+          "meaning": "Compare the full current timestamp with the saved target. >= accepts the target time or any later time, including a check that runs late."
         },
         {
           "code": "break",
-          "name": "Leave the loop",
-          "meaning": "Immediately leaves the nearest loop and skips the rest of that repetition. Execution continues after the loop; break does not end the whole program."
+          "name": "Stop after printing",
+          "meaning": "Stop future checks after printing Time reached! once."
         }
       ],
-      "outputNote": "Example output at 17:20. The lesson preview does not wait for the clock.",
+      "outputNote": "Example output after one minute. This app previews the result immediately; running the code on your computer waits for the target. Keep the program open.",
       "runHint": "Save as main.cpp. In the VS Code terminal compile with g++ -std=c++17 main.cpp -o main, then run ./main. A C++ compiler must be installed."
     },
     {

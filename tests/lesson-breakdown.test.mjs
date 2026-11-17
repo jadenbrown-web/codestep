@@ -160,3 +160,10 @@ test('shared programming basics explain the action before specialised terminolog
   assert.ok(card.meaning.includes(phrase),language);
  }
 });
+
+test('relative clock examples explain both datetime imports and their actual waits', () => {
+ const lesson=lessons.python.find(item=>item.title==='Check for a particular time');
+ const imports=importBreakdown(lesson,'python');
+ assert.match(imports.find(item=>item.code==='from datetime import datetime, timedelta').meaning,/timedelta\(minutes=1\)/);
+ assert.match(imports.find(item=>item.code==='import time').meaning,/time\.sleep\(60\)/);
+});

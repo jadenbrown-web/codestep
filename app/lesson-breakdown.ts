@@ -22,6 +22,7 @@ const pythonTools: Record<string, [string, string]> = {
   random: ['Choose randomly', 'Makes the `random` module available. This lesson uses random.choice(...) to pick an item from a list.'],
   re: ['Check a text pattern', 'Makes Python’s text-pattern tools available. This lesson uses re.search(...) to check whether text matches a pattern.'],
   threading: ['Run separate work', 'Makes threading.Thread available. It lets you start separate pieces of work and wait for them to finish.'],
+  timedelta: ['Describe a time difference', 'Makes timedelta available for describing a duration. Here, timedelta(minutes=1) adds one minute to the current time.'],
   datetime: ['Read the date and time', 'Makes the `datetime` tool available from the `datetime` module. datetime.now() reads the current date and time.'],
   Path: ['Work with files and folders', 'Makes Path available from `pathlib`. Path(...) describes a file or folder, and its tools can check or list files.'],
 };
@@ -46,11 +47,17 @@ export function importBreakdown(lesson: LessonContent, language: string): Breakd
       const match = code.match(/^#include\s*<([^>]+)>/);
       if (!match) continue;
       entry = cppTools[match[1]] ?? ['Add library tools', 'Makes the tools described by this header available to this file. A header lists tools the compiler can use; it does not install them.'];
+      if(match[1]==='chrono' && lesson.answer.includes('std::chrono::minutes(1)'))entry=['Read the clock and add a minute','Makes std::chrono::system_clock and duration tools available. Here, minutes(1) adds one minute to the current timestamp.'];
+      if(match[1]==='thread' && lesson.answer.includes('sleep_until'))entry=['Wait until the target','Makes std::this_thread::sleep_until available. Here, it pauses the program until the saved one-minute target is reached.'];
       result.push({ code: match[0], name: entry[0], meaning: entry[1] });
     } else if (language === 'python') {
-      const match = code.match(/^(?:import\s+(\w+)|from\s+(\w+)\s+import\s+(\w+))/);
+      const match = code.match(/^(?:import\s+(\w+)|from\s+(\w+)\s+import\s+(\w+(?:\s*,\s*\w+)*))/);
       if (!match) continue;
-      entry = pythonTools[match[3] ?? match[1]] ?? ['Add Python tools', 'Makes this module or its named tool available so the program can use it.'];
+      const names=(match[3] ?? match[1]).split(/\s*,\s*/);
+      const tools=names.map(name=>pythonTools[name] ?? ['Add Python tools', 'Makes this module or its named tool available so the program can use it.']);
+      entry=[tools.map(tool=>tool[0]).join(' and '),tools.map(tool=>tool[1]).join(' ')];
+      const pause=lesson.answer.match(/time\.sleep\((\d+)\)/)?.[1];
+      if(match[1]==='time' && pause)entry=['Wait before continuing',`Makes the time module available. Here, time.sleep(${pause}) pauses the program for ${pause} second${pause==='1'?'':'s'}.`];
       result.push({ code: match[0], name: entry[0], meaning: entry[1] });
     } else if (language === 'csharp') {
       const match = code.match(/^using\s+([\w.]+);/);
