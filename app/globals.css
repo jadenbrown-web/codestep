@@ -1951,3 +1951,7 @@ html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:h
 /* Reference actions share the practice bar's four-pixel clearance and corners. */
 .html-reference-footer{padding:4px;min-height:53px}
 .html-reference-next{box-sizing:border-box;height:44px;min-height:44px;border-radius:9px}
+
+/* Native heading margins and sizes need room for both levels in the result. */
+.workspace:not(.editor-expanded)>.console-panel[data-browser-preview="headings"]:has(.browser-result-preview){flex:0 0 246px;min-height:246px;max-height:246px}
+.console-panel[data-browser-preview="headings"] .console-body:has(.browser-result-preview){flex:1}
