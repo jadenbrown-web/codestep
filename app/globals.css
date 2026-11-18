@@ -2019,9 +2019,6 @@ html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:h
 }
 
 .loop-example-picker .comparison-case-choices button{font:600 12px/1.35 var(--sans);flex-basis:100px}
-.loop-count-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;font:12px/1.4 var(--sans)}
-.loop-count-options label,.loop-count-options b{color:var(--ui-text);font-weight:600}
+.loop-count-options{margin-top:8px;font:12px/1.4 var(--sans)}
+.loop-count-options label{color:var(--ui-text);font-weight:600}
 .loop-count-options input[type=range]{display:block;width:100%;min-height:32px;accent-color:var(--green)}
-.loop-count-options .comparison-case-choices{margin-top:4px;flex-wrap:nowrap}
-.loop-count-options .comparison-case-choices button{min-width:0;padding:4px;flex:1}
-@media(max-width:500px){.loop-count-options{grid-template-columns:1fr;gap:6px}}

@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 
 import CodeBlocks from "./CodeBlocks";
 import BrowserResultPreview from "./BrowserResultPreview";
 import ClubTerminalInput from "./ClubTerminalInput";
 import BankTerminalInput from "./BankTerminalInput";
 import ShoppingTotalInput from "./ShoppingTotalInput";
+import {patchLoopCount,mapLoopEditOffset} from "./loop-count-edit";
 import LoopExamplePicker from "./LoopExamplePicker";
 import {applyLoopExample,defaultLoopOptions,type LoopOptions} from "./loop-examples";
 import ComparisonCasePicker from "./ComparisonCasePicker";
@@ -4900,7 +4901,7 @@ function LanguageComparison({ indentationDots = true, language, lesson, editorCo
   const prefix = lessonComment(lesson, language);
   const editedBody = editorCode.startsWith(prefix) ? editorCode.slice(prefix.length) : editorCode;
   const hasEditorCode = !pickedLesson && !(language === "javascript" && runtimeChanged) && !(lesson.loopExample && loopChanged) && !(lesson.displayCurrentTime && zoneChanged) && !(lesson.comparisonExample && caseChanged) && !lesson.referenceOnly && !!editedBody.trim();
-  const sourceCode = hasEditorCode ? editorCode : sourceLesson ? lessonExample(sourceLesson, language, showComments) : "";
+  const sourceCode = hasEditorCode ? lesson.loopExample && lesson.loopOptions?.mode === "counted" && comparisonLoop.mode === "counted" ? patchLoopCount(editorCode,language,lesson.loopOptions.count,comparisonLoop.count).code : editorCode : sourceLesson ? lessonExample(sourceLesson, language, showComments) : "";
   const other = contextual(javascriptInputLesson(matchingLesson(pickedLesson ?? lesson, target), target, comparisonRuntime),target);
   const selectPinnedTopic = (topic: string) => {
     const nextIndex = pinnedLessonIndex(lessons[language], topic);
@@ -4909,8 +4910,10 @@ function LanguageComparison({ indentationDots = true, language, lesson, editorCo
   const activeTopic = sourceLesson?.title ?? null;
   const targetCode = other ? lessonExample(other, target, showComments) : "";
   const replayKey = `${language}-${target}-${pickedLesson?.title ?? lesson.title}-${comparisonRuntime}-${comparisonCase}-${comparisonZone}-${JSON.stringify(comparisonLoop)}`;
-  const sourceReveal = useQuickCodeReveal(sourceCode, replayKey);
-  const targetReveal = useQuickCodeReveal(targetCode, replayKey);
+  const countedSource = !!sourceLesson?.loopExample && comparisonLoop.mode === "counted";
+  const countedTarget = !!other?.loopExample && comparisonLoop.mode === "counted";
+  const sourceReveal = useQuickCodeReveal(sourceCode, replayKey, !countedSource);
+  const targetReveal = useQuickCodeReveal(targetCode, replayKey, !countedTarget);
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -4923,14 +4926,14 @@ function LanguageComparison({ indentationDots = true, language, lesson, editorCo
     <header className="lesson-nav app-header comparison-topbar"><div className="lesson-brand-group"><BackButton onClick={onClose} label="Back to lesson" /><button className="drawer-toggle comparison-notes-toggle" aria-label="Lesson explanations" title="Lesson explanations" data-active={notesOpen} aria-expanded={notesOpen} aria-controls="comparison-notes-panel" onClick={() => setNotesOpen(!notesOpen)}><LessonSymbol /></button><ComparisonExamplePicker key={target} target={target} sourceLanguage={language} pins={pinnedTopics} pinLimit={pinLimit} onTogglePin={onTogglePin} selected={other} onSelect={title => setPickedLesson(lessons[target].find(item => item.title === title) ?? null)} /></div>{pinLimit > 2 && pinnedTopics.length > 0 && <div className="desktop-header-pins"><PinnedTopicShortcuts topics={pinnedTopics} activeTopic={activeTopic} onSelect={selectPinnedTopic} language={language} /></div>}<div className="comparison-header-languages"><h2 id="language-comparison-title">Compare code</h2><div className="compare-language-choices"><div role="group" aria-label="Comparison language">{(Object.keys(lessons) as Language[]).filter(item => item !== language && item !== "html" && item !== "css").map(item => <button className={`language-choice language-${item}`} key={item} aria-label={`Compare with ${languageName(item)}`} title={languageName(item)} data-active={target === item} aria-pressed={target === item} onClick={() => setTarget(item)}><img className="comparison-language-logo" src={`language-logos/${item}.svg`} alt="" width="24" height="24" /><span className="comparison-language-name">{languageName(item)}</span></button>)}</div></div></div></header>
     <div className="language-comparison-controls">
       <p className="comparison-context">{(pickedLesson ?? lesson).title}</p>
-      {(sourceLesson?.loopExample && other?.loopExample) && <LoopExamplePicker options={comparisonLoop} onChange={value=>{setComparisonLoop(value);setLoopChanged(true);}} comparison />}
+      {(sourceLesson?.loopExample && other?.loopExample) && <LoopExamplePicker options={comparisonLoop} onChange={value=>{setComparisonLoop(value);if(value.mode!==comparisonLoop.mode)setLoopChanged(true);}} comparison />}
       {(sourceLesson?.displayCurrentTime || other?.displayCurrentTime) && <TimeZonePicker selected={comparisonZone} onSelect={value=>{setComparisonZone(value);setZoneChanged(true);}} comparison />}
       {(sourceLesson?.comparisonExample || other?.comparisonExample) && <ComparisonCasePicker selected={comparisonCase} onSelect={value=>{setComparisonCase(value);setCaseChanged(true);}} language={language} comparison />}
       {((language === "javascript" && sourceLesson?.compareNode) || (target === "javascript" && other?.compareNode)) && <div className="comparison-input-runtime runtime-picker" role="group" aria-label="JavaScript input environment"><span>JavaScript input:</span><button data-active={comparisonRuntime === "browser"} aria-pressed={comparisonRuntime === "browser"} onClick={() => { setComparisonRuntime("browser"); setRuntimeChanged(true); }}>Browser prompt()</button><button data-active={comparisonRuntime === "node"} aria-pressed={comparisonRuntime === "node"} onClick={() => { setComparisonRuntime("node"); setRuntimeChanged(true); }}>Node.js terminal</button><small>Changes the comparison example; your practice code stays unchanged.</small></div>}
     </div>
     <div className="language-comparison-columns">
-      <section className={`comparison-card ${sourceLesson ? `tone-${lessonTone(sourceLesson)}` : ""}`}><header className="comparison-filebar"><div className={`comparison-file-tab ${pinnedTopics.length && pinLimit <= 2 ? "has-pinned-topics" : ""}`} data-topic-tone={sourceLesson ? lessonTone(sourceLesson) : "green"} title={languageName(language)}><span className="comparison-panel-identity"><img src={`language-logos/${language}.svg`} alt="" width="26" height="26"/><span><strong>{languageName(language)}</strong><small>Your language</small></span></span><span className="comparison-file-name">{sourceLesson ? sourceLesson.fileName || challengeFile(language) : languageName(language)}</span>{pinLimit <= 2 && <PinnedTopicShortcuts topics={pinnedTopics} activeTopic={activeTopic} onSelect={selectPinnedTopic} language={language} />}</div><CopyCodeButton iconOnly code={sourceCode} label={languageName(language)} /></header>{!sourceLesson && <p className="comparison-unavailable" role="status">{comparisonUnavailable(pickedLesson ?? lesson, language)}</p>}<pre className="numbered-comparison-code" aria-label={`${languageName(language)} code for comparison`}><CodeLineNumbers text={sourceCode} /><code className="comparison-code-space" aria-hidden="true">{sourceCode}</code><code className="comparison-code-reveal"><HighlightedCode indentationDots={indentationDots} code={sourceReveal} fullCode={sourceCode} language={language} /></code></pre></section>
-      <section className={`comparison-card ${other ? `tone-${lessonTone(other)}` : ""}`} key={target + (other?.title ?? "")}><header className="comparison-filebar"><div className="comparison-file-tab" data-topic-tone={other ? lessonTone(other) : "green"} title={languageName(target)}><span className="comparison-panel-identity"><img src={`language-logos/${target}.svg`} alt="" width="26" height="26"/><span><strong>{languageName(target)}</strong><small>Comparing with</small></span></span><span className="comparison-file-name">{other ? other.fileName || challengeFile(target) : languageName(target)}</span></div><CopyCodeButton iconOnly code={other ? lessonExample(other, target, showComments) : ""} label={languageName(target)} /></header>{!other && <p className="comparison-unavailable" role="status">{comparisonUnavailable(pickedLesson ?? lesson, target)}</p>}<pre className="numbered-comparison-code" aria-label="Other language code"><CodeLineNumbers text={targetCode} /><code className="comparison-code-space" aria-hidden="true">{targetCode}</code><code className="comparison-code-reveal">{other ? <HighlightedCode indentationDots={indentationDots} code={targetReveal} fullCode={targetCode} language={target} /> : null}</code></pre></section>
+      <section className={`comparison-card ${sourceLesson ? `tone-${lessonTone(sourceLesson)}` : ""}`}><header className="comparison-filebar"><div className={`comparison-file-tab ${pinnedTopics.length && pinLimit <= 2 ? "has-pinned-topics" : ""}`} data-topic-tone={sourceLesson ? lessonTone(sourceLesson) : "green"} title={languageName(language)}><span className="comparison-panel-identity"><img src={`language-logos/${language}.svg`} alt="" width="26" height="26"/><span><strong>{languageName(language)}</strong><small>Your language</small></span></span><span className="comparison-file-name">{sourceLesson ? sourceLesson.fileName || challengeFile(language) : languageName(language)}</span>{pinLimit <= 2 && <PinnedTopicShortcuts topics={pinnedTopics} activeTopic={activeTopic} onSelect={selectPinnedTopic} language={language} />}</div><CopyCodeButton iconOnly code={sourceCode} label={languageName(language)} /></header>{!sourceLesson && <p className="comparison-unavailable" role="status">{comparisonUnavailable(pickedLesson ?? lesson, language)}</p>}<pre className="numbered-comparison-code" aria-label={`${languageName(language)} code for comparison`}><CodeLineNumbers text={sourceCode} /><code className="comparison-code-space" aria-hidden="true">{sourceCode}</code><code className="comparison-code-reveal"><HighlightedCode indentationDots={indentationDots} code={countedSource ? sourceCode : sourceReveal} fullCode={sourceCode} language={language} /></code></pre></section>
+      <section className={`comparison-card ${other ? `tone-${lessonTone(other)}` : ""}`} key={target + (other?.title ?? "")}><header className="comparison-filebar"><div className="comparison-file-tab" data-topic-tone={other ? lessonTone(other) : "green"} title={languageName(target)}><span className="comparison-panel-identity"><img src={`language-logos/${target}.svg`} alt="" width="26" height="26"/><span><strong>{languageName(target)}</strong><small>Comparing with</small></span></span><span className="comparison-file-name">{other ? other.fileName || challengeFile(target) : languageName(target)}</span></div><CopyCodeButton iconOnly code={other ? lessonExample(other, target, showComments) : ""} label={languageName(target)} /></header>{!other && <p className="comparison-unavailable" role="status">{comparisonUnavailable(pickedLesson ?? lesson, target)}</p>}<pre className="numbered-comparison-code" aria-label="Other language code"><CodeLineNumbers text={targetCode} /><code className="comparison-code-space" aria-hidden="true">{targetCode}</code><code className="comparison-code-reveal">{other ? <HighlightedCode indentationDots={indentationDots} code={countedTarget ? targetCode : targetReveal} fullCode={targetCode} language={target} /> : null}</code></pre></section>
     </div>
     {notesOpen && <button className="comparison-notes-backdrop" aria-label="Close explanations" onClick={() => setNotesOpen(false)} />}<aside id="comparison-notes-panel" className="comparison-notes" hidden={!notesOpen} aria-label="Explanations and setup"><div className="comparison-notes-heading"><b>Explanations and setup</b><button className="comparison-notes-close" aria-label="Close explanations" onClick={() => setNotesOpen(false)}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><path d="m8 15 4-4 4 4"/></svg></button></div><div className="comparison-notes-language"><h3><img className="comparison-language-logo" src={`language-logos/${language}.svg`} alt="" width="24" height="24" />{languageName(language)}</h3><div className="comparison-description"><p>{hasEditorCode ? "Your language · code currently in your editor." : sourceLesson ? <span>{lessonOverview(sourceLesson)}</span> : "Choose another example to compare this topic."}</p>{sourceLesson && <LessonBreakdown lesson={sourceLesson} language={language} />}</div></div><div className="comparison-notes-language"><h3><img className="comparison-language-logo" src={`language-logos/${target}.svg`} alt="" width="24" height="24" />{languageName(target)}</h3><div className="comparison-description">{!other && <p>{comparisonUnavailable(pickedLesson ?? lesson, target)}</p>}{other && <><p>{lessonOverview(other)}</p><LessonBreakdown lesson={other} language={target} />{other.runHint && <p><CodeProse text={other.runHint} language={target} /></p>}</>}</div></div></aside>
   </dialog>;
@@ -5126,7 +5129,36 @@ export default function Home() {
   const previewColours = lessonCheck?.accepted && lessonCheck.colours ? lessonCheck.colours : current?.outputColors;
   const linkedIdHtml = idDrafts.current.html?.accepted ? idDrafts.current.html.code : lessons.html.find(item => item.idLesson === "html")!.answer;
 
+  const loopDraftContext = useRef<{base:Lesson|null;language:Language|null;options:LoopOptions}|null>(null);
+  const keepLoopGuide = useRef(false);
+  const pendingLoopSelection = useRef<{code:string;options:LoopOptions;start:number;end:number;scrollTop:number;scrollLeft:number}|null>(null);
+  useLayoutEffect(()=>{
+    const pending=pendingLoopSelection.current;
+    if(!pending)return;
+    if(pending.options!==loopOptions){pendingLoopSelection.current=null;return;}
+    const textarea=codeEditorRef.current?.querySelector('textarea');
+    if(code===pending.code && textarea?.value===pending.code){
+      textarea.setSelectionRange(pending.start,pending.end);
+      textarea.scrollTop=pending.scrollTop;textarea.scrollLeft=pending.scrollLeft;
+      pendingLoopSelection.current=null;
+    }
+  },[code,loopOptions]);
+
   useEffect(() => {
+    const previous=loopDraftContext.current;
+    const countOnly=!!current?.loopExample && previous?.base===baseCurrent && previous.language===language && previous.options.mode==='counted' && loopOptions.mode==='counted' && previous.options.count!==loopOptions.count;
+    loopDraftContext.current={base:baseCurrent,language,options:loopOptions};
+    keepLoopGuide.current=countOnly;
+    if(countOnly && language && previous){
+      const result=patchLoopCount(code,language,previous.options.count,loopOptions.count);
+      const textarea=codeEditorRef.current?.querySelector('textarea');
+      const start=mapLoopEditOffset(textarea?.selectionStart ?? caretIndex,result.edit);
+      const end=mapLoopEditOffset(textarea?.selectionEnd ?? caretIndex,result.edit);
+      const scrollTop=textarea?.scrollTop ?? 0,scrollLeft=textarea?.scrollLeft ?? 0;
+      if(result.edit && textarea)pendingLoopSelection.current={code:result.code,options:loopOptions,start,end,scrollTop,scrollLeft};
+      setCode(result.code);setCaretIndex(start);setStatus('idle');setTypedOutput('');
+      return;
+    }
     if (current) {
       const prefix = showComments && language ? lessonComment(current, language) : "";
       insertedComment.current = prefix;
@@ -5140,6 +5172,7 @@ export default function Home() {
   }, [current]);
 
   useEffect(() => {
+    if(keepLoopGuide.current && showGuide && current){setGhostLength(ghostSource.length);return;}
     setGhostLength(0);
     if (!showGuide || !current) return;
     let position = 0;
