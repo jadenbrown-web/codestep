@@ -2012,3 +2012,8 @@ html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:h
 .reference-workspace .font-featured-example .visual-example-code:not(.css-featured-code)>code{padding-top:0}
 .reference-workspace .font-featured-example .css-featured-code{padding:0}
 .reference-workspace .html-text-reference:not(.layout-reference) .font-featured-example .css-featured-code{min-height:0}
+/* Keep the positioning controls and preview fitted on phones. */
+@media(max-width:850px){
+.reference-workspace .layout-reference .font-example-heading{min-height:18px}
+.reference-workspace .layout-reference .css-featured-code>code{padding-right:48px}
+}
