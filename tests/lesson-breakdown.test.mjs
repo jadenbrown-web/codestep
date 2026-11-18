@@ -52,7 +52,7 @@ test('lesson introductions state a goal without repeating symbol definitions', (
 });
 
 test('let is explained in every JavaScript lesson that uses it, including the input loop', () => {
-  const loops = lessons.javascript.find(lesson => lesson.title === 'Repeat input until the answer is correct');
+  const loops = lessons.javascript.find(lesson => lesson.title === 'Repeat with while or for');
   const letCard = syntaxBreakdown(loops, 'javascript').find(part => part.code === 'let');
   assert.ok(letCard);
   assert.match(letCard.meaning, /stores a value/);

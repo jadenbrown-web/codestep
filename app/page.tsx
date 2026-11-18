@@ -7,6 +7,8 @@ import BrowserResultPreview from "./BrowserResultPreview";
 import ClubTerminalInput from "./ClubTerminalInput";
 import BankTerminalInput from "./BankTerminalInput";
 import ShoppingTotalInput from "./ShoppingTotalInput";
+import LoopExamplePicker from "./LoopExamplePicker";
+import {applyLoopExample,defaultLoopOptions,type LoopOptions} from "./loop-examples";
 import ComparisonCasePicker from "./ComparisonCasePicker";
 import TimeZonePicker from "./TimeZonePicker";
 import {applyTimeZone,formatZonedClock,timeZoneLabel,type TimeZoneId} from "./time-zones";
@@ -58,6 +60,8 @@ type Lesson = {
   clockExample?: boolean;
   displayCurrentTime?: boolean;
   timeZone?: TimeZoneId;
+  loopExample?: boolean;
+  loopOptions?: LoopOptions;
   clockTarget?: ClockTarget;
   idLesson?: "html" | "css";
   referenceKind?: "text" | "fonts" | "pages" | "css" | "colours" | "named-colours" | "comparisons" | "alignment" | "positioning" | "combined-styles";
@@ -521,7 +525,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "13 · Loops",
-      "title": "Repeat input until the answer is correct",
+      "title": "Repeat with while or for",
       "explanation": "The loop asks the question, saves the entered text, and prints that answer. If it is \"2\", it prints Correct! and break immediately leaves the nearest loop, skipping Try again. A wrong answer prints the retry message, then the next repetition asks again. The braces show which instructions belong to while and if.",
       "note": "// Create the loop with input, output, and break inside if.",
       "prompt": "Create the loop with input, output, and break inside if.",
@@ -562,7 +566,8 @@ const lessons: Record<Language, Lesson[]> = {
         "break leaves the loop"
       ],
       "outputNote": "Example run: the first answer is 2. The labels beside the lines explain the run; the program does not print them.",
-      "runHint": "Run this example in a browser developer console or inside an HTML script. prompt() opens a browser dialog; it is not available in the Node terminal. CodeStep checks the code and shows a sample result."
+      "runHint": "Run this example in a browser developer console or inside an HTML script. prompt() opens a browser dialog; it is not available in the Node terminal. CodeStep checks the code and shows a sample result.",
+      "loopExample": true
     },
     {
       "eyebrow": "14 · Dictionary",
@@ -1375,7 +1380,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "12 · Loops",
-      "title": "Repeat input until the answer is correct",
+      "title": "Repeat with while or for",
       "explanation": "The loop asks the question, saves the entered text, and prints that answer. If it is \"2\", it prints Correct! and break immediately leaves the nearest loop, skipping Try again. A wrong answer prints the retry message, then the next repetition asks again. The braces show which instructions belong to while and if.",
       "note": "// Create the loop with input, output, and break inside if.",
       "prompt": "Create the loop with input, output, and break inside if.",
@@ -1418,7 +1423,8 @@ const lessons: Record<Language, Lesson[]> = {
         "entered answer echoed",
         "break leaves the loop"
       ],
-      "outputNote": "Example run: the first answer is 2. The labels beside the lines explain the run; the program does not print them."
+      "outputNote": "Example run: the first answer is 2. The labels beside the lines explain the run; the program does not print them.",
+      "loopExample": true
     },
     {
       "eyebrow": "13 · Dictionary",
@@ -3060,7 +3066,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "12 · Loops",
-      "title": "Repeat input until the answer is correct",
+      "title": "Repeat with while or for",
       "explanation": "The loop asks the question, saves the entered text, and prints that answer. If it is \"2\", it prints Correct! and break immediately leaves the nearest loop, skipping Try again. A wrong answer prints the retry message, then the next repetition asks again. Python uses a colon and indentation to show which instructions belong to while and if.",
       "note": "# Create the loop with input, output, and break inside if.",
       "prompt": "Create the loop with input, output, and break inside if.",
@@ -3103,7 +3109,8 @@ const lessons: Record<Language, Lesson[]> = {
         "entered answer echoed",
         "break leaves the loop"
       ],
-      "outputNote": "Example run: the first answer is 2. The labels beside the lines explain the run; the program does not print them."
+      "outputNote": "Example run: the first answer is 2. The labels beside the lines explain the run; the program does not print them.",
+      "loopExample": true
     },
     {
       "eyebrow": "13 · Dictionary",
@@ -3902,7 +3909,7 @@ const lessons: Record<Language, Lesson[]> = {
     },
     {
       "eyebrow": "12 · Loops",
-      "title": "Repeat input until the answer is correct",
+      "title": "Repeat with while or for",
       "explanation": "The loop asks the question, saves the entered text, and prints that answer. If it is \"2\", it prints Correct! and break immediately leaves the nearest loop, skipping Try again. A wrong answer prints the retry message, then the next repetition asks again. The braces show which instructions belong to while and if.",
       "note": "// Create the loop with input, output, and break inside if.",
       "prompt": "Create the loop with input, output, and break inside if.",
@@ -3945,7 +3952,8 @@ const lessons: Record<Language, Lesson[]> = {
         "entered answer echoed",
         "break leaves the loop"
       ],
-      "outputNote": "Example run: the first answer is 2. The labels beside the lines explain the run; the program does not print them."
+      "outputNote": "Example run: the first answer is 2. The labels beside the lines explain the run; the program does not print them.",
+      "loopExample": true
     },
     {
       "eyebrow": "13 · Dictionary",
@@ -4790,8 +4798,8 @@ function matchingLesson(source: Lesson, target: Language) {
     "Use one function inside another": ["Send a value back with return", "Use a function's returned value"],
     "Send a value back with return": ["Use one function inside another", "Use a function's returned value"],
     "Use a function's returned value": ["Use one function inside another", "Send a value back with return"],
-    "Repeat input until the answer is correct": ["Use a button instead of while (true)"],
-    "Use a button instead of while (true)": ["Repeat input until the answer is correct"],
+    "Repeat with while or for": ["Use a button instead of while (true)"],
+    "Use a button instead of while (true)": ["Repeat with while or for"],
     "Give one element a unique name": ["Style one unique element"],
     "Style one unique element": ["Give one element a unique name"],
   };
@@ -4884,12 +4892,14 @@ function LanguageComparison({ indentationDots = true, language, lesson, editorCo
   const [caseChanged,setCaseChanged] = useState(false);
   const [comparisonZone,setComparisonZone] = useState<TimeZoneId>(lesson.timeZone ?? "local");
   const [zoneChanged,setZoneChanged] = useState(false);
+  const [comparisonLoop,setComparisonLoop] = useState<LoopOptions>(lesson.loopOptions ?? defaultLoopOptions);
+  const [loopChanged,setLoopChanged] = useState(false);
   const comparisonClock = useMemo(() => pickedLesson ? nextClockTarget() : lesson.clockTarget ?? nextClockTarget(), [pickedLesson, lesson]);
-  const contextual = (value: Lesson | null, lang: Language) => value ? value.comparisonExample ? {...value,...comparisonExample(lang,comparisonCase)} : applyTimeZone(applyClockTarget(value,comparisonClock),lang,comparisonZone) : null;
+  const contextual = (value: Lesson | null, lang: Language) => value ? value.comparisonExample ? {...value,...comparisonExample(lang,comparisonCase)} : applyLoopExample(applyTimeZone(applyClockTarget(value,comparisonClock),lang,comparisonZone),lang,comparisonLoop) : null;
   const sourceLesson = contextual(javascriptInputLesson(pickedLesson ? matchingLesson(pickedLesson, language) : lesson, language, comparisonRuntime),language);
   const prefix = lessonComment(lesson, language);
   const editedBody = editorCode.startsWith(prefix) ? editorCode.slice(prefix.length) : editorCode;
-  const hasEditorCode = !pickedLesson && !(language === "javascript" && runtimeChanged) && !(lesson.displayCurrentTime && zoneChanged) && !(lesson.comparisonExample && caseChanged) && !lesson.referenceOnly && !!editedBody.trim();
+  const hasEditorCode = !pickedLesson && !(language === "javascript" && runtimeChanged) && !(lesson.loopExample && loopChanged) && !(lesson.displayCurrentTime && zoneChanged) && !(lesson.comparisonExample && caseChanged) && !lesson.referenceOnly && !!editedBody.trim();
   const sourceCode = hasEditorCode ? editorCode : sourceLesson ? lessonExample(sourceLesson, language, showComments) : "";
   const other = contextual(javascriptInputLesson(matchingLesson(pickedLesson ?? lesson, target), target, comparisonRuntime),target);
   const selectPinnedTopic = (topic: string) => {
@@ -4898,7 +4908,7 @@ function LanguageComparison({ indentationDots = true, language, lesson, editorCo
   };
   const activeTopic = sourceLesson?.title ?? null;
   const targetCode = other ? lessonExample(other, target, showComments) : "";
-  const replayKey = `${language}-${target}-${pickedLesson?.title ?? lesson.title}-${comparisonRuntime}-${comparisonCase}-${comparisonZone}`;
+  const replayKey = `${language}-${target}-${pickedLesson?.title ?? lesson.title}-${comparisonRuntime}-${comparisonCase}-${comparisonZone}-${JSON.stringify(comparisonLoop)}`;
   const sourceReveal = useQuickCodeReveal(sourceCode, replayKey);
   const targetReveal = useQuickCodeReveal(targetCode, replayKey);
   useEffect(() => {
@@ -4913,6 +4923,7 @@ function LanguageComparison({ indentationDots = true, language, lesson, editorCo
     <header className="lesson-nav app-header comparison-topbar"><div className="lesson-brand-group"><BackButton onClick={onClose} label="Back to lesson" /><button className="drawer-toggle comparison-notes-toggle" aria-label="Lesson explanations" title="Lesson explanations" data-active={notesOpen} aria-expanded={notesOpen} aria-controls="comparison-notes-panel" onClick={() => setNotesOpen(!notesOpen)}><LessonSymbol /></button><ComparisonExamplePicker key={target} target={target} sourceLanguage={language} pins={pinnedTopics} pinLimit={pinLimit} onTogglePin={onTogglePin} selected={other} onSelect={title => setPickedLesson(lessons[target].find(item => item.title === title) ?? null)} /></div>{pinLimit > 2 && pinnedTopics.length > 0 && <div className="desktop-header-pins"><PinnedTopicShortcuts topics={pinnedTopics} activeTopic={activeTopic} onSelect={selectPinnedTopic} language={language} /></div>}<div className="comparison-header-languages"><h2 id="language-comparison-title">Compare code</h2><div className="compare-language-choices"><div role="group" aria-label="Comparison language">{(Object.keys(lessons) as Language[]).filter(item => item !== language && item !== "html" && item !== "css").map(item => <button className={`language-choice language-${item}`} key={item} aria-label={`Compare with ${languageName(item)}`} title={languageName(item)} data-active={target === item} aria-pressed={target === item} onClick={() => setTarget(item)}><img className="comparison-language-logo" src={`language-logos/${item}.svg`} alt="" width="24" height="24" /><span className="comparison-language-name">{languageName(item)}</span></button>)}</div></div></div></header>
     <div className="language-comparison-controls">
       <p className="comparison-context">{(pickedLesson ?? lesson).title}</p>
+      {(sourceLesson?.loopExample || other?.loopExample) && <LoopExamplePicker options={comparisonLoop} onChange={value=>{setComparisonLoop(value);setLoopChanged(true);}} comparison />}
       {(sourceLesson?.displayCurrentTime || other?.displayCurrentTime) && <TimeZonePicker selected={comparisonZone} onSelect={value=>{setComparisonZone(value);setZoneChanged(true);}} comparison />}
       {(sourceLesson?.comparisonExample || other?.comparisonExample) && <ComparisonCasePicker selected={comparisonCase} onSelect={value=>{setComparisonCase(value);setCaseChanged(true);}} language={language} comparison />}
       {((language === "javascript" && sourceLesson?.compareNode) || (target === "javascript" && other?.compareNode)) && <div className="comparison-input-runtime runtime-picker" role="group" aria-label="JavaScript input environment"><span>JavaScript input:</span><button data-active={comparisonRuntime === "browser"} aria-pressed={comparisonRuntime === "browser"} onClick={() => { setComparisonRuntime("browser"); setRuntimeChanged(true); }}>Browser prompt()</button><button data-active={comparisonRuntime === "node"} aria-pressed={comparisonRuntime === "node"} onClick={() => { setComparisonRuntime("node"); setRuntimeChanged(true); }}>Node.js terminal</button><small>Changes the comparison example; your practice code stays unchanged.</small></div>}
@@ -4989,8 +5000,9 @@ export default function Home() {
   const [checkerError, setCheckerError] = useState("");
   const [comparisonCase,setComparisonCase] = useState<ComparisonCaseId>("at-least");
   const [timeZone,setTimeZone] = useState<TimeZoneId>("local");
-  const checkContext = useRef({ code, language, index, comparisonCase, timeZone });
-  checkContext.current = { code, language, index, comparisonCase, timeZone };
+  const [loopOptions,setLoopOptions] = useState<LoopOptions>(defaultLoopOptions);
+  const checkContext = useRef({ code, language, index, comparisonCase, timeZone, loopOptions });
+  checkContext.current = { code, language, index, comparisonCase, timeZone, loopOptions };
 
   useEffect(() => {
     if (!language) return;
@@ -5045,6 +5057,7 @@ export default function Home() {
   const baseCurrent = language ? lessons[language][index] : null;
   const clockTarget = useMemo(() => nextClockTarget(), [baseCurrent]);
   const current = useMemo(() => {
+    if(baseCurrent?.loopExample)return applyLoopExample(baseCurrent,language!,loopOptions);
     if(baseCurrent?.displayCurrentTime)return applyTimeZone(baseCurrent,language!,timeZone);
     if(baseCurrent?.comparisonExample)return {...baseCurrent,...comparisonExample(language!,comparisonCase)};
     if(baseCurrent?.clockExample)return applyClockTarget(baseCurrent,clockTarget);
@@ -5067,7 +5080,7 @@ export default function Home() {
       ] };
     }
     return baseCurrent && language === "javascript" && baseCurrent.compareNode && inputRuntime === "browser" ? { ...baseCurrent, ...browserInputPatch() } : baseCurrent;
-  }, [baseCurrent, language, inputRuntime, textColour, textColourTag, layoutOptions, clockTarget, comparisonCase, timeZone]);
+  }, [baseCurrent, language, inputRuntime, textColour, textColourTag, layoutOptions, clockTarget, comparisonCase, timeZone, loopOptions]);
   const pinnedTopics = language ? (pinnedByLanguage[language] ?? []).slice(0, pinLimit) : [];
   const visibleLessons = language ? filterTopicLessons(lessons[language], null) : [];
   const openPinnedTopic = (topic: string) => {
@@ -5272,12 +5285,12 @@ export default function Home() {
     setCheckerError("");
     try {
       const result = lessonCheck ?? await checkLesson(code, current, language);
-      if (checkContext.current.code !== context.code || checkContext.current.language !== context.language || checkContext.current.index !== context.index || checkContext.current.comparisonCase !== context.comparisonCase || checkContext.current.timeZone !== context.timeZone) return;
+      if (checkContext.current.code !== context.code || checkContext.current.language !== context.language || checkContext.current.index !== context.index || checkContext.current.comparisonCase !== context.comparisonCase || checkContext.current.timeZone !== context.timeZone || checkContext.current.loopOptions !== context.loopOptions) return;
       setCheckerVersion(version => version + 1);
       setStatus(result.accepted ? "correct" : "wrong");
       if (result.accepted) setCompleted(old => ({ ...old, [language]: Math.max(old[language], index + 1) }));
     } catch {
-      if (checkContext.current.code === context.code && checkContext.current.language === context.language && checkContext.current.index === context.index && checkContext.current.comparisonCase === context.comparisonCase && checkContext.current.timeZone === context.timeZone) {
+      if (checkContext.current.code === context.code && checkContext.current.language === context.language && checkContext.current.index === context.index && checkContext.current.comparisonCase === context.comparisonCase && checkContext.current.timeZone === context.timeZone && checkContext.current.loopOptions === context.loopOptions) {
         setCheckerError("The checker couldn’t load. Please try Check code again.");
         setStatus("wrong");
       }
@@ -5493,6 +5506,7 @@ export default function Home() {
             <button className="reference-next" onClick={nextLesson}>Continue to images →</button>
           </div> : ["alignment", "positioning", "combined-styles"].includes(current!.referenceKind ?? "") ? <LayoutReference kind={current!.referenceKind as LayoutKind} language={language as "html" | "css"} options={layoutOptions} onChange={setLayoutOptions} nextLabel={index === lessons[language].length - 1 ? `Finish ${language.toUpperCase()} path →` : "Continue to the next lesson →"} onAlternate={() => openReferenceLesson(language === "html" ? "css" : "html", current!.referenceKind!)} onNext={nextLesson} actions={lessonActions} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax} />} /> : current!.referenceKind === "named-colours" ? <TextColourReference colourName={textColour} onColourChange={setTextColour} onOpenHex={() => openReferenceLesson("css", "colours")} onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} /> : (current!.referenceKind === "css" || current!.referenceKind === "colours") ? <CssVisualReference colourName={textColour} onColourChange={setTextColour} onOpenTextColour={() => openReferenceLesson("html", "named-colours")} kind={current!.referenceKind === "colours" ? "colours" : "borders"} onNext={nextLesson} actions={lessonActions} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax ?? (current!.referenceKind === "colours" ? "html" : "css")} />} /> : <HtmlTextReference onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} />}</> : <>
           <div className="editor-panel">
+            {current!.loopExample && <LoopExamplePicker options={loopOptions} onChange={setLoopOptions} />}
             {current!.displayCurrentTime && <TimeZonePicker key={`${language}-${index}`} selected={timeZone} onSelect={setTimeZone} />}
             {current!.comparisonExample && <ComparisonCasePicker selected={comparisonCase} onSelect={setComparisonCase} language={language} />}
             <div className="panel-bar"><div className={`file-tab ${pinnedTopics.length && pinLimit <= 2 ? "has-pinned-topics" : ""}`} data-topic-tone={lessonTone(current!)} title={current!.fileName || challengeFile(language)}><span className="editor-file-name">{current!.fileName || challengeFile(language)}</span>{pinnedTopics.length && pinLimit <= 2 ? <PinnedTopicShortcuts topics={pinnedTopics} activeTopic={current?.title ?? null} onSelect={openPinnedTopic} language={language} /> : null}</div><div className="panel-actions"><div className="desktop-pane-actions">{lessonActions}</div><span className="mobile-editor-copy"><CopyCodeButton iconOnly code={lessonExample(current!, language, showComments)} label="full lesson example for VS Code" /></span><button className="editor-expand-button" aria-label={editorExpanded ? "Restore editor" : "Expand editor"} title={editorExpanded ? "Restore editor" : "Expand editor"} aria-pressed={editorExpanded} onClick={() => setEditorExpanded(expanded => !expanded)}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{editorExpanded ? <path d="M8 3v5H3m13-5v5h5M3 16h5v5m13-5h-5v5"/> : <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>}</svg></button><button className="editor-reset-button" onClick={() => changeBlockCode(commentPrefix + (current!.starter || ""))} title="Reset code" aria-label="Reset code"><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></svg><span className="editor-action-label">Reset</span></button></div></div>

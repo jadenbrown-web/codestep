@@ -79,3 +79,8 @@ test('old if-statement pins follow the selectable comparison lesson',()=>{
  const courses={python:[{title:'Make decisions with if and else',eyebrow:'11 · If statements and symbols'}]};
  assert.deepEqual(restoreLessonPins(JSON.stringify({python:['Check an answer with if and else']}),courses),{python:['Make decisions with if and else']});
 });
+
+test('old while-loop pins follow the lesson with both loop options',()=>{
+ const courses={python:[{title:'Repeat with while or for',eyebrow:'12 · Loops'}]};
+ assert.deepEqual(restoreLessonPins(JSON.stringify({python:['Repeat input until the answer is correct']}),courses),{python:['Repeat with while or for']});
+});
