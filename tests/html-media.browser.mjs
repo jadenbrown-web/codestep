@@ -32,7 +32,7 @@ try{
    if(lesson.mediaPreview==='link'){
     const url=page.url();await preview.getByRole('link',{name:'Open page',exact:true}).click();
     await preview.getByRole('heading',{name:'Page',exact:true}).waitFor();
-    assert.equal(await preview.locator('.linked-pages-address>span').textContent(),'page.html');
+    assert.equal(await page.locator('.live-web-file').textContent(),'page.html');
     await preview.getByRole('link',{name:'Go back',exact:true}).click();
     assert.equal(page.url(),url);
    }else if(lesson.mediaPreview==='image'){

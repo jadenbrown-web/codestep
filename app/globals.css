@@ -692,7 +692,7 @@ html[data-theme] :is(.theme-options button.selected,.compare-language-choices .l
 .editor-body textarea,.editor-body .typed-code-layer,.editor-body .code-guide{font-size:13px;line-height:21px}
 .editor-body .code-line-ruler{font-size:13px;line-height:21px}
 .language-comparison-columns{grid-template-rows:max-content minmax(150px,1fr)}
-.language-comparison-columns .comparison-card>.comparison-filebar{grid-row:1;display:flex;align-items:center;justify-content:space-between;min-height:48px;height:48px;box-sizing:border-box;padding:0 4px 0 0;background:#1a2d23!important;border-color:#31463d;border-radius:12px 12px 0 0}
+.language-comparison-columns .comparison-card>.comparison-filebar{grid-row:1;display:flex;align-items:center;justify-content:space-between;min-height:48px;height:48px;box-sizing:border-box;padding:0 4px 0 0;background:var(--app-surface,var(--ui-surface));border-color:#31463d;border-radius:12px 12px 0 0}
 .comparison-file-tab{display:flex;align-items:center;gap:7px;min-width:0;height:100%;box-sizing:border-box;padding:0 10px;border-top:3px solid #61d09a;background:#122019;color:#d6dfda;font:650 12px/1.3 var(--mono)}
 .comparison-file-tab>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .comparison-filebar>.copy-code-control{flex:none;width:44px;height:44px;display:flex}
@@ -2317,3 +2317,43 @@ html[data-theme] .font-example-heading>b{color:var(--app-accent)}
 @media(min-width:851px){.language-comparison{--comparison-nav-height:64px}}
 .language-comparison .comparison-notes:not([hidden]){top:calc(var(--comparison-nav-height) + 6px)}
 .language-comparison .comparison-notes-backdrop{top:var(--comparison-nav-height)}
+
+/* Comparison navigation is vertically centred, with quiet text selection. */
+.language-comparison{--comparison-nav-height:72px}
+html[data-theme] .language-comparison .app-header.lesson-nav.comparison-topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;height:72px;min-height:72px;max-height:72px;padding:8px 12px}
+html[data-theme] .language-comparison .app-header.lesson-nav.comparison-topbar>.lesson-brand-group{display:flex;position:static;flex:0 0 auto;gap:0;width:auto;min-width:0}
+html[data-theme] .language-comparison .app-header.lesson-nav.comparison-topbar>.comparison-header-languages,
+html[data-theme] .language-comparison .app-header.lesson-nav.comparison-topbar .compare-language-choices,
+html[data-theme] .language-comparison .app-header.lesson-nav.comparison-topbar .compare-language-choices>div{display:flex;align-items:center;position:static;transform:none;inset:auto;width:auto;min-width:0;min-height:0;height:auto;margin:0;padding:0;gap:4px}
+html[data-theme] .language-comparison .app-header.app-header .language-choice[aria-label]{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;width:64px;min-width:64px;max-width:64px;height:56px;min-height:56px;max-height:56px;padding:0;border:0;background:transparent}
+html[data-theme] .language-comparison .app-header.app-header .language-choice img{width:30px;height:30px}
+html[data-theme] .language-comparison .comparison-language-name{font:500 10px/12px var(--sans);color:var(--app-muted);white-space:nowrap}
+html[data-theme] .language-comparison .language-choice[aria-pressed="true"] .comparison-language-name{color:var(--app-accent);font-weight:800}
+html[data-theme] .language-comparison .app-header.app-header button:is([data-active="true"],[aria-pressed="true"],:hover):not(:disabled),
+html[data-theme] .programming-lesson .app-header.app-header button:is([data-active="true"],[aria-pressed="true"],:hover):not(:disabled){background:transparent!important;box-shadow:none!important;color:var(--app-accent)}
+html[data-theme] .language-comparison .language-comparison-columns .comparison-card>.comparison-filebar,
+html[data-theme] .language-comparison .language-comparison-columns .comparison-card>.comparison-filebar>.comparison-file-tab{background:var(--app-surface);color:var(--app-text);border:0}
+html[data-theme] .language-comparison .comparison-file-name{background:transparent;color:var(--app-muted);padding:0;opacity:1;border-radius:0}
+@media(max-width:360px){
+ html[data-theme] .language-comparison .app-header.lesson-nav.comparison-topbar{gap:4px;padding:8px 6px}
+ html[data-theme] .language-comparison .app-header.app-header .language-choice[aria-label]{width:50px;min-width:50px;max-width:50px}
+ html[data-theme] .language-comparison .comparison-language-name{font-size:9px}
+}
+/* Web quizzes keep a browser canvas alive while the student edits the file. */
+html[data-theme] .workspace:not(.editor-expanded)>.console-panel.live-web-panel{display:flex;flex-direction:column;flex:0 0 clamp(240px,40vh,360px);min-height:220px;max-height:48%;overflow:hidden}
+html[data-theme] .live-web-panel .live-web-header{display:flex;align-items:center;gap:10px;padding:0 10px;border:0;background:var(--app-surface);color:var(--app-text)}
+html[data-theme] .live-web-header>span{display:flex;align-items:center;gap:8px;font:650 13px/1.4 var(--sans);letter-spacing:0;white-space:nowrap}
+.live-web-file{margin-left:auto;font:12px var(--mono);color:var(--app-muted)}
+.live-web-header button{min-height:44px;white-space:nowrap}
+html[data-theme] .live-web-panel .console-body{display:flex;flex:1;flex-direction:column;padding:0;min-height:0;overflow:hidden;white-space:normal}
+.live-web-panel .browser-result-preview{display:block;flex:1;width:100%;height:100%;min-height:0;border:0;border-radius:0;background:#fff;color-scheme:light}
+.live-web-panel .browser-page-preview{border:0;border-radius:0;min-height:0}
+html[data-theme] .live-web-panel :is(.browser-preview-tab,.browser-preview-navigation){background:var(--app-raised);color:var(--app-text);border:0}
+.live-web-panel .html-media-preview{display:flex;flex:1;flex-direction:column;min-height:0;padding:8px}
+.live-web-panel .html-media-preview .sample-browser-document{flex:1;min-height:0;border-radius:0}
+.live-check-message{flex:none;max-height:110px;overflow:auto;padding:8px 10px;font:12px/1.5 var(--sans)}
+.live-preview-hint,.live-script-result{flex:none;padding:6px 10px;font:12px/1.4 var(--sans);color:var(--app-muted)}
+.live-script-result>div{margin-top:6px;color:var(--app-text)}
+.live-script-result p{margin:4px 0;white-space:pre-wrap}
+.workspace.editor-expanded>.live-web-panel{display:none}
+html[data-theme] .live-web-panel .console-bar.live-web-header button{width:auto;min-width:80px;max-width:none;padding:0 8px;flex:none}

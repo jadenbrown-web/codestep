@@ -56,7 +56,7 @@ try{
   await editor.fill(htmlAttempt);await check();await page.locator('.feedback.correct').waitFor();
   assert.equal(await paragraph.textContent(),'CSS turns this paragraph blue.');
   assert.equal(await colour(),'rgb(0, 0, 0)','The HTML ID alone does not change the text colour');
-  await activate(page.locator('.console-bar').getByRole('button',{name:'Clear',exact:true}));
+  await activate(page.locator('.console-bar').getByRole('button',{name:'Clear check',exact:true}));
   assert.ok(await page.getByRole('button',{name:'Style this paragraph in CSS →',exact:true}).isVisible(),'Clear leaves both directions available');
   await style();await back();
   assert.equal(await editor.inputValue(),htmlAttempt);
@@ -81,8 +81,8 @@ try{
   if(theme==='dark')await page.screenshot({path:`/tmp/codestep-linked-ids-${width}.png`});
   await back();assert.equal(await editor.inputValue(),htmlAttempt);assert.equal(await colour(),'rgb(0, 0, 0)');
   await style();assert.equal(await editor.inputValue(),cssAttempt);assert.equal(await colour(),'rgb(0, 0, 255)','The checked CSS result is restored');
-  await activate(page.locator('.console-bar').getByRole('button',{name:'Clear',exact:true}));
-  assert.equal(await page.locator('iframe.browser-result-preview').count(),0);
+  await activate(page.locator('.console-bar').getByRole('button',{name:'Clear check',exact:true}));
+  assert.equal(await page.locator('iframe.browser-result-preview').count(),1,'Clearing validation keeps the current CSS visible');
   await back();await style();
   assert.ok(await page.getByRole('button',{name:'Check code',exact:true}).isVisible(),'Clear is not undone by linked navigation');
   await check();await page.locator('.feedback.correct').waitFor();

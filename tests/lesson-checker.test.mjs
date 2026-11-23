@@ -215,3 +215,12 @@ for (const language of ['python','javascript','csharp','cpp']) {
     assert.equal(compareLesson(parsers[language],noResult,lesson,language).accepted,false);
   });
 }
+
+test('a scanner exception leaves an unfinished draft unverified and resets the parser', () => {
+  let reset = false;
+  const parser = {parse() { throw new Error('Incomplete external scanner input'); }, reset() { reset = true; }};
+  const result = compareLesson(parser, '<h', {title:'Heading', prompt:'', answer:'<h1>Hello</h1>'}, 'html');
+  assert.equal(result.accepted, false);
+  assert.equal(result.kind, 'unverified');
+  assert.equal(reset, true);
+});

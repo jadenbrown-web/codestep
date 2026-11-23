@@ -359,8 +359,11 @@ export function compareLesson(parser: Parser, code: string, lesson: Exercise, la
 
 function compareStrictLesson(parser: Parser, code: string, lesson: Exercise, language: CourseLanguage): CheckResult {
   if (code.length > 50000) return { accepted: false, kind: 'unverified', message: 'Keep this exercise under 50,000 characters.' };
-  const actual = parser.parse(code); const expected = parser.parse(lesson.answer);
+  let actual: Parser.Tree | undefined;
+  let expected: Parser.Tree | undefined;
   try {
+    actual = parser.parse(code);
+    expected = parser.parse(lesson.answer);
     if (actual.rootNode.hasError()) {
       const problem = actual.rootNode.descendantsOfType('ERROR')[0];
       return { accepted: false, kind: 'syntax', message: `Check the syntax${problem ? ` near line ${problem.startPosition.row + 1}` : ''}. Look for missing punctuation or an incomplete block.` };
@@ -371,5 +374,10 @@ function compareStrictLesson(parser: Parser, code: string, lesson: Exercise, lan
     }
     const accepted = JSON.stringify(canonical(actual.rootNode, language, lesson)) === JSON.stringify(canonical(expected.rootNode, language, lesson));
     return { accepted, kind: accepted ? 'accepted' : 'unverified', message: accepted ? '' : 'Couldn’t verify this version. Check the lesson’s required values and actions. A different solution can be valid even when this checker cannot recognise it.' };
-  } finally { actual.delete(); expected.delete(); }
+  } catch {
+    // An unfinished draft can reach a grammar's external scanner while typing.
+    // Keep editing and rendering available when the parser cannot inspect it.
+    parser.reset();
+    return { accepted: false, kind: 'unverified', message: 'Couldn’t inspect this draft yet. Finish the code, then choose Check code again.' };
+  } finally { actual?.delete(); expected?.delete(); }
 }
