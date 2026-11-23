@@ -25,7 +25,7 @@ try{
   await page.locator('.drawer-lessons .topic-lesson-button').filter({hasText:lessons.cpp.find(l=>l.loopExample).title}).click();
   if(width===390)await page.getByRole('button',{name:'Practice',exact:true}).click();
   const editor=page.getByRole('textbox',{name:'Code editor',exact:true});await editor.fill('// keep this draft');
-  for(const [palette,name] of [['ide','Studio'],['ocean','Ocean'],['plum','Plum']]){
+  for(const [palette,name] of [['ide','Studio'],['ocean','Ocean'],['forest','Forest'],['ember','Ember'],['slate','Slate'],['plum','Plum']]){
    await page.getByRole('button',{name:'Settings',exact:true}).click();
    await page.getByRole('group',{name:'Colour palette',exact:true}).getByRole('button').filter({hasText:name}).click();
    await page.getByRole('button',{name:'Close settings',exact:true}).click();

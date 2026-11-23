@@ -183,10 +183,11 @@ test('a pin without an equivalent never substitutes another lesson in that topic
 });
 
 
-test('desktop comparison moves its single pin selector into the navigation bar', () => {
+test('desktop comparison keeps its single pin selector below the navigation bar', () => {
   const comparison = setup('python', code => code, 5);
   assert.equal(comparison.pinSelectorCount(), 1);
-  assert.match(comparison.html(), /class="desktop-header-pins"/);
+  assert.match(comparison.html(), /class="comparison-pinned-topics"/);
+  assert.doesNotMatch(comparison.html().split('</header>')[0], /comparison-pinned-topics/);
   assert.doesNotMatch(comparison.html(), /comparison-file-tab has-pinned-topics/);
   comparison.selectPin('Time');
   assert.equal(comparison.activePin(), 'Run code after a delay');

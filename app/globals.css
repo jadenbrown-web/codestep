@@ -2239,3 +2239,76 @@ html[data-theme] .lesson-breakdown-sections .breakdown-part .prose-code .syntax-
 html[data-theme] .lesson-breakdown-sections .breakdown-part .prose-code .syntax-punctuation,html[data-theme] .symbol-guide .prose-code .syntax-punctuation{color:var(--editor-text);font-weight:inherit}
 html[data-theme] .app-header.lesson-nav button{background:transparent;box-shadow:none}
 html[data-theme] .pages-reference-preview .file-pair article .file-example-code{background:var(--app-raised)}
+
+/* Additional paired palettes use the same appearance controls and syntax roles. */
+html[data-theme="light"][data-palette="forest"]{--app-bg:#edf2ed;--app-surface:#fcfefb;--app-raised:#f0f6ef;--editor-bg:#fcfefb;--app-text:#203529;--editor-text:#203529;--app-muted:#506255;--app-accent:#2e6c46;--app-action:#2e6c46;--app-selected:#dceadd;--app-line:#c5d5c7}
+html[data-theme="dark"][data-palette="forest"]{--app-bg:#141c17;--app-surface:#1c2820;--app-raised:#27362a;--editor-bg:#18211a;--app-text:#e5eee6;--editor-text:#e5eee6;--app-muted:#a7bdab;--app-accent:#a3d6a8;--app-action:#326a40;--app-selected:#314b36;--app-line:#415b46}
+html[data-theme="light"][data-palette="ember"]{--app-bg:#f5efea;--app-surface:#fffdfb;--app-raised:#faf3ec;--editor-bg:#fffcf8;--app-text:#38271f;--editor-text:#38271f;--app-muted:#72584b;--app-accent:#9c4017;--app-action:#9c4017;--app-selected:#f4e1d3;--app-line:#dbc9bb}
+html[data-theme="dark"][data-palette="ember"]{--app-bg:#211914;--app-surface:#2d211b;--app-raised:#3b2d24;--editor-bg:#251b16;--app-text:#f5e9df;--editor-text:#f5e9df;--app-muted:#cfb6a3;--app-accent:#f6be8b;--app-action:#a94e20;--app-selected:#513827;--app-line:#6b5140}
+html[data-theme="light"][data-palette="slate"]{--app-bg:#edf0f7;--app-surface:#fdfdff;--app-raised:#f4f5fb;--editor-bg:#fff;--app-text:#26304b;--editor-text:#26304b;--app-muted:#56617c;--app-accent:#3f55a4;--app-action:#3f55a4;--app-selected:#dfe5fa;--app-line:#cbd1e2}
+html[data-theme="dark"][data-palette="slate"]{--app-bg:#171c2a;--app-surface:#20283b;--app-raised:#2a3550;--editor-bg:#1b2232;--app-text:#e8edf9;--editor-text:#e8edf9;--app-muted:#aebbd7;--app-accent:#a9c4ff;--app-action:#405eaa;--app-selected:#344564;--app-line:#455675}
+
+/* The home animation is one coherent miniature, never a light/dark hybrid. */
+html[data-theme] .home-shell .hero .terminal-card{background:var(--editor-bg);color:var(--editor-text);border:0!important;box-shadow:none}
+html[data-theme] .home-shell .hero .terminal-code{background:var(--editor-bg);color:var(--editor-text);border:0}
+html[data-theme] .home-shell .hero :is(.terminal-top,.terminal-output){background:var(--app-raised);color:var(--app-text);border:0}
+html[data-theme] .home-shell .hero .terminal-lines{color:var(--app-muted)}
+html[data-theme] .home-shell .hero .success-pill{background:var(--app-selected);color:var(--app-text);border:0;box-shadow:none}
+html[data-theme] .home-shell .hero .success-pill :is(b,span){color:var(--app-text)}
+/* Drag feedback is rendered in a portal and needs its own complete theme. */
+html[data-theme] .block-drag-preview{background:var(--app-raised);color:var(--app-text);border:0;box-shadow:0 8px 24px #0003;transform:none}
+html[data-theme] .block-program .drop-active{background:var(--app-selected);color:var(--app-text);border-top-color:transparent}
+html[data-theme] .block-builder button:focus-visible{outline-color:var(--app-accent)}
+html[data-theme] .home-shell .hero .terminal-code .syntax-keyword,html[data-theme] .block-drag-preview .syntax-keyword{color:var(--syntax-key)}
+html[data-theme] .home-shell .hero .terminal-code .syntax-api,html[data-theme] .block-drag-preview .syntax-api{color:var(--syntax-type)}
+html[data-theme] .home-shell .hero .terminal-code .syntax-header,html[data-theme] .block-drag-preview .syntax-header{color:var(--syntax-type)}
+html[data-theme] .home-shell .hero .terminal-code .syntax-function-name,html[data-theme] .block-drag-preview .syntax-function-name{color:var(--syntax-fn)}
+html[data-theme] .home-shell .hero .terminal-code .syntax-string,html[data-theme] .block-drag-preview .syntax-string{color:var(--syntax-str)}
+html[data-theme] .home-shell .hero .terminal-code .syntax-number,html[data-theme] .block-drag-preview .syntax-number{color:var(--syntax-num)}
+html[data-theme] .home-shell .hero .terminal-code .syntax-attribute,html[data-theme] .block-drag-preview .syntax-attribute{color:var(--syntax-num)}
+html[data-theme] .home-shell .hero .terminal-code .syntax-comment,html[data-theme] .block-drag-preview .syntax-comment{color:var(--syntax-comment)}
+html[data-theme] .home-shell .hero .terminal-code .syntax-plain,html[data-theme] .block-drag-preview .syntax-plain{color:var(--editor-text)}
+html[data-theme] .home-shell .hero .terminal-code .syntax-punctuation,html[data-theme] .block-drag-preview .syntax-punctuation{color:var(--editor-text)}
+
+/* Pinned shortcuts occupy their own flow row, never the navigation icon row. */
+.comparison-pinned-topics{min-width:0;max-width:100%;padding:4px 0}
+html[data-theme] .comparison-pinned-topics .pinned-topic-shortcuts{display:flex;flex-wrap:wrap;gap:6px;position:static;height:auto;max-height:none;min-width:0;max-width:100%;padding:0;background:transparent;border:0;overflow:visible}
+html[data-theme] .comparison-pinned-topics .pinned-topic-shortcuts button{position:static;flex:0 1 auto;width:auto;max-width:100%;min-height:36px;border:0;background:var(--app-raised);color:var(--app-text);padding:6px 10px}
+html[data-theme] .comparison-pinned-topics .pinned-topic-shortcuts button[data-active="true"]{background:var(--app-selected)}
+@media(min-width:851px){
+ .language-comparison .app-header.comparison-topbar{display:flex;justify-content:space-between;gap:16px;padding:6px 16px;min-height:64px;height:64px;max-height:64px;overflow:visible}
+ .language-comparison .app-header.comparison-topbar>.lesson-brand-group{position:static;display:flex;flex:0 0 auto;width:auto;min-width:0;gap:6px}
+ .language-comparison .app-header.comparison-topbar>.comparison-header-languages{position:static;display:flex;flex:0 0 auto;align-items:center;justify-content:flex-end;transform:none;inset:auto;min-height:44px;height:52px;width:auto;max-width:100%;margin:0;padding:0;gap:12px}
+ .language-comparison .comparison-header-languages .compare-language-choices{display:flex;position:static;min-width:0}
+ .language-comparison .comparison-header-languages .compare-language-choices>div{display:flex;gap:6px}
+}
+html[data-theme] .language-comparison :is(.comparison-topbar,.language-comparison-controls,.example-picker-panel,.comparison-topic-head,.comparison-notes,.comparison-notes-heading,.comparison-notes-language,.comparison-notes-language>h3,.comparison-unavailable,.comparison-runtime-note){background:var(--app-surface);color:var(--app-text);border:0!important;box-shadow:none}
+html[data-theme] .language-comparison :is(.comparison-code,.comparison-output,.comparison-console){background:var(--editor-bg);color:var(--editor-text)}
+html[data-theme] :is(.lesson-breakdown-sections .import-breakdown,.lesson-breakdown-sections .setup-breakdown,.breakdown-section-heading,.comment-card,.settings-panel,.example-picker-panel,.reference-pane-toolbar){border:0!important;box-shadow:none}
+html[data-theme] .lesson-breakdown-sections :is(.import-breakdown,.setup-breakdown){background:var(--app-surface)}
+html[data-theme] :is(.breakdown-section-heading>p,.comparison-topic-unavailable,.comparison-unavailable,.comparison-runtime-note){color:var(--app-muted)}
+html[data-theme] :is(.comparison-input-runtime,.example-picker-panel input){background:var(--app-raised);color:var(--app-text);border-color:transparent}
+html[data-theme] .comparison-header-languages .language-choice{border:0!important;background:transparent;color:var(--app-text)}
+html[data-theme] .reference-workspace :is(.html-text-reference,.text-reference-preview,.font-reference-preview,.css-reference-preview,.comparison-reference-preview,.layout-reference,.colour-lesson-link){border:0!important;box-shadow:none}
+html[data-theme] :is(.app-back,.drawer-toggle,.settings-button,.compare-language-button,.time-zone-trigger,.layout-choice,.comparison-case-choices button,.runtime-picker button,.theme-options button){border:0}
+html[data-theme] .lesson-breakdown-sections :is(.breakdown-section-kind,.import-breakdown>.breakdown-label,.setup-breakdown>.breakdown-label){color:var(--app-accent)}
+html[data-theme] .language-comparison .numbered-comparison-code{background:var(--editor-bg);color:var(--editor-text);border:0}
+html[data-theme] .language-comparison .numbered-comparison-code .code-line-ruler{color:var(--app-muted)}
+html[data-theme] :is(.drawer-pins,.drawer-pin-hint){border:0!important;box-shadow:none}
+html[data-theme] .drawer-pins .pinned-topic-shortcuts .pinned-topic-label{border:0!important;background:var(--app-raised);color:var(--app-text);box-shadow:none}
+html[data-theme] .drawer-pins .pinned-topic-shortcuts button[data-active="true"] .pinned-topic-label{background:var(--app-selected);color:var(--app-text)}
+html[data-theme] .language-comparison .numbered-comparison-code .syntax-keyword{color:var(--syntax-key)}
+html[data-theme] .language-comparison .numbered-comparison-code .syntax-api{color:var(--syntax-type)}
+html[data-theme] .language-comparison .numbered-comparison-code .syntax-header{color:var(--syntax-type)}
+html[data-theme] .language-comparison .numbered-comparison-code .syntax-function-name{color:var(--syntax-fn)}
+html[data-theme] .language-comparison .numbered-comparison-code .syntax-string{color:var(--syntax-str)}
+html[data-theme] .language-comparison .numbered-comparison-code .syntax-number{color:var(--syntax-num)}
+html[data-theme] .language-comparison .numbered-comparison-code .syntax-attribute{color:var(--syntax-num)}
+html[data-theme] .language-comparison .numbered-comparison-code .syntax-comment{color:var(--syntax-comment)}
+html[data-theme] .language-comparison .numbered-comparison-code .syntax-plain{color:var(--editor-text)}
+html[data-theme] .language-comparison .numbered-comparison-code .syntax-punctuation{color:var(--editor-text)}
+html[data-theme] .home-shell .hero .terminal-lines small{color:var(--app-muted)}
+html[data-theme] .block-drag-preview .block-grip{color:var(--app-muted)}
+html[data-theme] .block-program .drop-active{box-shadow:none}
+html[data-theme] .language-comparison .language-comparison-columns{background:var(--app-bg)}
+html[data-theme] .font-example-heading>b{color:var(--app-accent)}
