@@ -13,7 +13,8 @@ try{
   await page.route('https://codestep.test/**',route=>{
    const path=new URL(route.request().url()).pathname;
    if(path==='/')return route.fulfill({contentType:'text/html',body:`<html><meta name="viewport" content="width=device-width,initial-scale=1"><style>${fs.readFileSync('app/globals.css','utf8')}</style><body><div id="root"></div></body></html>`});
-   const mime={'.png':'image/png','.mp4':'video/mp4','.mp3':'audio/mpeg','.js':'text/javascript','.wasm':'application/wasm'};
+   if(process.env.TEST_WEBM_FALLBACK && path.endsWith('my-video.mp4'))return route.fulfill({status:404,body:''});
+   const mime={'.png':'image/png','.mp4':'video/mp4','.webm':'video/webm','.mp3':'audio/mpeg','.js':'text/javascript','.wasm':'application/wasm'};
    return fs.existsSync('public'+path)?route.fulfill({body:fs.readFileSync('public'+path),contentType:mime[path.slice(path.lastIndexOf('.'))]||'image/svg+xml'}):route.fulfill({status:404,body:''});
   });
   await page.goto('https://codestep.test/');
@@ -39,6 +40,7 @@ try{
     assert.equal(await preview.locator('img').getAttribute('alt'),'A car');
    }else{
     const media=preview.locator(lesson.mediaPreview);
+    await page.waitForFunction(kind=>document.querySelector('.html-media-preview '+kind).readyState>=2,lesson.mediaPreview);
     await media.evaluate(async e=>{await e.play();});
     await page.waitForFunction(kind=>document.querySelector('.html-media-preview '+kind).currentTime>0.05,lesson.mediaPreview);
     assert.ok(await media.evaluate(e=>e.duration>0&&!e.error&&e.controls));await media.evaluate(e=>e.pause());
