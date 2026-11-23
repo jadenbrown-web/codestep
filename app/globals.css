@@ -2080,3 +2080,16 @@ html[data-theme] .pages-reference-preview .link-journey{border:0;box-shadow:none
  .reference-workspace .font-featured-example .visual-example-code>.copy-code-control{top:0;right:220px}
  .reference-workspace .reference-pane-heading{position:relative;padding-right:276px;min-height:44px;height:44px}
 }
+
+/* Linked-file examples and their working browser preview share the available pane. */
+.pages-reference-preview .file-pair{padding:12px 14px;gap:14px}
+.pages-reference-preview .file-pair pre{font-size:clamp(13px,1.05vw,17px);line-height:1.65;padding:14px}
+.pages-reference-preview .file-pair article>header{font-size:14px}
+.linked-pages-browser{margin:8px 14px 14px;flex:1;min-height:240px;display:flex;flex-direction:column}
+.linked-pages-address{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;font-size:14px}
+.linked-pages-address>span{font:13px var(--mono);color:var(--ui-muted)}
+.linked-pages-browser iframe{display:block;width:100%;flex:1;min-height:190px;border:0;border-radius:8px;background:white;color-scheme:light}
+.linked-pages-browser>p{font-size:13px;margin:8px 0 0;color:var(--ui-muted)}
+html[data-theme] .pages-reference-preview .reference-pane-heading{border-bottom:0;box-shadow:none}
+.pages-reference-preview>.reference-next{align-self:flex-end;margin:0 14px 14px}
+@media(max-width:650px){.pages-reference-preview .file-pair{padding:8px 10px;gap:10px}.pages-reference-preview .file-pair pre{font-size:14px}.linked-pages-browser{margin:4px 10px 12px;flex:none;min-height:260px}}

@@ -50,8 +50,17 @@ try{
    await page.locator('.reference-workspace').waitFor();same(await settings(),home,`${kind} Settings stays fixed`);
    if(width>850){same(await page.locator('.reference-workspace .editor-mode-toggle').boundingBox(),mode,`${kind} mode stays fixed`);if(kind!=='pages')same(await page.locator('.reference-workspace .font-featured-example .copy-code-button').boundingBox(),copy,`${kind} copy stays fixed`);}
    if(kind==='pages'){
-    for(const selector of ['.pages-reference-preview','.pages-reference-preview .reference-pane-heading','.file-pair article','.link-journey'])assert.equal(await page.locator(selector).first().evaluate(e=>getComputedStyle(e).borderTopWidth),'0px',selector);
+    for(const selector of ['.pages-reference-preview','.pages-reference-preview .reference-pane-heading','.file-pair article'])assert.equal(await page.locator(selector).first().evaluate(e=>getComputedStyle(e).borderTopWidth),'0px',selector);
     assert.equal(await page.locator('.file-pair article>header .copy-code-button').count(),2);
+    const preview=page.frameLocator('iframe[title="Linked HTML page"]');
+    await preview.getByRole('heading',{name:'First Page',exact:true}).waitFor();
+    await preview.getByRole('link',{name:'Go to Page 2',exact:true}).click();
+    await preview.getByRole('heading',{name:'Page 2',exact:true}).waitFor();
+    assert.equal(await page.locator('.linked-pages-address>span').textContent(),'page2.html');
+    await preview.getByRole('link',{name:'Go back',exact:true}).click();
+    await preview.getByRole('heading',{name:'First Page',exact:true}).waitFor();
+    assert.equal(await page.locator('.linked-pages-address>span').textContent(),'index.html');
+
    }
    if(width===1952&&theme==='dark'&&kind==='pages')await page.screenshot({path:'/tmp/codestep-pages-clean.png'});
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);

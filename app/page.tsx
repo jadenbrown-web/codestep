@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEve
 
 import CodeBlocks from "./CodeBlocks";
 import BrowserResultPreview from "./BrowserResultPreview";
+import LinkedPagesPreview, {linkedPageCode} from "./LinkedPagesPreview";
 import ClubTerminalInput from "./ClubTerminalInput";
 import BankTerminalInput from "./BankTerminalInput";
 import ShoppingTotalInput from "./ShoppingTotalInput";
@@ -5532,10 +5533,9 @@ export default function Home() {
           </div> : current!.referenceKind === "fonts" ? <FontReference language={language} onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language={language} />} /> : current!.referenceKind === "pages" ? <div className="pages-reference-preview">
             <header className="reference-pane-heading"><b>Two HTML files</b><div className="desktop-pane-actions">{lessonActions}</div></header>
             <div className="file-pair">
-              <article><header><span>1</span><b>index.html</b><CopyCodeButton iconOnly code={'<!DOCTYPE html>\n<html>\n<body>\n\n  <h1>First Page</h1>\n\n  <a href="page2.html">Go to Page 2</a>\n\n</body>\n</html>'} label="index.html" /></header><div className="file-example-code"><pre><code><HighlightedCode language="html" code={'<!DOCTYPE html>\n<html>\n<body>\n\n  <h1>First Page</h1>\n\n  <a href="page2.html">Go to Page 2</a>\n\n</body>\n</html>'} /></code></pre></div></article>
-              <article><header><span>2</span><b>page2.html</b><CopyCodeButton iconOnly code={'<!DOCTYPE html>\n<html>\n<body>\n\n  <h1>Page 2</h1>\n\n  <a href="index.html">Go back</a>\n\n</body>\n</html>'} label="page2.html" /></header><div className="file-example-code"><pre><code><HighlightedCode language="html" code={'<!DOCTYPE html>\n<html>\n<body>\n\n  <h1>Page 2</h1>\n\n  <a href="index.html">Go back</a>\n\n</body>\n</html>'} /></code></pre></div></article>
+              {[false, true].map(second => <article key={String(second)}><header><b>{second ? "page2.html" : "index.html"}</b><CopyCodeButton iconOnly code={linkedPageCode(second)} label={second ? "page2.html" : "index.html"} /></header><div className="file-example-code"><pre><code><HighlightedCode language="html" code={linkedPageCode(second)} /></code></pre></div></article>)}
             </div>
-            <div className="link-journey"><b>First Page</b><span>Go to Page 2 →</span><b>Page 2</b><span>← Go back</span></div>
+            <LinkedPagesPreview />
             <button className="reference-next" onClick={nextLesson}>Continue to images →</button>
           </div> : ["alignment", "positioning", "combined-styles"].includes(current!.referenceKind ?? "") ? <LayoutReference kind={current!.referenceKind as LayoutKind} language={language as "html" | "css"} options={layoutOptions} onChange={setLayoutOptions} nextLabel={index === lessons[language].length - 1 ? `Finish ${language.toUpperCase()} path →` : "Continue to the next lesson →"} onAlternate={() => openReferenceLesson(language === "html" ? "css" : "html", current!.referenceKind!)} onNext={nextLesson} actions={lessonActions} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax} />} /> : current!.referenceKind === "named-colours" ? <TextColourReference colourName={textColour} onColourChange={setTextColour} onOpenHex={() => openReferenceLesson("css", "colours")} onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} /> : (current!.referenceKind === "css" || current!.referenceKind === "colours") ? <CssVisualReference colourName={textColour} onColourChange={setTextColour} onOpenTextColour={() => openReferenceLesson("html", "named-colours")} kind={current!.referenceKind === "colours" ? "colours" : "borders"} onNext={nextLesson} actions={lessonActions} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax ?? (current!.referenceKind === "colours" ? "html" : "css")} />} /> : <HtmlTextReference onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} />}</> : <>
           <div className="editor-panel">
