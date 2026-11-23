@@ -18,7 +18,7 @@ try{
   }
   await page.getByRole('button',{name:/Ember Soft coral/}).click();
   assert.equal(await page.locator('html').getAttribute('data-palette'),'ember');
-  for(const choice of await page.locator('.settings-panel button[aria-pressed="true"]').all())assert.equal(await choice.evaluate(e=>getComputedStyle(e,'::after').display),'block','Appearance and palette selection use the same checkmark');
+  for(const choice of await page.locator('.settings-panel button[aria-pressed="true"]').all())assert.equal(await choice.locator('.settings-choice-check[aria-hidden="true"]').count(),1,'Appearance and palette selection use the same decorative checkmark');
   await page.screenshot({path:`/tmp/flat-settings-${width}-${theme}.png`});
   await page.getByRole('button',{name:'Close settings',exact:true}).click();await page.locator('.course-card.cs-card').click();
   if(width<=850)await page.getByRole('button',{name:'Practice',exact:true}).click();

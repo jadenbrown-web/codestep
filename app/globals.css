@@ -2362,7 +2362,7 @@ html[data-theme] .live-web-panel .console-bar.live-web-header button{width:auto;
 html[data-theme] .settings-panel .theme-options button,
 html[data-theme] .settings-panel .palette-options button{border:0;outline:0;box-shadow:none;background:var(--app-raised);color:var(--app-text);position:relative}
 html[data-theme] .settings-panel :is(.theme-options button,.palette-options button):is([data-active="true"],[aria-pressed="true"]){background:var(--app-selected);border:0;outline:0;box-shadow:none}
-html[data-theme] .settings-panel :is(.theme-options button,.palette-options button):is([data-active="true"],[aria-pressed="true"])::after{content:"\2713";display:block!important;position:absolute;inset:12px 12px auto auto;color:var(--app-accent);font:700 16px var(--sans);background:none;border:0;width:auto;height:auto}
+html[data-theme] .settings-panel .settings-choice-check{display:block;position:absolute;inset:12px 12px auto auto;width:16px;height:16px;color:var(--app-accent);pointer-events:none}
 html[data-theme] .settings-panel :is(.theme-options button,.palette-options button){padding-right:36px}
 html[data-theme] .settings-panel :is(.theme-options button,.palette-options button):focus-visible{outline:2px solid var(--app-accent);outline-offset:-2px}
 html[data-theme] .settings-panel .switch{border:0;box-shadow:none;background:var(--app-muted)}
