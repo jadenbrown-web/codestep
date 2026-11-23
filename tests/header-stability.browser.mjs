@@ -48,7 +48,15 @@ try{
    await page.locator('.drawer-lessons .topic-lesson-button').filter({hasText:lesson.title}).click();
    if(width===390)await page.getByRole('button',{name:'Practice',exact:true}).click();
    await page.locator('.reference-workspace').waitFor();same(await settings(),home,`${kind} Settings stays fixed`);
-   if(width>850){same(await page.locator('.reference-workspace .editor-mode-toggle').boundingBox(),mode,`${kind} mode stays fixed`);if(kind!=='pages')same(await page.locator('.reference-workspace .font-featured-example .copy-code-button').boundingBox(),copy,`${kind} copy stays fixed`);}
+   if(width>850){
+    const controls=await page.locator('.reference-workspace .desktop-pane-actions button').evaluateAll(es=>es.map(e=>e.getBoundingClientRect().x));
+    assert.ok(Math.abs(controls[1]-controls[0]-44)<1,'Available actions are packed into adjacent slots');
+    if(kind!=='pages'){
+     const copyBox=await page.locator('.reference-workspace .font-featured-example .copy-code-button').boundingBox();
+     assert.ok(Math.abs(controls[0]-copyBox.x-44)<1,'Copy sits immediately beside mode');
+    }
+   }
+
    if(kind==='pages'){
     for(const selector of ['.pages-reference-preview','.pages-reference-preview .reference-pane-heading','.file-pair article'])assert.equal(await page.locator(selector).first().evaluate(e=>getComputedStyle(e).borderTopWidth),'0px',selector);
     assert.equal(await page.locator('.file-pair article>header .copy-code-button').count(),2);

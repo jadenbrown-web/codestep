@@ -38,6 +38,12 @@ import { checkLesson, checkPreparedLesson, prepareChecker } from "./lesson-check
 
 type Language = "javascript" | "csharp" | "cpp" | "python" | "html" | "css";
 type ThemeMode = "light" | "dark" | "system";
+type ColourPalette = "ide" | "ocean" | "plum";
+const colourPalettes: {id:ColourPalette;name:string;description:string;swatches:string[]}[] = [
+  {id:"ide",name:"Studio",description:"Xcode light · VS Code dark",swatches:["#ffffff","#1e1e1e","#007acc"]},
+  {id:"ocean",name:"Ocean",description:"Cool blue and teal",swatches:["#f0f8fa","#10232e","#008295"]},
+  {id:"plum",name:"Plum",description:"Soft violet and charcoal",swatches:["#f8f4fc","#241e2c","#8050ba"]},
+];
 type Lesson = {
   title: string;
   eyebrow: string;
@@ -4730,7 +4736,7 @@ function MenuHeader({ title, titleId, onBack, backLabel, className }: { title: s
   return <header className={`app-header menu-header ${className}`}><BackButton onClick={onBack} label={backLabel} /><div className="menu-header-heading"><small>CODESTEP</small><h2 id={titleId}>{title}</h2></div></header>;
 }
 
-function SettingsPanel({ indentationDots = true, onIndentationDotsChange = () => {}, open, themeMode, showGuide, showComments, onCommentsChange, colourTyping, blockMode, onBlockModeChange, onThemeChange, onGuideChange, onColourTypingChange, onClose }: { indentationDots?: boolean; onIndentationDotsChange?: (enabled: boolean) => void; open: boolean; themeMode: ThemeMode; showGuide: boolean; showComments: boolean; onCommentsChange: (show: boolean) => void; colourTyping: boolean; blockMode: boolean; onBlockModeChange: (enabled: boolean) => void; onThemeChange: (mode: ThemeMode) => void; onGuideChange: (show: boolean) => void; onColourTypingChange: (show: boolean) => void; onClose: () => void }) {
+function SettingsPanel({ indentationDots = true, onIndentationDotsChange = () => {}, open, themeMode, colourPalette, onPaletteChange, showGuide, showComments, onCommentsChange, colourTyping, blockMode, onBlockModeChange, onThemeChange, onGuideChange, onColourTypingChange, onClose }: { indentationDots?: boolean; onIndentationDotsChange?: (enabled: boolean) => void; open: boolean; themeMode: ThemeMode; colourPalette: ColourPalette; onPaletteChange: (palette:ColourPalette)=>void; showGuide: boolean; showComments: boolean; onCommentsChange: (show: boolean) => void; colourTyping: boolean; blockMode: boolean; onBlockModeChange: (enabled: boolean) => void; onThemeChange: (mode: ThemeMode) => void; onGuideChange: (show: boolean) => void; onColourTypingChange: (show: boolean) => void; onClose: () => void }) {
   const close = useRef(onClose);
   close.current = onClose;
   useEffect(() => {
@@ -4757,8 +4763,9 @@ function SettingsPanel({ indentationDots = true, onIndentationDotsChange = () =>
       <div className="settings-group"><b>Appearance</b><span>Choose a theme or follow your device setting.</span><div className="theme-options">
         {(["light", "dark", "system"] as ThemeMode[]).map((mode) => <button key={mode} data-active={themeMode === mode} className={themeMode === mode ? "selected" : ""} onClick={() => onThemeChange(mode)}><i aria-hidden="true"><svg className="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{mode === "light" ? <><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4 19 5"/></> : mode === "dark" ? <path d="M20.8 13.1A9 9 0 0 1 10.9 3.2a9 9 0 1 0 9.9 9.9Z"/> : <><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></>}</svg></i><span>{mode[0].toUpperCase() + mode.slice(1)}</span><small>{mode === "system" ? "Use device setting" : `${mode} appearance`}</small></button>)}
       </div></div>
+      <div className="settings-group"><b>Colour palette</b><span>Every palette includes a light and dark version. System appearance follows your device.</span><div className="palette-options" role="group" aria-label="Colour palette">{colourPalettes.map(palette=><button key={palette.id} aria-pressed={colourPalette===palette.id} onClick={()=>onPaletteChange(palette.id)}><span className="palette-swatches" aria-hidden="true">{palette.swatches.map(colour=><i key={colour} style={{background:colour}} />)}</span><b>{palette.name}</b><small>{palette.description}</small></button>)}</div></div>
       <div className="settings-group guide-setting"><div><b>Code blocks</b><span>Tap or drag ready-made lines into your code. Turn off to type instead. Your choice is saved on this device.</span></div><button aria-label="Code blocks" className={`switch ${blockMode ? "on" : ""}`} role="switch" aria-checked={blockMode} onClick={() => onBlockModeChange(!blockMode)}><i /></button></div>
-      <div className="settings-group guide-setting"><div><b>Code guide</b><span>Show a faint, colour-coded copy of the expected answer in the editor.</span></div><button aria-label="Code guide" className={`switch ${showGuide ? "on" : ""}`} role="switch" aria-checked={showGuide} onClick={() => onGuideChange(!showGuide)}><i /></button></div>
+      <div className="settings-group guide-setting"><div><b>Code guide</b><span>Show a readable, colour-coded example in the editor.</span></div><button aria-label="Code guide" className={`switch ${showGuide ? "on" : ""}`} role="switch" aria-checked={showGuide} onClick={() => onGuideChange(!showGuide)}><i /></button></div>
       <div className="settings-group guide-setting"><div><b>Colour typed code</b><span>Give your typed code the same syntax colours as the ghost guide.</span></div><button aria-label="Colour typed code" className={`switch ${colourTyping ? "on" : ""}`} role="switch" aria-checked={colourTyping} onClick={() => onColourTypingChange(!colourTyping)}><i /></button></div>
       <div className="settings-group guide-setting"><div><b>Indentation dots</b><span>Show dots for leading spaces and tabs to make code blocks easier to follow. Copied code keeps its original whitespace.</span></div><button aria-label="Indentation dots" className={`switch ${indentationDots ? "on" : ""}`} role="switch" aria-checked={indentationDots} onClick={() => onIndentationDotsChange(!indentationDots)}><i /></button></div>
       <div className="settings-group guide-setting"><div><b>Lesson comments</b><span>Show step-by-step comments in the code guide and copied examples. You can skip typing the comments.</span></div><button aria-label="Lesson comments" className={`switch ${showComments ? "on" : ""}`} role="switch" aria-checked={showComments} onClick={() => onCommentsChange(!showComments)}><i /></button></div>
@@ -4999,6 +5006,7 @@ export default function Home() {
     try { localStorage.setItem("codestep-pinned-lessons", JSON.stringify(pinnedByLanguage)); } catch {}
   }, [pinnedByLanguage, pinsReady]);
   const [themeMode, setThemeMode] = useState<ThemeMode>("system");
+  const [colourPalette,setColourPalette] = useState<ColourPalette>("ide");
   const [showGuide, setShowGuide] = useState(true);
   const [showComments, setShowComments] = useState(false);
   const insertedComment = useRef("");
@@ -5217,6 +5225,8 @@ export default function Home() {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("codestep-theme") as ThemeMode | null;
+    const savedPalette=localStorage.getItem("codestep-palette");
+    if(savedPalette && colourPalettes.some(p=>p.id===savedPalette))setColourPalette(savedPalette as ColourPalette);
     const savedGuide = localStorage.getItem("codestep-code-guide");
     setShowComments(localStorage.getItem("codestep-lesson-comments") === "true");
     const savedColourTyping = localStorage.getItem("codestep-colour-typing");
@@ -5235,6 +5245,8 @@ export default function Home() {
     localStorage.setItem("codestep-theme", themeMode);
     return () => media.removeEventListener("change", applyTheme);
   }, [themeMode]);
+
+  useEffect(()=>{document.documentElement.dataset.palette=colourPalette;localStorage.setItem("codestep-palette",colourPalette);},[colourPalette]);
 
   useEffect(() => { localStorage.setItem("codestep-code-guide", String(showGuide)); }, [showGuide]);
   useEffect(() => { localStorage.setItem("codestep-colour-typing", String(colourTyping)); }, [colourTyping]);
@@ -5430,7 +5442,7 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <SettingsPanel indentationDots={indentationDots} onIndentationDotsChange={enabled => { setIndentationDots(enabled); localStorage.setItem("codestep-indentation-dots", String(enabled)); }} open={settingsOpen} themeMode={themeMode} showGuide={showGuide} showComments={showComments} onCommentsChange={changeComments} colourTyping={colourTyping} blockMode={blockMode} onBlockModeChange={changeBlockMode} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onColourTypingChange={setColourTyping} onClose={() => setSettingsOpen(false)} />
+      <SettingsPanel indentationDots={indentationDots} onIndentationDotsChange={enabled => { setIndentationDots(enabled); localStorage.setItem("codestep-indentation-dots", String(enabled)); }} open={settingsOpen} themeMode={themeMode} colourPalette={colourPalette} onPaletteChange={setColourPalette} showGuide={showGuide} showComments={showComments} onCommentsChange={changeComments} colourTyping={colourTyping} blockMode={blockMode} onBlockModeChange={changeBlockMode} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onColourTypingChange={setColourTyping} onClose={() => setSettingsOpen(false)} />
       </>
     );
   }
@@ -5571,7 +5583,7 @@ export default function Home() {
         </section>
       </div>
     </main>
-    <SettingsPanel indentationDots={indentationDots} onIndentationDotsChange={enabled => { setIndentationDots(enabled); localStorage.setItem("codestep-indentation-dots", String(enabled)); }} open={settingsOpen} themeMode={themeMode} showGuide={showGuide} showComments={showComments} onCommentsChange={changeComments} colourTyping={colourTyping} blockMode={blockMode} onBlockModeChange={changeBlockMode} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onColourTypingChange={setColourTyping} onClose={() => setSettingsOpen(false)} />
+    <SettingsPanel indentationDots={indentationDots} onIndentationDotsChange={enabled => { setIndentationDots(enabled); localStorage.setItem("codestep-indentation-dots", String(enabled)); }} open={settingsOpen} themeMode={themeMode} colourPalette={colourPalette} onPaletteChange={setColourPalette} showGuide={showGuide} showComments={showComments} onCommentsChange={changeComments} colourTyping={colourTyping} blockMode={blockMode} onBlockModeChange={changeBlockMode} onThemeChange={setThemeMode} onGuideChange={setShowGuide} onColourTypingChange={setColourTyping} onClose={() => setSettingsOpen(false)} />
     </>
   );
 }

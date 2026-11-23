@@ -2115,3 +2115,94 @@ html[data-theme] .pages-reference-preview .reference-pane-heading{border-bottom:
 .html-media-preview .sample-browser-document{white-space:normal}
 @media(max-width:850px){.workspace:has(.html-media-preview)>.console-panel{max-height:45%;min-height:180px}.html-media-preview .sample-browser-document img,.html-media-preview .sample-browser-document video{max-height:180px;object-fit:contain;object-position:left}}
 @media(min-width:851px){.html-media-preview .sample-browser-document video{width:min(100%,400px);max-height:225px}.html-media-preview .sample-browser-document img{width:400px;max-height:225px;object-fit:contain;object-position:left}}
+
+/* Paired light/dark palettes: appearance and palette remain independent choices. */
+html[data-theme="light"]{
+ --app-bg:#f0f0f3;--app-surface:#fff;--app-raised:#f7f7fa;--editor-bg:#fff;--editor-text:#232329;--app-text:#222329;--app-muted:#555963;--app-accent:#0068d9;--app-action:#0068d9;--app-selected:#dfecfc;--app-line:#d0d3da;
+ --syntax-key:#9b2393;--syntax-str:#b12626;--syntax-num:#1c00cf;--syntax-fn:#326d74;--syntax-type:#3e6c71;--syntax-comment:#536c58;
+}
+html[data-theme="dark"]{
+ --app-bg:#181818;--app-surface:#252526;--app-raised:#2d2d30;--editor-bg:#1e1e1e;--editor-text:#d4d4d4;--app-text:#ededed;--app-muted:#b2b2b8;--app-accent:#75bfff;--app-action:#007acc;--app-selected:#303d4d;--app-line:#49494d;
+ --syntax-key:#c586c0;--syntax-str:#ce9178;--syntax-num:#b5cea8;--syntax-fn:#dcdcaa;--syntax-type:#4ec9b0;--syntax-comment:#8cb478;
+}
+html[data-theme="light"][data-palette="ocean"]{--app-bg:#eaf3f6;--app-surface:#fafdff;--app-raised:#f0f8fa;--editor-bg:#fff;--app-text:#17333e;--editor-text:#17333e;--app-muted:#49616d;--app-accent:#006c7c;--app-action:#006c7c;--app-selected:#d4edf1;--app-line:#bfcfd5}
+html[data-theme="dark"][data-palette="ocean"]{--app-bg:#0c1921;--app-surface:#10232e;--app-raised:#18313e;--editor-bg:#0e1e28;--app-text:#e1f1f6;--editor-text:#d0e7f0;--app-muted:#a4becb;--app-accent:#6cd9df;--app-action:#087d8c;--app-selected:#214351;--app-line:#365361}
+html[data-theme="light"][data-palette="plum"]{--app-bg:#f0ecf4;--app-surface:#fffcff;--app-raised:#f8f4fc;--editor-bg:#fffaff;--app-text:#31253d;--editor-text:#31253d;--app-muted:#665770;--app-accent:#7440a8;--app-action:#7440a8;--app-selected:#ebdff7;--app-line:#d6c8df}
+html[data-theme="dark"][data-palette="plum"]{--app-bg:#19151f;--app-surface:#241e2c;--app-raised:#30283b;--editor-bg:#201a28;--app-text:#f1e9f8;--editor-text:#e5d9ee;--app-muted:#c1afce;--app-accent:#d4afff;--app-action:#8050ba;--app-selected:#443252;--app-line:#584565}
+html[data-theme]{--ink:var(--app-text);--cream:var(--app-bg);--green:var(--app-action);--green-dark:var(--app-accent);--ui-surface:var(--app-surface);--ui-border:var(--app-line);--ui-hover:var(--app-raised);--ui-text:var(--app-text);--ui-muted:var(--app-muted);--selection-surface:var(--app-selected);color-scheme:light}
+html[data-theme="dark"]{color-scheme:dark}
+html[data-theme] body{background:var(--app-bg);color:var(--app-text)}
+html[data-theme] :is(.home-shell,.lesson-shell,.lesson-layout,.workspace,.lesson-copy){background:var(--app-bg);color:var(--app-text)}
+html[data-theme] :is(.lesson-drawer,.course-card,.reference-card,.settings-panel,.language-comparison,.comparison-card,.comparison-example-menu,.example-picker-list,.time-zone-options){background:var(--app-surface);color:var(--app-text);box-shadow:none}
+html[data-theme] :is(.editor-panel,.console-panel,.comparison-card,.terminal-card){--ui-surface:var(--app-surface);--ui-border:var(--app-line);--ui-hover:var(--app-raised);--ui-text:var(--app-text);--ui-muted:var(--app-muted)}
+html[data-theme] :is(.editor-panel,.console-panel,.editor-body,.console-body,.terminal-card,.terminal-code,.terminal-output,.comparison-code,.comparison-output,.file-pair article,.file-example-code,.block-builder){background:var(--editor-bg);color:var(--editor-text)}
+html[data-theme] :is(.panel-bar,.console-bar,.terminal-topbar,.reference-pane-heading,.font-featured-example,.comparison-filebar,.file-pair article>header,.comparison-case-picker,.loop-example-picker,.time-zone-picker,.runtime-picker,.input-runtime-picker){background:var(--app-surface);color:var(--app-text)}
+html[data-theme] :is(.html-text-reference,.font-reference-preview,.text-reference-preview,.pages-reference-preview,.css-reference-preview,.comparison-reference-preview,.layout-reference,.layout-reference-body){background:var(--app-surface);color:var(--app-text)}
+html[data-theme] :is(.breakdown-part,.symbol-guide,.linked-id-guide,.font-guide-note,.feedback,.comparison-reminder){background:var(--app-surface);color:var(--app-text);box-shadow:none}
+html[data-theme] :is(.lesson-copy p,.breakdown-part span,.course-card>p,.section-heading p,.feedback small,.tip,.console-muted,.settings-group>span,.settings-foot,.guide-setting>div>span,.theme-options small,.comparison-case-picker p span,.time-zone-picker small,.loop-count-options label,.block-instructions,.comparison-context){color:var(--app-muted);opacity:1}
+html[data-theme] :is(.lesson-title,.lesson-copy h1,.lesson-copy h2,.reference-pane-heading b,.font-example-heading,.comparison-case-picker p strong,.comparison-case-picker p b,.console-bar,.file-tab,.file-pair header,.file-pair pre,.panel-actions button,.lesson-actions button,.copy-code-button,.console-bar button){color:var(--app-text)}
+html[data-theme] .editor-body textarea{color:var(--editor-text);caret-color:var(--app-accent)}
+html[data-theme] :is(.typed-code-layer,.example-syntax-code,.html-tag-code,.terminal-code code,.comparison-code code){color:var(--editor-text)}
+html[data-theme] .editor-body .code-guide{opacity:1;color:var(--editor-text)}
+html[data-theme] :is(.line-numbers,.code-line-ruler,.block-number){color:var(--app-muted)}
+html[data-theme] :is(.comparison-case-choices button,.layout-choice,.time-zone-trigger,.time-zone-options button,.runtime-picker button,.theme-options button,.palette-options button){background:var(--app-raised);color:var(--app-text);border-color:transparent}
+html[data-theme] :is(.comparison-case-choices button,.layout-choice,.time-zone-options button,.runtime-picker button,.theme-options button,.palette-options button):is([aria-pressed="true"],.selected){background:var(--app-selected);color:var(--app-text);box-shadow:none}
+html[data-theme] :is(.comparison-case-choices button,.layout-choice,.time-zone-trigger,.time-zone-options button,.runtime-picker button,.theme-options button,.palette-options button):hover{background:var(--app-selected);color:var(--app-text)}
+html[data-theme] :is(.feedback>button,.reference-next,.html-reference-footer>button,.browser-input-launcher button){background:var(--app-action);color:#fff;border:0}
+html[data-theme] .feedback>button:disabled{background:var(--app-raised);color:var(--app-muted);opacity:1}
+html[data-theme] :is(.switch.on,.drawer-progress>div>i){background:var(--app-action)}
+html[data-theme] :is(.html-tag-example,.font-samples>div,.tag-card-heading,.colour-example-card,.colour-swatch-card){color:var(--app-text);border-color:transparent;box-shadow:none}
+/* Quiet surfaces replace decorative outlines; keyboard focus stays visible. */
+html[data-theme] :is(.lesson-drawer,.drawer-head,.drawer-summary,.lesson-copy,.breakdown-part,.symbol-guide,.linked-id-guide,.feedback,.reference-card,.course-card,.settings-group,.settings-head,.comparison-card,.comparison-code-actions,.comparison-filebar,.reference-pane-heading,.panel-bar,.console-bar,.font-featured-example,.html-reference-footer,.file-pair article,.file-pair article>header,.html-tag-example,.font-samples>div,.colour-example-card,.colour-swatch-card){border:0!important;box-shadow:none}
+html[data-theme] :is(.block-program,.placed-block,.code-block-choice){background:var(--app-raised);border-color:transparent;color:var(--app-text)}
+html[data-theme] :is(.topic-lesson-button,.comparison-example-menu .topic-lesson-button){color:var(--app-text)}
+html[data-theme] :is(.drawer-lessons button.active,.topic-lesson-button[data-active="true"]){background:var(--app-selected)}
+html[data-theme] .explanation-code{color:var(--app-accent)}
+html[data-theme] :is(.breakdown-part.tone-rose,.breakdown-part.tone-gold,.breakdown-part.tone-blue,.breakdown-part.tone-green) strong{color:var(--app-text)}
+/* One readable syntax palette across the editor, examples, and explanations. */
+html[data-theme] :is(.editor-body,.example-syntax-code,.html-tag-code,.terminal-code,.comparison-code,.explanation-code,.file-example-code,.block-builder) .syntax-keyword{color:var(--syntax-key)}
+html[data-theme] :is(.editor-body,.example-syntax-code,.html-tag-code,.terminal-code,.comparison-code,.explanation-code,.file-example-code,.block-builder) .syntax-string{color:var(--syntax-str)}
+html[data-theme] :is(.editor-body,.example-syntax-code,.html-tag-code,.terminal-code,.comparison-code,.explanation-code,.file-example-code,.block-builder) :is(.syntax-number,.syntax-attribute){color:var(--syntax-num)}
+html[data-theme] :is(.editor-body,.example-syntax-code,.html-tag-code,.terminal-code,.comparison-code,.explanation-code,.file-example-code,.block-builder) :is(.syntax-function,.syntax-function-name){color:var(--syntax-fn)}
+html[data-theme] :is(.editor-body,.example-syntax-code,.html-tag-code,.terminal-code,.comparison-code,.explanation-code,.file-example-code,.block-builder) :is(.syntax-type,.syntax-method){color:var(--syntax-type)}
+html[data-theme] :is(.editor-body,.example-syntax-code,.html-tag-code,.terminal-code,.comparison-code,.explanation-code,.file-example-code,.block-builder) .syntax-comment{color:var(--syntax-comment)}
+.palette-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+.palette-options button{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:12px;text-align:left;border:0;border-radius:8px;font:14px var(--sans);cursor:pointer}
+.palette-options button[aria-pressed="true"]{outline:2px solid var(--app-accent);outline-offset:-2px}
+.palette-options small{color:var(--app-muted);font-size:12px;line-height:1.4}
+.palette-swatches{display:flex;gap:4px}.palette-swatches i{width:20px;height:20px;border-radius:50%;box-shadow:inset 0 0 0 1px #80808055}
+@media(max-width:500px){.palette-options{grid-template-columns:1fr}.palette-options button{display:grid;grid-template-columns:76px 1fr;align-items:center}.palette-options small{grid-column:2}.palette-swatches{grid-row:1/3}}
+/* Compact actual actions instead of reserving slots for unavailable controls. */
+@media(min-width:851px){
+ .editor-panel .panel-actions>.desktop-pane-actions>.lesson-actions{display:flex;width:auto;gap:0}
+ .reference-workspace .font-featured-example .desktop-pane-actions,.reference-workspace .reference-pane-heading .desktop-pane-actions{width:88px}
+ .reference-workspace .font-featured-example .desktop-pane-actions>.lesson-actions,.reference-workspace .reference-pane-heading .desktop-pane-actions>.lesson-actions{display:flex;width:auto;gap:0}
+ .reference-workspace .font-featured-example .visual-example-code>.copy-code-control{right:88px}
+ .reference-workspace .font-featured-example .font-example-heading,.reference-workspace .reference-pane-heading{padding-right:144px}
+}
+html[data-theme] .breakdown-part b{color:var(--app-text)}
+html[data-theme] :is(.editor-body,.example-syntax-code,.html-tag-code,.terminal-code,.comparison-code,.explanation-code,.file-example-code,.block-builder) :is(.syntax-api,.syntax-header){color:var(--syntax-type)}
+html[data-theme] :is(.editor-body,.example-syntax-code,.html-tag-code,.terminal-code,.comparison-code,.explanation-code,.file-example-code,.block-builder) .syntax-punctuation{color:var(--editor-text)}
+html[data-theme]{--prose-ink:var(--app-accent)}
+html[data-theme] .lesson-copy .breakdown-part:nth-child(n) b{color:var(--app-text)}
+html[data-theme] :is(.editor-body,.example-syntax-code,.html-tag-code,.terminal-code,.comparison-code,.file-example-code,.block-builder) .syntax-plain{color:var(--editor-text)}
+html[data-theme]{--sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;--workspace-rail:var(--app-bg);--workspace-filebar:var(--app-surface);--drawer-surface:var(--app-surface);--drawer-edge:var(--app-line);--selection-border:var(--app-accent);--scrollbar-thumb:var(--app-line)}
+html[data-theme] body{font-family:var(--sans)}
+html[data-theme] .lesson-layout .workspace{background:var(--app-bg)}
+html[data-theme] :is(.lesson-drawer .drawer-head,.lesson-drawer .drawer-lessons,.settings-panel .settings-drawer-head){background:var(--app-surface);color:var(--app-text)}
+html[data-theme] .lesson-drawer .drawer-summary{background:var(--app-raised);color:var(--app-muted)}
+html[data-theme] .lesson-copy .breakdown-part:nth-child(n),html[data-theme] .comparison-notes .lesson-breakdown-sections .breakdown-part:nth-child(n){border:0!important;box-shadow:none}
+html[data-theme] .settings-backdrop{background:#00000066}
+.settings-panel .palette-options{grid-template-columns:1fr}
+.settings-panel .palette-options button{display:grid;grid-template-columns:76px 1fr;align-items:center}
+.settings-panel .palette-options small{grid-column:2}.settings-panel .palette-swatches{grid-row:1/3}
+html[data-theme] .home-shell>.courses{background:var(--app-bg);border:0;box-shadow:none}
+html[data-theme] .home-shell .terminal-card{border:0}
+html[data-theme] .home-shell .terminal-top{background:var(--app-surface);color:var(--app-muted);border:0}
+html[data-theme] .home-shell :is(.terminal-lines,.course-count){color:var(--app-muted)}
+html[data-theme] .home-shell .success-pill,html[data-theme] .home-shell .success-pill b{background:var(--app-selected);color:var(--app-text);border:0}
+html[data-theme] :is(.typed-output,.club-terminal,.club-terminal-form label,.club-terminal-result,.bank-starting-balance){color:var(--editor-text)}
+html[data-theme] .club-terminal-form input{background:var(--app-raised);color:var(--app-text);border-color:var(--app-line);caret-color:var(--app-accent)}
+html[data-theme] .club-terminal-form button{background:var(--app-action);color:#fff;border:0}
+html[data-theme] .run-line{color:var(--app-accent)}
+html[data-theme] .prompt-mark{color:var(--app-accent)}

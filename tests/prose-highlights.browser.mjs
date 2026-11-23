@@ -13,7 +13,7 @@ try {
       assert.equal(style.background, 'rgba(0, 0, 0, 0)', `${theme}: inline background`);
       assert.equal(style.border, '0px', `${theme}: inline border`);
       assert.equal(style.padding, '0px', `${theme}: inline padding`);
-      assert.equal(style.color, theme === 'dark' ? 'rgb(130, 220, 195)' : 'rgb(21, 98, 117)', `${theme}: text colour`);
+      assert.equal(style.color, theme === 'dark' ? 'rgb(117, 191, 255)' : 'rgb(0, 104, 217)', `${theme}: text colour`);
     }
     const titleBackgrounds = await page.locator('.breakdown-part>code').evaluateAll(elements => elements.map(element => getComputedStyle(element).backgroundColor));
     assert.ok(titleBackgrounds.every(color => color !== 'rgba(0, 0, 0, 0)'), `${theme}: card titles stay filled`);
