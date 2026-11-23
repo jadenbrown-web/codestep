@@ -52,7 +52,7 @@ try{
    if(kind==='pages'){
     for(const selector of ['.pages-reference-preview','.pages-reference-preview .reference-pane-heading','.file-pair article'])assert.equal(await page.locator(selector).first().evaluate(e=>getComputedStyle(e).borderTopWidth),'0px',selector);
     assert.equal(await page.locator('.file-pair article>header .copy-code-button').count(),2);
-    const preview=page.frameLocator('iframe[title="Linked HTML page"]');
+    const preview=page.getByRole('document',{name:'Linked HTML page'});
     await preview.getByRole('heading',{name:'First Page',exact:true}).waitFor();
     await preview.getByRole('link',{name:'Go to Page 2',exact:true}).click();
     await preview.getByRole('heading',{name:'Page 2',exact:true}).waitFor();

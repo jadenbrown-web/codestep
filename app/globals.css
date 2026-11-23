@@ -2093,3 +2093,24 @@ html[data-theme] .pages-reference-preview .link-journey{border:0;box-shadow:none
 html[data-theme] .pages-reference-preview .reference-pane-heading{border-bottom:0;box-shadow:none}
 .pages-reference-preview>.reference-next{align-self:flex-end;margin:0 14px 14px}
 @media(max-width:650px){.pages-reference-preview .file-pair{padding:8px 10px;gap:10px}.pages-reference-preview .file-pair pre{font-size:14px}.linked-pages-browser{margin:4px 10px 12px;flex:none;min-height:260px}}
+
+/* Native preview content keeps file navigation inside the lesson on every browser. */
+.sample-browser-document{box-sizing:border-box;display:block;background:#fff;color:#000;color-scheme:light;border:0;border-radius:8px;padding:8px;min-height:190px;font:16px/normal 'Times New Roman',serif;text-align:left;overflow:auto}
+.linked-pages-browser>.sample-browser-document{flex:1}
+.sample-browser-document h1{display:block;font:bold 2em/normal 'Times New Roman',serif;margin:.67em 0;color:#000}
+.sample-browser-document a,.sample-browser-document a:visited{color:#0000ee;text-decoration:underline;cursor:pointer;font:inherit}
+.sample-browser-document img{display:block;max-width:100%;width:440px;height:auto}
+.sample-browser-document video{display:block;width:min(100%,560px);max-height:300px}
+.sample-browser-document audio{display:block;width:min(100%,400px);margin:18px 0}
+.html-media-preview{width:100%}
+.html-media-preview .sample-browser-document{min-height:160px}
+.media-sample-note{font-size:13px;line-height:1.5;color:var(--ui-muted);margin:10px 0 0}
+.media-sample-note a{color:var(--green-dark);text-decoration:underline}
+.pages-reference-preview .file-pair{padding:6px 8px;gap:10px}
+.pages-reference-preview .file-pair pre{padding:10px;font-size:clamp(14px,1.1vw,18px);line-height:1.5}
+.pages-reference-preview .linked-pages-browser{margin:4px 8px 10px}
+.workspace:has(.html-media-preview) .console-panel{flex:none}
+.workspace:has(.html-media-preview) .console-body{padding:10px 12px}
+.workspace:has(.html-media-preview)>.console-panel{flex:0 1 auto;max-height:48%;min-height:180px}
+.html-media-preview .sample-browser-document{white-space:normal}
+@media(max-width:850px){.workspace:has(.html-media-preview)>.console-panel{max-height:45%;min-height:180px}.html-media-preview .sample-browser-document img,.html-media-preview .sample-browser-document video{max-height:180px;object-fit:contain;object-position:left}}

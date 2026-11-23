@@ -5,6 +5,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEve
 import CodeBlocks from "./CodeBlocks";
 import BrowserResultPreview from "./BrowserResultPreview";
 import LinkedPagesPreview, {linkedPageCode} from "./LinkedPagesPreview";
+import HtmlMediaPreview, {type HtmlMediaKind} from "./HtmlMediaPreview";
 import ClubTerminalInput from "./ClubTerminalInput";
 import BankTerminalInput from "./BankTerminalInput";
 import ShoppingTotalInput from "./ShoppingTotalInput";
@@ -55,6 +56,7 @@ type Lesson = {
   runHint?: string;
   compareNode?: boolean;
   referenceOnly?: boolean;
+  mediaPreview?: HtmlMediaKind;
   browserPreview?: boolean | "headings" | "document";
   interactiveInput?: "club-name" | "bank-deposit" | "shopping-total" | "comparison-value";
   comparisonExample?: boolean;
@@ -2126,6 +2128,7 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "10 · Links",
       "title": "Open another page",
+      "mediaPreview": "link",
       "explanation": "The a element creates a link. Its href attribute stores the destination, while the text between the tags is what the visitor clicks.",
       "note": "<!-- Link to a second HTML page -->",
       "prompt": "Create a link to page.html.",
@@ -2233,6 +2236,7 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "15 · Images",
       "title": "Place an image on the page",
+      "mediaPreview": "image",
       "explanation": "The img element displays an image. src tells the browser which file to load, while alt describes the image if it cannot be seen or loaded. If car.png is beside index.html, its filename is enough for src.",
       "note": "<!-- Display car.png from the same folder as this HTML file -->",
       "prompt": "Add the car image with useful alternative text.",
@@ -2262,6 +2266,7 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "16 · Videos",
       "title": "Place a video on the page",
+      "mediaPreview": "video",
       "explanation": "The video element places a video on the page, much like img places a picture. src tells the browser to load my-video.mp4, and controls adds the built-in play, pause, volume, and timeline controls. Keep the MP4 file beside the HTML file when using only its filename.",
       "note": "<!-- Display my-video.mp4 with playback controls -->",
       "prompt": "Add the video and let the visitor control its playback.",
@@ -2286,6 +2291,7 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "17 · Audio",
       "title": "Place audio on the page",
+      "mediaPreview": "audio",
       "explanation": "The audio element works much like video, but it plays sound without a picture area. src tells the browser to load my-audio.mp3, and controls adds play, pause, volume, and timeline controls. Keep the MP3 file beside the HTML file when using only its filename.",
       "note": "<!-- Play my-audio.mp3 with playback controls -->",
       "prompt": "Add the audio file and let the visitor control its playback.",
@@ -5191,7 +5197,7 @@ export default function Home() {
   }, [current, ghostSource, showGuide]);
 
   useEffect(() => {
-    if (status !== "correct" || !current || current.browserPreview || current.interactiveInput) { setTypedOutput(""); return; }
+    if (status !== "correct" || !current || current.browserPreview || current.mediaPreview || current.interactiveInput) { setTypedOutput(""); return; }
     const completeOutput = (previewOutput ?? current.output).join("\n");
     let position = 0;
     let typingTimer: ReturnType<typeof setTimeout> | undefined;
@@ -5545,12 +5551,12 @@ export default function Home() {
             {current!.comparisonExample && <ComparisonCasePicker selected={comparisonCase} onSelect={setComparisonCase} language={language} />}
               {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={commentPrefix + ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode indentationDots={indentationDots} code={value} language={language} />} /> : <div ref={codeEditorRef} className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="editor-surface" style={{ minHeight: `max(100%, calc(${lineNumbers.length} * var(--editor-line-height) + var(--editor-padding)))`, minWidth: `max(100%, calc(${Math.max(...(code + guideCode).split("\n").map(line => line.length), 1)}ch + var(--editor-gutter) + var(--editor-inline-padding) + var(--editor-inline-padding)))` }}><CodeLineNumbers text={code + (showGuide ? guideCode : "")} minimumLines={8} />{showGuide && <pre className={`code-guide ${current!.comparisonExample ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{!!current!.comparisonExample ? <LearningCode indentationDots={indentationDots} indentationPrefix={code} code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode indentationDots={indentationDots} indentationPrefix={code} code={guideCode} fullCode={fullGuideCode} language={language} />}</code></pre>}{<pre className="typed-code-layer" aria-hidden="true"><code><LearningCode indentationDots={indentationDots} code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={!!current!.comparisonExample} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" wrap="soft" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div></div>}
           </div>
-          <div className="console-panel" data-browser-preview={current?.browserPreview || undefined}>
+          <div className="console-panel" data-browser-preview={current?.browserPreview || current?.mediaPreview || undefined}>
             <div className="console-bar"><span><i /> {language === "html" || language === "css" ? "RESULT PREVIEW" : "CONSOLE"}</span><button onClick={() => setStatus("idle")}>Clear</button></div>
             <div className="console-body">
-              {status === "idle" && <span className="console-muted">{language === "html" || language === "css" ? "Your page result preview will appear here..." : "Your program output will appear here..."}</span>}
+              {status === "idle" && current?.mediaPreview && <HtmlMediaPreview key={`${language}-${index}`} kind={current.mediaPreview} code={current.answer} />}{status === "idle" && !current?.mediaPreview && <span className="console-muted">{language === "html" || language === "css" ? "Your page result preview will appear here..." : "Your program output will appear here..."}</span>}
               {status === "wrong" && <><SyntaxDiagnostic parts={diagnostic} /><div className="console-muted diagnostic-hint">Hover over or focus each underlined part to see what it means.</div></>}
-              {status === "correct" && <><div className="run-line"><span><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Code accepted — {current?.interactiveInput === "comparison-value" ? "try a value below" : current?.interactiveInput === "shopping-total" ? "enter a price and quantity below" : current?.interactiveInput === "bank-deposit" ? "enter a deposit below" : current?.interactiveInput ? "enter a name below" : current?.displayCurrentTime ? current.timeZone === "local" ? "current local time" : `current time in ${timeZoneLabel(current.timeZone!)}` : language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div>{current?.interactiveInput === "comparison-value" ? <ComparisonValueInput key={`${language}-${index}-${comparisonCase}`} example={comparisonCase} /> : current?.interactiveInput === "shopping-total" ? <ShoppingTotalInput key={`${language}-${index}`} /> : current?.interactiveInput === "bank-deposit" ? <BankTerminalInput key={`${language}-${index}`} /> : current?.interactiveInput === "club-name" ? <ClubTerminalInput key={`${language}-${index}`} /> : current?.browserPreview ? <BrowserResultPreview showTab={current.browserPreview === "document"} code={current.idLesson === "css" ? linkedIdHtml : practiceCode} css={current.idLesson === "css" ? practiceCode : undefined} /> : <div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div>}</>}
+              {status === "correct" && <><div className="run-line"><span><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span> Code accepted — {current?.interactiveInput === "comparison-value" ? "try a value below" : current?.interactiveInput === "shopping-total" ? "enter a price and quantity below" : current?.interactiveInput === "bank-deposit" ? "enter a deposit below" : current?.interactiveInput ? "enter a name below" : current?.displayCurrentTime ? current.timeZone === "local" ? "current local time" : `current time in ${timeZoneLabel(current.timeZone!)}` : language === "html" || language === "css" ? "result preview" : lessonCheck?.output ? "your output" : "example output"}</div>{current?.interactiveInput === "comparison-value" ? <ComparisonValueInput key={`${language}-${index}-${comparisonCase}`} example={comparisonCase} /> : current?.interactiveInput === "shopping-total" ? <ShoppingTotalInput key={`${language}-${index}`} /> : current?.interactiveInput === "bank-deposit" ? <BankTerminalInput key={`${language}-${index}`} /> : current?.interactiveInput === "club-name" ? <ClubTerminalInput key={`${language}-${index}`} /> : current?.mediaPreview ? <HtmlMediaPreview key={`${language}-${index}-result`} kind={current.mediaPreview} code={practiceCode} /> : current?.browserPreview ? <BrowserResultPreview showTab={current.browserPreview === "document"} code={current.idLesson === "css" ? linkedIdHtml : practiceCode} css={current.idLesson === "css" ? practiceCode : undefined} /> : <div className="typed-output">{current?.outputNote && <p className="console-muted">{current.outputNote}</p>}{typedOutput.split("\n").map((line, i, lines) => <div key={i} style={previewColours?.[i] ? { color: previewColours[i] } : undefined}><span className="prompt-mark">›</span> {line}{i === lines.length - 1 && <i className="output-cursor">▋</i>}{line && current?.outputAnnotations?.[i] && <span className="output-time-annotation">{current.outputAnnotations[i]}</span>}</div>)}</div>}</>}
             </div>
           </div>
           <div className={`feedback ${status}`}>
