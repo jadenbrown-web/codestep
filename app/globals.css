@@ -2114,3 +2114,4 @@ html[data-theme] .pages-reference-preview .reference-pane-heading{border-bottom:
 .workspace:has(.html-media-preview)>.console-panel{flex:0 1 auto;max-height:48%;min-height:180px}
 .html-media-preview .sample-browser-document{white-space:normal}
 @media(max-width:850px){.workspace:has(.html-media-preview)>.console-panel{max-height:45%;min-height:180px}.html-media-preview .sample-browser-document img,.html-media-preview .sample-browser-document video{max-height:180px;object-fit:contain;object-position:left}}
+@media(min-width:851px){.html-media-preview .sample-browser-document video{width:min(100%,400px);max-height:225px}.html-media-preview .sample-browser-document img{width:400px;max-height:225px;object-fit:contain;object-position:left}}
