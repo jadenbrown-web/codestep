@@ -1228,7 +1228,7 @@ button[data-active="true"]::after,html[data-theme] button[data-active="true"]::a
 .settings-panel button.switch i,html[data-theme] .settings-panel button.switch i{display:block;width:20px;height:20px;background:#fff;transform:translateX(0);box-shadow:0 1px 3px #0003}
 .settings-panel button.switch.on,html[data-theme] .settings-panel button.switch.on{background:#10b981;border-color:#10b981}
 .settings-panel button.switch.on i,html[data-theme] .settings-panel button.switch.on i{background:#fff;transform:translateX(20px)}
-.settings-panel button.switch.on::before{content:"✓";position:absolute;left:6px;top:6px;color:#063a28;font:900 13px/14px var(--sans)}
+.settings-panel button.switch.on::before{content:"\2713";position:absolute;left:6px;top:6px;color:#063a28;font:900 13px/14px var(--sans)}
 .app-header.app-header button[data-active="true"],html[data-theme] .app-header.app-header button[data-active="true"]{color:var(--ui-text);background:var(--selection-surface);border-radius:6px}
 
 /* A continuous shell sits behind the inset editor surfaces. */
@@ -2243,8 +2243,8 @@ html[data-theme] .pages-reference-preview .file-pair article .file-example-code{
 /* Additional paired palettes use the same appearance controls and syntax roles. */
 html[data-theme="light"][data-palette="forest"]{--app-bg:#edf2ed;--app-surface:#fcfefb;--app-raised:#f0f6ef;--editor-bg:#fcfefb;--app-text:#203529;--editor-text:#203529;--app-muted:#506255;--app-accent:#2e6c46;--app-action:#2e6c46;--app-selected:#dceadd;--app-line:#c5d5c7}
 html[data-theme="dark"][data-palette="forest"]{--app-bg:#141c17;--app-surface:#1c2820;--app-raised:#27362a;--editor-bg:#18211a;--app-text:#e5eee6;--editor-text:#e5eee6;--app-muted:#a7bdab;--app-accent:#a3d6a8;--app-action:#326a40;--app-selected:#314b36;--app-line:#415b46}
-html[data-theme="light"][data-palette="ember"]{--app-bg:#f5efea;--app-surface:#fffdfb;--app-raised:#faf3ec;--editor-bg:#fffcf8;--app-text:#38271f;--editor-text:#38271f;--app-muted:#72584b;--app-accent:#9c4017;--app-action:#9c4017;--app-selected:#f4e1d3;--app-line:#dbc9bb}
-html[data-theme="dark"][data-palette="ember"]{--app-bg:#211914;--app-surface:#2d211b;--app-raised:#3b2d24;--editor-bg:#251b16;--app-text:#f5e9df;--editor-text:#f5e9df;--app-muted:#cfb6a3;--app-accent:#f6be8b;--app-action:#a94e20;--app-selected:#513827;--app-line:#6b5140}
+html[data-theme="light"][data-palette="ember"]{--app-bg:#f4f1f2;--app-surface:#fff9f7;--app-raised:#f5ecea;--editor-bg:#fffdfc;--app-text:#302a2c;--editor-text:#302a2c;--app-muted:#6d5b60;--app-accent:#b44732;--app-action:#b44732;--app-selected:#f6ded7;--app-line:#dcc8c3}
+html[data-theme="dark"][data-palette="ember"]{--app-bg:#1b1b1e;--app-surface:#242326;--app-raised:#302c30;--editor-bg:#201f22;--app-text:#f5edef;--editor-text:#f5edef;--app-muted:#c3b0b6;--app-accent:#ffa18d;--app-action:#ad4935;--app-selected:#483136;--app-line:#5d484e}
 html[data-theme="light"][data-palette="slate"]{--app-bg:#edf0f7;--app-surface:#fdfdff;--app-raised:#f4f5fb;--editor-bg:#fff;--app-text:#26304b;--editor-text:#26304b;--app-muted:#56617c;--app-accent:#3f55a4;--app-action:#3f55a4;--app-selected:#dfe5fa;--app-line:#cbd1e2}
 html[data-theme="dark"][data-palette="slate"]{--app-bg:#171c2a;--app-surface:#20283b;--app-raised:#2a3550;--editor-bg:#1b2232;--app-text:#e8edf9;--editor-text:#e8edf9;--app-muted:#aebbd7;--app-accent:#a9c4ff;--app-action:#405eaa;--app-selected:#344564;--app-line:#455675}
 
@@ -2357,3 +2357,42 @@ html[data-theme] .live-web-panel :is(.browser-preview-tab,.browser-preview-navig
 .live-script-result p{margin:4px 0;white-space:pre-wrap}
 .workspace.editor-expanded>.live-web-panel{display:none}
 html[data-theme] .live-web-panel .console-bar.live-web-header button{width:auto;min-width:80px;max-width:none;padding:0 8px;flex:none}
+
+/* Shared flat settings, readable topic shortcuts and browser chrome. */
+html[data-theme] .settings-panel .theme-options button,
+html[data-theme] .settings-panel .palette-options button{border:0;outline:0;box-shadow:none;background:var(--app-raised);color:var(--app-text);position:relative}
+html[data-theme] .settings-panel :is(.theme-options button,.palette-options button):is([data-active="true"],[aria-pressed="true"]){background:var(--app-selected);border:0;outline:0;box-shadow:none}
+html[data-theme] .settings-panel :is(.theme-options button,.palette-options button):is([data-active="true"],[aria-pressed="true"])::after{content:"\2713";display:block!important;position:absolute;inset:12px 12px auto auto;color:var(--app-accent);font:700 16px var(--sans);background:none;border:0;width:auto;height:auto}
+html[data-theme] .settings-panel :is(.theme-options button,.palette-options button){padding-right:36px}
+html[data-theme] .settings-panel :is(.theme-options button,.palette-options button):focus-visible{outline:2px solid var(--app-accent);outline-offset:-2px}
+html[data-theme] .settings-panel .switch{border:0;box-shadow:none;background:var(--app-muted)}
+html[data-theme] .settings-panel .switch.on{background:var(--app-action);border:0}
+html[data-theme] .pinned-topic-shortcuts .pinned-topic-chip{display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:5px;min-width:0;height:auto;min-height:44px;padding:6px;border:0;background:transparent;color:var(--app-text);box-shadow:none;overflow:visible}
+html[data-theme] .pinned-topic-shortcuts .pinned-topic-chip::after{display:none}
+html[data-theme] .pinned-topic-shortcuts .pinned-topic-chip .pinned-topic-label{display:flex;align-items:center;justify-content:center;height:auto;min-height:32px;max-height:none;line-height:1.25;white-space:normal;overflow-wrap:anywhere;overflow:visible;background:var(--pin-fill);color:#141414;-webkit-text-fill-color:#141414;border:0!important;box-shadow:none;font:750 12px/1.25 var(--sans);padding:6px}
+html[data-theme] .pinned-topic-shortcuts .pinned-topic-chip[data-active="true"]{background:var(--app-selected);border:0;box-shadow:none}
+html[data-theme] .pinned-topic-chip small{display:block;white-space:normal;font:12px/1.4 var(--sans);color:var(--app-muted);padding:0 2px}
+.editor-pinned-topics{flex:none;padding:4px 8px;background:var(--app-surface)}
+.editor-pinned-topics .pinned-topic-shortcuts{display:grid;grid-template-columns:repeat(var(--pin-count),minmax(0,1fr));height:auto;border:0;margin:0;gap:6px}
+html[data-theme] .language-comparison .comparison-filebar .comparison-file-tab{display:flex;flex:1;min-width:0;padding:0 8px;gap:8px}
+html[data-theme] .language-comparison .comparison-filebar .comparison-file-name{display:inline-flex;flex:none;min-width:max-content;max-width:none;white-space:nowrap;overflow:visible;text-overflow:clip;margin-left:auto}
+html[data-theme] .language-comparison .comparison-card{border:0;box-shadow:none}
+html[data-theme] .reference-workspace .visual-example-code,
+html[data-theme] .reference-workspace .visual-example-code>code,
+html[data-theme] .reference-workspace .font-featured-example>span code{background:transparent;color:var(--editor-text);border:0;box-shadow:none}
+html[data-theme] .border-reference .border-example-sample{background:#fff;color:#111}
+html[data-theme] .browser-page-preview{display:flex;flex:1;flex-direction:column;min-height:0;overflow:hidden;background:var(--app-raised);border:0;border-radius:8px;padding:0}
+html[data-theme] .browser-page-preview .browser-preview-tab{align-self:stretch;min-height:28px;padding:4px 10px;background:var(--app-raised);color:var(--app-text);border:0;border-radius:0;box-sizing:border-box}
+html[data-theme] .browser-page-preview .browser-preview-navigation{flex:none;min-height:30px;padding:3px 8px 7px;background:var(--app-raised);color:var(--app-muted);box-sizing:border-box}
+html[data-theme] .browser-page-preview .browser-preview-navigation>span{background:var(--app-surface);color:var(--app-muted);border:0;border-radius:5px;font:12px/1.4 var(--mono);padding:5px 8px}
+html[data-theme] .browser-page-preview>.browser-result-preview{display:block;flex:1;width:100%;min-height:0;margin:0;border:0;border-radius:0;background:#fff}
+.browser-page-preview>.sample-browser-document{flex:1;min-height:0;border-radius:0}
+.linked-pages-browser>.browser-page-preview{min-height:240px}
+.html-media-preview>.browser-page-preview{min-height:160px}
+.live-web-panel .html-media-preview>.browser-page-preview{min-height:0}
+.layout-preview>.browser-page-preview{min-height:190px}
+
+html[data-theme] .drawer-pins .pinned-topic-shortcuts .pinned-topic-chip[data-active] .pinned-topic-label{background:var(--pin-fill);color:#141414;-webkit-text-fill-color:#141414}
+html[data-theme] .language-comparison .app-header.app-header .example-picker-panel .lesson-list-row>.topic-pin-button[data-pinned="true"]{color:var(--saved-pin-colour);background:transparent;border:0}
+html[data-theme] .layout-preview>.browser-page-preview{height:clamp(140px,25dvh,212px);min-height:140px;flex:none}
+html[data-theme] .layout-preview .browser-page-preview>.browser-result-preview{height:0;flex:1;min-height:0}

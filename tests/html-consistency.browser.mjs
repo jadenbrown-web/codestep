@@ -131,6 +131,10 @@ try{
    await root.getByRole('button',{name:'Copy text elements example code',exact:true}).click();
    assert.equal(await page.evaluate(()=>window.copied.at(-1)),'<mark>Marked text</mark>');
   }else if(kind==='css'){
+   const rounded=root.locator('[data-border="Rounded dotted border"] .border-example-sample');
+   assert.deepEqual(await rounded.evaluate(e=>{const s=getComputedStyle(e);return [s.borderTopStyle,s.borderTopColor,s.borderRadius,s.backgroundColor];}),['dotted','rgb(0, 0, 255)','12px','rgb(255, 255, 255)']);
+   assert.equal(await root.locator('.css-featured-code>code').evaluate(e=>getComputedStyle(e).backgroundColor),'rgba(0, 0, 0, 0)','Code uses the flat reference surface');
+   await page.screenshot({path:`/tmp/flat-border-${width}-${theme}.png`});
    await root.getByRole('button',{name:'Show Solid border code',exact:true}).click();
    await root.getByRole('button',{name:'Copy border example code',exact:true}).click();
    assert.equal(await page.evaluate(()=>window.copied.at(-1)),'p.notice {\n  border: 5px solid red;\n}');
@@ -139,6 +143,7 @@ try{
    await root.getByRole('button',{name:'Copy red HTML tag code',exact:true}).click();
    assert.equal(await page.evaluate(()=>window.copied.at(-1)),'<p style="color: #FF0000;">Red text</p>');
   }else if(kind==='pages'){
+   assert.equal(await root.locator('.browser-page-preview .browser-preview-navigation').count(),1,'Linked pages use the shared browser frame');
    for(const file of ['index.html','page2.html']){
     const article=root.locator('.file-pair article').filter({has:page.locator('header>b',{hasText:file})});
     const code=await article.locator('pre').textContent();

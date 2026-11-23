@@ -29,6 +29,7 @@ try{
    await page.getByRole('button',{name:'Check code',exact:true}).click();
    await page.getByText('That’s correct!',{exact:true}).waitFor();
    const preview=page.locator('.html-media-preview');
+   assert.equal(await preview.locator('.browser-page-preview .browser-preview-navigation').count(),1,'Media lessons use the shared browser frame');
    if(lesson.mediaPreview==='link'){
     const url=page.url();await preview.getByRole('link',{name:'Open page',exact:true}).click();
     await preview.getByRole('heading',{name:'Page',exact:true}).waitFor();
