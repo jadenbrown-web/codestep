@@ -2312,3 +2312,8 @@ html[data-theme] .block-drag-preview .block-grip{color:var(--app-muted)}
 html[data-theme] .block-program .drop-active{box-shadow:none}
 html[data-theme] .language-comparison .language-comparison-columns{background:var(--app-bg)}
 html[data-theme] .font-example-heading>b{color:var(--app-accent)}
+/* Explanation overlays start below the same toolbar they belong to. */
+.language-comparison{--comparison-nav-height:52px}
+@media(min-width:851px){.language-comparison{--comparison-nav-height:64px}}
+.language-comparison .comparison-notes:not([hidden]){top:calc(var(--comparison-nav-height) + 6px)}
+.language-comparison .comparison-notes-backdrop{top:var(--comparison-nav-height)}

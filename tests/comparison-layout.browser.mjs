@@ -48,6 +48,8 @@ try {
   await page.getByRole('button',{name:'Lesson explanations',exact:true}).click();
   const notes=page.locator('.comparison-notes');
   await notes.waitFor();
+  const nav=await page.locator('.comparison-topbar').boundingBox(),sheet=await notes.boundingBox();
+  assert.ok(sheet.y>=nav.y+nav.height,'Explanations open below the toolbar without clipping controls');
   const columns=await notes.locator('.comparison-notes-language').all();
   assert.equal(columns.length,2);
   if(width>850){
