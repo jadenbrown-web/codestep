@@ -9,7 +9,7 @@ const reference=source.slice(refStart+1,source.indexOf(' : <>\n          <div cl
 const guideStart=source.indexOf('{(language === "html" || language === "css") && <section className="browser-run-guide"');
 const highlighter=source.slice(source.indexOf('function HighlightedCode('),source.indexOf('\nfunction LearningCode('));
 const guide=source.slice(guideStart,source.indexOf('          {current!.runHint',guideStart));
-const entry=`import React from 'react';import {createRoot} from 'react-dom/client';import FontReference from './app/FontReference';import HtmlTextReference from './app/HtmlTextReference';import CopyCodeButton from './app/CopyCodeButton';import CssVisualReference from './app/CssVisualReference';import TextColourReference from './app/TextColourReference';
+const entry=`import React from 'react';import {createRoot} from 'react-dom/client';import FontReference from './app/FontReference';import HtmlTextReference from './app/HtmlTextReference';import CopyCodeButton from './app/CopyCodeButton';import CssVisualReference from './app/CssVisualReference';import TextColourReference from './app/TextColourReference';import LinkedPagesPreview,{linkedPageCode} from './app/LinkedPagesPreview';
 const language=window.fixtureLanguage||'html',blockMode=false,settingsOpen=false,showComments=false;
 const current={referenceOnly:true,referenceKind:window.fixtureKind,answer:'<p>Full reference</p>'};
 const lessonExample=(lesson)=>lesson.answer;const EditorModeSymbol=()=> <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18"/></svg>;
