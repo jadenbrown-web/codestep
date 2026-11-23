@@ -44,7 +44,7 @@ try {
       const programColour=await page.locator('[aria-label="Code breakdown"]>.breakdown-label').evaluate(el=>getComputedStyle(el).color);
       assert.notEqual(toolsColour,programColour,'Imports and program headings must be visually distinct');
       const edges=await tools.evaluate(el=>{const s=getComputedStyle(el);return [s.borderLeftWidth,s.borderRightWidth,s.paddingLeft];});
-      assert.deepEqual(edges,['1px','1px','8px'],'Supporting sections use even borders and compact padding');
+      assert.deepEqual(edges,['0px','0px','8px'],'Supporting sections keep compact padding without outline borders');
     }
     if(language==='javascript') {
       const text=await page.locator('.lesson-copy').innerText();
