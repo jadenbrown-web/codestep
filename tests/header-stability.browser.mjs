@@ -60,11 +60,16 @@ try{
    if(kind==='pages'){
     for(const selector of ['.pages-reference-preview','.pages-reference-preview .reference-pane-heading','.file-pair article'])assert.equal(await page.locator(selector).first().evaluate(e=>getComputedStyle(e).borderTopWidth),'0px',selector);
     assert.equal(await page.locator('.file-pair article>header .copy-code-button').count(),2);
+    const headers=page.locator('.file-pair article>header');
+    const initialColours=await headers.evaluateAll(es=>es.map(e=>getComputedStyle(e).backgroundColor));
+    assert.notEqual(initialColours[0],initialColours[1],'Current source file has its own filled header');
+    for(const header of await headers.all())assert.equal(await header.locator('.copy-code-button').evaluate(e=>getComputedStyle(e).color),await header.evaluate(e=>getComputedStyle(e).color),'Copy stays readable in the file header');
     const preview=page.getByRole('document',{name:'Linked HTML page'});
     await preview.getByRole('heading',{name:'First Page',exact:true}).waitFor();
     await preview.getByRole('link',{name:'Go to Page 2',exact:true}).click();
     await preview.getByRole('heading',{name:'Page 2',exact:true}).waitFor();
     assert.equal(await page.locator('.linked-pages-address>span').textContent(),'page2.html');
+    assert.deepEqual(await headers.evaluateAll(es=>es.map(e=>getComputedStyle(e).backgroundColor)),[initialColours[1],initialColours[0]],'Source highlight follows the displayed page');
     await preview.getByRole('link',{name:'Go back',exact:true}).click();
     await preview.getByRole('heading',{name:'First Page',exact:true}).waitFor();
     assert.equal(await page.locator('.linked-pages-address>span').textContent(),'index.html');

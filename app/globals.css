@@ -2208,3 +2208,34 @@ html[data-theme] .run-line{color:var(--app-accent)}
 html[data-theme] .prompt-mark{color:var(--app-accent)}
 html[data-theme] .block-row-actions button{color:var(--app-text)}
 html[data-theme] .block-row-actions .block-action-buttons{background:var(--app-raised);border:0;box-shadow:none}
+
+/* File identity is a filled label; the rendered page identifies its matching source. */
+html[data-theme] :is(.editor-file-name,.comparison-file-name){display:inline-flex;align-items:center;background:var(--app-selected);color:var(--app-text);border-radius:6px;padding:5px 8px}
+html[data-theme] .pages-reference-preview .file-pair .copy-code-button{color:var(--app-text)}
+html[data-theme] .pages-reference-preview .file-pair article>header{background:var(--app-raised)}
+html[data-theme] .pages-reference-preview:has([data-current-page="index.html"]) .file-pair article:first-child>header,
+html[data-theme] .pages-reference-preview:has([data-current-page="page2.html"]) .file-pair article:last-child>header{background:var(--app-selected)}
+html[data-theme] .pages-reference-preview:has([data-current-page="index.html"]) .file-pair article:first-child .file-example-code,
+html[data-theme] .pages-reference-preview:has([data-current-page="page2.html"]) .file-pair article:last-child .file-example-code{background:color-mix(in srgb,var(--editor-bg) 94%,var(--app-accent))}
+html[data-theme] .pages-reference-preview:has([data-current-page="index.html"]) .file-pair article:first-child>header>b::after,
+html[data-theme] .pages-reference-preview:has([data-current-page="page2.html"]) .file-pair article:last-child>header>b::after{content:"In preview";display:inline-block;margin-left:10px;font:500 12px var(--sans);color:var(--app-muted)}
+/* Blocks use the same quiet surfaces and readable instructions as typed code. */
+html[data-theme] .block-builder :is(.code-block-choice,.placed-block){border:0;box-shadow:none!important;background:var(--app-raised);color:var(--app-text);border-radius:8px;transform:none}
+html[data-theme] .block-builder .code-block-choice{padding:12px;align-items:flex-start;width:100%;min-width:0}
+html[data-theme] .block-builder .code-block-choice:hover{background:var(--app-selected)}
+html[data-theme] .block-builder :is(.block-drop-end,.block-bank>small,.block-grip){color:var(--app-muted);opacity:1}
+html[data-theme] .block-builder .block-drop-end{padding:18px;min-height:64px;display:flex;align-items:center;justify-content:center;box-sizing:border-box;font:14px/1.5 var(--sans)}
+html[data-theme] .block-builder .block-bank{border:0}
+html[data-theme] .block-builder .block-bank>b{color:var(--app-text)}
+html[data-theme] .lesson-breakdown-sections .breakdown-part .prose-code .syntax-keyword,html[data-theme] .symbol-guide .prose-code .syntax-keyword{color:var(--syntax-key);font-weight:inherit}
+html[data-theme] .lesson-breakdown-sections .breakdown-part .prose-code .syntax-api,html[data-theme] .symbol-guide .prose-code .syntax-api{color:var(--syntax-type);font-weight:inherit}
+html[data-theme] .lesson-breakdown-sections .breakdown-part .prose-code .syntax-header,html[data-theme] .symbol-guide .prose-code .syntax-header{color:var(--syntax-type);font-weight:inherit}
+html[data-theme] .lesson-breakdown-sections .breakdown-part .prose-code .syntax-function-name,html[data-theme] .symbol-guide .prose-code .syntax-function-name{color:var(--syntax-fn);font-weight:inherit}
+html[data-theme] .lesson-breakdown-sections .breakdown-part .prose-code .syntax-string,html[data-theme] .symbol-guide .prose-code .syntax-string{color:var(--syntax-str);font-weight:inherit}
+html[data-theme] .lesson-breakdown-sections .breakdown-part .prose-code .syntax-number,html[data-theme] .symbol-guide .prose-code .syntax-number{color:var(--syntax-num);font-weight:inherit}
+html[data-theme] .lesson-breakdown-sections .breakdown-part .prose-code .syntax-attribute,html[data-theme] .symbol-guide .prose-code .syntax-attribute{color:var(--syntax-num);font-weight:inherit}
+html[data-theme] .lesson-breakdown-sections .breakdown-part .prose-code .syntax-comment,html[data-theme] .symbol-guide .prose-code .syntax-comment{color:var(--syntax-comment);font-weight:inherit}
+html[data-theme] .lesson-breakdown-sections .breakdown-part .prose-code .syntax-plain,html[data-theme] .symbol-guide .prose-code .syntax-plain{color:var(--editor-text);font-weight:inherit}
+html[data-theme] .lesson-breakdown-sections .breakdown-part .prose-code .syntax-punctuation,html[data-theme] .symbol-guide .prose-code .syntax-punctuation{color:var(--editor-text);font-weight:inherit}
+html[data-theme] .app-header.lesson-nav button{background:transparent;box-shadow:none}
+html[data-theme] .pages-reference-preview .file-pair article .file-example-code{background:var(--app-raised)}

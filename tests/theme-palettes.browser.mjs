@@ -35,6 +35,9 @@ try{
     const styles=await page.locator('.loop-example-picker button,.loop-example-picker p,.loop-example-picker p span,.breakdown-part b,.editor-body .code-guide .syntax-api,.editor-body .code-guide .syntax-string').evaluateAll(es=>es.filter(e=>e.getBoundingClientRect().height&&e.textContent.trim()).map(e=>{let p=e;let background;while(p){background=getComputedStyle(p).backgroundColor;if(background!=='rgba(0, 0, 0, 0)'&&background!=='transparent')break;p=p.parentElement;}return {text:e.textContent.slice(0,35),fg:getComputedStyle(e).color,bg:background};}));
     for(const style of styles)assert.ok(contrast(style.fg,style.bg)>=4.5,`${palette} ${theme} ${style.text}: ${JSON.stringify(style)} ratio=${contrast(style.fg,style.bg)}`);
     assert.ok(await page.locator('.breakdown-part').evaluateAll(es=>es.every(e=>getComputedStyle(e).borderTopWidth==='0px')),'Lesson cards use surfaces without outline borders');
+    const inlineKeywords=await page.locator('.lesson-breakdown-sections .prose-code .syntax-keyword').evaluateAll(es=>es.map(e=>getComputedStyle(e).color));
+    const editorKeyword=await page.locator('.editor-body .syntax-keyword').first().evaluate(e=>getComputedStyle(e).color);
+    assert.ok(inlineKeywords.length>0&&inlineKeywords.every(c=>c===editorKeyword),'Explanation keywords match editor syntax colours');
     assert.equal(await editor.inputValue(),'// keep this draft','Appearance never changes code');
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
     if(palette==='ide')await page.screenshot({path:`/tmp/studio-${width}-${theme}.png`});
@@ -49,6 +52,26 @@ try{
   await page.getByRole('button',{name:'Light light appearance',exact:true}).click();
   await page.waitForFunction(()=>document.documentElement.dataset.theme==='light');
   await page.emulateMedia({colorScheme:'dark'});assert.equal(await page.evaluate(()=>document.documentElement.dataset.theme),'light');
+  await page.getByRole('switch',{name:'Code blocks',exact:true}).click();
+  await page.getByRole('button',{name:'Close settings',exact:true}).click();
+  await page.locator('.course-card').filter({hasText:'C++'}).click();
+  if(width===390)await page.getByRole('button',{name:'Practice',exact:true}).click();
+  await page.locator('.code-block-choice').first().click();
+  const rows=await page.locator('.placed-block').count();assert.ok(rows>0);
+  for(const explicit of ['Light','Dark']){
+   await page.getByRole('button',{name:'Settings',exact:true}).click();
+   await page.getByRole('button',{name:explicit+' '+explicit.toLowerCase()+' appearance',exact:true}).click();
+   await page.getByRole('button',{name:'Close settings',exact:true}).click();
+   if(width===390)await page.locator('.block-options-toggle').first().click();
+   const remove=page.locator('.block-action-buttons button[aria-label^="Remove line"]').first();assert.ok(await remove.isVisible());
+   const style=await remove.evaluate(e=>({fg:getComputedStyle(e).color,bg:getComputedStyle(document.querySelector('.block-program')).backgroundColor}));
+   assert.ok(contrast(style.fg,style.bg)>=4.5,JSON.stringify(style));
+   assert.equal(await page.locator('.code-block-choice').first().evaluate(e=>getComputedStyle(e).boxShadow),'none');
+   await page.screenshot({path:`/tmp/blocks-refreshed-${width}-${explicit}.png`});
+  }
+  await page.locator('.block-action-buttons button[aria-label^="Remove line"]').first().click();
+  assert.equal(await page.locator('.placed-block').count(),rows-1,'Blocks can still be removed after switching appearance');
+  console.log(`PASS ${width}: readable block actions, flat choices and unchanged add/remove behaviour`);
   assert.deepEqual(errors,[]);await page.close();
  }
 }finally{await browser.close();}
