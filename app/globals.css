@@ -2206,3 +2206,5 @@ html[data-theme] .club-terminal-form input{background:var(--app-raised);color:va
 html[data-theme] .club-terminal-form button{background:var(--app-action);color:#fff;border:0}
 html[data-theme] .run-line{color:var(--app-accent)}
 html[data-theme] .prompt-mark{color:var(--app-accent)}
+html[data-theme] .block-row-actions button{color:var(--app-text)}
+html[data-theme] .block-row-actions .block-action-buttons{background:var(--app-raised);border:0;box-shadow:none}
