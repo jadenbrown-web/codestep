@@ -23,7 +23,7 @@ const browser=await chromium.launch({headless:true,...(fs.existsSync('/usr/bin/c
 try{
  const page=await browser.newPage();
  const cases=process.env.CSS_REFERENCE_ONLY ? [['css','fonts'],['css','css'],['css','colours']] : [['html','text'],['html','named-colours'],['html','fonts'],['html','pages'],['css','fonts'],['css','css'],['css','colours']];
- for(const width of [1400,390]) for(const theme of ['light','dark']) for(const [language,kind] of cases){
+ for(const width of [1952,1400,390]) for(const theme of ['light','dark']) for(const [language,kind] of cases){
   await page.setViewportSize({width,height:900});
   await page.setContent(`<html data-theme="${theme}"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${css}</style><body><div id="root"></div></body></html>`);
   await page.evaluate(({language,kind})=>{window.fixtureLanguage=language;window.fixtureKind=kind;window.copied=[];Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async text=>window.copied.push(text)}});},{language,kind});
@@ -76,6 +76,14 @@ try{
    const button=await root.locator('.font-featured-example .copy-code-button').boundingBox();
    assert.ok(Math.abs(button.y-pane.y-6)<1,'copy is at the main example top edge');
    assert.ok(Math.abs(pane.x+pane.width-button.x-button.width-6)<1,'copy is at the main example right edge');
+   assert.equal(await root.locator('.font-featured-example').evaluate(el=>getComputedStyle(el).borderBottomWidth),'0px');
+   assert.equal(await root.locator('.html-reference-footer').evaluate(el=>getComputedStyle(el).borderTopWidth),'0px');
+   if(width>850){
+    const icons=await root.locator('.font-featured-example .desktop-pane-actions button,.font-featured-example .copy-code-button').evaluateAll(es=>es.filter(e=>e.getBoundingClientRect().width).map(e=>{const b=e.getBoundingClientRect(),i=e.querySelector('svg').getBoundingClientRect();return {x:b.x,width:b.width,y:i.y+i.height/2};}).sort((a,b)=>a.x-b.x));
+    assert.ok(Math.max(...icons.map(i=>i.y))-Math.min(...icons.map(i=>i.y))<1,'All top-right glyphs share a baseline');
+    for(let i=1;i<icons.length;i++)assert.ok(Math.abs(icons[i].x-icons[i-1].x-44)<1,'No empty comparison-icon slot');
+   }
+
    const actions=root.locator('.font-example-heading .desktop-pane-actions');
    if(width>850 && await actions.count()){
     const box=await actions.boundingBox();

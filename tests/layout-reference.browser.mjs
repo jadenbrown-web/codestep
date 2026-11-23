@@ -9,8 +9,8 @@ const lesson=lessons.html.find(item=>item.referenceKind==='alignment');
 const bundle=await build({stdin:{contents:`import React from 'react';import {createRoot} from 'react-dom/client';import App from './app/page';createRoot(document.getElementById('root')).render(<App/>);`,loader:'tsx',resolveDir:process.cwd()},bundle:true,format:'iife',platform:'browser',write:false,define:{'process.env.NODE_ENV':'"production"'}});
 const browser=await chromium.launch({headless:true,...(fs.existsSync('/usr/bin/chromium')?{executablePath:'/usr/bin/chromium'}:{})});
 try{
- for(const width of [1400,390,430]) for(const theme of ['light','dark']){
-  const page=await browser.newPage({viewport:{width,height:width===1400?900:width===430?788:700},hasTouch:width<=850,isMobile:width<=850});
+ for(const width of [1952,1400,390,430]) for(const theme of ['light','dark']){
+  const page=await browser.newPage({viewport:{width,height:width>=1400?900:width===430?788:700},hasTouch:width<=850,isMobile:width<=850});
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   await page.route('https://codestep.test/**',route=>{
    const path=new URL(route.request().url()).pathname;
@@ -49,11 +49,13 @@ try{
   await page.getByRole('button',{name:'Right',exact:true}).click();
   assert.match(await code(),/text-align: right/);assert.equal((await view()).align,'right');await copy();await noScroll();
   const beforeSwitch=await geometry();
+  const fixedPreview=beforeSwitch[1];
   await page.getByRole('button',{name:'See matching CSS →',exact:true}).click();
   assert.deepEqual(await geometry(),beforeSwitch,'Preview and switch button stay in the same place');
   assert.equal((await view()).align,'right');assert.match(await code(),/^p \{/);
   await page.getByRole('button',{name:'Continue to the next lesson →',exact:true}).click();
   assert.equal(await page.locator('.lesson-copy h1').textContent(),'Position text precisely','Positioning follows alignment through Next lesson');
+  assert.deepEqual((await geometry())[1],fixedPreview,'Preview stays fixed between alignment and positioning');
   await setRange('Distance from top',75);await setRange('Distance from left',80);await page.getByRole('button',{name:'20px',exact:true}).click();
   let rendered=await view();assert.ok(Math.abs(rendered.top-75)<1);assert.ok(Math.abs(rendered.left-80)<1);assert.equal(rendered.size,'20px');
   assert.match(await code(),/top: 75px/);assert.match(await code(),/left: 80px/);assert.doesNotMatch(await code(),/div|height:|margin:/);await copy();
@@ -70,6 +72,7 @@ try{
   if(width<=850)await page.getByRole('button',{name:'Practice',exact:true}).click();
   await choose('combined-styles');
   assert.equal(await page.locator('.lesson-copy h1').textContent(),'Combine styles in one attribute');
+  assert.deepEqual((await geometry())[1],fixedPreview,'Preview stays fixed for the combined-styles lesson');
   await page.getByRole('button',{name:'Centre',exact:true}).click();
   await page.getByRole('button',{name:'Blue',exact:true}).click();
   await page.getByRole('button',{name:'Georgia',exact:true}).click();

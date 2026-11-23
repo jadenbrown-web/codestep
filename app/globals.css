@@ -2022,3 +2022,24 @@ html[data-theme] .reference-workspace .css-featured-code .copy-code-button:is(:h
 .loop-count-options{margin-top:8px;font:12px/1.4 var(--sans)}
 .loop-count-options label{color:var(--ui-text);font-weight:600}
 .loop-count-options input[type=range]{display:block;width:100%;min-height:32px;accent-color:var(--green)}
+
+/* Keep workspace chrome quiet; controls and lesson cards retain their outlines. */
+html[data-theme] .workspace>:is(.editor-panel,.console-panel,.feedback),
+html[data-theme] .reference-workspace>.html-text-reference{border:0;box-shadow:none}
+html[data-theme] .workspace :is(.panel-bar,.console-bar,.font-featured-example,.comparison-case-picker,.time-zone-picker){border-bottom:0}
+html[data-theme] .workspace .file-tab{border:0}
+html[data-theme] .reference-workspace .html-reference-footer{border-top:0}
+
+/* Each preview shares the same bottom anchor in HTML and CSS, across layout lessons. */
+.layout-reference-body>.layout-preview{margin-top:auto}
+
+/* Pack only the actions that exist; align their glyphs with the copy action. */
+@media(min-width:851px){
+ .reference-workspace .font-featured-example{padding:6px 10px}
+ .reference-workspace .font-featured-example .font-example-heading{height:44px;min-height:44px;margin:0;padding:0 136px 0 0}
+ .reference-workspace .font-featured-example .desktop-pane-actions{position:absolute;top:6px;right:50px;height:44px;display:flex;align-items:center}
+ .reference-workspace .font-featured-example .desktop-pane-actions>.lesson-actions{display:flex;align-items:center;justify-content:flex-end;width:auto;height:44px;gap:0}
+ .reference-workspace .font-featured-example .desktop-pane-actions .lesson-actions>button{flex:none;width:44px;height:44px;min-height:44px;margin:0;padding:0}
+}
+html[data-theme] .lesson-copy{border-right:0}
+html[data-theme] .workspace .line-numbers{border-right:0}
