@@ -2043,3 +2043,6 @@ html[data-theme] .reference-workspace .html-reference-footer{border-top:0}
 }
 html[data-theme] .lesson-copy{border-right:0}
 html[data-theme] .workspace .line-numbers{border-right:0}
+@media(min-width:851px){
+ .desktop-pane-actions>.lesson-actions{display:flex;align-items:center;width:auto;gap:0}
+}
