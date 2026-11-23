@@ -62,7 +62,7 @@ try{
    assert.equal(state.radius,'8px');
 
   }
-  const misplaced=await root.locator('.copy-code-button').evaluateAll(es=>es.filter(e=>!e.closest('.visual-example-code,.tag-card-heading,.file-example-code')).map(e=>e.getAttribute('aria-label')));
+  const misplaced=await root.locator('.copy-code-button').evaluateAll(es=>es.filter(e=>!e.closest('.visual-example-code,.tag-card-heading,.file-example-code,.file-pair article')).map(e=>e.getAttribute('aria-label')));
   assert.deepEqual(misplaced,[],'each copy button is beside the code it copies');
   const offCentre=await root.locator('.copy-code-button').evaluateAll(buttons=>buttons.filter(button=>{
     const svg=button.querySelector('svg');if(!svg)return false;
@@ -74,20 +74,22 @@ try{
    assert.equal(await root.locator('.html-tag-grid .copy-code-button').count(),0,'individual cards only select the main example');
    const pane=await root.locator('.font-featured-example').boundingBox();
    const button=await root.locator('.font-featured-example .copy-code-button').boundingBox();
-   assert.ok(Math.abs(button.y-pane.y-6)<1,'copy is at the main example top edge');
-   assert.ok(Math.abs(pane.x+pane.width-button.x-button.width-6)<1,'copy is at the main example right edge');
+   assert.ok(Math.abs(button.y-pane.y-(width>850?0:6))<1,'copy is at the main example top edge');
+   assert.ok(Math.abs(pane.x+pane.width-button.x-button.width-(width>850?220:6))<1,'copy is at the main example right edge');
    assert.equal(await root.locator('.font-featured-example').evaluate(el=>getComputedStyle(el).borderBottomWidth),'0px');
    assert.equal(await root.locator('.html-reference-footer').evaluate(el=>getComputedStyle(el).borderTopWidth),'0px');
    if(width>850){
     const icons=await root.locator('.font-featured-example .desktop-pane-actions button,.font-featured-example .copy-code-button').evaluateAll(es=>es.filter(e=>e.getBoundingClientRect().width).map(e=>{const b=e.getBoundingClientRect(),i=e.querySelector('svg').getBoundingClientRect();return {x:b.x,width:b.width,y:i.y+i.height/2};}).sort((a,b)=>a.x-b.x));
     assert.ok(Math.max(...icons.map(i=>i.y))-Math.min(...icons.map(i=>i.y))<1,'All top-right glyphs share a baseline');
-    for(let i=1;i<icons.length;i++)assert.ok(Math.abs(icons[i].x-icons[i-1].x-44)<1,'No empty comparison-icon slot');
+    assert.equal(icons.length,3);
+    assert.ok(Math.abs(icons[1].x-icons[0].x-132)<1,'Copy and mode keep their standard editor slots');
+    assert.ok(Math.abs(icons[2].x-icons[1].x-88)<1,'Settings keeps the far-right slot');
    }
 
    const actions=root.locator('.font-example-heading .desktop-pane-actions');
    if(width>850 && await actions.count()){
     const box=await actions.boundingBox();
-    assert.ok(box.x+box.width<=button.x+1,'navigation does not overlap the copy button');
+    assert.ok(button.x+button.width<=box.x+1,'copy and navigation keep separate slots');
    }
   }
   if(kind==='css'||kind==='colours'){

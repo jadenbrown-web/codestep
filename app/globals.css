@@ -2046,3 +2046,37 @@ html[data-theme] .workspace .line-numbers{border-right:0}
 @media(min-width:851px){
  .desktop-pane-actions>.lesson-actions{display:flex;align-items:center;width:auto;gap:0}
 }
+
+/* Filenames are identifiers, not shortened topic labels. */
+.editor-panel .file-tab.has-pinned-topics,.comparison-filebar>.comparison-file-tab.has-pinned-topics{grid-template-columns:max-content minmax(0,1fr)}
+.editor-panel .file-tab .editor-file-name,.comparison-file-tab>.comparison-file-name{flex:0 0 auto;min-width:max-content;max-width:none;overflow:visible;text-overflow:clip;white-space:nowrap}
+
+/* One clipped, rounded home demo instead of overlapping coloured frames. */
+html[data-theme] .home-shell .hero .terminal-card{border:1px solid var(--ui-border);border-radius:12px;box-shadow:none;overflow:hidden}
+
+/* The HTML-files example follows the same border-free workspace chrome. */
+html[data-theme] .pages-reference-preview,
+html[data-theme] .pages-reference-preview .reference-pane-heading,
+html[data-theme] .pages-reference-preview .file-pair article,
+html[data-theme] .pages-reference-preview .file-pair article>header,
+html[data-theme] .pages-reference-preview .link-journey{border:0;box-shadow:none}
+.pages-reference-preview .file-pair article{border-radius:12px;overflow:hidden}
+.pages-reference-preview .file-pair article>header .copy-code-control{flex:none;margin-left:auto}
+.pages-reference-preview .file-pair .file-example-code>pre{padding-right:14px}
+
+/* Shared desktop actions use stable 44px slots in every lesson. */
+@media(min-width:851px){
+ .app-header.home-nav{position:relative;min-height:56px;height:56px;padding-right:56px}
+ .home-nav .home-actions>.settings-button{position:absolute;top:6px;right:6px}
+ .reference-workspace .font-featured-example .font-example-heading{padding-right:276px}
+ .reference-workspace .font-featured-example .desktop-pane-actions,
+ .reference-workspace .reference-pane-heading .desktop-pane-actions{position:absolute;top:0;right:0;width:132px;height:44px;display:block}
+ .reference-workspace .font-featured-example .desktop-pane-actions>.lesson-actions,
+ .reference-workspace .reference-pane-heading .desktop-pane-actions>.lesson-actions,
+ .editor-panel .panel-actions>.desktop-pane-actions>.lesson-actions{display:grid;grid-template-columns:repeat(3,44px);grid-template-rows:44px;width:132px;height:44px;gap:0}
+ .desktop-pane-actions .editor-mode-toggle{grid-column:1;grid-row:1}
+ .desktop-pane-actions .compare-language-button{grid-column:2;grid-row:1}
+ .desktop-pane-actions .settings-button{grid-column:3;grid-row:1}
+ .reference-workspace .font-featured-example .visual-example-code>.copy-code-control{top:0;right:220px}
+ .reference-workspace .reference-pane-heading{position:relative;padding-right:276px;min-height:44px;height:44px}
+}
