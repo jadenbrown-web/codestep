@@ -7,8 +7,8 @@ const lessons=JSON.parse(source.slice(start,source.indexOf('\n};',start)+2));
 const bundle=await build({stdin:{contents:`import React from 'react';import {createRoot} from 'react-dom/client';import App from './app/page';createRoot(document.getElementById('root')).render(<App/>);`,loader:'tsx',resolveDir:process.cwd()},bundle:true,format:'iife',platform:'browser',write:false,define:{'process.env.NODE_ENV':'"production"'}});
 const browser=await chromium.launch({headless:true,...(fs.existsSync('/usr/bin/chromium')?{executablePath:'/usr/bin/chromium'}:{})});
 try{
- for(const width of [1400,390])for(const theme of ['light','dark']){
-  const page=await browser.newPage({viewport:{width,height:900},hasTouch:width===390,isMobile:width===390});
+ for(const width of [1400,390,320])for(const theme of ['light','dark']){
+  const page=await browser.newPage({viewport:{width,height:width===320?568:900},hasTouch:width===390,isMobile:width===390});
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.route('https://codestep.test/**',route=>{
    const path=new URL(route.request().url()).pathname;
@@ -21,19 +21,21 @@ try{
   await page.evaluate(theme=>{localStorage.setItem('codestep-theme',theme);localStorage.setItem('codestep-code-blocks','false');},theme);
   await page.addScriptTag({content:bundle.outputFiles[0].text});await page.locator('.course-card.py-card').click();
   for(const lesson of lessons.html.filter(l=>l.mediaPreview)){
-   if(width===390)await page.getByRole('button',{name:'Open lesson list',exact:true}).click();
+   if(width<=390)await page.getByRole('button',{name:'Open lesson list',exact:true}).click();
    await page.locator('.drawer-lessons .topic-lesson-button').filter({hasText:lesson.title}).click();
-   if(width===390)await page.getByRole('button',{name:'Practice',exact:true}).click();
+   if(width<=390)await page.getByRole('button',{name:'Practice',exact:true}).click();
    await page.locator('.html-media-preview').waitFor();
    const editor=page.getByRole('textbox',{name:'Code editor',exact:true});await editor.fill(lesson.answer);
    await page.getByRole('button',{name:'Check code',exact:true}).click();
    await page.getByText('That’s correct!',{exact:true}).waitFor();
    const preview=page.locator('.html-media-preview');
    assert.equal(await preview.locator('.browser-page-preview .browser-preview-navigation').count(),1,'Media lessons use the shared browser frame');
+   assert.equal(await preview.locator('.browser-page-preview').getByText('index.html',{exact:true}).count(),1,'Only one visible file address in the media preview');
+   assert.equal(await preview.locator('.browser-preview-tab').count(),1,'Only one media preview title');
    if(lesson.mediaPreview==='link'){
     const url=page.url();await preview.getByRole('link',{name:'Open page',exact:true}).click();
     await preview.getByRole('heading',{name:'Page',exact:true}).waitFor();
-    await page.waitForFunction(()=>document.querySelector('.live-web-file')?.textContent==='page.html');
+    await page.waitForFunction(()=>document.querySelector('.html-media-preview .browser-preview-navigation>span')?.textContent==='page.html');
     await preview.getByRole('link',{name:'Go back',exact:true}).click();
     assert.equal(page.url(),url);
    }else if(lesson.mediaPreview==='image'){
@@ -45,6 +47,16 @@ try{
     await media.evaluate(async e=>{await e.play();});
     await page.waitForFunction(kind=>document.querySelector('.html-media-preview '+kind).currentTime>0.05,lesson.mediaPreview);
     assert.ok(await media.evaluate(e=>e.duration>0&&!e.error&&e.controls));await media.evaluate(e=>e.pause());
+   }
+   if(lesson.mediaPreview==='audio'){
+    const audio=preview.locator('audio');
+    const intact=async()=>{await audio.scrollIntoViewIfNeeded();const box=await audio.boundingBox(),canvas=await preview.locator('.sample-browser-document').boundingBox();assert.ok(box.y>=canvas.y&&box.y+box.height<=canvas.y+canvas.height+1,'Native audio controls fit inside the page');assert.equal(await preview.locator('.sample-browser-document').evaluate(e=>e.scrollHeight>e.clientHeight+1),false,'No nested scroll needed to use the audio player');};
+    await intact();
+    await editor.fill(lesson.answer+'<p>Extra content</p>');await page.getByRole('button',{name:'Check code',exact:true}).click();await page.locator('.feedback.wrong').waitFor();
+    await intact();
+    await page.locator('.live-check-message').scrollIntoViewIfNeeded();
+    const diagnosis=await page.locator('.live-check-message').boundingBox(),panel=await page.locator('.live-web-panel').boundingBox();assert.ok(diagnosis.y>=panel.y-1&&diagnosis.y+diagnosis.height<=panel.y+panel.height+1,'Quiz feedback remains reachable');
+    await page.getByRole('button',{name:'Clear check',exact:true}).click();await intact();
    }
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
   }

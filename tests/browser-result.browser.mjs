@@ -43,7 +43,7 @@ try{
   const visible=await iframe.evaluate(el=>{const r=el.getBoundingClientRect(),p=el.closest('.console-body').getBoundingClientRect();return r.top>=p.top&&r.bottom<=p.bottom+1&&r.right<=p.right+1;});
   assert.ok(visible,'Both coloured sections fit the visible result area');
   if(theme==='dark')await page.screenshot({path:`/tmp/codestep-div-preview-${width}.png`});
-  await page.locator('.console-bar').getByRole('button',{name:'Clear check',exact:true}).click();
+  await page.locator('.live-web-panel').getByRole('button',{name:'Clear check',exact:true}).click();
   assert.equal(await iframe.count(),1,'Clearing validation keeps the live page');
   await page.getByRole('button',{name:'Check code',exact:true}).click();
   await iframe.waitFor();
@@ -67,7 +67,7 @@ try{
   assert.ok(headings.every(h=>h.bottom<=h.viewport),'Both native headings fit in the preview: '+JSON.stringify(headings));
   assert.equal(await editor.inputValue(),heading.answer,'The HTML remains in the IDE');
   assert.equal(await page.locator('.console-body .typed-output').count(),0);
-  await page.locator('.console-bar').getByRole('button',{name:'Clear check',exact:true}).click();
+  await page.locator('.live-web-panel').getByRole('button',{name:'Clear check',exact:true}).click();
   assert.equal(await iframe.count(),1);
   const documentLesson=lessons.html.find(item=>item.browserPreview==='document');
   if(width===390)await page.getByRole('button',{name:'Open lesson list',exact:true}).tap();
@@ -82,12 +82,18 @@ try{
   assert.equal(await editor.inputValue(),documentLesson.answer);
   assert.equal(await page.locator('.console-body .typed-output').count(),0);
   if(theme==='dark')await page.screenshot({path:`/tmp/codestep-document-preview-${width}.png`});
+  const longTitle=Array(20).fill('A longer page title').join(' ');
+  const tab=page.getByLabel('Browser tab title',{exact:true}),tabHeight=(await tab.boundingBox()).height;
+  await editor.fill(documentLesson.answer.replace('My page',longTitle));
+  await tab.locator('span[title]').filter({hasText:longTitle.trim()}).waitFor();
+  assert.equal((await tab.boundingBox()).height,tabHeight,'Long page titles do not shrink the web canvas');
+  assert.equal(await tab.locator('span[title]').getAttribute('title'),longTitle,'The full title is still available');
   await editor.fill(documentLesson.answer.replace('My page','My &amp; music'));
   assert.equal(await iframe.count(),1,'Editing updates the live document preview');
   await editor.fill(documentLesson.answer);
   await page.getByRole('button',{name:'Check code',exact:true}).click();
   await page.getByLabel('Browser tab title',{exact:true}).getByText('My page',{exact:true}).waitFor();
-  await page.locator('.console-bar').getByRole('button',{name:'Clear check',exact:true}).click();
+  await page.locator('.live-web-panel').getByRole('button',{name:'Clear check',exact:true}).click();
   assert.equal(await page.locator('.browser-page-preview').count(),1);
   assert.deepEqual(errors,[]);
   console.log(`PASS ${width} ${theme}: actual red/blue HTML, isolated preview, clear/edit/check lifecycle and visible phone layout`);

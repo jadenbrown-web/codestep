@@ -68,11 +68,11 @@ try{
     await preview.getByRole('heading',{name:'First Page',exact:true}).waitFor();
     await preview.getByRole('link',{name:'Go to Page 2',exact:true}).click();
     await preview.getByRole('heading',{name:'Page 2',exact:true}).waitFor();
-    assert.equal(await page.locator('.linked-pages-address>span').textContent(),'page2.html');
+    assert.equal(await page.locator('.linked-pages-browser .browser-preview-navigation>span').textContent(),'page2.html');
     assert.deepEqual(await headers.evaluateAll(es=>es.map(e=>getComputedStyle(e).backgroundColor)),[initialColours[1],initialColours[0]],'Source highlight follows the displayed page');
     await preview.getByRole('link',{name:'Go back',exact:true}).click();
     await preview.getByRole('heading',{name:'First Page',exact:true}).waitFor();
-    assert.equal(await page.locator('.linked-pages-address>span').textContent(),'index.html');
+    assert.equal(await page.locator('.linked-pages-browser .browser-preview-navigation>span').textContent(),'index.html');
 
    }
    if(width===1952&&theme==='dark'&&kind==='pages')await page.screenshot({path:'/tmp/codestep-pages-clean.png'});

@@ -16,6 +16,10 @@ try{
   const editor=page.getByRole('textbox',{name:'Code editor',exact:true});const frame=page.frameLocator('iframe.browser-result-preview');
   await editor.pressSequentially('<h1>Typing live</h1>',{delay:8});await frame.getByRole('heading',{name:'Typing live',exact:true}).waitFor();
   assert.equal(await page.locator('.browser-page-preview .browser-preview-navigation').count(),1,'Every live page has browser chrome');
+  const preview=page.locator('.live-web-panel');
+  assert.equal(await preview.locator('.browser-preview-tab').count(),1,'One preview title bar');
+  assert.equal(await preview.getByText('index.html',{exact:true}).count(),1,'The preview filename appears once');
+  assert.equal(await preview.getByText('Web page',{exact:true}).count(),0,'No duplicate generic heading beneath Live preview');
   assert.equal(await page.locator('.feedback.correct').count(),0,'Rendering never accepts a quiz automatically');
   assert.ok(await editor.evaluate(e=>e===document.activeElement&&e.selectionStart===e.value.length),'Live rendering preserves editor focus and caret');
   await editor.fill('<h1>Changed live</h1><p>New paragraph</p>');await frame.getByText('New paragraph',{exact:true}).waitFor();

@@ -1228,13 +1228,11 @@ button[data-active="true"]::after,html[data-theme] button[data-active="true"]::a
 .settings-panel button.switch i,html[data-theme] .settings-panel button.switch i{display:block;width:20px;height:20px;background:#fff;transform:translateX(0);box-shadow:0 1px 3px #0003}
 .settings-panel button.switch.on,html[data-theme] .settings-panel button.switch.on{background:#10b981;border-color:#10b981}
 .settings-panel button.switch.on i,html[data-theme] .settings-panel button.switch.on i{background:#fff;transform:translateX(20px)}
-.settings-panel button.switch.on::before{content:"\2713";position:absolute;left:6px;top:6px;color:#063a28;font:900 13px/14px var(--sans)}
 .app-header.app-header button[data-active="true"],html[data-theme] .app-header.app-header button[data-active="true"]{color:var(--ui-text);background:var(--selection-surface);border-radius:6px}
 
 /* A continuous shell sits behind the inset editor surfaces. */
 :root{--workspace-rail:#e7eee8;--workspace-filebar:#f3f7f3}
 html[data-theme="dark"]{--workspace-rail:#1c2d24;--workspace-filebar:#18281f}
-.settings-panel button.switch.on::before{content:none;display:none}
 .home-shell,.lesson-shell,html[data-theme="dark"] .home-shell,html[data-theme="dark"] .lesson-shell{background:var(--workspace-rail)}
 .home-shell>.app-header,.lesson-shell>.app-header,.language-comparison>.app-header,html[data-theme] .home-shell>.app-header,html[data-theme] .lesson-shell>.app-header,html[data-theme] .language-comparison>.app-header{background:var(--workspace-rail);border-bottom:0;box-shadow:none}
 .lesson-layout,.lesson-layout .workspace,html[data-theme="dark"] .lesson-layout .workspace,.language-comparison[open],.language-comparison-controls,.home-shell>.hero,html[data-theme="dark"] .home-shell>.hero{background:var(--workspace-rail)}
@@ -2341,10 +2339,6 @@ html[data-theme] .language-comparison .comparison-file-name{background:transpare
 }
 /* Web quizzes keep a browser canvas alive while the student edits the file. */
 html[data-theme] .workspace:not(.editor-expanded)>.console-panel.live-web-panel{display:flex;flex-direction:column;flex:0 0 clamp(240px,40vh,360px);min-height:220px;max-height:48%;overflow:hidden}
-html[data-theme] .live-web-panel .live-web-header{display:flex;align-items:center;gap:10px;padding:0 10px;border:0;background:var(--app-surface);color:var(--app-text)}
-html[data-theme] .live-web-header>span{display:flex;align-items:center;gap:8px;font:650 13px/1.4 var(--sans);letter-spacing:0;white-space:nowrap}
-.live-web-file{margin-left:auto;font:12px var(--mono);color:var(--app-muted)}
-.live-web-header button{min-height:44px;white-space:nowrap}
 html[data-theme] .live-web-panel .console-body{display:flex;flex:1;flex-direction:column;padding:0;min-height:0;overflow:hidden;white-space:normal}
 .live-web-panel .browser-result-preview{display:block;flex:1;width:100%;height:100%;min-height:0;border:0;border-radius:0;background:#fff;color-scheme:light}
 .live-web-panel .browser-page-preview{border:0;border-radius:0;min-height:0}
@@ -2356,14 +2350,11 @@ html[data-theme] .live-web-panel :is(.browser-preview-tab,.browser-preview-navig
 .live-script-result>div{margin-top:6px;color:var(--app-text)}
 .live-script-result p{margin:4px 0;white-space:pre-wrap}
 .workspace.editor-expanded>.live-web-panel{display:none}
-html[data-theme] .live-web-panel .console-bar.live-web-header button{width:auto;min-width:80px;max-width:none;padding:0 8px;flex:none}
 
 /* Shared flat settings, readable topic shortcuts and browser chrome. */
 html[data-theme] .settings-panel .theme-options button,
 html[data-theme] .settings-panel .palette-options button{border:0;outline:0;box-shadow:none;background:var(--app-raised);color:var(--app-text);position:relative}
 html[data-theme] .settings-panel :is(.theme-options button,.palette-options button):is([data-active="true"],[aria-pressed="true"]){background:var(--app-selected);border:0;outline:0;box-shadow:none}
-html[data-theme] .settings-panel .settings-choice-check{display:block;position:absolute;inset:12px 12px auto auto;width:16px;height:16px;color:var(--app-accent);pointer-events:none}
-html[data-theme] .settings-panel :is(.theme-options button,.palette-options button){padding-right:36px}
 html[data-theme] .settings-panel :is(.theme-options button,.palette-options button):focus-visible{outline:2px solid var(--app-accent);outline-offset:-2px}
 html[data-theme] .settings-panel .switch{border:0;box-shadow:none;background:var(--app-muted)}
 html[data-theme] .settings-panel .switch.on{background:var(--app-action);border:0}
@@ -2396,3 +2387,17 @@ html[data-theme] .drawer-pins .pinned-topic-shortcuts .pinned-topic-chip[data-ac
 html[data-theme] .language-comparison .app-header.app-header .example-picker-panel .lesson-list-row>.topic-pin-button[data-pinned="true"]{color:var(--saved-pin-colour);background:transparent;border:0}
 html[data-theme] .layout-preview>.browser-page-preview{height:clamp(140px,25dvh,212px);min-height:140px;flex:none}
 html[data-theme] .layout-preview .browser-page-preview>.browser-result-preview{height:0;flex:1;min-height:0}
+
+/* A single browser frame owns each preview's title, file and actions. */
+html[data-theme] .live-web-panel .browser-preview-tab{min-height:44px;padding:0 10px;gap:8px}
+.browser-preview-tab>span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.browser-preview-actions{display:flex;align-items:center;flex:none;margin-left:auto}
+html[data-theme] .browser-preview-actions button{min-width:80px;min-height:44px;padding:0 8px;border:0;border-radius:6px;background:transparent;color:var(--app-text);font:600 12px var(--sans);white-space:nowrap;cursor:pointer}
+html[data-theme] .browser-preview-actions button:hover{background:var(--app-selected)}
+html[data-theme] .browser-preview-actions button:focus-visible{outline:2px solid var(--app-accent);outline-offset:-2px}
+/* Keep native audio controls intact; feedback scrolls below the preview on short phones. */
+html[data-theme] .workspace:not(.editor-expanded)>.console-panel.live-web-panel:has(audio){overflow-y:auto}
+html[data-theme] .live-web-panel:has(audio) .live-web-body{flex:1 0 auto;overflow:visible}
+.live-web-panel .html-media-preview:has(audio){flex:none;min-height:min-content}
+html[data-theme] .live-web-panel .html-media-preview:has(audio)>.browser-page-preview{flex:none;min-height:150px}
+.live-web-panel .sample-browser-document audio{margin:0}

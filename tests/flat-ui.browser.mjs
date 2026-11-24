@@ -18,7 +18,12 @@ try{
   }
   await page.getByRole('button',{name:/Ember Soft coral/}).click();
   assert.equal(await page.locator('html').getAttribute('data-palette'),'ember');
-  for(const choice of await page.locator('.settings-panel button[aria-pressed="true"]').all())assert.equal(await choice.locator('.settings-choice-check[aria-hidden="true"]').count(),1,'Appearance and palette selection use the same decorative checkmark');
+  assert.equal(await page.locator('.settings-choice-check').count(),0,'Settings selection uses background alone without ticks');
+  for(const toggle of await page.locator('.settings-panel .switch.on').all())assert.equal(await toggle.evaluate(e=>getComputedStyle(e,'::before').content),'none','Switches have no extra tick');
+  for(const group of await page.locator('.theme-options,.palette-options').all()){
+   const selected=group.locator('button[aria-pressed="true"]'),other=group.locator('button[aria-pressed="false"]').first();
+   assert.notEqual(await selected.evaluate(e=>getComputedStyle(e).backgroundColor),await other.evaluate(e=>getComputedStyle(e).backgroundColor),'Selection remains clear without ticks');
+  }
   await page.screenshot({path:`/tmp/flat-settings-${width}-${theme}.png`});
   await page.getByRole('button',{name:'Close settings',exact:true}).click();await page.locator('.course-card.cs-card').click();
   if(width<=850)await page.getByRole('button',{name:'Practice',exact:true}).click();
