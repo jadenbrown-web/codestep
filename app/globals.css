@@ -2401,3 +2401,12 @@ html[data-theme] .live-web-panel:has(audio) .live-web-body{flex:1 0 auto;overflo
 .live-web-panel .html-media-preview:has(audio){flex:none;min-height:min-content}
 html[data-theme] .live-web-panel .html-media-preview:has(audio)>.browser-page-preview{flex:none;min-height:150px}
 .live-web-panel .sample-browser-document audio{margin:0}
+/* Reference choices use the same flat selection fill in every palette. */
+html[data-theme] .reference-workspace .html-tag-example[data-example="true"]{background:var(--app-selected);border:0;box-shadow:none}
+/* Layout examples follow their content instead of reserving empty rows. */
+html[data-theme] .reference-workspace>.layout-reference{container-type:inline-size;flex:0 1 auto;height:auto;max-height:100%;min-height:0}
+.reference-workspace .layout-reference[data-layout-kind] .css-featured-code{min-height:0}
+.layout-reference .layout-reference-body{flex:0 1 auto;gap:12px}
+.layout-reference-body>.layout-preview{margin-top:0}
+html[data-theme] .layout-preview>.browser-page-preview{height:200px;min-height:200px}
+.layout-reference .example-syntax-code{font-size:13px}

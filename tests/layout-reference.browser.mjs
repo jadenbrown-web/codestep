@@ -39,6 +39,7 @@ try{
    assert.ok(measures.every(item=>item.scroll<=item.height+1),'Controls and example code fit without internal scrolling: '+JSON.stringify(measures));
   };
   const geometry=()=>page.locator('.layout-preview iframe,.layout-reference .colour-lesson-link').evaluateAll(es=>es.map(el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};}));
+  const compact=async()=>{const boxes=await page.locator('.font-featured-example,.layout-controls,.layout-preview').evaluateAll(es=>es.map(e=>{const r=e.getBoundingClientRect();return {top:r.top,bottom:r.bottom};}));assert.ok(boxes[1].top-boxes[0].bottom<=16,'Controls follow the example without reserved blank rows');assert.ok(boxes[2].top-boxes[1].bottom<=13,'The preview follows its controls');const preview=await page.locator('.layout-preview .browser-page-preview').boundingBox();assert.equal(preview.height,200,'A standard compact preview size');};
   const copy=async()=>{
    await page.evaluate(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async value=>window.copied=value}}));
    await page.getByRole('button',{name:'Copy layout example code',exact:true}).click();
@@ -48,20 +49,22 @@ try{
   await choose('alignment');
   await page.getByRole('button',{name:'Right',exact:true}).click();
   assert.match(await code(),/text-align: right/);assert.equal((await view()).align,'right');await copy();await noScroll();
+  if(theme==='dark')await page.screenshot({path:`/tmp/compact-alignment-${width}.png`});
   const beforeSwitch=await geometry();
-  const fixedPreview=beforeSwitch[1];
+  await compact();
   await page.getByRole('button',{name:'See matching CSS →',exact:true}).click();
-  assert.deepEqual(await geometry(),beforeSwitch,'Preview and switch button stay in the same place');
+  assert.deepEqual((await geometry())[0],beforeSwitch[0],'The language switch stays in the same place');await compact();
   assert.equal((await view()).align,'right');assert.match(await code(),/^p \{/);
   await page.getByRole('button',{name:'Continue to the next lesson →',exact:true}).click();
   assert.equal(await page.locator('.lesson-copy h1').textContent(),'Position text precisely','Positioning follows alignment through Next lesson');
-  assert.deepEqual((await geometry())[1],fixedPreview,'Preview stays fixed between alignment and positioning');
+  await compact();
   await setRange('Distance from top',75);await setRange('Distance from left',80);await page.getByRole('button',{name:'20px',exact:true}).click();
   let rendered=await view();assert.ok(Math.abs(rendered.top-75)<1);assert.ok(Math.abs(rendered.left-80)<1);assert.equal(rendered.size,'20px');
   assert.match(await code(),/top: 75px/);assert.match(await code(),/left: 80px/);assert.doesNotMatch(await code(),/div|height:|margin:/);await copy();
+  if(theme==='dark')await page.screenshot({path:`/tmp/compact-positioning-${width}.png`});
   const positionGeometry=await geometry();
   await page.getByRole('button',{name:'See matching HTML →',exact:true}).click();
-  assert.deepEqual(await geometry(),positionGeometry,'Positioning preview stays put between HTML and CSS');
+  assert.deepEqual((await geometry())[0],positionGeometry[0],'The language switch stays fixed for positioning');await compact();
   rendered=await view();assert.ok(Math.abs(rendered.top-75)<1);assert.ok(Math.abs(rendered.left-80)<1);assert.equal(rendered.size,'20px');
   await noScroll();
   if(width<=850)await page.getByRole('button',{name:'Lesson',exact:true}).click();
@@ -72,7 +75,7 @@ try{
   if(width<=850)await page.getByRole('button',{name:'Practice',exact:true}).click();
   await choose('combined-styles');
   assert.equal(await page.locator('.lesson-copy h1').textContent(),'Combine styles in one attribute');
-  assert.deepEqual((await geometry())[1],fixedPreview,'Preview stays fixed for the combined-styles lesson');
+  await compact();
   await page.getByRole('button',{name:'Centre',exact:true}).click();
   await page.getByRole('button',{name:'Blue',exact:true}).click();
   await page.getByRole('button',{name:'Georgia',exact:true}).click();
@@ -84,7 +87,7 @@ try{
   await noScroll();
   const combinedGeometry=await geometry();
   await page.getByRole('button',{name:'See matching CSS →',exact:true}).click();
-  assert.deepEqual(await geometry(),combinedGeometry,'Combined preview stays put between HTML and CSS');
+  assert.deepEqual((await geometry())[0],combinedGeometry[0],'The language switch stays fixed for the recap');await compact();
   rendered=await view();assert.equal(rendered.colour,'rgb(0, 0, 255)');assert.equal(rendered.align,'center');assert.match(rendered.font,/Georgia/);
   assert.doesNotMatch(await code(),/div|position:|top:|left:|font-size:|height:|margin:|width:/);
   const syntax=await page.locator('.example-syntax-code .syntax-api').allTextContents();

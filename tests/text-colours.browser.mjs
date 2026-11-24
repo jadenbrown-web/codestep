@@ -22,15 +22,24 @@ try{
   await activate(page.locator('.drawer-lessons .topic-lesson-button').filter({hasText:'Colour paragraph text'}));
   if(width<=850)await activate(page.getByRole('button',{name:'Practice',exact:true}));
   const code=()=>page.locator('.font-featured-example .example-syntax-code').textContent();
-  assert.equal(await code(),'<p style="color: red;">This color is red</p>');
+  const selected=async selector=>{const item=page.locator(selector);assert.equal(await item.getAttribute('data-example'),'true');const expected=await item.evaluate(e=>{const probe=document.createElement('i');probe.style.background='var(--app-selected)';e.appendChild(probe);const bg=getComputedStyle(probe).backgroundColor;probe.remove();return bg;});assert.equal(await item.evaluate(e=>getComputedStyle(e).backgroundColor),expected,'The chosen example has the shared flat highlight');assert.equal(await item.evaluate(e=>getComputedStyle(e).borderTopWidth),'0px','No decorative selection border');};
+  const samples=await page.locator('.named-text-colour-preview').evaluateAll(es=>es.map(e=>({colour:getComputedStyle(e.firstElementChild).color,backdrop:getComputedStyle(e).backgroundColor})));
+  const luminance=rgb=>{const [r,g,b]=rgb.match(/[\d.]+/g).slice(0,3).map(Number).map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;});return .2126*r+.7152*g+.0722*b;};
+  for(const sample of samples){const [a,b]=[luminance(sample.colour),luminance(sample.backdrop)].sort((a,b)=>b-a);assert.ok((a+.05)/(b+.05)>=4.5,'Named colour samples remain readable: '+JSON.stringify(sample));}
+  await selected('[data-text-colour="Red"]');
+  await activate(page.getByRole('button',{name:'Show Orange paragraph code',exact:true}));await selected('[data-text-colour="Orange"]');
+  await page.screenshot({path:`/tmp/selected-orange-${width}-${theme}.png`});
+  assert.equal(await code(),'<p style="color: orange;">This color is orange</p>');
   await page.locator('[data-text-colour="Blue"]').scrollIntoViewIfNeeded();
   if(width<=850)await page.locator('[data-text-colour="Blue"]').tap({position:{x:3,y:3}});else await page.getByRole('button',{name:'Show Blue paragraph code',exact:true}).click();
+  await selected('[data-text-colour="Blue"]');
   await activate(page.getByRole('button',{name:'Copy text colour example code',exact:true}));
   assert.equal(await page.evaluate(()=>window.copiedCode),'<p style="color: blue;">This color is blue</p>');
   await activate(page.getByRole('button',{name:'See Blue as a hex value in CSS →',exact:true}));
   assert.equal(await code(),'<p style="color: #0000FF;">Blue text</p>');
   if(width<=850)await page.locator('[data-colour="Green"]').tap({position:{x:3,y:3}});else await page.getByRole('button',{name:'Use Green hex colour',exact:true}).click();
   assert.equal(await code(),'<p style="color: #008000;">Green text</p>');
+  await selected('[data-colour="Green"]');
   assert.equal(await page.locator('.html-tag-grid .copy-code-button').count(),0,'Only the main example has a copy button');
   await activate(page.getByRole('button',{name:'Copy green HTML tag code',exact:true}));
   assert.equal(await page.evaluate(()=>window.copiedCode),'<p style="color: #008000;">Green text</p>');

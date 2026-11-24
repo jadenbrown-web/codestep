@@ -39,6 +39,7 @@ try{
    assert.ok(Math.max(...centers)-Math.min(...centers)<1,'toolbar controls share a center line');
   }
   const root=page.locator('.reference-workspace');
+  if(kind!=='pages'){const selected=root.locator('.html-tag-example[data-example="true"]');assert.equal(await selected.count(),1,'Each reference has one selected example');const colours=await selected.evaluate(e=>{const swatch=document.createElement('i');swatch.style.background='var(--app-selected)';e.appendChild(swatch);const result=[getComputedStyle(e).backgroundColor,getComputedStyle(swatch).backgroundColor];swatch.remove();return result;});assert.equal(colours[0],colours[1],'Font, text, colour and border choices share a visible flat highlight');}
   if(kind==='text'){
     const cards=await root.locator('.html-tag-code').evaluateAll(es=>es.map(el=>({base:getComputedStyle(el).color,colours:[...el.querySelectorAll('span')].map(span=>getComputedStyle(span).color)})));
     assert.equal(cards.length,18);
