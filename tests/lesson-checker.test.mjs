@@ -69,9 +69,10 @@ test('HTML attribute order and void-tag slash are equivalent; missing alt and ch
   assert.equal(check('html', 'Tell the browser it is HTML', '<!DOCTYPE potato>').accepted, false);
 });
 test('CSS accepts reordered unique declarations and equivalent colours; cascade order is preserved', () => {
-  assert.equal(check('css', 'Colour and centre text', 'p { text-align: center; color: #f00; }').accepted, true);
-  assert.equal(check('css', 'Colour and centre text', 'p { text-align: left; color: red; }').accepted, false);
-  assert.equal(check('css', 'Colour and centre text', 'p { color: blue; color: red; text-align: center; }').accepted, false);
+  assert.equal(check('css', 'Choose left, centre or right', 'h1 { text-align: center; color: #f00; }').accepted, true);
+  assert.equal(check('css', 'Choose left, centre or right', 'h1 { text-align: left; color: red; }').accepted, false);
+  assert.equal(check('css', 'Choose left, centre or right', 'h1 { color: blue; color: red; text-align: center; }').accepted, false);
+  assert.equal(check('css', 'Choose left, centre or right', 'p { color: red; text-align: center; }').accepted, false,'The selector must match the heading example');
 });
 test('Independent colour declarations can be reordered; use before assignment does not pass', () => {
   const lesson = courses.javascript.find(item => item.title === 'Choose a text colour');

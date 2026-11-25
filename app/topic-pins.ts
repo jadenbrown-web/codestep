@@ -42,7 +42,7 @@ export function restoreLessonPins(raw: string | null, courses: Record<string, { 
       if (!Array.isArray(saved[language])) continue;
       const resolved = saved[language].flatMap((value: unknown) => {
         if (typeof value !== "string") return [];
-        const renamed = ["Choose let or const", "Use changeable and fixed values"].includes(value) ? "Store and update values" : value === "Check an answer with if and else" ? "Make decisions with if and else" : value === "Use one function inside another" ? "Use a function's returned value" : value === "Check for a particular time" ? "Display the current time" : value === "Repeat input until the answer is correct" ? "Repeat with while or for" : value;
+        const renamed = language === "css" && ["Colour and centre text", "Text styling"].includes(value) ? "Choose left, centre or right" : ["Choose let or const", "Use changeable and fixed values"].includes(value) ? "Store and update values" : value === "Check an answer with if and else" ? "Make decisions with if and else" : value === "Use one function inside another" ? "Use a function's returned value" : value === "Check for a particular time" ? "Display the current time" : value === "Repeat input until the answer is correct" ? "Repeat with while or for" : value;
         const lesson = course.find(item => item.title === renamed) ?? course.find(item => lessonTopic(item) === value);
         return lesson ? [lesson.title] : [];
       });

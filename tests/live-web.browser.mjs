@@ -34,12 +34,12 @@ try{
   await page.getByRole('button',{name:'Go home',exact:true}).click();await page.locator('.course-card.css-card').click();
   await editor.fill('body { background-color: papayawhip; } p { color: blue; text-align: center; }');
   await page.waitForFunction(()=>document.querySelector('iframe.browser-result-preview')!==null);
-  await frame.locator('p').waitFor();
-  const styles=await frame.locator('p').evaluate(e=>({colour:getComputedStyle(e).color,align:getComputedStyle(e).textAlign,bg:getComputedStyle(e.ownerDocument.body).backgroundColor}));
-  assert.deepEqual(styles,{colour:'rgb(0, 0, 255)',align:'center',bg:'rgb(255, 239, 213)'});
+  await frame.locator('body').waitFor({state:'attached'});
+  assert.equal(await frame.locator('body').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(255, 239, 213)');
+  assert.equal(await frame.locator('p').count(),0,'A background-only file needs no invented paragraph');
   assert.equal(await page.locator('.feedback.correct').count(),0);
   await page.getByRole('button',{name:'Check code',exact:true}).click();await page.locator('.feedback.wrong').waitFor();
-  assert.equal(await frame.locator('p').evaluate(e=>getComputedStyle(e).color),'rgb(0, 0, 255)','Quiz feedback does not remove the current live page');
+  assert.equal(await frame.locator('body').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(255, 239, 213)','Quiz feedback does not remove the current live page');
   assert.equal(await page.locator('iframe.browser-result-preview').getAttribute('sandbox'),'');
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);assert.deepEqual(errors,[]);
   console.log(`PASS ${width} ${theme}: real typing, preserved focus, live HTML/CSS, separate quiz validation and checked script results`);await page.close();

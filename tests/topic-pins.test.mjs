@@ -84,3 +84,10 @@ test('old while-loop pins follow the lesson with both loop options',()=>{
  const courses={python:[{title:'Repeat with while or for',eyebrow:'12 · Loops'}]};
  assert.deepEqual(restoreLessonPins(JSON.stringify({python:['Repeat input until the answer is correct']}),courses),{python:['Repeat with while or for']});
 });
+
+
+test('merged CSS text-styling pins follow alignment without duplicates',()=>{
+ const courses={css:[{title:'Colour the page background',eyebrow:'01 · Background colour'},{title:'Choose left, centre or right',eyebrow:'02 · Text alignment'}],html:[{title:'Colour and centre text',eyebrow:'01 · Text styling'}]};
+ const saved=JSON.stringify({css:['Colour and centre text','Text styling','Choose left, centre or right','Colour the page background'],html:['Colour and centre text']});
+ assert.deepEqual(restoreLessonPins(saved,courses,5),{css:['Choose left, centre or right','Colour the page background'],html:['Colour and centre text']});
+});

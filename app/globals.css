@@ -2410,3 +2410,30 @@ html[data-theme] .reference-workspace>.layout-reference{container-type:inline-si
 .layout-reference-body>.layout-preview{margin-top:0}
 html[data-theme] .layout-preview>.browser-page-preview{height:200px;min-height:200px}
 .layout-reference .example-syntax-code{font-size:13px}
+/* Keep the HTML connection visible beside each stylesheet example. */
+.stylesheet-file-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-width:0;align-items:start}
+html[data-theme] .stylesheet-file{min-width:0;background:var(--app-raised);color:var(--app-text);border:0;border-radius:8px;overflow:hidden}
+.stylesheet-file>header{display:flex;align-items:center;justify-content:space-between;min-height:44px;padding:0 8px;font:650 12px var(--mono)}
+.stylesheet-file>pre{margin:0;padding:4px 8px 10px;white-space:pre-wrap;overflow-wrap:anywhere;font:600 13px/20px var(--mono)}
+.stylesheet-file>pre>code{font:inherit;white-space:inherit}
+.stylesheet-file>p{margin:0;padding:0 8px 10px;color:var(--app-muted);font:12px/1.45 var(--sans)}
+.stylesheet-file>p code{font:inherit;color:var(--app-accent)}
+.stylesheet-file .copy-code-control{position:static;margin:0;flex:none}
+.stylesheet-file .copy-code-button{width:44px;min-width:44px;height:44px;min-height:44px}
+.css-editor-companion{flex:none;padding:0 8px 8px;max-height:180px;overflow:auto}
+.css-editor-companion .stylesheet-companion{display:grid;grid-template-columns:100px minmax(0,1fr);align-items:start}
+.css-editor-companion .stylesheet-companion>pre{padding-top:8px}
+.css-editor-companion .stylesheet-companion>p{grid-column:1/-1}
+html[data-theme] .reference-workspace>.layout-reference{overflow-y:auto}
+.layout-reference .layout-reference-body{flex:none;overflow:visible}
+.layout-reference[data-layout-kind="alignment"] .layout-alignment-control,
+.layout-reference[data-layout-kind="alignment"] .layout-option-group[aria-label="Text colour"]{grid-column:auto}
+html[data-theme] .layout-reference[data-layout-kind="alignment"] .browser-page-preview{height:170px;min-height:170px}
+html[data-theme] .layout-reference[data-layout-kind="combined-styles"] .browser-page-preview{height:140px;min-height:140px}
+html[data-theme] .layout-reference[data-layout-kind="positioning"] .browser-page-preview{height:220px;min-height:220px}
+@media(max-width:650px){.stylesheet-file-pair{grid-template-columns:minmax(0,1fr)}.css-editor-companion .stylesheet-companion{grid-template-columns:minmax(0,1fr)}.css-editor-companion{max-height:170px}}
+html[data-theme] .stylesheet-file>pre>code{display:block;background:transparent;border:0;box-shadow:none}
+@media(max-height:650px){
+ html[data-theme] .workspace:not(.editor-expanded):has(.css-editor-companion)>.console-panel.live-web-panel{flex:0 0 150px;min-height:150px;max-height:35%}
+ .workspace:has(.css-editor-companion) .editor-body{min-height:80px}
+}

@@ -12,7 +12,7 @@ test('alignment, positioning and combined styles follow their prerequisites in b
  for(const language of ['html','css']){
   const course=lessons[language];
   const alignment=course.findIndex(l=>l.referenceKind==='alignment');
-  assert.equal(language==='html'?course[alignment-1].referenceKind:course[alignment-1].title,language==='html'?'named-colours':'Colour and centre text');
+  assert.equal(language==='html'?course[alignment-1].referenceKind:course[alignment-1].title,language==='html'?'named-colours':'Colour the page background');
   const position=course.findIndex(l=>l.referenceKind==='positioning');
   assert.equal(position,alignment+1,'Precise positioning comes immediately after alignment');
   assert.equal(course.at(-1).referenceKind,'combined-styles','Combining styles is the final recap');
@@ -29,4 +29,18 @@ test('the final recap combines exactly three properties inside one style attribu
  for(const value of [example.html,example.css])assert.doesNotMatch(value,/<div|position:|top:|left:|font-size:|height:|margin:|width:/,'Recap contains only colour, font and alignment');
  assert.equal((example.css.match(/;/g)??[]).length,3);
  assert.equal(example.setupCss,'');assert.doesNotMatch(example.companion,/style=/);
+});
+
+
+test('CSS has one combined colour-and-alignment lesson with a matching heading',()=>{
+ assert.equal(lessons.css.length,8);
+ assert.equal(lessons.css.some(lesson=>lesson.title==='Colour and centre text'),false);
+ for(const language of ['html','css']){
+  const lesson=lessons[language].find(item=>item.referenceKind==='alignment');
+  assert.match(lesson.answer,language==='html'?/<h1\b/:/^h1\s*\{/);
+  assert.match(lesson.answer,/color: red;/);
+  assert.match(lesson.answer,/text-align: center;/);
+  assert.match(lesson.explanation,/h1/);
+  assert.match(lesson.explanation,/paragraph|<p>/);
+ }
 });
