@@ -46,7 +46,7 @@ try{
   const html=await copy('Copy matching HTML file code');assert.match(html,/<link rel="stylesheet" href="styles.css">/);assert.match(html,/<h1>This text is aligned right\.<\/h1>/);assert.doesNotMatch(html,/style=/);
   const css=await copy('Copy layout example code');await verifyFiles(html,css,'h1',{align:'right',colour:'rgb(0, 0, 255)'});await compact('alignment');
   assert.equal(await page.locator('.drawer-lessons .topic-lesson-button').filter({hasText:'Colour and centre text'}).count(),0,'Styling is merged into alignment');
-  assert.equal(await page.locator('.drawer-lessons .topic-lesson-button').count(),8);
+  assert.equal(await page.locator('.drawer-lessons .topic-lesson-button').count(),lessons.css.length);
   if(theme==='dark')await page.screenshot({path:`/tmp/linked-css-alignment-${width}.png`});
   await choose('positioning','css');await setRange('Distance from top',75);await setRange('Distance from left',80);await page.getByRole('button',{name:'20px',exact:true}).click();
   const positioned=await view();assert.equal(positioned.top,75);assert.equal(positioned.left,80);assert.equal(positioned.size,'20px');assert.match(await code(),/margin: 0/);await compact('positioning');

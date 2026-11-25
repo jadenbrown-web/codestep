@@ -28,6 +28,7 @@ import FontReference from "./FontReference";
 import CssVisualReference, { WEB_COLOURS } from "./CssVisualReference";
 import TextColourReference from "./TextColourReference";
 import LayoutReference, { layoutExample, type LayoutOptions, type LayoutKind } from "./LayoutReference";
+import PaddingReference,{paddingExample,defaultPadding,type PaddingOptions} from "./PaddingReference";
 import CodeLineNumbers from "./CodeLineNumbers";
 import { fitEditorCode } from "./editor-fit";
 import { explanationTokens } from "./explanation-tokens";
@@ -78,7 +79,7 @@ type Lesson = {
   loopOptions?: LoopOptions;
   clockTarget?: ClockTarget;
   idLesson?: "html" | "css";
-  referenceKind?: "text" | "fonts" | "pages" | "css" | "colours" | "named-colours" | "comparisons" | "alignment" | "positioning" | "combined-styles";
+  referenceKind?: "text" | "fonts" | "pages" | "css" | "colours" | "named-colours" | "comparisons" | "alignment" | "padding" | "positioning" | "combined-styles";
 };
 
 const lessons: Record<Language, Lesson[]> = {
@@ -2116,7 +2117,67 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "09 · Positioning",
+      "eyebrow": "09 · Padding",
+      "title": "Add space inside elements",
+      "explanation": "Padding adds space inside an element, between its text and its edges. Start with padding: 20px to give all four sides the same space. Choose individual sides to change padding-top, padding-right, padding-bottom and padding-left independently. Padding changes inside spacing; margin changes outside spacing. Padding-right adds room after the content, while text-align: right aligns the text. Both paragraphs use the same padding settings. The green background and rounded corners make their edges visible. In HTML, these CSS declarations go inside each paragraph’s style attribute. Width: fit-content lets the green box hug the text so padding on every edge is visible; padding also works without it.",
+      "note": "<!-- Explore space inside paragraphs -->",
+      "prompt": "Move the all-sides slider, then choose individual sides to compare the space around the text.",
+      "answer": "<p style=\"width: fit-content; padding: 20px; background-color: #73AD21; border-radius: 5px; color: #111;\">Welcome to my website</p>\n<p style=\"width: fit-content; padding: 20px; background-color: #73AD21; border-radius: 5px; color: #111;\">Thank you for visiting</p>",
+      "output": [
+        "Two paragraphs with space inside their edges."
+      ],
+      "referenceOnly": true,
+      "referenceKind": "padding",
+      "parts": [
+        {
+          "code": "p",
+          "name": "Style both paragraphs",
+          "meaning": "Each <p> creates a paragraph. Repeating the same style attribute gives both paragraphs the same padding."
+        },
+        {
+          "code": "padding",
+          "name": "Space inside every edge",
+          "meaning": "Adds space between the paragraph’s content and each of its four edges. The one-value padding shorthand sets top, right, bottom and left to the same selected value."
+        },
+        {
+          "code": "padding-top",
+          "name": "Space above the content",
+          "meaning": "Adds space inside the top edge, above the text. It is not the gap outside the paragraph."
+        },
+        {
+          "code": "padding-right",
+          "name": "Space after the content",
+          "meaning": "Adds space inside the right edge. Increasing padding-right makes more room on the right; it does not align the text to the right. Use text-align for alignment."
+        },
+        {
+          "code": "padding-bottom",
+          "name": "Space below the content",
+          "meaning": "Adds space inside the bottom edge, below the text."
+        },
+        {
+          "code": "padding-left",
+          "name": "Space before the content",
+          "meaning": "Adds space inside the left edge, before the text."
+        },
+        {
+          "code": "padding / margin",
+          "name": "Inside space and outside space",
+          "meaning": "Padding is inside an element, between its content and its edges. Margin is outside the element, between it and nearby elements. These controls change padding, not margin."
+        },
+        {
+          "code": "background-color / border-radius",
+          "name": "Make the padding visible",
+          "meaning": "The green background shows the paragraph’s padded area. The sample’s 5px border-radius rounds its corners. These supporting styles help you see the edges; padding itself controls the space."
+        },
+        {
+          "code": "width: fit-content",
+          "name": "See padding on every edge",
+          "meaning": "Lets the example box hug its text so changing left or right padding visibly grows that edge. This supports the demonstration; padding also works on full-width elements."
+        }
+      ]
+    },
+    {
+      "eyebrow": "10 · Positioning",
       "title": "Position text precisely",
       "explanation": "Use position: absolute with top and left to choose coordinates from the page viewport when there is no positioned ancestor. This example puts the paragraph directly in the body and sets margin: 0, so its default spacing does not shift the visible text. Adjust the text size independently. If you later put it inside a positioned ancestor, the offsets are measured from that ancestor instead.",
       "note": "<!-- Explore text layout -->",
@@ -2156,7 +2217,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "10 · Links",
+      "eyebrow": "11 · Links",
       "title": "Open another page",
       "mediaPreview": "link",
       "explanation": "The a element creates a link. Its href attribute stores the destination, while the text between the tags is what the visitor clicks.",
@@ -2180,7 +2241,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "11 · Text elements",
+      "eyebrow": "12 · Text elements",
       "title": "Explore HTML text elements",
       "explanation": "This is a reference page rather than a quiz. Compare headings, paragraphs, text-formatting elements, inline colour and alignment styles, and a link to another page.",
       "note": "<!-- A visual guide to HTML text elements -->",
@@ -2193,7 +2254,7 @@ const lessons: Record<Language, Lesson[]> = {
       "referenceKind": "text"
     },
     {
-      "eyebrow": "12 · Fonts",
+      "eyebrow": "13 · Fonts",
       "title": "Explore HTML fonts",
       "explanation": "Use font-family inside the style attribute to choose how text looks. Each example shows the HTML and its result. A named font must be available on your device; otherwise the browser uses a fallback.",
       "note": "<!-- Choose a font for a paragraph -->",
@@ -2218,7 +2279,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "13 · JavaScript in HTML",
+      "eyebrow": "14 · JavaScript in HTML",
       "title": "Show the current date and time",
       "explanation": "The script element lets an HTML page run JavaScript. new Date() creates the current date and time, and console.log displays it in the browser's developer console.",
       "note": "<!-- Run JavaScript from inside the HTML page -->",
@@ -2251,7 +2312,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "14 · Multiple pages",
+      "eyebrow": "15 · Multiple pages",
       "title": "Link two HTML pages",
       "explanation": "This is a two-file reference rather than a quiz. When both files are in the same folder, each href can use the other file's name as a relative path.",
       "note": "<!-- Link index.html and page2.html in both directions -->",
@@ -2264,7 +2325,7 @@ const lessons: Record<Language, Lesson[]> = {
       "referenceKind": "pages"
     },
     {
-      "eyebrow": "15 · Images",
+      "eyebrow": "16 · Images",
       "title": "Place an image on the page",
       "mediaPreview": "image",
       "explanation": "The img element displays an image. src tells the browser which file to load, while alt describes the image if it cannot be seen or loaded. If car.png is beside index.html, its filename is enough for src.",
@@ -2294,7 +2355,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "16 · Videos",
+      "eyebrow": "17 · Videos",
       "title": "Place a video on the page",
       "mediaPreview": "video",
       "explanation": "The video element places a video on the page, much like img places a picture. src tells the browser to load my-video.mp4, and controls adds the built-in play, pause, volume, and timeline controls. Keep the MP4 file beside the HTML file when using only its filename.",
@@ -2319,7 +2380,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "17 · Audio",
+      "eyebrow": "18 · Audio",
       "title": "Place audio on the page",
       "mediaPreview": "audio",
       "explanation": "The audio element works much like video, but it plays sound without a picture area. src tells the browser to load my-audio.mp3, and controls adds play, pause, volume, and timeline controls. Keep the MP3 file beside the HTML file when using only its filename.",
@@ -2339,7 +2400,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "18 · IDs for CSS",
+      "eyebrow": "19 · IDs for CSS",
       "title": "Give one element a unique name",
       "idLesson": "html",
       "browserPreview": true,
@@ -2365,7 +2426,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "19 · Browser-safe repetition",
+      "eyebrow": "20 · Browser-safe repetition",
       "title": "Use a button instead of while (true)",
       "explanation": "while (true) is JavaScript, not HTML. Even inside a script element, an endless loop can freeze the page. A button is safer for an HTML page: each click runs checkAnswer once, then the page waits for another click.",
       "note": "<!-- A click safely runs one answer check at a time -->",
@@ -2422,7 +2483,7 @@ const lessons: Record<Language, Lesson[]> = {
       "outputNote": "Example page result after clicking the button and entering 2. The dialog input and click are actions, not printed output. The page then waits for another click."
     },
     {
-      "eyebrow": "20 · Return values",
+      "eyebrow": "21 · Return values",
       "title": "Send a value back with return",
       "explanation": "return sends a value back to the place where a function was called, and the function ends immediately. Here, getMessage() returns the text Hello. That returned text is then placed in the paragraph.",
       "note": "<!-- Return a value from a function and show it on the page -->",
@@ -2449,7 +2510,7 @@ const lessons: Record<Language, Lesson[]> = {
       "outputNote": "Example visible paragraph text. return itself does not print anything."
     },
     {
-      "eyebrow": "21 · Combined styles",
+      "eyebrow": "22 · Combined styles",
       "title": "Combine styles in one attribute",
       "explanation": "A final recap adds font-family to the colour and alignment settings explored earlier. color, font-family and text-align are CSS properties. In HTML, their declarations go inside one style attribute, with semicolons between them. In a CSS file, put the same declarations inside one rule.",
       "note": "<!-- Explore text layout -->",
@@ -2574,7 +2635,67 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "03 · Positioning",
+      "eyebrow": "03 · Padding",
+      "title": "Add space inside elements",
+      "explanation": "Padding adds space inside an element, between its text and its edges. Start with padding: 20px to give all four sides the same space. Choose individual sides to change padding-top, padding-right, padding-bottom and padding-left independently. Padding changes inside spacing; margin changes outside spacing. Padding-right adds room after the content, while text-align: right aligns the text. Both paragraphs use the same padding settings. The green background and rounded corners make their edges visible. The p rule styles the two <p> elements in index.html. Link styles.css from the HTML head and keep both files in the same folder. Width: fit-content lets the green box hug the text so padding on every edge is visible; padding also works without it.",
+      "note": "/* Explore space inside paragraphs */",
+      "prompt": "Move the all-sides slider, then choose individual sides to compare the space around the text.",
+      "answer": "p {\n  width: fit-content;\n  padding: 20px;\n  background-color: #73AD21;\n  border-radius: 5px;\n  color: #111;\n}",
+      "output": [
+        "Two paragraphs with space inside their edges."
+      ],
+      "referenceOnly": true,
+      "referenceKind": "padding",
+      "parts": [
+        {
+          "code": "p",
+          "name": "Style both paragraphs",
+          "meaning": "The p selector matches every <p> paragraph in this example. The same padding rule applies to both paragraphs."
+        },
+        {
+          "code": "padding",
+          "name": "Space inside every edge",
+          "meaning": "Adds space between the paragraph’s content and each of its four edges. The one-value padding shorthand sets top, right, bottom and left to the same selected value."
+        },
+        {
+          "code": "padding-top",
+          "name": "Space above the content",
+          "meaning": "Adds space inside the top edge, above the text. It is not the gap outside the paragraph."
+        },
+        {
+          "code": "padding-right",
+          "name": "Space after the content",
+          "meaning": "Adds space inside the right edge. Increasing padding-right makes more room on the right; it does not align the text to the right. Use text-align for alignment."
+        },
+        {
+          "code": "padding-bottom",
+          "name": "Space below the content",
+          "meaning": "Adds space inside the bottom edge, below the text."
+        },
+        {
+          "code": "padding-left",
+          "name": "Space before the content",
+          "meaning": "Adds space inside the left edge, before the text."
+        },
+        {
+          "code": "padding / margin",
+          "name": "Inside space and outside space",
+          "meaning": "Padding is inside an element, between its content and its edges. Margin is outside the element, between it and nearby elements. These controls change padding, not margin."
+        },
+        {
+          "code": "background-color / border-radius",
+          "name": "Make the padding visible",
+          "meaning": "The green background shows the paragraph’s padded area. The sample’s 5px border-radius rounds its corners. These supporting styles help you see the edges; padding itself controls the space."
+        },
+        {
+          "code": "width: fit-content",
+          "name": "See padding on every edge",
+          "meaning": "Lets the example box hug its text so changing left or right padding visibly grows that edge. This supports the demonstration; padding also works on full-width elements."
+        }
+      ]
+    },
+    {
+      "eyebrow": "04 · Positioning",
       "title": "Position text precisely",
       "explanation": "Use position: absolute with top and left to choose coordinates from the page viewport when there is no positioned ancestor. This example puts the paragraph directly in the body and sets margin: 0, so its default spacing does not shift the visible text. Adjust the text size independently. If you later put it inside a positioned ancestor, the offsets are measured from that ancestor instead.",
       "note": "/* Explore text layout */",
@@ -2614,7 +2735,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "04 · ID selectors",
+      "eyebrow": "05 · ID selectors",
       "title": "Style one unique element",
       "idLesson": "css",
       "browserPreview": true,
@@ -2634,7 +2755,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "05 · Font families",
+      "eyebrow": "06 · Font families",
       "title": "Compare website fonts",
       "explanation": "This is a visual reference rather than a quiz. A browser uses the first available font in a font-family list, then tries each fallback. Named fonts are not guaranteed on every device, so finish every stack with a generic family.",
       "note": "/* Compare common fonts and safe fallbacks */",
@@ -2647,7 +2768,7 @@ const lessons: Record<Language, Lesson[]> = {
       "referenceKind": "fonts"
     },
     {
-      "eyebrow": "06 · Borders",
+      "eyebrow": "07 · Borders",
       "title": "Explore CSS borders",
       "explanation": "Compare border styles and edges. The border rule sets the width, line style and colour. border-radius rounds the corners.",
       "note": "/* Choose a border style */",
@@ -2672,7 +2793,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "07 · Hex colours",
+      "eyebrow": "08 · Hex colours",
       "title": "Explore hex colours",
       "explanation": "Choose a colour using a six-digit hex value. The first pair sets red, the next green, and the last blue. Put it after color: to colour text or background-color: to colour the background.",
       "note": "/* Choose a hex colour */",
@@ -2702,7 +2823,7 @@ const lessons: Record<Language, Lesson[]> = {
       ]
     },
     {
-      "eyebrow": "08 · Combined styles",
+      "eyebrow": "09 · Combined styles",
       "title": "Combine styles in one rule",
       "explanation": "A final recap adds font-family to the colour and alignment settings explored earlier. color, font-family and text-align are CSS properties. In HTML, their declarations go inside one style attribute, with semicolons between them. In a CSS file, put the same declarations inside one rule.",
       "note": "/* Explore text layout */",
@@ -4638,7 +4759,7 @@ function HighlightedCode({ code, language, caretIndex, fullCode, indentationDots
     else if (/^(style|rel|href|src|alt|controls|id|lang|charset)$/.test(text)) kind = "attribute";
     else if (/^(background-color|color|text-align|font-family|border-radius|border-bottom|border-left|border)$/.test(text)) kind = "api";
     else if (/^(body|p)$/.test(text)) kind = "keyword";
-    else if ((language === "css" && /^(sans-serif|serif|monospace|cursive|fantasy|system-ui|absolute|relative|static|fixed|sticky|justify)$/.test(text)) || /^(solid|dotted|dashed|double|none|center|left|right|lightblue|red|green|blue|tomato|#[0-9a-fA-F]+)$/.test(text)) kind = "string";
+    else if ((language === "css" && /^(sans-serif|serif|monospace|cursive|fantasy|system-ui|absolute|relative|static|fixed|sticky|justify|fit-content)$/.test(text)) || /^(solid|dotted|dashed|double|none|center|left|right|lightblue|red|green|blue|tomato|#[0-9a-fA-F]+)$/.test(text)) kind = "string";
     else if (/^#[A-Za-z_]/.test(text)) kind = "function-name";
     else if (/^\d+(?:px)?$/.test(text)) kind = "number";
     else if ((language === "python" && text === "__init__") || /^(WriteLine|ReadLine|log)$/.test(text)) kind = "function-name";
@@ -5085,6 +5206,7 @@ export default function Home() {
   const idDrafts = useRef<Partial<Record<"html" | "css", { code: string; accepted: boolean }>>>({});
   const [textColour, setTextColour] = useState("Red");
   const textColourTag = "p";
+  const [paddingOptions,setPaddingOptions]=useState<PaddingOptions>(defaultPadding);
   const [layoutOptions, setLayoutOptions] = useState<LayoutOptions>({align:"center",top:50,left:20,fontSize:12});
   const [inputRuntime, setInputRuntime] = useState<InputRuntime>("browser");
   const baseCurrent = language ? lessons[language][index] : null;
@@ -5094,6 +5216,7 @@ export default function Home() {
     if(baseCurrent?.displayCurrentTime)return applyTimeZone(baseCurrent,language!,timeZone);
     if(baseCurrent?.comparisonExample)return {...baseCurrent,...comparisonExample(language!,comparisonCase)};
     if(baseCurrent?.clockExample)return applyClockTarget(baseCurrent,clockTarget);
+    if(baseCurrent?.referenceKind === "padding"){const example=paddingExample(paddingOptions);return {...baseCurrent,answer:example[language === "css"?"css":"html"]};}
     if (baseCurrent && ["alignment", "positioning", "combined-styles"].includes(baseCurrent.referenceKind ?? "")) {
       const example = layoutExample(baseCurrent.referenceKind as LayoutKind, layoutOptions);
       return { ...baseCurrent, answer: example[language === "css" ? "css" : "html"], parts: baseCurrent.parts?.map(part => ({ ...part,
@@ -5113,7 +5236,7 @@ export default function Home() {
       ] };
     }
     return baseCurrent && language === "javascript" && baseCurrent.compareNode && inputRuntime === "browser" ? { ...baseCurrent, ...browserInputPatch() } : baseCurrent;
-  }, [baseCurrent, language, inputRuntime, textColour, textColourTag, layoutOptions, clockTarget, comparisonCase, timeZone, loopOptions]);
+  }, [baseCurrent, language, inputRuntime, textColour, textColourTag, layoutOptions, paddingOptions, clockTarget, comparisonCase, timeZone, loopOptions]);
   const pinnedTopics = language ? (pinnedByLanguage[language] ?? []).slice(0, pinLimit) : [];
   const visibleLessons = language ? filterTopicLessons(lessons[language], null) : [];
   const openPinnedTopic = (topic: string) => {
@@ -5559,7 +5682,7 @@ export default function Home() {
             </div>
             <LinkedPagesPreview />
             <button className="reference-next" onClick={nextLesson}>Continue to images →</button>
-          </div> : ["alignment", "positioning", "combined-styles"].includes(current!.referenceKind ?? "") ? <LayoutReference kind={current!.referenceKind as LayoutKind} language={language as "html" | "css"} options={layoutOptions} onChange={setLayoutOptions} nextLabel={index === lessons[language].length - 1 ? `Finish ${language.toUpperCase()} path →` : "Continue to the next lesson →"} onAlternate={() => openReferenceLesson(language === "html" ? "css" : "html", current!.referenceKind!)} onNext={nextLesson} actions={lessonActions} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax} />} /> : current!.referenceKind === "named-colours" ? <TextColourReference colourName={textColour} onColourChange={setTextColour} onOpenHex={() => openReferenceLesson("css", "colours")} onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} /> : (current!.referenceKind === "css" || current!.referenceKind === "colours") ? <CssVisualReference colourName={textColour} onColourChange={setTextColour} onOpenTextColour={() => openReferenceLesson("html", "named-colours")} kind={current!.referenceKind === "colours" ? "colours" : "borders"} onNext={nextLesson} actions={lessonActions} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax ?? (current!.referenceKind === "colours" ? "html" : "css")} />} /> : <HtmlTextReference onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} />}</> : <>
+          </div> : current!.referenceKind === "padding" ? <PaddingReference language={language as "html"|"css"} options={paddingOptions} onChange={setPaddingOptions} onAlternate={()=>openReferenceLesson("css","padding")} onNext={nextLesson} actions={lessonActions} renderCode={(value,syntax)=><HighlightedCode code={value} language={syntax}/>} /> : ["alignment", "positioning", "combined-styles"].includes(current!.referenceKind ?? "") ? <LayoutReference kind={current!.referenceKind as LayoutKind} language={language as "html" | "css"} options={layoutOptions} onChange={setLayoutOptions} nextLabel={index === lessons[language].length - 1 ? `Finish ${language.toUpperCase()} path →` : "Continue to the next lesson →"} onAlternate={() => openReferenceLesson(language === "html" ? "css" : "html", current!.referenceKind!)} onNext={nextLesson} actions={lessonActions} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax} />} /> : current!.referenceKind === "named-colours" ? <TextColourReference colourName={textColour} onColourChange={setTextColour} onOpenHex={() => openReferenceLesson("css", "colours")} onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} /> : (current!.referenceKind === "css" || current!.referenceKind === "colours") ? <CssVisualReference colourName={textColour} onColourChange={setTextColour} onOpenTextColour={() => openReferenceLesson("html", "named-colours")} kind={current!.referenceKind === "colours" ? "colours" : "borders"} onNext={nextLesson} actions={lessonActions} renderCode={(value, syntax) => <HighlightedCode code={value} language={syntax ?? (current!.referenceKind === "colours" ? "html" : "css")} />} /> : <HtmlTextReference onNext={nextLesson} actions={lessonActions} renderCode={value => <HighlightedCode code={value} language="html" />} />}</> : <>
           <div className="editor-panel">
             <div className="panel-bar"><div className="file-tab" data-topic-tone={lessonTone(current!)} title={current!.fileName || challengeFile(language)}><span className="editor-file-name">{current!.fileName || challengeFile(language)}</span></div><div className="panel-actions"><div className="desktop-pane-actions">{lessonActions}</div><span className="mobile-editor-copy"><CopyCodeButton iconOnly code={lessonExample(current!, language, showComments)} label="full lesson example for VS Code" /></span><button className="editor-expand-button" aria-label={editorExpanded ? "Restore editor" : "Expand editor"} title={editorExpanded ? "Restore editor" : "Expand editor"} aria-pressed={editorExpanded} onClick={() => setEditorExpanded(expanded => !expanded)}><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{editorExpanded ? <path d="M8 3v5H3m13-5v5h5M3 16h5v5m13-5h-5v5"/> : <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>}</svg></button><button className="editor-reset-button" onClick={() => changeBlockCode(commentPrefix + (current!.starter || ""))} title="Reset code" aria-label="Reset code"><svg className="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></svg><span className="editor-action-label">Reset</span></button></div></div>
             {language === "css" && <div className="css-editor-companion"><StylesheetCompanion html={current!.idLesson === "css" ? linkedIdHtml : ""} renderCode={(value,syntax)=><HighlightedCode code={value} language={syntax}/>} /></div>}

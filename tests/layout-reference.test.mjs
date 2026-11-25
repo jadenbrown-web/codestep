@@ -8,13 +8,15 @@ const module={exports:{}};new Function('require','module','exports',bundle.outpu
 const {layoutExample}=module.exports;
 const source=fs.readFileSync('app/page.tsx','utf8'),start=source.indexOf('{',source.indexOf('const lessons:'));
 const lessons=JSON.parse(source.slice(start,source.indexOf('\n};',start)+2));
-test('alignment, positioning and combined styles follow their prerequisites in both courses',()=>{
+test('alignment, padding, positioning and combined styles follow their prerequisites in both courses',()=>{
  for(const language of ['html','css']){
   const course=lessons[language];
   const alignment=course.findIndex(l=>l.referenceKind==='alignment');
   assert.equal(language==='html'?course[alignment-1].referenceKind:course[alignment-1].title,language==='html'?'named-colours':'Colour the page background');
+  const padding=course.findIndex(l=>l.referenceKind==='padding');
+  assert.equal(padding,alignment+1,'Inside spacing follows text alignment');
   const position=course.findIndex(l=>l.referenceKind==='positioning');
-  assert.equal(position,alignment+1,'Precise positioning comes immediately after alignment');
+  assert.equal(position,padding+1,'Precise positioning follows inside spacing');
   assert.equal(course.at(-1).referenceKind,'combined-styles','Combining styles is the final recap');
   assert.ok(course.every((lesson,index)=>lesson.eyebrow.startsWith(String(index+1).padStart(2,'0'))));
  }
@@ -33,7 +35,7 @@ test('the final recap combines exactly three properties inside one style attribu
 
 
 test('CSS has one combined colour-and-alignment lesson with a matching heading',()=>{
- assert.equal(lessons.css.length,8);
+ assert.equal(lessons.css.length,9);
  assert.equal(lessons.css.some(lesson=>lesson.title==='Colour and centre text'),false);
  for(const language of ['html','css']){
   const lesson=lessons[language].find(item=>item.referenceKind==='alignment');
