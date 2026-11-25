@@ -45,8 +45,9 @@ try{
   await page.locator('.course-card.css-card').click();
   await page.locator('.drawer-lessons .topic-lesson-button').filter({hasText:'Position text precisely'}).click();
   await page.locator('.layout-reference').waitFor();
-  await readable(page.locator('.font-example-heading>b,.colour-lesson-link'),`${palette}/${theme} reference heading`);
-  assert.equal(await page.locator('.colour-lesson-link').evaluate(e=>getComputedStyle(e).borderTopWidth),'0px');
+  await readable(page.locator('.font-example-heading>b,.stylesheet-file>header>b'),`${palette}/${theme} reference heading`);
+  assert.equal(await page.locator('.stylesheet-file-pair .stylesheet-file').count(),2,'CSS setup is shown as two files');
+  for(const file of await page.locator('.stylesheet-file-pair .stylesheet-file').all())assert.equal(await file.evaluate(e=>getComputedStyle(e).borderTopWidth),'0px');
   if(palette==='plum'&&theme==='dark')await page.screenshot({path:'/tmp/audit-reference-plum.png'});
   assert.deepEqual(errors,[]);console.log(`PASS ${palette}/${theme}: all six home demos readable, themed drag ghost and drop, successful block placement`);await page.close();
  }
