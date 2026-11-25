@@ -2421,7 +2421,7 @@ html[data-theme] .stylesheet-file{min-width:0;background:var(--app-raised);color
 .stylesheet-file .copy-code-control{position:static;margin:0;flex:none}
 .stylesheet-file .copy-code-button{width:44px;min-width:44px;height:44px;min-height:44px}
 .css-editor-companion{flex:none;padding:0 8px 8px;max-height:180px;overflow:auto}
-.css-editor-companion .stylesheet-companion{display:grid;grid-template-columns:100px minmax(0,1fr);align-items:start}
+.css-editor-companion .stylesheet-companion{display:grid;grid-template-columns:max-content minmax(0,1fr);align-items:start}
 .css-editor-companion .stylesheet-companion>pre{padding-top:8px}
 .css-editor-companion .stylesheet-companion>p{grid-column:1/-1}
 html[data-theme] .reference-workspace>.layout-reference{overflow-y:auto}

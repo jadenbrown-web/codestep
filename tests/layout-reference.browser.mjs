@@ -57,6 +57,8 @@ try{
   assert.equal(await page.getByRole('button',{name:'Finish CSS path →',exact:true}).count(),1);
   if(theme==='dark')await page.screenshot({path:`/tmp/linked-css-recap-${width}.png`});
   await course('css');if(width<=850)await page.getByRole('button',{name:'Practice',exact:true}).click();
+  const htmlCopy=page.getByRole('button',{name:'Copy matching HTML file code',exact:true}),header=page.locator('.css-editor-companion .stylesheet-file>header');
+  const copyBox=await htmlCopy.boundingBox(),headBox=await header.boundingBox();assert.ok(copyBox.x>=headBox.x&&copyBox.x+copyBox.width<=headBox.x+headBox.width+1,'The copy target fits inside its file header');
   const backgroundHtml=await copy('Copy matching HTML file code');assert.equal(backgroundHtml,'<link rel="stylesheet" href="styles.css">');
   const editor=page.getByRole('textbox',{name:'Code editor',exact:true});assert.ok((await page.locator('.editor-body').boundingBox()).height>=80,'The HTML helper never squeezes out the CSS editor');await editor.fill(lessons.css[0].answer);await page.getByRole('button',{name:'Check code',exact:true}).click();await page.locator('.feedback.correct').waitFor();
   const body=page.frameLocator('.live-web-panel iframe').locator('body');assert.equal(await body.evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(173, 216, 230)');assert.equal(await body.innerText(),'');
