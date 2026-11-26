@@ -2,7 +2,8 @@
 import React from 'react';
 import BrowserResultPreview from './BrowserResultPreview';
 import CopyCodeButton from './CopyCodeButton';
-import StylesheetCompanion,{linkedStylesheetHtml} from './StylesheetCompanion';
+import {linkedStylesheetHtml} from './StylesheetCompanion';
+import StylesheetExample from './StylesheetExample';
 
 export type LayoutKind='alignment'|'positioning'|'combined-styles';
 export type LayoutOptions={align:'left'|'center'|'right';top:number;left:number;fontSize:number;colour?:string;fontFamily?:string};
@@ -36,10 +37,7 @@ export default function LayoutReference({kind,language,options,onChange,onAltern
  return <section className="html-text-reference layout-reference" aria-label={`${titles[kind]} examples`} data-layout-kind={kind}>
   <div className="font-featured-example">
    <div className="font-example-heading"><b>Example · {titles[kind]}</b><div className="desktop-pane-actions">{actions}</div></div>
-   {language==='html'?<><button className="colour-lesson-link" onClick={onAlternate}>See matching CSS →</button><div className="visual-example-code css-featured-code"><code className="example-syntax-code layout-primary-code" tabIndex={0} aria-label="Lesson example code">{renderCode(code,language)}</code><CopyCodeButton iconOnly code={code} label="layout example" /></div></>:<div className="stylesheet-file-pair">
-    <article className="stylesheet-file"><header><b>styles.css</b><CopyCodeButton iconOnly code={code} label="layout example"/></header><pre><code className="example-syntax-code layout-primary-code" tabIndex={0} aria-label="Lesson example code">{renderCode(code,'css')}</code></pre></article>
-    <StylesheetCompanion html={example.companion} selector={kind==='alignment'?'h1':'p'} renderCode={renderCode}/>
-   </div>}
+   {language==='html'?<><button className="colour-lesson-link" onClick={onAlternate}>See matching CSS →</button><div className="visual-example-code css-featured-code"><code className="example-syntax-code layout-primary-code" tabIndex={0} aria-label="Lesson example code">{renderCode(code,language)}</code><CopyCodeButton iconOnly code={code} label="layout example" /></div></>:<StylesheetExample css={code} html={example.companion} copyLabel="layout example" primaryClassName="layout-primary-code" onOpenHtml={onAlternate} renderCode={renderCode}/>}
   </div>
   <div className="layout-reference-body">
    <div className="layout-controls">

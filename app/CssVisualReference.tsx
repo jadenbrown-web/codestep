@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import CopyCodeButton from './CopyCodeButton';
+import StylesheetExample from './StylesheetExample';
 
 export const WEB_COLOURS = [
  ['Red','#FF0000'],['Green','#008000'],['Blue','#0000FF'],['Yellow','#FFFF00'],
@@ -21,12 +21,12 @@ export default function CssVisualReference({kind,onNext,actions,renderCode,colou
  const [selected,setSelected]=useState(BORDER_EXAMPLES[5]);
  const [localColour,setLocalColour]=useState(colourName);
  const [name,hex]=WEB_COLOURS.find(([name])=>name===(onColourChange?colourName:localColour))??WEB_COLOURS[0];
- const example=colours?`<p style="color: ${hex};">${name} text</p>`:`p.notice {\n  ${selected.css.replace('; ', ';\n  ')}\n}`;
- return <section className={`html-text-reference css-visual-reference ${colours?'colour-reference':'border-reference'}`} aria-label={colours?'Hex colour examples':'Border examples'}>
+ const example=colours?`p {\n  color: ${hex};\n}`:`p.notice {\n  ${selected.css.replace('; ', ';\n  ')}\n}`;
+ return <section className={`html-text-reference css-visual-reference linked-files-reference ${colours?'colour-reference':'border-reference'}`} aria-label={colours?'Hex colour examples':'Border examples'}>
   <div className="font-featured-example">
    <div className="font-example-heading"><b>{colours?`Example · ${name} text`:`Example · ${selected.name}`}</b><div className="desktop-pane-actions">{actions}</div></div>
-   <div className="visual-example-code css-featured-code"><code className="example-syntax-code">{renderCode ? renderCode(example) : example}</code><CopyCodeButton iconOnly code={example} label={colours?`${name.toLowerCase()} HTML tag`:'border example'} /></div>
-   {colours?<>{onOpenTextColour&&<button className="colour-lesson-link" onClick={onOpenTextColour}>See {name} as a named colour in HTML →</button>}</>:<span>Use <code>{renderCode ? renderCode('<p class="notice">Border text</p>',"html") : '<p class="notice">Border text</p>'}</code> in your HTML. Change the border style to try the examples below.</span>}
+   <StylesheetExample css={example} html={colours?`<p>${name} text</p>`:'<p class="notice">Border text</p>'} copyLabel={colours?'hex colour example':'border example'} onOpenHtml={colours?onOpenTextColour:undefined} renderCode={renderCode}/>
+   {!colours&&<span>Change the border style below. The rule styles the paragraph with <code className="example-syntax-code">{renderCode ? renderCode('class="notice"','html') : 'class="notice"'}</code>.</span>}
   </div>
   <div className={`html-tag-grid ${colours?'colour-example-grid':'border-example-grid'}`}>
    {colours?WEB_COLOURS.map(([name,hex])=><article className="html-tag-example colour-example" data-colour={name} data-example={hex===(WEB_COLOURS.find(([n])=>n===(onColourChange?colourName:localColour))?.[1])||undefined} key={name}>

@@ -71,8 +71,8 @@ try {
   assert.equal(style.after,'none','No underline beneath the selected language');
   const copy=page.locator('.comparison-card').last().locator('.copy-code-button');
   await copy.hover();
-  assert.notEqual(await copy.evaluate(el=>getComputedStyle(el).backgroundColor),'rgba(0, 0, 0, 0)','Copy hover uses a filled highlight');
-  assert.equal(await copy.evaluate(el=>getComputedStyle(el).borderRadius),'8px');
+  assert.equal(await copy.evaluate(el=>getComputedStyle(el).backgroundColor),'rgba(0, 0, 0, 0)','Copy hover keeps the icon unboxed');
+  assert.equal(await copy.evaluate(el=>getComputedStyle(el).borderRadius),'0px');
   if(width>850) {
     assert.equal(await active.locator('img').evaluate(el=>getComputedStyle(el).width),'30px');
     const header=await page.locator('.comparison-topbar').boundingBox(),group=await page.locator('.comparison-header-languages').boundingBox();

@@ -10,18 +10,25 @@ const compiled=await build({entryPoints:['app/FontReference.tsx'],bundle:true,pl
 const module={exports:{}};
 new Function('require','module','exports',compiled.outputFiles[0].text)(require,module,module.exports);
 const {default:Component}=module.exports;
-const markup=renderToStaticMarkup(React.createElement(Component,{language:"html",onNext(){},actions:React.createElement("button",{"aria-label":"Settings"},"⚙")}));
+const markupFor=language=>renderToStaticMarkup(React.createElement(Component,{language,onNext(){},onAlternate(){},actions:React.createElement("button",{"aria-label":"Settings"},"⚙")}));
 const css=fs.readFileSync('app/globals.css','utf8');
 const browser=await chromium.launch({headless:true,...(fs.existsSync('/usr/bin/chromium')?{executablePath:'/usr/bin/chromium'}:{})});
 try {
   const page=await browser.newPage();
-  for(const viewport of [{width:1952,height:1000},{width:1440,height:900},{width:1280,height:720},{width:1024,height:600},{width:390,height:844}]) for(const theme of ['light','dark']) {
+  for(const viewport of [{width:1952,height:1000},{width:1440,height:900},{width:1280,height:720},{width:1024,height:600},{width:390,height:844}]) for(const theme of ['light','dark']) for(const language of ['html','css']) {
+    const markup=markupFor(language);
     await page.setViewportSize(viewport);
     await page.setContent(`<html data-theme="${theme}"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${css}</style><body><main class="lesson-shell reference-mode mobile-practice"><header class="app-header lesson-nav"></header><div class="lesson-layout drawer-closed"><aside class="lesson-drawer"></aside><aside class="lesson-copy"></aside><section class="workspace reference-workspace">${markup}</section></div></main></body></html>`);
     assert.equal(await page.locator('[data-font]').count(),20);
     assert.equal(await page.locator('.reference-pane-toolbar').count(),0,'no detached Fonts header');
     assert.equal(await page.locator('.font-example-heading .desktop-pane-actions').count(),1,'controls are inside the example pane');
-    assert.equal(await page.locator('.font-featured-example code').count(),1);
+    assert.equal(await page.locator('.font-featured-example .example-syntax-code').count(),1);
+    if(language==='css'){
+      assert.equal(await page.locator('.stylesheet-file-pair .stylesheet-file').count(),2);
+      assert.deepEqual(await page.locator('.stylesheet-file header>b').allTextContents(),['styles.css','index.html']);
+      assert.match(await page.locator('.companion-html-code').textContent(),/<link rel="stylesheet" href="styles.css">\n<p>Courier New<\/p>/);
+      assert.equal(await page.getByRole('button',{name:'See matching HTML →',exact:true}).count(),1);
+    }else assert.equal(await page.getByRole('button',{name:'See matching CSS →',exact:true}).count(),1);
     assert.equal(await page.locator('[data-font] code').count(),0);
     assert.equal(await page.locator('.font-example-label').count(),20);
     const labelFont=await page.locator('[data-font="Lucida Console"] .font-example-label').evaluate(el=>getComputedStyle(el).fontFamily);
@@ -39,7 +46,7 @@ try {
     assert.deepEqual(clipped,[],`${theme} ${viewport.width}: examples stay readable without clipping`);
     const last=await page.locator('[data-font="system-ui"]').boundingBox();
     if(viewport.height>=900) assert.ok(last.y+last.height<=viewport.height,`${theme}: final example stays on screen`);
-    if(viewport.width===1440&&theme==='light') await page.locator('.html-text-reference').screenshot({path:'/tmp/codestep-fonts-preview.png'});
-    console.log(`PASS ${theme} ${viewport.width}x${viewport.height}: 20 font examples remain readable without clipping`);
+    if(viewport.width===1440&&theme==='light'&&language==='html') await page.locator('.html-text-reference').screenshot({path:'/tmp/codestep-fonts-preview.png'});
+    console.log(`PASS ${language} ${theme} ${viewport.width}x${viewport.height}: 20 font examples remain readable without clipping`);
   }
 }finally{await browser.close();}

@@ -5,7 +5,7 @@ import {chromium} from 'playwright';
 const source=fs.readFileSync('app/page.tsx','utf8');
 const actions=source.slice(source.indexOf('  const lessonActions ='),source.indexOf('\n  const desktopHomeControls ='));
 const refStart=source.indexOf('{current!.referenceOnly ? <>');
-const reference=source.slice(refStart+1,source.indexOf(' : <>\n          <div className="editor-panel">',refStart))+' : null';
+const reference=source.slice(refStart+1,source.indexOf(' : <>\n          <PracticeFiles css={language === "css"}>',refStart))+' : null';
 const guideStart=source.indexOf('{(language === "html" || language === "css") && <section className="browser-run-guide"');
 const highlighter=source.slice(source.indexOf('function HighlightedCode('),source.indexOf('\nfunction LearningCode('));
 const guide=source.slice(guideStart,source.indexOf('          {current!.runHint',guideStart));
@@ -50,20 +50,27 @@ try{
     assert.ok(await root.locator('[data-font]').evaluateAll(es=>es.every(el=>el.getBoundingClientRect().height<=84)),'Font cards are compact');
   }
   if(kind!=='pages'){
-   const syntax=await root.locator('.font-featured-example .example-syntax-code').evaluate(el=>({base:getComputedStyle(el).color,colours:[...el.querySelectorAll('span')].map(e=>getComputedStyle(e).color)}));
+   const syntax=await root.locator('.font-featured-example .example-syntax-code').first().evaluate(el=>({base:getComputedStyle(el).color,colours:[...el.querySelectorAll('span')].map(e=>getComputedStyle(e).color)}));
    assert.ok(syntax.colours.some(c=>c!==syntax.base),`${language}/${kind}: example has syntax colours`);
   }
   assert.equal(await root.locator('.lesson-actions .copy-code-button').count(),0,'no example copy control among navigation icons');
   if(language==='css'){
-   const codeRow=root.locator('.css-featured-code');
-   const copy=codeRow.locator('.copy-code-button');
-   await copy.hover();
-   const state=await copy.evaluate(el=>{const s=getComputedStyle(el);return {background:s.backgroundColor,radius:s.borderRadius};});
-   assert.notEqual(state.background,'rgba(0, 0, 0, 0)','CSS copy hover has visible fill');
-   assert.equal(state.radius,'8px');
-
+   const files=root.locator('.stylesheet-file-pair .stylesheet-file');
+   assert.equal(await files.count(),2,'Every stylesheet reference has a CSS and HTML file');
+   assert.deepEqual(await files.locator('header>b').allTextContents(),['styles.css','index.html']);
+   const boxes=await files.evaluateAll(es=>es.map(el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,right:r.right,bottom:r.bottom};}));
+   if(width>650)assert.ok(boxes[0].right<=boxes[1].x,'CSS stays on the left and matching HTML on the right');
+   else assert.ok(boxes[0].bottom<=boxes[1].y,'Files stack in CSS then HTML order on phones');
+   for(const file of await files.all()){
+    const copy=file.getByRole('button',{name:/^Copy /});
+    await copy.hover();
+    const state=await copy.evaluate(el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect(),header=el.closest('header').getBoundingClientRect();return {background:s.backgroundColor,border:s.borderTopWidth,shadow:s.boxShadow,width:r.width,height:r.height,fits:r.x>=header.x&&r.right<=header.right+1};});
+    assert.equal(state.background,'rgba(0, 0, 0, 0)','Copy hover stays visually unboxed');
+    assert.equal(state.border,'0px');assert.equal(state.shadow,'none');
+    assert.equal(state.width,44);assert.equal(state.height,44);assert.equal(state.fits,true,'Each copy target fits inside its file header');
+   }
   }
-  const misplaced=await root.locator('.copy-code-button').evaluateAll(es=>es.filter(e=>!e.closest('.visual-example-code,.tag-card-heading,.file-example-code,.file-pair article')).map(e=>e.getAttribute('aria-label')));
+  const misplaced=await root.locator('.copy-code-button').evaluateAll(es=>es.filter(e=>!e.closest('.visual-example-code,.tag-card-heading,.file-example-code,.file-pair article,.stylesheet-file')).map(e=>e.getAttribute('aria-label')));
   assert.deepEqual(misplaced,[],'each copy button is beside the code it copies');
   const offCentre=await root.locator('.copy-code-button').evaluateAll(buttons=>buttons.filter(button=>{
     const svg=button.querySelector('svg');if(!svg)return false;
@@ -73,24 +80,25 @@ try{
   assert.deepEqual(offCentre,[],'Every copy glyph is centred in its highlight');
   if(kind!=='pages'){
    assert.equal(await root.locator('.html-tag-grid .copy-code-button').count(),0,'individual cards only select the main example');
-   const pane=await root.locator('.font-featured-example').boundingBox();
-   const button=await root.locator('.font-featured-example .copy-code-button').boundingBox();
-   assert.ok(Math.abs(button.y-pane.y-(width>850?0:6))<1,'copy is at the main example top edge');
-   assert.ok(Math.abs(pane.x+pane.width-button.x-button.width-(width>850?88:6))<1,'copy is at the main example right edge');
    assert.equal(await root.locator('.font-featured-example').evaluate(el=>getComputedStyle(el).borderBottomWidth),'0px');
    assert.equal(await root.locator('.html-reference-footer').evaluate(el=>getComputedStyle(el).borderTopWidth),'0px');
-   if(width>850){
-    const icons=await root.locator('.font-featured-example .desktop-pane-actions button,.font-featured-example .copy-code-button').evaluateAll(es=>es.filter(e=>e.getBoundingClientRect().width).map(e=>{const b=e.getBoundingClientRect(),i=e.querySelector('svg').getBoundingClientRect();return {x:b.x,width:b.width,y:i.y+i.height/2};}).sort((a,b)=>a.x-b.x));
-    assert.ok(Math.max(...icons.map(i=>i.y))-Math.min(...icons.map(i=>i.y))<1,'All top-right glyphs share a baseline');
-    assert.equal(icons.length,3);
-    assert.ok(Math.abs(icons[1].x-icons[0].x-44)<1,'Copy and mode keep their standard editor slots');
-    assert.ok(Math.abs(icons[2].x-icons[1].x-44)<1,'Settings keeps the far-right slot');
-   }
-
-   const actions=root.locator('.font-example-heading .desktop-pane-actions');
-   if(width>850 && await actions.count()){
-    const box=await actions.boundingBox();
-    assert.ok(button.x+button.width<=box.x+1,'copy and navigation keep separate slots');
+   if(language==='html'){
+    const pane=await root.locator('.font-featured-example').boundingBox();
+    const button=await root.locator('.font-featured-example .copy-code-button').boundingBox();
+    assert.ok(Math.abs(button.y-pane.y-(width>850?0:6))<1,'copy is at the main example top edge');
+    assert.ok(Math.abs(pane.x+pane.width-button.x-button.width-(width>850?88:6))<1,'copy is at the main example right edge');
+    if(width>850){
+     const icons=await root.locator('.font-featured-example .desktop-pane-actions button,.font-featured-example .copy-code-button').evaluateAll(es=>es.filter(e=>e.getBoundingClientRect().width).map(e=>{const b=e.getBoundingClientRect(),i=e.querySelector('svg').getBoundingClientRect();return {x:b.x,width:b.width,y:i.y+i.height/2};}).sort((a,b)=>a.x-b.x));
+     assert.ok(Math.max(...icons.map(i=>i.y))-Math.min(...icons.map(i=>i.y))<1,'All top-right glyphs share a baseline');
+     assert.equal(icons.length,3);
+     assert.ok(Math.abs(icons[1].x-icons[0].x-44)<1,'Copy and mode keep their standard editor slots');
+     assert.ok(Math.abs(icons[2].x-icons[1].x-44)<1,'Settings keeps the far-right slot');
+    }
+    const actions=root.locator('.font-example-heading .desktop-pane-actions');
+    if(width>850 && await actions.count()){
+     const box=await actions.boundingBox();
+     assert.ok(button.x+button.width<=box.x+1,'copy and navigation keep separate slots');
+    }
    }
   }
   if(kind==='css'||kind==='colours'){
@@ -134,15 +142,15 @@ try{
   }else if(kind==='css'){
    const rounded=root.locator('[data-border="Rounded dotted border"] .border-example-sample');
    assert.deepEqual(await rounded.evaluate(e=>{const s=getComputedStyle(e);return [s.borderTopStyle,s.borderTopColor,s.borderRadius,s.backgroundColor];}),['dotted','rgb(0, 0, 255)','12px','rgb(255, 255, 255)']);
-   assert.equal(await root.locator('.css-featured-code>code').evaluate(e=>getComputedStyle(e).backgroundColor),'rgba(0, 0, 0, 0)','Code uses the flat reference surface');
+   assert.equal(await root.locator('.stylesheet-primary-code').evaluate(e=>getComputedStyle(e).backgroundColor),'rgba(0, 0, 0, 0)','Code uses the flat reference surface');
    await page.screenshot({path:`/tmp/flat-border-${width}-${theme}.png`});
    await root.getByRole('button',{name:'Show Solid border code',exact:true}).click();
    await root.getByRole('button',{name:'Copy border example code',exact:true}).click();
    assert.equal(await page.evaluate(()=>window.copied.at(-1)),'p.notice {\n  border: 5px solid red;\n}');
   }else if(kind==='colours'){
    assert.equal(await root.locator('.colour-example-grid .copy-code-button').count(),0);
-   await root.getByRole('button',{name:'Copy red HTML tag code',exact:true}).click();
-   assert.equal(await page.evaluate(()=>window.copied.at(-1)),'<p style="color: #FF0000;">Red text</p>');
+   await root.getByRole('button',{name:'Copy hex colour example code',exact:true}).click();
+   assert.equal(await page.evaluate(()=>window.copied.at(-1)),'p {\n  color: #FF0000;\n}');
   }else if(kind==='pages'){
    assert.equal(await root.locator('.browser-page-preview .browser-preview-navigation').count(),1,'Linked pages use the shared browser frame');
    for(const file of ['index.html','page2.html']){
@@ -151,6 +159,12 @@ try{
     await article.getByRole('button',{name:`Copy ${file} code`,exact:true}).click();
     assert.equal(await page.evaluate(()=>window.copied.at(-1)),code,'copies the complete displayed file');
    }
+  }
+  if(language==='css'){
+   await root.getByRole('button',{name:'Copy matching HTML file code',exact:true}).click();
+   const copied=await page.evaluate(()=>window.copied.at(-1));
+   const paragraph=kind==='fonts'?'<p>Courier New</p>':kind==='css'?'<p class="notice">Border text</p>':'<p>Red text</p>';
+   assert.equal(copied,'<link rel="stylesheet" href="styles.css">\n'+paragraph,'Matching HTML is linked and has no inline overrides');
   }
   console.log(`PASS ${theme} ${width} ${language}/${kind}: integrated heading, direct instructions, aligned actions and exact copied examples`);
  }

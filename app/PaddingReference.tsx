@@ -2,7 +2,8 @@
 import React, {type ReactNode} from 'react';
 import BrowserResultPreview from './BrowserResultPreview';
 import CopyCodeButton from './CopyCodeButton';
-import StylesheetCompanion,{linkedStylesheetHtml} from './StylesheetCompanion';
+import {linkedStylesheetHtml} from './StylesheetCompanion';
+import StylesheetExample from './StylesheetExample';
 
 export type PaddingSide='top'|'right'|'bottom'|'left';
 export type PaddingOptions={mode:'all'|'sides';top:number;right:number;bottom:number;left:number};
@@ -27,7 +28,7 @@ export default function PaddingReference({language,options,onChange,onAlternate,
  const top=options.top,bottom=options.mode==='all'?options.top:options.bottom;
  return <section className="html-text-reference padding-reference" aria-label="Padding examples">
   <div className="font-featured-example"><div className="font-example-heading"><b>Example · Padding</b><div className="desktop-pane-actions">{actions}</div></div>
-   {language==='html'?<><button className="colour-lesson-link" onClick={onAlternate}>See matching CSS →</button><div className="visual-example-code css-featured-code"><code className="example-syntax-code padding-primary-code" tabIndex={0} aria-label="Lesson example code">{renderCode(code,'html')}</code><CopyCodeButton iconOnly code={code} label="padding example"/></div></>:<div className="stylesheet-file-pair"><article className="stylesheet-file"><header><b>styles.css</b><CopyCodeButton iconOnly code={code} label="padding example"/></header><pre><code className="example-syntax-code padding-primary-code" tabIndex={0} aria-label="Lesson example code">{renderCode(code,'css')}</code></pre></article><StylesheetCompanion html={example.companion} selector="p" renderCode={renderCode}/></div>}
+   {language==='html'?<><button className="colour-lesson-link" onClick={onAlternate}>See matching CSS →</button><div className="visual-example-code css-featured-code"><code className="example-syntax-code padding-primary-code" tabIndex={0} aria-label="Lesson example code">{renderCode(code,'html')}</code><CopyCodeButton iconOnly code={code} label="padding example"/></div></>:<StylesheetExample css={code} html={example.companion} copyLabel="padding example" primaryClassName="padding-primary-code" onOpenHtml={onAlternate} renderCode={renderCode}/>}
   </div>
   <div className="padding-reference-body"><div className="padding-mode" role="group" aria-label="Padding sides"><button aria-pressed={options.mode==='all'} onClick={()=>changeAll(options.top)}>All sides</button><button aria-pressed={options.mode==='sides'} onClick={()=>onChange({...options,mode:'sides'})}>Each side</button></div>
    <div className="padding-sliders">{options.mode==='all'?slider('all'):sides.map(slider)}</div>

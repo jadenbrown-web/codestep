@@ -27,11 +27,14 @@ test('border reference has one featured example and six named visual styles',()=
  assert.match(html,/Example · Rounded dotted border/);
  assert.doesNotMatch(html,/hex-note|rgb\(|Try the border quiz/);
 });
-test('hex reference shows accurate named swatches, hex values and an HTML insertion example',()=>{
+test('hex reference shows accurate swatches and matching linked CSS and HTML files',()=>{
  const html=renderToStaticMarkup(React.createElement(Component,{kind:'colours',onNext(){}}));
  assert.equal(WEB_COLOURS.length,20);
  assert.equal((html.match(/data-colour=/g)??[]).length,20);
  for(const [name,hex] of WEB_COLOURS){assert.match(hex,/^#[0-9A-F]{6}$/);assert.ok(html.includes(name));assert.ok(html.includes(hex));}
- assert.ok(html.includes('&lt;p style=&quot;color: #FF0000;&quot;&gt;Red text&lt;/p&gt;'));
- assert.ok(html.includes('Copy red HTML tag code'));
+ assert.ok(html.includes('p {\n  color: #FF0000;\n}'));
+ assert.ok(html.includes('&lt;link rel=&quot;stylesheet&quot; href=&quot;styles.css&quot;&gt;\n&lt;p&gt;Red text&lt;/p&gt;'));
+ assert.ok(html.includes('Copy hex colour example code'));
+ assert.ok(html.includes('Copy matching HTML file code'));
+ assert.doesNotMatch(html,/&lt;p style=/);
 });
