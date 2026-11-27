@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {build} from 'esbuild';
 import {chromium} from 'playwright';
+import {inHtmlFile,openHtmlLesson} from './web-file-helpers.mjs';
 const bundle=await build({stdin:{contents:`import React from 'react';import {createRoot} from 'react-dom/client';import App from './app/page';createRoot(document.getElementById('root')).render(<App/>);`,loader:'tsx',resolveDir:process.cwd()},bundle:true,format:'iife',platform:'browser',write:false,define:{'process.env.NODE_ENV':'"production"'}});
 const browser=await chromium.launch({headless:true,...(fs.existsSync('/usr/bin/chromium')?{executablePath:'/usr/bin/chromium'}:{})});
 try{
@@ -44,7 +45,7 @@ try{
   await activate(page.getByRole('button',{name:'Copy hex colour example code',exact:true}));
   assert.equal(await page.evaluate(()=>window.copiedCode),'p {\n  color: #008000;\n}');
   const css=await page.evaluate(()=>window.copiedCode);
-  await activate(page.getByRole('button',{name:'Copy matching HTML file code',exact:true}));
+  await inHtmlFile(page,width,file=>activate(file.getByRole('button',{name:'Copy matching HTML file code',exact:true})));
   const html=await page.evaluate(()=>window.copiedCode);
   assert.equal(html,'<link rel="stylesheet" href="styles.css">\n<p>Green text</p>');
   const saved=await browser.newPage({viewport:{width,height:700}});
@@ -52,12 +53,12 @@ try{
   await saved.goto('https://saved-colour.test/index.html');
   assert.equal(await saved.locator('p').evaluate(el=>getComputedStyle(el).color),'rgb(0, 128, 0)','Copied file pair renders the chosen colour');
   await saved.close();
-  await activate(page.getByRole('button',{name:'See matching HTML →',exact:true}));
+  await openHtmlLesson(page,width);
   assert.equal(await code(),'<p style="color: green;">This color is green</p>');
   assert.match(await page.locator('.drawer-summary').textContent(),/0 of/,'Lesson links do not mark exercises complete');
   await activate(page.getByRole('button',{name:'See Green as a hex value in CSS →',exact:true}));
   await activate(page.getByRole('button',{name:'Use White hex colour',exact:true}));
-  await activate(page.getByRole('button',{name:'See matching HTML →',exact:true}));
+  await openHtmlLesson(page,width);
   assert.equal(await code(),'<p style="color: white;">This color is white</p>');
   assert.equal(await page.getByRole('button',{name:'Heading <h1>',exact:true}).count(),0);
   assert.equal(await page.locator('.named-text-colour-reference .font-example-label').count(),0);

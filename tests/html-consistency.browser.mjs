@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {build} from 'esbuild';
 import {chromium} from 'playwright';
+import {inHtmlFile} from './web-file-helpers.mjs';
 const source=fs.readFileSync('app/page.tsx','utf8');
 const actions=source.slice(source.indexOf('  const lessonActions ='),source.indexOf('\n  const desktopHomeControls ='));
 const refStart=source.indexOf('{current!.referenceOnly ? <>');
@@ -55,21 +56,20 @@ try{
   }
   assert.equal(await root.locator('.lesson-actions .copy-code-button').count(),0,'no example copy control among navigation icons');
   if(language==='css'){
-   const files=root.locator('.stylesheet-file-pair .stylesheet-file');
-   assert.equal(await files.count(),2,'Every stylesheet reference has a CSS and HTML file');
-   assert.deepEqual(await files.locator('header>b').allTextContents(),['styles.css','index.html']);
-   const boxes=await files.evaluateAll(es=>es.map(el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,right:r.right,bottom:r.bottom};}));
-   if(width>650)assert.ok(boxes[0].right<=boxes[1].x,'CSS stays on the left and matching HTML on the right');
-   else assert.ok(boxes[0].bottom<=boxes[1].y,'Files stack in CSS then HTML order on phones');
-   for(const file of await files.all()){
-    const copy=file.getByRole('button',{name:/^Copy /});
+   const files=root.locator('.stylesheet-file-pair>.stylesheet-file');
+   assert.equal(await files.count(),width<=850?1:2,'Desktop shows both files; phones reserve the pane for CSS');
+   assert.equal(await files.first().locator('header>b').textContent(),'styles.css');
+   if(width>850){const boxes=await files.evaluateAll(es=>es.map(el=>{const r=el.getBoundingClientRect();return {x:r.x,right:r.right};}));assert.ok(boxes[0].right<=boxes[1].x,'CSS stays on the left and matching HTML on the right');}
+   else{assert.equal(await root.locator('.companion-html-code').count(),0,'Phone HTML content is on its own screen');assert.equal(await root.getByRole('button',{name:'View HTML file',exact:true}).count(),1);}
+   const checkCopy=async copy=>{
     await copy.hover();
     const state=await copy.evaluate(el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect(),header=el.closest('header').getBoundingClientRect();return {background:s.backgroundColor,border:s.borderTopWidth,shadow:s.boxShadow,width:r.width,height:r.height,fits:r.x>=header.x&&r.right<=header.right+1};});
-    assert.equal(state.background,'rgba(0, 0, 0, 0)','Copy hover stays visually unboxed');
-    assert.equal(state.border,'0px');assert.equal(state.shadow,'none');
-    assert.equal(state.width,44);assert.equal(state.height,44);assert.equal(state.fits,true,'Each copy target fits inside its file header');
-   }
+    assert.equal(state.background,'rgba(0, 0, 0, 0)','Copy hover stays visually unboxed');assert.equal(state.border,'0px');assert.equal(state.shadow,'none');assert.equal(state.width,44);assert.equal(state.height,44);assert.equal(state.fits,true,'Each copy target fits inside its file header');
+   };
+   await checkCopy(files.first().getByRole('button',{name:/^Copy /}));
+   await inHtmlFile(page,width,async file=>{await checkCopy(file.getByRole('button',{name:'Copy matching HTML file code',exact:true}));assert.match(await file.locator('.companion-html-code').textContent(),/<link rel="stylesheet" href="styles.css">/);});
   }
+
   const misplaced=await root.locator('.copy-code-button').evaluateAll(es=>es.filter(e=>!e.closest('.visual-example-code,.tag-card-heading,.file-example-code,.file-pair article,.stylesheet-file')).map(e=>e.getAttribute('aria-label')));
   assert.deepEqual(misplaced,[],'each copy button is beside the code it copies');
   const offCentre=await root.locator('.copy-code-button').evaluateAll(buttons=>buttons.filter(button=>{
@@ -161,7 +161,7 @@ try{
    }
   }
   if(language==='css'){
-   await root.getByRole('button',{name:'Copy matching HTML file code',exact:true}).click();
+   await inHtmlFile(page,width,file=>file.getByRole('button',{name:'Copy matching HTML file code',exact:true}).click());
    const copied=await page.evaluate(()=>window.copied.at(-1));
    const paragraph=kind==='fonts'?'<p>Courier New</p>':kind==='css'?'<p class="notice">Border text</p>':'<p>Red text</p>';
    assert.equal(copied,'<link rel="stylesheet" href="styles.css">\n'+paragraph,'Matching HTML is linked and has no inline overrides');

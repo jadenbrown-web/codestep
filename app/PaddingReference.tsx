@@ -12,9 +12,8 @@ const sides:PaddingSide[]=['top','right','bottom','left'];
 const messages=['Welcome to my website','Thank you for visiting'];
 export function paddingExample(options:PaddingOptions){
  const padding=options.mode==='all'?`padding: ${options.top}px;`:sides.map(side=>`padding-${side}: ${options[side]}px;`).join('\n  ');
- const declarations=`width: fit-content;\n  ${padding}\n  background-color: #73AD21;\n  border-radius: 5px;\n  color: #111;`;
- const css=`p {\n  ${declarations}\n}`;
- const html=messages.map(text=>`<p style="${declarations.replace(/\n\s*/g,' ')}">${text}</p>`).join('\n');
+ const css=`p {\n  ${padding}\n}`;
+ const html=messages.map(text=>`<p style="${padding.replace(/\n\s*/g,' ')}">${text}</p>`).join('\n');
  const companion=messages.map(text=>`<p>${text}</p>`).join('\n');
  return {html,css,companion,linkedHtml:linkedStylesheetHtml(companion)};
 }
@@ -32,9 +31,9 @@ export default function PaddingReference({language,options,onChange,onAlternate,
   </div>
   <div className="padding-reference-body"><div className="padding-mode" role="group" aria-label="Padding sides"><button aria-pressed={options.mode==='all'} onClick={()=>changeAll(options.top)}>All sides</button><button aria-pressed={options.mode==='sides'} onClick={()=>onChange({...options,mode:'sides'})}>Each side</button></div>
    <div className="padding-sliders">{options.mode==='all'?slider('all'):sides.map(slider)}</div>
-   <p className="padding-explanation">Padding adds space <strong>inside</strong> each green box. Left padding moves text inward from the left; right padding adds space after it. Text alignment controls where text lines up.</p>
+   <p className="padding-explanation">Padding adds space <strong>inside</strong> each paragraph. Left padding moves text inward from the left; right padding adds space after it. Text alignment controls where text lines up.</p>
    <div className="padding-preview" style={{'--padding-canvas-height':`${88+2*(top+bottom)}px`} as React.CSSProperties}><BrowserResultPreview code={language==='html'?example.html:example.companion} css={language==='css'?example.css:undefined}/></div>
-   <p className="padding-explanation">The green background and 5px corners make the boxes easy to see. <code>width: fit-content</code> makes each box hug its text; padding also works without it. The gaps outside the boxes are their margins.</p>
+   <p className="padding-explanation">Paragraphs fill the available width, so right padding reduces the room for text. The gaps outside are margins.</p>
   </div>
   <footer className="html-reference-footer"><button className="html-reference-next" onClick={onNext}>Continue to positioning →</button></footer>
  </section>;

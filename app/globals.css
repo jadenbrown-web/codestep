@@ -2484,7 +2484,30 @@ html[data-theme] .css-practice-files>.editor-panel{border:0;box-shadow:none}
 html[data-theme] .workspace:has(>.css-practice-files){overflow-y:auto}
 .css-practice-files .editor-body{min-height:80px}
 @media(max-width:850px){
- .css-practice-files{flex:1 0 274px;min-height:274px}
- .css-practice-files:has(.editor-pinned-topics){flex-basis:326px;min-height:326px}
+ .css-practice-files{flex:1 0 178px;min-height:178px}
+ .css-practice-files:has(.editor-pinned-topics){flex-basis:230px;min-height:230px}
  .css-practice-files>.editor-panel:has(.editor-pinned-topics){min-height:180px}
 }
+
+/* On phones the linked HTML gets its own screen, leaving room for CSS. */
+html[data-theme] .html-file-launcher{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:44px;margin:0;padding:10px 12px;border:0;border-radius:8px;background:var(--app-raised);color:var(--app-accent);font:650 14px/1.4 var(--sans);text-align:left;cursor:pointer}
+.html-file-launcher span{font:12px var(--mono);color:var(--app-muted)}
+.html-file-launcher:focus-visible{outline:2px solid var(--app-accent);outline-offset:-2px}
+.mobile-html-file-view{position:fixed;inset:0;box-sizing:border-box;width:100%;max-width:none;height:var(--visible-height,100dvh);max-height:none;margin:0;padding:0;border:0;border-radius:0;background:var(--app-surface);color:var(--app-text);overflow:hidden}
+.mobile-html-file-view[open]{display:flex;flex-direction:column}
+.mobile-html-file-view::backdrop{background:var(--app-bg)}
+.mobile-file-heading{display:flex;flex:none;align-items:center;justify-content:space-between;gap:8px;min-height:56px;padding:env(safe-area-inset-top,0px) 8px 0}
+.mobile-file-heading h1{flex:1;min-width:0;margin:0;font:650 15px var(--mono);text-align:center}
+html[data-theme] .mobile-file-back{display:flex;align-items:center;gap:4px;min-height:44px;padding:0 4px;border:0;background:transparent;color:var(--app-text);font:600 14px var(--sans);cursor:pointer}
+.mobile-file-back svg{width:20px;height:20px}
+.mobile-file-back:focus-visible{outline:2px solid var(--app-accent);outline-offset:-2px}
+.mobile-file-heading .copy-code-button{display:flex;width:44px;height:44px;align-items:center;justify-content:center}
+.mobile-file-heading .copy-code-button svg{width:20px;height:20px}
+.mobile-file-content{flex:1;min-height:0;overflow:auto;padding:12px 16px max(16px,env(safe-area-inset-bottom,0px))}
+.mobile-file-content pre{margin:0 0 20px;white-space:pre-wrap;overflow-wrap:anywhere;font:600 15px/1.7 var(--mono)}
+html[data-theme] .mobile-file-content pre>code{display:block;white-space:inherit;font:inherit;background:transparent;color:var(--editor-text);border:0;box-shadow:none}
+.mobile-file-content>p{margin:0 0 12px;font:400 16px/1.6 var(--sans);color:var(--app-muted)}
+.mobile-file-content>p code{font:inherit;color:var(--app-accent)}
+.mobile-file-content>.stylesheet-lesson-link{margin:0}
+.mobile-file-content pre>code{max-height:none;overflow:visible;padding:0}
+@media(max-width:850px){.stylesheet-file-pair{grid-template-columns:minmax(0,1fr)}}

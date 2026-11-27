@@ -13,7 +13,6 @@ const {default:PaddingReference,defaultPadding,paddingExample}=module.exports;
 const source=fs.readFileSync('app/page.tsx','utf8'),start=source.indexOf('{',source.indexOf('const lessons:'));
 const lessons=JSON.parse(source.slice(start,source.indexOf('\n};',start)+2));
 const messages=['Welcome to my website','Thank you for visiting'];
-const supporting={'width':'fit-content','background-color':'#73AD21','border-radius':'5px','color':'#111'};
 
 function declarations(source){
  const entries=source.split(';').map(value=>value.trim()).filter(Boolean).map(value=>{
@@ -35,13 +34,13 @@ function checkExamples(example,expected){
 
 test('default padding gives both paragraphs 20 pixels inside every edge',()=>{
  assert.deepEqual(defaultPadding,{mode:'all',top:20,right:20,bottom:20,left:20});
- checkExamples(paddingExample(defaultPadding),{...supporting,padding:'20px'});
+ checkExamples(paddingExample(defaultPadding),{padding:'20px'});
 });
 
 test('all-sides mode produces one shorthand without stale individual side overrides',()=>{
  const options=Object.freeze({mode:'all',top:0,right:48,bottom:7,left:23});
  const example=paddingExample(options);
- checkExamples(example,{...supporting,padding:'0px'});
+ checkExamples(example,{padding:'0px'});
  assert.doesNotMatch(example.css,/padding-(top|right|bottom|left):/);
  assert.deepEqual(options,{mode:'all',top:0,right:48,bottom:7,left:23});
 });
@@ -49,7 +48,7 @@ test('all-sides mode produces one shorthand without stale individual side overri
 test('individual sides preserve zero, upper-bound and unequal spacing in CSS and HTML',()=>{
  const options=Object.freeze({mode:'sides',top:0,right:48,bottom:7,left:23});
  const example=paddingExample(options);
- checkExamples(example,{...supporting,'padding-top':'0px','padding-right':'48px','padding-bottom':'7px','padding-left':'23px'});
+ checkExamples(example,{'padding-top':'0px','padding-right':'48px','padding-bottom':'7px','padding-left':'23px'});
  assert.doesNotMatch(example.css,/(?:^|\s)padding:/,'Individual properties must not be overridden by a shorthand');
  assert.deepEqual(options,{mode:'sides',top:0,right:48,bottom:7,left:23});
 });
@@ -79,7 +78,8 @@ test('both courses teach padding between alignment and positioning with matching
   for(const property of ['padding','padding-top','padding-right','padding-bottom','padding-left']){
    assert.ok(lesson.parts.some(part=>part.code===property),`Missing ${property} explanation`);
   }
-  assert.ok(lesson.parts.some(part=>part.code==='width: fit-content'&&/padding also works/i.test(part.meaning)),'Fit-content is demonstration support, not a requirement for padding');
+  assert.doesNotMatch(lesson.answer,/width:|background-color:|border-radius:|color:/,'Padding examples contain only the properties being taught');
+  assert.ok(lesson.parts.every(part=>!['width: fit-content','background-color / border-radius'].includes(part.code)));
  }
 });
 

@@ -2124,10 +2124,10 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "09 · Padding",
       "title": "Add space inside elements",
-      "explanation": "Padding adds space inside an element, between its text and its edges. Start with padding: 20px to give all four sides the same space. Choose individual sides to change padding-top, padding-right, padding-bottom and padding-left independently. Padding changes inside spacing; margin changes outside spacing. Padding-right adds room after the content, while text-align: right aligns the text. Both paragraphs use the same padding settings. The green background and rounded corners make their edges visible. In HTML, these CSS declarations go inside each paragraph’s style attribute. Width: fit-content lets the green box hug the text so padding on every edge is visible; padding also works without it.",
+      "explanation": "Padding adds space inside an element, between its text and its edges. Start with padding: 20px to give all four sides the same space. Choose individual sides to change padding-top, padding-right, padding-bottom and padding-left independently. Padding changes inside spacing; margin changes outside spacing. Padding-right adds room after the content, while text-align: right aligns the text. Both paragraphs use the same padding settings. In HTML, put these CSS declarations inside each paragraph’s style attribute.",
       "note": "<!-- Explore space inside paragraphs -->",
       "prompt": "Move the all-sides slider, then choose individual sides to compare the space around the text.",
-      "answer": "<p style=\"width: fit-content; padding: 20px; background-color: #73AD21; border-radius: 5px; color: #111;\">Welcome to my website</p>\n<p style=\"width: fit-content; padding: 20px; background-color: #73AD21; border-radius: 5px; color: #111;\">Thank you for visiting</p>",
+      "answer": "<p style=\"padding: 20px;\">Welcome to my website</p>\n<p style=\"padding: 20px;\">Thank you for visiting</p>",
       "output": [
         "Two paragraphs with space inside their edges."
       ],
@@ -2168,16 +2168,6 @@ const lessons: Record<Language, Lesson[]> = {
           "code": "padding / margin",
           "name": "Inside space and outside space",
           "meaning": "Padding is inside an element, between its content and its edges. Margin is outside the element, between it and nearby elements. These controls change padding, not margin."
-        },
-        {
-          "code": "background-color / border-radius",
-          "name": "Make the padding visible",
-          "meaning": "The green background shows the paragraph’s padded area. The sample’s 5px border-radius rounds its corners. These supporting styles help you see the edges; padding itself controls the space."
-        },
-        {
-          "code": "width: fit-content",
-          "name": "See padding on every edge",
-          "meaning": "Lets the example box hug its text so changing left or right padding visibly grows that edge. This supports the demonstration; padding also works on full-width elements."
         }
       ]
     },
@@ -2642,10 +2632,10 @@ const lessons: Record<Language, Lesson[]> = {
     {
       "eyebrow": "03 · Padding",
       "title": "Add space inside elements",
-      "explanation": "Padding adds space inside an element, between its text and its edges. Start with padding: 20px to give all four sides the same space. Choose individual sides to change padding-top, padding-right, padding-bottom and padding-left independently. Padding changes inside spacing; margin changes outside spacing. Padding-right adds room after the content, while text-align: right aligns the text. Both paragraphs use the same padding settings. The green background and rounded corners make their edges visible. The p rule styles the two <p> elements in index.html. Link styles.css from the HTML head and keep both files in the same folder. Width: fit-content lets the green box hug the text so padding on every edge is visible; padding also works without it.",
+      "explanation": "Padding adds space inside an element, between its text and its edges. Start with padding: 20px to give all four sides the same space. Choose individual sides to change padding-top, padding-right, padding-bottom and padding-left independently. Padding changes inside spacing; margin changes outside spacing. Padding-right adds room after the content, while text-align: right aligns the text. Both paragraphs use the same padding settings. The p rule styles both <p> elements in index.html. Link styles.css from the HTML head and keep both files in the same folder.",
       "note": "/* Explore space inside paragraphs */",
       "prompt": "Move the all-sides slider, then choose individual sides to compare the space around the text.",
-      "answer": "p {\n  width: fit-content;\n  padding: 20px;\n  background-color: #73AD21;\n  border-radius: 5px;\n  color: #111;\n}",
+      "answer": "p {\n  padding: 20px;\n}",
       "output": [
         "Two paragraphs with space inside their edges."
       ],
@@ -2686,16 +2676,6 @@ const lessons: Record<Language, Lesson[]> = {
           "code": "padding / margin",
           "name": "Inside space and outside space",
           "meaning": "Padding is inside an element, between its content and its edges. Margin is outside the element, between it and nearby elements. These controls change padding, not margin."
-        },
-        {
-          "code": "background-color / border-radius",
-          "name": "Make the padding visible",
-          "meaning": "The green background shows the paragraph’s padded area. The sample’s 5px border-radius rounds its corners. These supporting styles help you see the edges; padding itself controls the space."
-        },
-        {
-          "code": "width: fit-content",
-          "name": "See padding on every edge",
-          "meaning": "Lets the example box hug its text so changing left or right padding visibly grows that edge. This supports the demonstration; padding also works on full-width elements."
         }
       ]
     },
@@ -5701,7 +5681,7 @@ export default function Home() {
             {current!.comparisonExample && <ComparisonCasePicker selected={comparisonCase} onSelect={setComparisonCase} language={language} />}
               {blockMode ? <CodeBlocks key={`${language}-${index}`} code={code} answer={commentPrefix + ghostSource} onChange={changeBlockCode} renderCode={(value) => <HighlightedCode indentationDots={indentationDots} code={value} language={language} />} /> : <div ref={codeEditorRef} className={`editor-body ${colourTyping ? "colour-typing" : ""} ${current!.starter && code === current!.starter ? "starter-only" : ""}`}><div className="editor-surface" style={{ minHeight: `max(100%, calc(${lineNumbers.length} * var(--editor-line-height) + var(--editor-padding)))`, minWidth: `max(100%, calc(${Math.max(...(code + guideCode).split("\n").map(line => line.length), 1)}ch + var(--editor-gutter) + var(--editor-inline-padding) + var(--editor-inline-padding)))` }}><CodeLineNumbers text={code + (showGuide ? guideCode : "")} minimumLines={8} />{showGuide && <pre className={`code-guide ${current!.comparisonExample ? "focused-guide" : ""}`} aria-hidden="true"><span>CODE GUIDE</span><code><span className="guide-prefix">{code}</span>{!!current!.comparisonExample ? <LearningCode indentationDots={indentationDots} indentationPrefix={code} code={guideCode} language={language} caretIndex={-1} focusConditions /> : <HighlightedCode indentationDots={indentationDots} indentationPrefix={code} code={guideCode} fullCode={fullGuideCode} language={language} />}</code></pre>}{<pre className="typed-code-layer" aria-hidden="true"><code><LearningCode indentationDots={indentationDots} code={code} starter={current!.starter} language={language} caretIndex={caretIndex} focusConditions={!!current!.comparisonExample} /></code></pre>}<textarea onScroll={event => { const editor = event.currentTarget; editor.parentElement?.querySelectorAll<HTMLElement>(".code-guide, .typed-code-layer, .line-numbers").forEach(layer => { layer.scrollTop = editor.scrollTop; layer.scrollLeft = editor.scrollLeft; }); }} aria-label="Code editor" wrap="soft" autoCapitalize="off" autoCorrect="off" spellCheck={false} value={code} onChange={(event) => {setCode(event.target.value); setCaretIndex(event.target.selectionStart); setStatus("idle")}} onSelect={(event) => setCaretIndex(event.currentTarget.selectionStart)} onKeyDown={handleEditorKeyDown} placeholder={showGuide ? "" : language === "python" ? "# Type your code here..." : language === "html" ? "<!-- Type your HTML here... -->" : language === "css" ? "/* Type your CSS here... */" : "// Type your code here..."} /></div></div>}
           </div>
-            {language === "css" && <div className="css-editor-companion"><StylesheetCompanion html={current!.idLesson === "css" ? linkedIdHtml : ""} renderCode={(value,syntax)=><HighlightedCode code={value} language={syntax}/>} /></div>}
+            {language === "css" && <div className="css-editor-companion"><StylesheetCompanion html={current!.idLesson === "css" ? linkedIdHtml : ""} onOpenLesson={current!.idLesson === "css" ? ()=>openIdLesson("html") : undefined} renderCode={(value,syntax)=><HighlightedCode code={value} language={syntax}/>} /></div>}
           </PracticeFiles>
           {language === "html" || language === "css" ? <LiveWebPreview key={`${language}-${index}`} code={practiceCode} html={language === "css" ? current!.idLesson === "css" ? linkedIdHtml : '' : undefined} css={language === "css" ? practiceCode : undefined} mediaKind={current!.mediaPreview} exampleCode={current!.answer} showTab={current!.browserPreview === "document"} previewKind={typeof current!.browserPreview === "string" ? current!.browserPreview : current!.mediaPreview ?? "page"} checked={status !== "idle"} onClearCheck={()=>setStatus("idle")} hasScript={/<script\b/i.test(current!.answer+practiceCode)} scriptOutput={status === "correct" && /<script\b/i.test(current!.answer) ? previewOutput : undefined}>
             {status === "wrong" && <><SyntaxDiagnostic parts={diagnostic}/><div className="diagnostic-hint">Hover over or focus each underlined part to see what it means.</div></>}
