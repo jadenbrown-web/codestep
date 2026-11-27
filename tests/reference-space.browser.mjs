@@ -49,15 +49,17 @@ try{
     const controls=reference.querySelector('.layout-controls'),preview=reference.querySelector('.layout-preview,.padding-preview');
     const paddingStart=reference.querySelector('.padding-mode'),paddingEnd=reference.querySelector('.padding-reference-body>.padding-explanation');
     const controlsRect=controls?rect(controls):{...rect(paddingStart),bottom:paddingEnd.getBoundingClientRect().bottom};
-    return {root:rect(reference),workspace:rect(workspace),contentBottom:workspace.getBoundingClientRect().bottom-parseFloat(style.paddingBottom),contentTop:workspace.getBoundingClientRect().top+parseFloat(style.paddingTop),scroll:reference.scrollHeight,client:reference.clientHeight,fill:parseFloat(reference.style.getPropertyValue('--reference-fill-height')),room:parseFloat(reference.style.getPropertyValue('--reference-room'))||0,font:parseFloat(getComputedStyle(code).fontSize),controlHeight:reference.querySelector('.layout-choice,.padding-mode button').getBoundingClientRect().height,featured:rect(reference.querySelector('.font-featured-example')),controls:controlsRect,preview:rect(preview),footer:rect(reference.querySelector('footer')),browser:rect(preview.querySelector('.browser-page-preview'))};
+    return {root:rect(reference),workspace:rect(workspace),contentBottom:workspace.getBoundingClientRect().bottom-parseFloat(style.paddingBottom),contentTop:workspace.getBoundingClientRect().top+parseFloat(style.paddingTop),scroll:reference.scrollHeight,client:reference.clientHeight,wide:reference.scrollWidth>reference.clientWidth+1,fill:parseFloat(reference.style.getPropertyValue('--reference-fill-height')),room:parseFloat(reference.style.getPropertyValue('--reference-room'))||0,font:parseFloat(getComputedStyle(code).fontSize),controlHeight:reference.querySelector('.layout-choice,.padding-mode button').getBoundingClientRect().height,featured:rect(reference.querySelector('.font-featured-example')),controls:controlsRect,preview:rect(preview),footer:rect(reference.querySelector('footer')),browser:rect(preview.querySelector('.browser-page-preview'))};
    });
    const verifyFlow=async(kind,language='css')=>{
     await settle();const m=await metric();
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,`${width}×${height}: no horizontal page overflow`);
+    assert.equal(m.wide,false,`${kind}/${language}: enlarged code and choices stay within the card`);
     assert.ok(m.controls.top-m.featured.bottom<=24,`${kind}: controls remain directly after code`);
     assert.ok(m.preview.top-m.controls.bottom<=24,`${kind}: preview follows controls without a spacer`);
     if(width>850){assert.equal(m.font,13,'Desktop code keeps its existing size');if(kind!=='padding')assert.equal(m.browser.height,{alignment:170,positioning:220,'combined-styles':140}[kind],'Desktop previews retain their standard sizes');}
-    else if(Number.isFinite(m.fill)){
+    else {assert.ok(Math.abs(m.font-(13+3*m.room))<.05,`${kind}/${language}: CSS and HTML code share the readable size`);}
+    if(width<=850&&Number.isFinite(m.fill)){
      assert.ok(Math.abs(m.root.bottom-m.contentBottom)<=3,`${kind}: fitting phone reference uses the workspace bottom: ${JSON.stringify(m)}`);
      assert.ok(m.scroll<=m.client+2,`${kind}: fitting phone content does not require extra scrolling`);
     }
@@ -89,6 +91,7 @@ try{
    await inHtmlFile(page,width,async file=>assert.match(await file.locator('.companion-html-code').textContent(),/<link rel="stylesheet" href="styles.css">/));
 
    await choose('alignment');await verifyFlow('alignment');await checkFrame('h1',{font:'32px',align:'right',colour:'rgb(0, 0, 255)'});
+   await openHtmlLesson(page,width);await verifyFlow('alignment','html');await checkFrame('h1',{font:'32px',align:'right',colour:'rgb(0, 0, 255)'});await page.getByRole('button',{name:'See matching CSS →',exact:true}).click();await verifyFlow('alignment');
    await choose('positioning');await setRange('Distance from top',100);await setRange('Distance from left',100);await page.getByRole('button',{name:'24px',exact:true}).click();await verifyFlow('positioning');await checkFrame('p',{top:100,left:100,font:'24px'});
    await choose('padding');await setRange('Padding on all sides',48);await verifyFlow('padding');await checkFrame('p',{padding:[48,48,48,48]});
    assert.doesNotMatch(await page.locator('.padding-primary-code').textContent(),/width:|font-size:|background-color:|border-radius:|color:/,'Adaptive presentation never adds CSS to the lesson example');

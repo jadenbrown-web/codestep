@@ -14,13 +14,14 @@ export default function useReferenceSpace(content:string){
    const style=getComputedStyle(workspace);
    const available=Math.floor(workspace.clientHeight-parseFloat(style.paddingTop)-parseFloat(style.paddingBottom));
    const compact=Math.ceil(card.scrollHeight);
-   if(compact>available)return;
+   if(compact>available||card.scrollWidth>card.clientWidth+1)return;
+   const fits=()=>Math.ceil(card.scrollHeight)<=available&&card.scrollWidth<=card.clientWidth+1;
    let low=0,high=1;
    card.style.setProperty('--reference-room',String(high));
-   if(Math.ceil(card.scrollHeight)<=available)low=high;
+   if(fits())low=high;
    else for(let attempt=0;attempt<6;attempt++){
     const candidate=(low+high)/2;card.style.setProperty('--reference-room',String(candidate));
-    if(Math.ceil(card.scrollHeight)<=available)low=candidate;else high=candidate;
+    if(fits())low=candidate;else high=candidate;
    }
    card.style.setProperty('--reference-room',String(low));
    card.style.setProperty('--reference-fill-height',`${available}px`);

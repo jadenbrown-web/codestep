@@ -2520,10 +2520,12 @@ html[data-theme] .mobile-file-content pre>code{display:block;white-space:inherit
  :is(.layout-reference,.padding-reference) .font-example-heading>b{font-size:calc(14px + 2px * var(--reference-room,0))}
  :is(.layout-reference,.padding-reference) .stylesheet-file>header{min-height:calc(44px + 4px * var(--reference-room,0));font-size:calc(12px + 2px * var(--reference-room,0))}
  :is(.layout-reference,.padding-reference) .stylesheet-file>pre{padding:calc(4px + 4px * var(--reference-room,0)) 8px calc(10px + 2px * var(--reference-room,0));font-size:calc(13px + 3px * var(--reference-room,0));line-height:calc(20px + 5px * var(--reference-room,0))}
- :is(.layout-reference,.padding-reference) .example-syntax-code{font-size:calc(13px + 3px * var(--reference-room,0));line-height:calc(20px + 5px * var(--reference-room,0))}
+ html[data-theme] :is(.layout-reference,.padding-reference) .example-syntax-code{font-size:calc(13px + 3px * var(--reference-room,0));line-height:calc(20px + 5px * var(--reference-room,0))}
  html[data-theme] :is(.layout-reference,.padding-reference) :is(.html-file-launcher,.layout-choice,.padding-mode button,.html-reference-next,.colour-lesson-link){min-height:calc(44px + 8px * var(--reference-room,0));font-size:calc(14px + 2px * var(--reference-room,0))}
  :is(.layout-reference,.padding-reference) .html-file-launcher span{font-size:calc(12px + var(--reference-room,0) * 1px)}
  .layout-reference .layout-controls{gap:calc(8px + 4px * var(--reference-room,0))}
+ .layout-reference .layout-choice-row{gap:4px}
+ .layout-reference .layout-choice{padding-inline:2px}
  .layout-reference .layout-controls :is(b,label),.padding-reference .padding-slider{font-size:calc(14px + 2px * var(--reference-room,0))}
  .layout-reference .layout-reference-body{flex:1 0 auto;gap:calc(12px + 4px * var(--reference-room,0))}
  .layout-reference[data-layout-kind="alignment"]{--reference-preview-min:170px}
