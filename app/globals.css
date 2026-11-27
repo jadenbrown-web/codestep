@@ -2511,3 +2511,28 @@ html[data-theme] .mobile-file-content pre>code{display:block;white-space:inherit
 .mobile-file-content>.stylesheet-lesson-link{margin:0}
 .mobile-file-content pre>code{max-height:none;overflow:visible;padding:0}
 @media(max-width:850px){.stylesheet-file-pair{grid-template-columns:minmax(0,1fr)}}
+
+/* Spend spare phone height on readable examples, then the live canvas. */
+@media(max-width:850px){
+ html[data-theme] .reference-workspace>:is(.layout-reference,.padding-reference){height:var(--reference-fill-height,auto)}
+ .layout-reference>.font-featured-example{gap:calc(2px + 9px * var(--reference-room,0))}
+ .padding-reference>.font-featured-example{gap:calc(8px + 3px * var(--reference-room,0))}
+ :is(.layout-reference,.padding-reference) .font-example-heading>b{font-size:calc(14px + 2px * var(--reference-room,0))}
+ :is(.layout-reference,.padding-reference) .stylesheet-file>header{min-height:calc(44px + 4px * var(--reference-room,0));font-size:calc(12px + 2px * var(--reference-room,0))}
+ :is(.layout-reference,.padding-reference) .stylesheet-file>pre{padding:calc(4px + 4px * var(--reference-room,0)) 8px calc(10px + 2px * var(--reference-room,0));font-size:calc(13px + 3px * var(--reference-room,0));line-height:calc(20px + 5px * var(--reference-room,0))}
+ :is(.layout-reference,.padding-reference) .example-syntax-code{font-size:calc(13px + 3px * var(--reference-room,0));line-height:calc(20px + 5px * var(--reference-room,0))}
+ html[data-theme] :is(.layout-reference,.padding-reference) :is(.html-file-launcher,.layout-choice,.padding-mode button,.html-reference-next,.colour-lesson-link){min-height:calc(44px + 8px * var(--reference-room,0));font-size:calc(14px + 2px * var(--reference-room,0))}
+ :is(.layout-reference,.padding-reference) .html-file-launcher span{font-size:calc(12px + var(--reference-room,0) * 1px)}
+ .layout-reference .layout-controls{gap:calc(8px + 4px * var(--reference-room,0))}
+ .layout-reference .layout-controls :is(b,label),.padding-reference .padding-slider{font-size:calc(14px + 2px * var(--reference-room,0))}
+ .layout-reference .layout-reference-body{flex:1 0 auto;gap:calc(12px + 4px * var(--reference-room,0))}
+ .layout-reference[data-layout-kind="alignment"]{--reference-preview-min:170px}
+ .layout-reference[data-layout-kind="combined-styles"]{--reference-preview-min:140px}
+ .layout-reference[data-layout-kind="positioning"]{--reference-preview-min:220px}
+ .layout-reference .layout-preview{display:flex;flex:1 0 auto;margin-top:0;min-height:var(--reference-preview-min)}
+ html[data-theme] .layout-reference .layout-preview>.browser-page-preview{flex:1 0 var(--reference-preview-min);height:var(--reference-preview-min);min-height:var(--reference-preview-min)}
+ .padding-reference .padding-reference-body{flex:1 0 auto;gap:calc(10px + 2px * var(--reference-room,0))}
+ .padding-reference .padding-preview{flex:1 0 auto}
+ html[data-theme] .padding-reference .padding-preview>.browser-page-preview{flex:1}
+ html[data-theme] .padding-reference .padding-preview .browser-result-preview{flex:1 0 var(--padding-canvas-height)}
+}

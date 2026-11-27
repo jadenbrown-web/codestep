@@ -36,7 +36,21 @@ try{
   const frame=()=>page.frameLocator('.layout-preview iframe');
   const view=async()=>{const element=frame().locator('h1,p').first();await element.waitFor();return element.evaluate(el=>{const r=el.getBoundingClientRect(),s=getComputedStyle(el);return {tag:el.tagName,align:s.textAlign,colour:s.color,size:s.fontSize,font:s.fontFamily,top:r.top,left:r.left};});};
   const setRange=async(name,value)=>page.getByRole('slider',{name,exact:true}).evaluate((el,value)=>{Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(el,String(value));el.dispatchEvent(new Event('input',{bubbles:true}));},value);
-  const compact=async kind=>{const boxes=await page.locator('.font-featured-example,.layout-controls,.layout-preview,.html-reference-footer').evaluateAll(es=>es.map(e=>{const r=e.getBoundingClientRect();return {top:r.top,bottom:r.bottom};}));assert.ok(boxes[1].top-boxes[0].bottom<=16,'Controls follow the example');assert.ok(boxes[2].top-boxes[1].bottom<=13,'Preview follows the controls');assert.ok(boxes[3].top-boxes[2].bottom<=12,'No reserved blank space below the preview');const box=await page.locator('.layout-preview .browser-page-preview').boundingBox();assert.equal(box.height,{alignment:170,positioning:220,'combined-styles':140}[kind]);};
+  const compact=async kind=>{
+   const boxes=await page.locator('.font-featured-example,.layout-controls,.layout-preview,.html-reference-footer').evaluateAll(es=>es.map(e=>{const r=e.getBoundingClientRect();return {top:r.top,bottom:r.bottom};}));
+   assert.ok(boxes[1].top-boxes[0].bottom<=16,'Controls follow the example');
+   assert.ok(boxes[2].top-boxes[1].bottom<=(width<=850?18:13),'Preview follows the controls');
+   assert.ok(boxes[3].top-boxes[2].bottom<=12,'No reserved blank space below the preview');
+   const box=await page.locator('.layout-preview .browser-page-preview').boundingBox(),minimum={alignment:170,positioning:220,'combined-styles':140}[kind];
+   if(width>850)assert.equal(box.height,minimum,'Desktop keeps its standard preview size');
+   else{
+    assert.ok(box.height>=minimum,'Phone preview never shrinks below the standard canvas');
+    const fit=await page.locator('.layout-reference').evaluate(el=>{const workspace=el.parentElement,s=getComputedStyle(workspace);return {cardHeight:el.getBoundingClientRect().height,available:workspace.clientHeight-parseFloat(s.paddingTop)-parseFloat(s.paddingBottom),scroll:el.scrollHeight,client:el.clientHeight,wide:el.scrollWidth>el.clientWidth+1,filled:!!el.style.getPropertyValue('--reference-fill-height')};});
+    assert.ok(fit.cardHeight<=fit.available+1,'Phone card fits inside its workspace');
+    assert.equal(fit.wide,false,'Code and choices never widen the phone card');
+    if(fit.filled)assert.ok(fit.scroll<=fit.client+1,'Using spare height must not introduce scrolling');
+   }
+  };
   const copy=async label=>{await page.evaluate(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async value=>window.copied=value}}));if(label==='Copy matching HTML file code')return inHtmlFile(page,width,async file=>{await file.getByRole('button',{name:label,exact:true}).click();return page.evaluate(()=>window.copied);});await page.getByRole('button',{name:label,exact:true}).click();return page.evaluate(()=>window.copied);};
   const verifyFiles=async(html,css,selector,expected)=>{const saved=await browser.newPage({viewport:{width,height:700}});await saved.route('https://saved-example.test/**',route=>route.fulfill({contentType:route.request().url().endsWith('.css')?'text/css':'text/html',body:route.request().url().endsWith('.css')?css:html}));await saved.goto('https://saved-example.test/index.html');const result=await saved.locator(selector).evaluate(el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect();return {align:s.textAlign,colour:s.color,background:s.backgroundColor,top:r.top,left:r.left};});for(const [key,value]of Object.entries(expected))assert.equal(result[key],value,'Copied HTML loads its real external stylesheet');await saved.close();};
   await page.getByRole('button',{name:'Right',exact:true}).click();await page.getByRole('button',{name:'Blue',exact:true}).click();
@@ -52,9 +66,11 @@ try{
   await choose('positioning','css');await setRange('Distance from top',75);await setRange('Distance from left',80);await page.getByRole('button',{name:'20px',exact:true}).click();
   const positioned=await view();assert.equal(positioned.top,75);assert.equal(positioned.left,80);assert.equal(positioned.size,'20px');assert.match(await code(),/margin: 0/);await compact('positioning');
   await verifyFiles(await copy('Copy matching HTML file code'),await copy('Copy layout example code'),'p',{top:75,left:80});
-  await course('html');await choose('combined-styles');await page.getByRole('button',{name:'Centre',exact:true}).click();await page.getByRole('button',{name:'Blue',exact:true}).click();await page.getByRole('button',{name:'Georgia',exact:true}).click();
+  const recapFont=width<=850?'Courier New':'Georgia';
+  await course('html');await choose('combined-styles');await page.getByRole('button',{name:'Centre',exact:true}).click();await page.getByRole('button',{name:'Blue',exact:true}).click();await page.getByRole('button',{name:recapFont,exact:true}).click();
   assert.equal(((await code()).match(/<p[^>]*>/)[0].match(/style=/g)||[]).length,1);assert.doesNotMatch(await code(),/position:|top:|left:|font-size:|height:|margin:/);await compact('combined-styles');
-  await page.getByRole('button',{name:'See matching CSS →',exact:true}).click();assert.equal((await view()).colour,'rgb(0, 0, 255)');assert.equal((await view()).align,'center');assert.match((await view()).font,/Georgia/);await compact('combined-styles');
+  if(width<=850)assert.match(await code(),/font-family: 'Courier New';/,'Longest font name remains readable in the HTML example');
+  await page.getByRole('button',{name:'See matching CSS →',exact:true}).click();assert.equal((await view()).colour,'rgb(0, 0, 255)');assert.equal((await view()).align,'center');assert.ok((await view()).font.includes(recapFont));await compact('combined-styles');
   assert.equal(await page.getByRole('button',{name:'Finish CSS path →',exact:true}).count(),1);
   if(theme==='dark')await page.screenshot({path:`/tmp/linked-css-recap-${width}.png`});
   await course('css');if(width<=850)await page.getByRole('button',{name:'Practice',exact:true}).click();

@@ -4,6 +4,7 @@ import BrowserResultPreview from './BrowserResultPreview';
 import CopyCodeButton from './CopyCodeButton';
 import {linkedStylesheetHtml} from './StylesheetCompanion';
 import StylesheetExample from './StylesheetExample';
+import useReferenceSpace from './useReferenceSpace';
 
 export type LayoutKind='alignment'|'positioning'|'combined-styles';
 export type LayoutOptions={align:'left'|'center'|'right';top:number;left:number;fontSize:number;colour?:string;fontFamily?:string};
@@ -32,9 +33,10 @@ ${language==='html'?html:companion}
 }
 export default function LayoutReference({kind,language,options,onChange,onAlternate,onNext,nextLabel="Continue to the next lesson →",actions,renderCode}:{kind:LayoutKind;language:'html'|'css';options:LayoutOptions;onChange:(options:LayoutOptions)=>void;onAlternate:()=>void;onNext:()=>void;nextLabel?:string;actions?:React.ReactNode;renderCode:(value:string,language:'html'|'css')=>React.ReactNode}){
  const example=layoutExample(kind,options),code=example[language];
+ const space=useReferenceSpace(code);
  const titles={alignment:'Text alignment',positioning:'Precise text position','combined-styles':language==='html'?'One style attribute, three properties':'One rule, three properties'};
  const adjust=(patch:Partial<LayoutOptions>)=>onChange({...options,...patch});
- return <section className="html-text-reference layout-reference" aria-label={`${titles[kind]} examples`} data-layout-kind={kind}>
+ return <section ref={space} className="html-text-reference layout-reference" aria-label={`${titles[kind]} examples`} data-layout-kind={kind}>
   <div className="font-featured-example">
    <div className="font-example-heading"><b>Example · {titles[kind]}</b><div className="desktop-pane-actions">{actions}</div></div>
    {language==='html'?<><button className="colour-lesson-link" onClick={onAlternate}>See matching CSS →</button><div className="visual-example-code css-featured-code"><code className="example-syntax-code layout-primary-code" tabIndex={0} aria-label="Lesson example code">{renderCode(code,language)}</code><CopyCodeButton iconOnly code={code} label="layout example" /></div></>:<StylesheetExample css={code} html={example.companion} copyLabel="layout example" primaryClassName="layout-primary-code" onOpenHtml={onAlternate} renderCode={renderCode}/>}
